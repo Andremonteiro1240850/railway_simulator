@@ -10,103 +10,103 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 **Business Transactions**
 
-* 
+Order, payment
 
----
+___
 
 **Transaction Line Items**
 
-* 
+Order item
 
 ---
 
 **Product/Service related to a Transaction or Transaction Line Item**
 
-* 
+Product, service
 
 ---
 
 **Transaction Records**
 
-* 
+Invoice, receipt
 
 ---  
 
 **Roles of People or Organizations**
 
-* 
+Seller, supplier, customer
 
 ---
 
 **Places**
 
-* 
+Store, warehouse
 
 ---
 
 **Noteworthy Events**
 
-* 
+Shipment, return
 
 ---
 
 **Physical Objects**
 
-* 
+Package, device
 
 ---
 
 **Descriptions of Things**
 
-* 
+Product description, service details
 
 ---
 
 **Catalogs**
 
-* 
+Product catalog
 
 ---
 
 **Containers**
 
-* 
+Shopping cart, Inventory
 
 ---
 
 **Elements of Containers**
 
-* 
+Car item, stock item
 
 ---
 
 **(Other) Organizations**
 
-* 
+Manufacturer, distributor
 
 ---
 
 **Other (External/Collaborating) Systems**
 
-* 
+Payment gateway, shipping system
 
 ---
 
 **Records of finance, work, contracts, legal matters**
 
-* 
+Contract, invoice record
 
 ---
 
 **Financial Instruments**
 
-* 
+Credit card
 
 ---
 
 **Documents mentioned/used to perform some work**
 
-* 
+Purchase, order, warranty document
 
 ---
 
@@ -124,10 +124,18 @@ An association is a relationship between instances of objects that indicates a r
 * etc.
 
 
-| Concept (A) 		|  Association   	|  Concept (B) |
-|----------	   		|:-------------:		|------:       |
-| C1  	| verb1    		 	| C2  |
-| ...  	| ...    		 	| ...  |
+| Concept (A) 		 | Association   	 |     Concept (B) |
+|----------------|:---------------:|----------------:|
+| Customer  	    |     Places      |           Order |               |                  |             |
+| Order 	        |    Contains     |      Order Item |
+| Order Item     |    Refers to    |         Product |
+| Order          |    Generates    |         Invoice |
+| Invoice        |     Records     |         Payment |
+| Payment        | is processed by | Payment Manager |
+| Seller         |     Manages     |         Product |
+| Warehouse      |     Stores      |         Product |
+| Order          |  is shipped to  |        Customer |
+| Shipment       |    delivers     |           Order |
 
 
 
