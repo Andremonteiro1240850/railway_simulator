@@ -4,12 +4,13 @@
 
 The team is formed by the students identified in the following table.
 
-| Student Number | Name              |
-|----------------|-------------------|
-| **1XXXXXX**    | Name of student 1 |
-| **1XXXXXX**    | Name of student 2 |
-| **1XXXXXX**    | Name of student 3 |
-| **1XXXXXX**    | Name of student 4 |
+| Student Number | Name                                 |
+|----------------|--------------------------------------|
+| **1240886**    | Edgar da Silva Pereira Couto         |
+| **1240835**    | Hugo José Ribeiro Azevedo            |
+| **1240850**    | André Miguel Garcias Monteiro        |
+| **1240868**    | João Miguel Soares da Silva          |
+| **1231906**    | Martim Brito Fernandes Marques Serra |
 
 # 2. Task Distribution ###
 
