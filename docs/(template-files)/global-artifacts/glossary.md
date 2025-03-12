@@ -18,3 +18,4 @@ Column "TEA (PT)" is optional. If the team does not intend to use it, then remov
 |**Editor**|**Editor**|A system user responsible for creating maps and scenarios within the simulation.|
 |**Electrified railway Line**|**Linha de comboio eletrificada**|A railway track that supports eletric locomotives by providing an external power source.|
 |**Industries**|**Industria**|Economic entities on the map that produce and consume resources, classified into primary, transforming, and mixed industries.|
+|**...**|**...**|...|
