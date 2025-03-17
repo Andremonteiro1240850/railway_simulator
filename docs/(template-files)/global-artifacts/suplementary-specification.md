@@ -72,7 +72,53 @@ Conducting load and stress testing will help determine the MTBF by simulating he
 
 _Evaluates the performance requirements of the software, namely: response time, start-up time, recovery time, memory consumption, CPU usage, load capacity and application availability._
 
-(fill in here )
+- Response Time
+
+Because the software simulates a railway network, it must frequently calculate resource availability, train schedules, and cargo movement.
+Although real-time performance optimizations (such as caching and efficient data structures) are not mentioned, the Java-based implementation should enable efficient execution.
+Processing intricate train schedules or loading large maps may cause delays.
+
+Suggestion for Improvement: Use multithreading and asynchronous processing for tasks that require high performance, such as updating train movements.
+
+
+- Start-Up Time
+
+If a lot of data needs to be loaded, the project's use of object serialization for data persistence could impact startup time.
+Optimizations like lazy loading, which loads only the most important data at startup, are not specifically mentioned.
+
+Progress Recommendation: Reduce startup time by loading only necessary items first and retrieving others as needed.
+
+- Recovery Time
+
+The document mentions that object serialization keeps data safe between runs, but it doesn't explain how quickly data can be restored. If there's a failure, it's unclear if there is a way to bring back the last good state.
+
+Improvement Suggestion: use incremental save states. This means loading smaller parts of data at different times, instead of everything at once, which can speed up recovery.
+
+- Memory Consumption
+
+The software has to store maps, industries, cities, trains, and their states, which can use a lot of memory. Java's automatic garbage collection helps to manage this. However, if objects that are no longer needed are not removed, it may cause memory issues.
+
+Improvement Suggestion: Use tools like VisualVM or JProfiler to monitor memory usage. Also, use techniques like data compression and object pooling to use memory more efficiently.
+
+- CPU Usage 
+
+The simulator is constantly updating train movements, cargo transactions, and network statistics, which can result in high CPU usage. The document doesn't discuss optimizing how tasks are divided among different threads, so CPU-heavy tasks might slow down the main operations.
+
+Improvement Suggestion: use multithreading to distribute tasks. This involves creating separate threads for the user interface, simulation, and database processes. Also, use performance profiling to detect where CPU usage is too high.
+
+
+- Load Capacity
+
+The document doesn't specify the largest map sizes, or the maximum number of trains or industries the system can handle before performance decreases. Having too many objects can slow the system significantly due to increased calculations.
+
+Improvement Suggestion:
+Define maximum supported limits (e.g., number of active trains, industries, and events).
+Implement dynamic scaling, such as reducing update frequency for distant or inactive areas of the map.
+
+- Application Availability
+
+There is no specific mention of uptime guarantees or methods to keep the system stable over long periods. If the application is used by multiple users in the future, maintaining high availability will be crucial.
+
 
 ## Supportability
 
@@ -80,7 +126,43 @@ _The supportability requirements gathers several characteristics, such as:
 testability, adaptability, maintainability, compatibility,
 configurability, installability, scalability and more._
 
-(fill in here )
+- Testability
+
+This project uses Test-Driven Development (TDD) with JUnit 5 to ensure code quality through unit testing. With JaCoCo, we verify how much of the code is covered by tests. However, there is no mention of integration testing, which is important to see how different parts like the user interface, data storage, and simulations work together.
+
+Improvement Suggestion: Add automated integration tests to ensure different parts of the system interact properly.
+
+- Adaptability
+
+The project follows object-oriented programming (OOP) principles, which should make it easier to modify and extend.
+The iterative and incremental development process (SCRUM) allows for changes over time.
+However, no mention is made of plugin-based architectures or modular designs, which could further improve adaptability.
+
+Improvement Suggestion:  Build the software with a modular design for easy addition of new parts like train models or industries. - Develop APIs to connect with external extensions or third-party services.
+
+- Maintainability
+
+Using JavaDoc helps make the code clear and easy to understand. Enforcing coding standards like CamelCase simplifies code maintenance. There's no mention of code improvement practices or using static analysis tools.
+
+Improvement Suggestion:  Implement static code analysis tools to identify areas for improvement in the code. - Establish strict version control to efficiently track changes.
+
+- Compatibility
+
+It's unclear if the application works on various operating systems or hardware setups. Since it's built with Java, it potentially runs on multiple platforms, but this has not been confirmed through cross-platform testing.
+
+- Configurability
+
+The application’s options for user configuration and personalization, such as changing UI, performance, or gameplay settings, are not addressed. Users need to have the ability to easily customize these settings for different simulation scenarios.
+
+Improvement Suggestion: Use configuration files like JSON or XML to allow easy changes in settings. - Develop a user-friendly menu to change simulator settings effortlessly.
+
+- Instability
+
+There is no discussion about how the software will be installed or distributed, like whether there will be an installer or options for cloud deployment. Installing Java applications often needs JRE/JDK, which might be challenging for non-technical users.
+
+- Scalability
+
+The project does not mention any performance limits, such as the maximum number of trains, industries, or cities it can handle. For future expansions, including more players or larger maps, the system should be ready to manage increased demands effectively.
 
 ## +
 
