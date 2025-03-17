@@ -15,14 +15,59 @@ _Evaluates the user interface. It has several subcategories,
 among them: error prevention; interface aesthetics and design; help and
 documentation; consistency and standards._
 
-(fill in here )
+- Error Prevention
+
+The document specifies validation rules for business logic, such as name constraints (e.g., city names cannot have special characters or digits) and preventing overbuilding of stations.
+It is unclear whether there are real-time UI validation mechanisms (e.g., warnings before errors occur). Implementing inline validation could enhance usability.
+
+- Interface Aesthetics and Design
+
+The document does not explicitly describe the visual aspects of the UI.
+The map editor, station details, and trains should be arranged with easy-to-understand layouts. This will ensure that important information, like cargo supply and demand, can be read intuitively.
+
+- Help and Documentation
+
+The application documentation will be in English; however, information pertaining to any in-app help feature has not been given.
+Implementation of tooltips, guided instructions, or a help section within the UI will greatly aid user experience.
+
+- Consistency and Standards
+
+The project enforces coding standards, that is, CamelCase, Javadoc, and so on, ensuring uniformity in software development.
+UI consistency should also be emphasized, such as maintaining uniform naming conventions, button placements, and interaction patterns across different modules.
 
 ## Reliability
 
 _Refers to the integrity, compliance and interoperability of the software. The requirements to be considered are: frequency and severity of failure, possibility of recovery, possibility of prediction, accuracy, average time between failures._
 
-(fill in here )
+- Frequency and Severity of Failure
 
+The project follows Test-Driven Development (TDD) and requires JUnit 5 testing, which should help minimize software failures.
+JaCoCo coverage reports ensure that most of the code is tested, reducing undetected bugs.
+However, the document does not mention stress testing or fault tolerance strategies. The severity of failure could vary depending on unhandled exceptions, missing data validations, or improper resource management.
+
+- Possibility of Recovery
+
+Object serialization is used to ensure data persistence, which helps recover application state between runs.
+No explicit mention of error recovery mechanisms, such as automatic backup creation, graceful degradation, or rollback mechanisms in case of failure.
+The system should implement exception handling with detailed logs to allow users to recover from crashes without significant data loss.
+
+- Possibility of Prediction
+
+No predictive maintenance or failure detection mechanisms are mentioned.
+The simulator’s automatic cargo generation could benefit from log-based analysis to detect inconsistencies before they cause failures.
+Runtime monitoring (e.g., performance logs, anomaly detection) could help predict and prevent system failures.
+
+- Accuracy
+
+The project involves simulating cargo demand, supply, and transportation, requiring precise calculations.
+The document does not specify how data precision is ensured (e.g., rounding mechanisms, floating-point calculations).
+Accuracy should be verified with unit tests covering business logic calculations for demand, supply, and transportation times.
+
+- Average Time Between Failures (MTBF)
+
+Since the software is still in development, MTBF is not defined, but using TDD, structured object-oriented design, and automated testing should help improve reliability.
+A bug tracking and monitoring system could be implemented to log and analyze system failures over time.
+Conducting load and stress testing will help determine the MTBF by simulating heavy usage scenarios.
 ## Performance
 
 _Evaluates the performance requirements of the software, namely: response time, start-up time, recovery time, memory consumption, CPU usage, load capacity and application availability._
