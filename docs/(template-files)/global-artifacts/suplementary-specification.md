@@ -6,8 +6,9 @@ _Specifies functionalities that:
 &nbsp; &nbsp; (i) are common across several US/UC;  
 &nbsp; &nbsp; (ii) are not related to US/UC, namely: Audit, Reporting and Security._
 
-(fill in here)
+Common functionalities across multiple use cases (US/UC):User authentication and authorization; Logging and monitoring systems Notification services (email, SMS, push notifications); Data validation and error handling mechanisms.
 
+Functionalities not directly related to US/UC: System audit logs for tracking user activity; Role-based access control (RBAC) enforcement; Report generation tools; Encryption and secure data storage mechanisms.
 ## Usability 
 
 _Evaluates the user interface. It has several subcategories,

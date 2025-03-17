@@ -125,17 +125,17 @@ An association is a relationship between instances of objects that indicates a r
 
 
 | Concept (A) 		 | Association   	 |     Concept (B) |
-|----------------|:---------------:|----------------:|
-| Customer  	    |     Places      |           Order |               |                  |             |
-| Order 	        |    Contains     |      Order Item |
-| Order Item     |    Refers to    |         Product |
-| Order          |    Generates    |         Invoice |
-| Invoice        |     Records     |         Payment |
-| Payment        | is processed by | Payment Manager |
-| Seller         |     Manages     |         Product |
-| Warehouse      |     Stores      |         Product |
-| Order          |  is shipped to  |        Customer |
-| Shipment       |    delivers     |           Order |
+|--------------|:---------------:|----------------:|
+|Customer  	   |     Places      |           Order |  
+| Order 	      |    Contains     |      Order Item |
+| Order Item   |    Refers to    |         Product |
+| Order        |    Generates    |         Invoice |
+| Invoice      |     Records     |         Payment |
+| Payment      | is processed by | Payment Manager |
+| Seller       |     Manages     |         Product |
+| Warehouse    |     Stores      |         Product |
+| Order        |  is shipped to  |        Customer |
+| Shipment     |    delivers     |           Order |
 
 
 
