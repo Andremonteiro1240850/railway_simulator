@@ -11,10 +11,15 @@ However, be aware, this is a pedagogical simplification. On further projects and
 **For each UC/US, it must be provided evidences of applying main activities of the software development process (requirements, analysis, design, tests and code). Gather those evidences on a separate file for each UC/US and set up a link as suggested below.**
 
 # Use Cases / User Stories
-| UC/US | Description                                 |                   
-|:------|:--------------------------------------------|
-| US01  | [Short name for US01](../../US01/README.md) |
-| US02  | [Short name for US02](../../US02/README.md) |
-| US03  | [Short name for US03](../../US03/README.md) |
-| ...   | ...                                         |
-| ...   | ...                                         |
+| UC/US | Description                                                                  |                   
+|:------|:-----------------------------------------------------------------------------|
+| US01  | [Define railroad system requirements](../../US01/README.md)                  |
+| US02  | [Identify industries and cities served by railroads](../../US02/README.md)   |
+| US03  | [Differnt types of trains, stations and cargo](../../US03/README.md)         |
+| US04  | [Functional railroad map](...)                                               |
+| US05  | [Define different railroad operation scenarios](...)                         |
+| US06  | [Game mechanics](...)                                                        |
+| US07  | [Train scheduling system](...)                                               |
+| US08  | [Optimize cargo transport and commerce](...)                                 |
+| US09  | [Real time tracing system](...)                                              |
+| US10  | [Test the railroad manegement system](...)                                   |
