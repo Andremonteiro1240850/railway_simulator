@@ -10,7 +10,6 @@ The team is formed by the students identified in the following table.
 | **1240835**    | Hugo José Ribeiro Azevedo            |
 | **1240850**    | André Miguel Garcias Monteiro        |
 | **1240868**    | João Miguel Soares da Silva          |
-| **1231906**    | Martim Brito Fernandes Marques Serra |
 
 # 2. Task Distribution ###
 
