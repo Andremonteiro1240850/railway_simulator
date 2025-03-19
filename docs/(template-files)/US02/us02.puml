@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+:Editor: as Editor
+(Add Industry) as (AddIndustry)
+Editor --> (AddIndustry)
+
+note right of Editor : The Editor can place\nan industry on the selected map.
+
+note right of (AddIndustry)
+The industry is added
+at the specified XY position
+on the map.
+end note
+
+@enduml
