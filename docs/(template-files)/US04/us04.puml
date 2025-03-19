@@ -1,0 +1,10 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+Actor Editor
+
+UseCase "Create scenario for a selected map" as (CreateScenario)
+
+Editor --> (CreateScenario)
+
+@enduml

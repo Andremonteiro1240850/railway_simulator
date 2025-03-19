@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+Actor Player
+
+UseCase "Build a Station" as (BuildStation)
+
+Player --> (BuildStation)
+
+note right of (BuildStation)
+Overbuilding is not possible
+end note
+
+@enduml
