@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+:Player: as Admin
+(Buy a train) as (Use)
+
+Admin ---> (Use)
+
+
+note right of (Use)
+The player should
+choose the locomotive from a list of available locomotives
+end note
+
+note left of (Use)
+The player should
+choose a current date
+end note
+
+
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/use-case-diagram
+
+:Player: as Admin
+(upgrade a station) as (Use)
+
+
+Admin ---> (Use)
+
+
+note right of (Use)
+The selected station must be upgraded
+with a building
+end note
+
+@enduml
