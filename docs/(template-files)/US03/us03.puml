@@ -1,27 +1,42 @@
 @startuml
 'https://plantuml.com/use-case-diagram
 
-:Editor: as Editor
-(Add City) as (AddCity)
-Editor --> (AddCity)
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
 
-note right of Editor : The Editor can place\n a city on the selected map.
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
 
-note right of (AddCity)
-The city is added at the specified XY position
-with a given name and a positive number
-of house blocks.
-end note
+class Editor {
+  Name
+  Email
+  Position
+  Phone
+}
 
-note right of (AddCity) #lightblue
-The city name cannot contain
-special characters or digits.
-end note
+class Map {
+  Reference
+  Description
+  Size
+  Name
+}
 
-note left of (AddCity) #lightgreen
-House blocks can be assigned
-manually or automatically (randomly
-around the city tag position).
+class City {
+  Name
+  Position XY
+  House Blocks
+}
+
+Editor "*" -- "1" Map : Selects
+Editor "*" -- "1" City : Adds
+Map "1" -- "*" City : Contains
+
+note right of City
+  - Name cannot have special characters or digits
+  - House blocks must be positive
+  - House blocks can be assigned manually or randomly
 end note
 
 @enduml

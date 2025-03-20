@@ -1,20 +1,25 @@
 @startuml
-'https://plantuml.com/use-case-diagram
 
-:Editor: as Admin
-(Create a map) as (Use)
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
 
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
 
+class Editor {
+  Name
+  Email
+  Position
+  Phone
+}
 
-Admin ---> (Use)
+class Mapa {
+  Nome
+  Tamanho
+}
 
-
-
-note right of (Use)
-The map must have a specific name and size
-
-end note
-
-
+Editor "1" -- "*" Mapa : creates
 
 @enduml

@@ -1,10 +1,34 @@
 @startuml
 'https://plantuml.com/use-case-diagram
 
-Actor Editor
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
 
-UseCase "Create scenario for a selected map" as (CreateScenario)
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
 
-Editor --> (CreateScenario)
+class Editor {
+  Name
+  Email
+  Position
+  Phone
+}
+
+class Map {
+  Reference
+  Description
+  Size
+  Name
+}
+
+class Scenario {
+  Description
+}
+
+Editor "*" -- "1" Map : Selects
+Editor "*" -- "1" Scenario : Creates
+Map "1" -- "*" Scenario : Contains
 
 @enduml
