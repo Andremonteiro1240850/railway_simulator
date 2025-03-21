@@ -1,0 +1,36 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Player" as Employee
+participant ":System" as System
+
+activate Employee
+
+    Employee -> System : asks to list all stations to verify the details of one of them
+    activate System
+
+        System --> Employee : shows task category list and asks to select one
+    deactivate System
+
+    Employee -> System : selects a task category
+    activate System
+
+        System --> Employee : requests data (i.e. station)
+    deactivate System
+
+    Employee -> System : types requested data
+    activate System
+
+        System --> Employee : shows all data and requests confirmation
+    deactivate System
+
+    Employee -> System : confirms data
+    activate System
+
+        System --> Employee : show existing building and demand/supply cargoes
+    deactivate System
+@enduml
