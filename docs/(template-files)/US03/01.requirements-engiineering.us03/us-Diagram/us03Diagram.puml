@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Editor" as Editor
+participant ":System" as System
+
+activate Editor
+
+    Editor -> System : Request to add a city
+        activate System
+
+    System -> Editor : Verify permission
+    deactivate System
+
+    Editor -> System : Select a position XY on the map
+        activate System
+
+    System --> Editor : Request city details (name, house blocks)
+        deactivate System
+
+    Editor -> System : Provide city details
+        activate System
+
+    System -> Editor : Validate city name (No special characters or digits)
+    System -> Editor : Assign house blocks (Manual or random)
+
+    System --> Editor : Show city information
+        deactivate System
+
+    Editor -> System : Confirm city creation
+        activate System
+
+    System --> Editor : Display operation success
+        deactivate System
+
+@enduml
