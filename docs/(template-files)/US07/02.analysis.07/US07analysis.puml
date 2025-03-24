@@ -1,25 +1,34 @@
 @startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+
 class Player {
-    +id
-    +name
+    id
+    name
 }
 
 class Station {
-    +id
-    +name
-    +location
+    id
+    name
+    location
 }
 
-entity Building {
-    +id
-    +type
-    +level
-    +cost
+class Building {
+    id
+    type
+    level
+    cost
 }
 
-entity Upgrade {
-    +timestamp
-    +status
+class Upgrade {
+    timestamp
+    status
 }
 
 Player -- "1" Upgrade : performs
