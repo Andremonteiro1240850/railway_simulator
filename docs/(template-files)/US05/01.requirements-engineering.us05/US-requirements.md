@@ -1,4 +1,4 @@
-# USXXX - YYY
+# US05 - Creating a Station
 
 _XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
 
@@ -8,20 +8,17 @@ _In this section, it is suggested to capture the requirement description and spe
 
 ### 1.1. User Story Description
 
-_Insert here the User Story as described by the client._
-
+As a Player, I want to build a station
 ### 1.2. Customer Specifications and Clarifications 
 
-_Insert here any related specification and/or clarification provided by the client together with **your interpretation**. When possible, provide a link to such specifications/clarifications._
-
+As the **PLAYER**, we should be able to build a Station type building in the map
 ### 1.3. Acceptance Criteria
 
-_Insert here the client acceptance criteria._
+AC1: Overbuilding is not possible
 
 ### 1.4. Found out Dependencies
 
-_Identify here any found out dependency to other US and/or requirements._
-
+Map Selected (US01, US02, US03)
 ### 1.5 Input and Output Data
 
 _Identify here the data to be inputted by the system actor as well as the output data that the system has/needs to present in order to properly support the actor actions. Regarding the inputted data, it is suggested to distinguish between typed data and selected data (e.g. from a list)_

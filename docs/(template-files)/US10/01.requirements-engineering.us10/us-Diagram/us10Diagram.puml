@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Product Owner" as PO
+participant ":System" as System
+
+activate PO
+
+    PO -> System : Request to create a cargo simulator
+        activate System
+
+    System -> PO : Verify railway network data
+    deactivate System
+
+    PO -> System : Configure simulation parameters
+        activate System
+
+    System --> PO : Request city and industry details
+        deactivate System
+
+    PO -> System : Provide city and industry details
+        activate System
+
+    System --> PO : Show simulation setup summary
+        deactivate System
+
+    PO -> System : Start simulation
+        activate System
+
+    System --> PO : Generate cargoes at stations
+    System --> PO : Display simulation progress
+        deactivate System
+
+
+
+@enduml

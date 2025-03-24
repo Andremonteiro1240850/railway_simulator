@@ -3,34 +3,48 @@ skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
-autonumber
+'left to right direction
 
-actor "Player" as Employee
-participant ":System" as System
+skinparam classAttributeIconSize 0
 
-activate Employee
+hide circle
+hide methods
 
-    Employee -> System : asks to upgrade a station
-    activate System
+'title Domain Model
 
-        System --> Employee : shows task category list and asks to select one
-    deactivate System
+class Organization {
+    name
+    vatNumber
+    website
+    phoneNumber
+    email
+}
 
-    Employee -> System : selects a task "upgrade"
-    activate System
+class Task {
+    reference
+    description
+    informalDescription
+    technicalDescription
+    duration
+    cost
+}
 
-        System --> Employee : requests data (i.e. building, cost)
-    deactivate System
+class TaskCategory {
+    description
+}
 
-    Employee -> System : types requested data
-    activate System
+class Employee {
+    name
+    email
+    position
+    phone
+}
 
-        System --> Employee : shows all data and requests confirmation
-    deactivate System
+Organization "1" - "*" Employee : has
+Organization "1" - "*" Task: owns
 
-    Employee -> System : confirms data
-    activate System
+Employee "1" -- "*" Task : creates
 
-        System --> Employee : displays operation success
-    deactivate System
+Task "*" - "1" TaskCategory: cataloged as
+
 @enduml

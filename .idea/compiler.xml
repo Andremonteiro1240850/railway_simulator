@@ -15,4 +15,7 @@
       <module name="project-template" options="-Xlint:all" />
     </option>
   </component>
+  <component name="TypeScriptCompiler">
+    <option name="useService" value="false" />
+  </component>
 </project>

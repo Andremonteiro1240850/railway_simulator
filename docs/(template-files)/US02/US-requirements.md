@@ -1,4 +1,4 @@
-# USXXX - YYY
+# US02 - Creating an Industry
 
 _XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
 
@@ -8,24 +8,20 @@ _In this section, it is suggested to capture the requirement description and spe
 
 ### 1.1. User Story Description
 
-_Insert here the User Story as described by the client._
-
+As an Editor, I want to add an industry in a position XY of
+the selected map
 ### 1.2. Customer Specifications and Clarifications 
 
-_Insert here any related specification and/or clarification provided by the client together with **your interpretation**. When possible, provide a link to such specifications/clarifications._
-
+As the editor, we should be able to create an industry type building in a part of the chosen map with the specified x and y position values
 ### 1.3. Acceptance Criteria
 
-_Insert here the client acceptance criteria._
-
+Unspecified
 ### 1.4. Found out Dependencies
 
-_Identify here any found out dependency to other US and/or requirements._
-
+Max X,Y values dependent on map size (US01)
 ### 1.5 Input and Output Data
-
-_Identify here the data to be inputted by the system actor as well as the output data that the system has/needs to present in order to properly support the actor actions. Regarding the inputted data, it is suggested to distinguish between typed data and selected data (e.g. from a list)_
-
+Input: Position values(X,Y), Industry description(Type)\
+Output: Display created industry
 ### 1.6. System Sequence Diagram (SSD)
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._

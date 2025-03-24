@@ -1,4 +1,4 @@
-# USXXX - YYY
+# US04 - Creating a Scenario
 
 _XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
 
@@ -8,24 +8,20 @@ _In this section, it is suggested to capture the requirement description and spe
 
 ### 1.1. User Story Description
 
-_Insert here the User Story as described by the client._
-
+As an Editor, I want to create a scenario for a selected map
 ### 1.2. Customer Specifications and Clarifications 
 
-_Insert here any related specification and/or clarification provided by the client together with **your interpretation**. When possible, provide a link to such specifications/clarifications._
-
+As the Editor, we should be able to create a scenario with a specific map and objectives
 ### 1.3. Acceptance Criteria
 
-_Insert here the client acceptance criteria._
-
+UNSPECIFIED
 ### 1.4. Found out Dependencies
 
-_Identify here any found out dependency to other US and/or requirements._
-
+Map Selected (US01,US02,US03)
 ### 1.5 Input and Output Data
 
-_Identify here the data to be inputted by the system actor as well as the output data that the system has/needs to present in order to properly support the actor actions. Regarding the inputted data, it is suggested to distinguish between typed data and selected data (e.g. from a list)_
-
+Input: Map, Objectives\
+Output: Show given info
 ### 1.6. System Sequence Diagram (SSD)
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
