@@ -34,7 +34,7 @@ activate Editor
     Editor -> System : Confirm city creation
         activate System
 
-    System --> Editor : Display operation success
+    System --> Editor : Display operation success and save
         deactivate System
 
 @enduml

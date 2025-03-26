@@ -25,7 +25,7 @@ activate Editor
     Editor -> System : Confirm map creation
         activate System
 
-    System --> Editor : Display operation success
+    System --> Editor : Display operation success and save map
         deactivate System
 
 @enduml
