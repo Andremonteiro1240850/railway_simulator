@@ -1,6 +1,7 @@
 # USXXX - YYY
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+US10 - As a Player, I want to assign a selected train to a route with a
+valid station and the respective list of cargoes to be picked up
 
 ## 2. Analysis
 

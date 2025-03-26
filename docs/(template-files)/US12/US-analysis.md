@@ -1,6 +1,6 @@
 # USXXX - YYY
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+US11 - As a Player, I want to list all trains.
 
 ## 2. Analysis
 

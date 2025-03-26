@@ -1,6 +1,6 @@
 # USXXX - YYY
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+As a Player, I want to upgrade a selected station with a building
 
 ## 2. Analysis
 

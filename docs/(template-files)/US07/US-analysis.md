@@ -1,7 +1,6 @@
 # USXXX - YYY
-
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
-
+As a Player, I want to list all the stations to select one to see its
+  details, including the existing building and the demand/supply cargoes.
 ## 2. Analysis
 
 ### 2.1. Relevant Domain Model Excerpt 
