@@ -1,7 +1,6 @@
 # USXXX - YYY
 
 As a Player, I want to build a station. 
-not possible
 
 ## 2. Analysis
 
