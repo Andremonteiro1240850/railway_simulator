@@ -6,11 +6,12 @@ _In this section, it is suggested to capture the requirement description and spe
 
 ### 1.1. User Story Description
 
-As an Editor, I want to create a map with a size and a name.
+As an Editor, I want to create a map with a size and a name
 
 ### 1.2. Customer Specifications and Clarifications 
 
 As the Editor, we should be able to create a custom map with the specified size and name.
+The system should validate the specifications
 ### 1.3. Acceptance Criteria
 
 Unspecified
@@ -26,11 +27,8 @@ Output: Map displayed
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![USXXX-SSD](svg/USXXX-SSD.svg)
+![US01-SSD](svg/us01Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
-_Use this section to capture other relevant information that is related with this US such as:  
-&nbsp; &nbsp; (i) special requirements;  
-&nbsp; &nbsp; (ii) data and/or technology variations;  
-&nbsp; &nbsp; (iii) how often this US is held._
+Default map size

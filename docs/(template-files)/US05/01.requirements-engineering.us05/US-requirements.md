@@ -21,13 +21,14 @@ AC1: Overbuilding is not possible
 Map Selected (US01, US02, US03)
 ### 1.5 Input and Output Data
 
-_Identify here the data to be inputted by the system actor as well as the output data that the system has/needs to present in order to properly support the actor actions. Regarding the inputted data, it is suggested to distinguish between typed data and selected data (e.g. from a list)_
+Input: Type of building, map\
+Output: map confirmation, building confirmation
 
 ### 1.6. System Sequence Diagram (SSD)
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![USXXX-SSD](svg/USXXX-SSD.svg)
+![US05-SSD](us05Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
