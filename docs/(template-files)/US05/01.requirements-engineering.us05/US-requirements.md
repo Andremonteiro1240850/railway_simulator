@@ -11,7 +11,7 @@ _In this section, it is suggested to capture the requirement description and spe
 As a Player, I want to build a station
 ### 1.2. Customer Specifications and Clarifications 
 
-As the **PLAYER**, we should be able to build a Station type building in the map
+As the **PLAYER**, we should be able to build a Station, choose type of building and name, and centre if is a statio
 ### 1.3. Acceptance Criteria
 
 AC1: Overbuilding is not possible
@@ -21,8 +21,8 @@ AC1: Overbuilding is not possible
 Map Selected (US01, US02, US03)
 ### 1.5 Input and Output Data
 
-Input: Type of building, map\
-Output: map confirmation, building confirmation
+Input: Type of building, map, centre, name\
+Output: map confirmation, building confirmation, building confirmation and name confirmation
 
 ### 1.6. System Sequence Diagram (SSD)
 
@@ -32,7 +32,5 @@ _Insert here a SSD depicting the envisioned Actor-System interactions and throug
 
 ### 1.7 Other Relevant Remarks
 
-_Use this section to capture other relevant information that is related with this US such as:  
-&nbsp; &nbsp; (i) special requirements;  
-&nbsp; &nbsp; (ii) data and/or technology variations;  
-&nbsp; &nbsp; (iii) how often this US is held._
+Building can be depot, terminal or station
+If is a station the player can choose a centre  (NE,SE,NW,SW), otherwise is the geometric centre

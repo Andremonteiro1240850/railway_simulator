@@ -19,10 +19,10 @@ activate Employee
     Employee -> System : select build category
     activate System
 
-        System --> Employee :  Request information (Location))
+        System --> Employee :  Request information (Location, type of building, name, centre)
     deactivate System
 
-    Employee -> System : Give location
+    Employee -> System : Give information
     activate System
 
         System --> Employee : shows all the information given
