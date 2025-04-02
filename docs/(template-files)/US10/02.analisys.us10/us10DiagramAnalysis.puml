@@ -16,7 +16,7 @@ class Organization {
     name
     vatNumber
     website
-    phoneNumber
+    phoneNumbe
     email
 }
 
