@@ -8,33 +8,34 @@ _In this section, it is suggested to capture the requirement description and spe
 
 ### 1.1. User Story Description
 
-_Insert here the User Story as described by the client._
+As a Player, I want to assign a selected train to a route with
+valid stations and the respective list of cargoes to be picked up in each
+station
+
 
 ### 1.2. Customer Specifications and Clarifications 
 
-_Insert here any related specification and/or clarification provided by the client together with **your interpretation**. When possible, provide a link to such specifications/clarifications._
+stations has to be valid 
 
 ### 1.3. Acceptance Criteria
 
-_Insert here the client acceptance criteria._
+unspecified
 
 ### 1.4. Found out Dependencies
 
-_Identify here any found out dependency to other US and/or requirements._
+us05(station)
 
 ### 1.5 Input and Output Data
 
-_Identify here the data to be inputted by the system actor as well as the output data that the system has/needs to present in order to properly support the actor actions. Regarding the inputted data, it is suggested to distinguish between typed data and selected data (e.g. from a list)_
+Input: train, rout, cargoe
+Output. confirm stations, check route, confirm route, confirm cargo
 
 ### 1.6. System Sequence Diagram (SSD)
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![USXXX-SSD](svg/USXXX-SSD.svg)
+![US10-SSD](us10Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
-_Use this section to capture other relevant information that is related with this US such as:  
-&nbsp; &nbsp; (i) special requirements;  
-&nbsp; &nbsp; (ii) data and/or technology variations;  
-&nbsp; &nbsp; (iii) how often this US is held._
+Stations should be valid to move the train to there route
