@@ -1,22 +1,46 @@
 @startuml
-'https://plantuml.com/use-case-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
 
-:Main Admin: as Admin
-(Use the application) as (Use)
+'left to right direction
 
-User -> (Start)
-User --> (Use)
+skinparam classAttributeIconSize 0
 
-Admin ---> (Use)
+hide circle
+hide methods
 
-note right of Admin : This is an example.
+'title Domain Model
 
-note right of (Use)
-A note can also
-be on several lines
-end note
+class Organization {
+    name
+    vatNumber
+    website
+    phoneNumber
+    email
+}
 
-note "This note is connected\nto several objects." as N2
-(Start) .. N2
-N2 .. (Use)
+class Task {
+    map
+    type of building
+    centre
+    name
+
+}
+
+
+
+class Player {
+    name
+    email
+    password
+}
+
+Organization "1" - "*" Player : has
+Organization "1" - "*" Task: owns
+
+Player "1" -- "*" Task : creates
+
+
+
 @enduml

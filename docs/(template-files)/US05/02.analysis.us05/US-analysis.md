@@ -5,10 +5,10 @@ As a Player, I want to build a station.
 ## 2. Analysis
 
 ### 2.1. Relevant Domain Model Excerpt 
-_In this section, it is suggested to present an excerpt of the domain model that is seen as relevant to fulfill this requirement._ 
+_In this section, it is suggested to present an excerpt of the domain model that is seen as relevant to fulfill this requirement._
 
-![USXXX-DM](svg/USXXX-DM.svg)
+![US05-DM](us05DiagramAnalysis.svg)
 
 ### 2.2. Other Remarks
 
-_Use this section to capture some aditional notes/remarks that must be taken into consideration into the design activity. In some case, it might be usefull to add other analysis artifacts (e.g. activity or state diagrams)._
+Player have to choose the centre for the station (only)

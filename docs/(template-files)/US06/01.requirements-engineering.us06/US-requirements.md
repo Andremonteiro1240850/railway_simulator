@@ -25,7 +25,7 @@ Build a station (US05)
 ### 1.5 Input and Output Data
 
 Input: Select a station, choose a building\
-Output: Station upgraded
+Output: Gives date where the station will be upgraded, Station upgraded
 
 ### 1.6. System Sequence Diagram (SSD)
 
