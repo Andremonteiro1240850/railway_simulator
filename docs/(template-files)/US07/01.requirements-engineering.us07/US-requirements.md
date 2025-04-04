@@ -27,7 +27,7 @@ us06(upgrade station)
 
 ### 1.5 Input and Output Data
 
-Input: Specified station
+Input: List all stations, Specified one station
 Output: Station information
 
 ### 1.6. System Sequence Diagram (SSD)

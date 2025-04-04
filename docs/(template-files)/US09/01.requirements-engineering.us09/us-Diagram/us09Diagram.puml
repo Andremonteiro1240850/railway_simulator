@@ -10,16 +10,10 @@ participant ":System" as System
 
 activate Employee
 
-    Employee -> System : asks to buy a train
+    Employee -> System : asks to buy a locomotive
     activate System
 
-        System --> Employee : shows task category list and asks to select one
-    deactivate System
-
-    Employee -> System : selects a task category (shop)
-    activate System
-
-        System --> Employee : requests data (i.e. train, price, current date)
+        System --> Employee : shows a list with all locomotive and requests data (type of locomotive, locomotive)
     deactivate System
 
     Employee -> System : types requested data
