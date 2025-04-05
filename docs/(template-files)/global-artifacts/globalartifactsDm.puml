@@ -1,0 +1,89 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
+
+'title Global Artifacts - Projeto Integrador
+
+class VisionDocument {
+    objectives
+    stakeholders
+    funcionalidades
+    restricoes
+}
+
+class UserStory {
+    numero
+    descrição
+    restricoes
+    criterios_adicionais
+}
+
+class SRS {
+    requisitosFuncionais
+    requisitosNaoFuncionais
+    diagramasCasoUso
+    glossario
+}
+
+class ArchitectureDesign {
+    arquiteturaLogica
+    arquiteturaFisica
+    diagramasCDeSD
+    padroes
+}
+
+class Implementation {
+    codigo
+    estrutura
+    dependencias
+}
+
+class TestPlan {
+    estrategiaDeTeste
+    criteriosAceitacao
+    coberturaFuncional
+}
+
+class TestReport {
+    resultadosTestes
+    erros
+    conclusoes
+}
+
+class UserManual {
+    instrucaoDeUtilizacao
+    funcionalidades
+    FAQ
+}
+
+class FinalReport {
+    resumo
+    globalArtifacts
+    aprendizagem
+    dificuldades
+    referencias
+}
+
+' Relações entre artefactos
+
+VisionDocument --> UserStory : define >
+UserStory --> SRS : detailed >
+SRS --> ArchitectureDesign : specified >
+ArchitectureDesign --> Implementation : implement >
+Implementation --> TestPlan : suport >
+TestPlan --> TestReport : origin >
+UserStory --> TestPlan : makes >
+Implementation --> UserManual : documented >
+VisionDocument --> FinalReport : inclued >
+SRS --> FinalReport
+ArchitectureDesign --> FinalReport
+Implementation --> FinalReport
+TestPlan --> FinalReport
+TestReport --> FinalReport
+UserManual --> FinalReport
+
+@enduml
