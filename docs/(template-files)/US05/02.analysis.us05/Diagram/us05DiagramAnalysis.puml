@@ -21,30 +21,26 @@ class Organization {
 }
 
 class Task {
-    reference
-    description
-    informalDescription
-    technicalDescription
-    duration
-    cost
+    map
+    type of building
+    centre
+    name
+
 }
 
-class TaskCategory {
-    description
-}
 
-class Employee {
+
+class Player {
     name
     email
-    position
-    phone
+    password
 }
 
-Organization "1" - "*" Employee : has
+Organization "1" - "*" Player : has
 Organization "1" - "*" Task: owns
 
-Employee "1" -- "*" Task : creates
+Player "1" -- "*" Task : creates
 
-Task "*" - "1" TaskCategory: cataloged as
+
 
 @enduml

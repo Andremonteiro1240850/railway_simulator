@@ -9,7 +9,7 @@ _Specifies functionalities that:
 Common functionalities across multiple use cases (US/UC): User authentication and authorization; Logging and monitoring systems Notification services (email, SMS, push notifications); Data validation and error handling mechanisms.
 
 Functionalities not directly related to US/UC: System audit logs for tracking user activity; Role-based access control (RBAC) enforcement; Report generation tools; Encryption and secure data storage mechanisms.
-## Usability 
+## Usability
 
 _Evaluates the user interface. It has several subcategories,
 among them: error prevention; interface aesthetics and design; help and
@@ -100,7 +100,7 @@ The software has to store maps, industries, cities, trains, and their states, wh
 
 Improvement Suggestion: Use tools like VisualVM or JProfiler to monitor memory usage. Also, use techniques like data compression and object pooling to use memory more efficiently.
 
-- CPU Usage 
+- CPU Usage
 
 The simulator is constantly updating train movements, cargo transactions, and network statistics, which can result in high CPU usage. The document doesn't discuss optimizing how tasks are divided among different threads, so CPU-heavy tasks might slow down the main operations.
 
@@ -170,7 +170,7 @@ The project does not mention any performance limits, such as the maximum number 
 
 _Specifies or constraints the system design process. Examples may include: programming languages, software process, mandatory standards/patterns, use of development tools, class library, etc._
 
-(The Design Constraints require that the system must be developed in Java, following an iterative and incremental approach with Agile SCRUM, with four-week Sprints. Implementation must adhere to Test-Driven Development (TDD) and Object-Oriented (OO) principles, with scalability and maintainability. Coding standards, such as CamelCase for naming conventions, must be followed, and Javadoc must be used for documentation. The development process requires JUnit 5 for unit testing and the JaCoCo plugin for test coverage reporting. Version control must use GitHub. Object serialization must be used for data persistence. Authentication must include passwords consisting of seven alphanumeric characters, with three being capital letters and two being digits. Documentation must be written in English, and images or figures, if any, must be kept in SVG format. )
+(fill in here )
 
 ### Implementation Constraints
 
@@ -178,17 +178,17 @@ _Specifies or constraints the code or construction of a system such
 such as: mandatory standards/patterns, implementation languages,
 database integrity, resource limits, operating system._
 
-(The solution will follow the concepts of Object-Oriented Programming (OOP), using Test-Driven Development (TDD) with JUnit 5 for unit testing and JaCoCo for test coverage. The implementation should be done in Java, CamelCase for naming conventions, and Javadoc for comments. Data integrity will be safeguarded by business rule validation and object serialization to achieve persistence across runs. The system design should facilitate ease in maintenance and expansion as well as offer maximum use of resources. There are no specific operating system constraints, though the software must be functional on Windows, macOS, and Linux.)
+(fill in here )
 
 ### Interface Constraints
 
 _Specifies or constraints the features inherent to the interaction of the
 system being developed with other external systems._
 
-(Interface Constraints of the railway simulation system specify that it must offer support for data import/export in standard formats (JSON, XML, CSV) and integration with GIS software and RESTful APIs. It should have password-protected access with a strong password, with editing access to maps and scenarios restricted to authorized personnel only. The graphical interface will be topological only, with simple interaction. The system must handle large volumes of data with controlled execution times. Security must be ensured, protecting data and implementing security standards. It will be implemented in Java, with support for Windows, macOS, and Linux, on a modular architecture basis for future expansion.)
+(fill in here )
 
 ### Physical Constraints
 
 _Specifies a limitation or physical requirement regarding the hardware used to house the system, as for example: material, shape, size or weight._
 
-(The Physical Constraints for the system are determined by its development and execution environment. The application has to be written in Java and support Windows, macOS, and Linux to achieve cross-platform compatibility. As the system is meant for simulating railway networks, it should be able to manage huge datasets of stations, railway lines, and trains without utilizing excessive memory or CPU. The software should be optimized for typical computing hardware, keeping in view common development environments utilized by professionals and students. There are no shape, weight, or material hardware limitations because the system will be software-only. Nevertheless, object serialization will be used to enable data persistence between executions, reducing the reliance on external databases as much as possible. The system's graphical interface will be topological representation-based, without heavy rendering processes, to ensure smooth execution on a very wide range of devices.)
+(fill in here )

@@ -8,7 +8,8 @@ _In this section, it is suggested to capture the requirement description and spe
 
 ### 1.1. User Story Description
 
-_Insert here the User Story as described by the client._
+As a Player, I want to list all the stations to select one to see its
+details, including the existing building and the demand/supply cargoes.
 
 ### 1.2. Customer Specifications and Clarifications 
 
@@ -16,25 +17,25 @@ _Insert here any related specification and/or clarification provided by the clie
 
 ### 1.3. Acceptance Criteria
 
-_Insert here the client acceptance criteria._
+unspecified
 
 ### 1.4. Found out Dependencies
 
-_Identify here any found out dependency to other US and/or requirements._
+us05(station)
+us06(upgrade station)
+
 
 ### 1.5 Input and Output Data
 
-_Identify here the data to be inputted by the system actor as well as the output data that the system has/needs to present in order to properly support the actor actions. Regarding the inputted data, it is suggested to distinguish between typed data and selected data (e.g. from a list)_
+Input: List all stations, Specified one station
+Output: Station information
 
 ### 1.6. System Sequence Diagram (SSD)
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![USXXX-SSD](svg/USXXX-SSD.svg)
+![US07-SSD](us07Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
-_Use this section to capture other relevant information that is related with this US such as:  
-&nbsp; &nbsp; (i) special requirements;  
-&nbsp; &nbsp; (ii) data and/or technology variations;  
-&nbsp; &nbsp; (iii) how often this US is held._
+none

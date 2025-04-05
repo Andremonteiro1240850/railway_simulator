@@ -20,17 +20,15 @@ Unspecified
 
 Max X,Y values dependent on map size (US01)
 ### 1.5 Input and Output Data
+
 Input: Position values(X,Y), Industry description(Type)\
 Output: Display created industry
 ### 1.6. System Sequence Diagram (SSD)
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![USXXX-SSD](svg/USXXX-SSD.svg)
+![US02-SSD](us02Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
-_Use this section to capture other relevant information that is related with this US such as:  
-&nbsp; &nbsp; (i) special requirements;  
-&nbsp; &nbsp; (ii) data and/or technology variations;  
-&nbsp; &nbsp; (iii) how often this US is held._
+System should give a modification historic

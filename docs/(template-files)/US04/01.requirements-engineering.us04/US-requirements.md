@@ -26,11 +26,8 @@ Output: Show given info
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![USXXX-SSD](svg/USXXX-SSD.svg)
+![US04-SSD](us04Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
-_Use this section to capture other relevant information that is related with this US such as:  
-&nbsp; &nbsp; (i) special requirements;  
-&nbsp; &nbsp; (ii) data and/or technology variations;  
-&nbsp; &nbsp; (iii) how often this US is held._
+Objects should be movable

@@ -10,25 +10,27 @@ participant ":System" as System
 
 activate Employee
 
-    Employee -> System : asks to buy a train
+    Employee -> System : asks to assign a selected train to a route
     activate System
 
-        System --> Employee : displays list of available locomotives (filtered by scenario and date)
+        System --> Employee : shows task category list and asks to select one
     deactivate System
 
-    Employee -> System : selects a train category (shop)
+    Employee -> System : selects a task category
     activate System
 
-        System --> Employee : requests train information (type, price, availability)
+        System --> Employee : requests data (Train, route, list of cargoe)
     deactivate System
 
-    Employee -> System : confirms purchase
+    Employee -> System : types requested data
     activate System
 
-        System --> Employee : generates unique ID for the locomotive
+        System --> Employee : shows all data and requests confirmation
     deactivate System
 
+    Employee -> System : confirms data
+    activate System
 
-        System --> Employee : confirms purchase success
+        System --> Employee : displays operation success
     deactivate System
 @enduml
