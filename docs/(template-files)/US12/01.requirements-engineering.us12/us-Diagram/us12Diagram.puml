@@ -10,29 +10,28 @@ participant ":System" as System
 
 activate PO
 
-    PO -> System : Request to create a cargo simulator
+    PO -> System : select scenario and map to simulate
         activate System
 
-    System -> PO : Verify railway network data
+    System -> PO :  start simulator with selected scenario
     deactivate System
 
-    PO -> System : Configure simulation parameters
+    PO -> System : confirms the simulator is ready
         activate System
 
-    System --> PO : Request city and industry details
+    System --> PO : start simulation
         deactivate System
 
-    PO -> System : Provide city and industry details
+   activate ":System"
+        System --> System : cargo based on industries and cargo
+        System --> System : schedule cargo generation ( fixed or random frequency)
+        System --> System : store cargo at stations (limit: 24 per station)
+   ==Pause Flow==
+
+    PO -> System : pause simulation (scenario-specific)
         activate System
 
-    System --> PO : Show simulation setup summary
-        deactivate System
-
-    PO -> System : Start simulation
-        activate System
-
-    System --> PO : Generate cargoes at stations
-    System --> PO : Display simulation progress
+    System --> PO : confirms pause
         deactivate System
 
 

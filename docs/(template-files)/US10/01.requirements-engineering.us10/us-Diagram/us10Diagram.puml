@@ -13,24 +13,32 @@ activate Employee
     Employee -> System : asks to assign a selected train to a route
     activate System
 
-        System --> Employee : shows task category list and asks to select one
+        System --> Employee : shows list avilable and asks to select one
     deactivate System
 
-    Employee -> System : selects a task category
+    Employee -> System : selects a train
     activate System
 
-        System --> Employee : requests data (Train, route, list of cargoe)
+        System --> Employee : shows list avilable station
     deactivate System
 
-    Employee -> System : types requested data
+    Employee -> System : define the route (order list of station)
     activate System
 
-        System --> Employee : shows all data and requests confirmation
+        System --> System : shecks connectivity between consecutive stations
     deactivate System
 
-    Employee -> System : confirms data
+  alt invalid path between two stations
+        System --> Player :  warns player to crate a route and asks to confirm (cancel or proceed)
+        Player -> System :  chooses to continue or cancel
+    end
+
+        System --> Employee : ask for cargo list per station
+    deactivate System
+
+    Employee -> System : assigns cargo types (multiple cargo types allowed)
     activate System
 
-        System --> Employee : displays operation success
-    deactivate System
+    System--> Employee :confirms successful route and cargo assigment
+
 @enduml
