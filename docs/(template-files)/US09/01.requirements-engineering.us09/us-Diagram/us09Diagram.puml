@@ -13,24 +13,26 @@ activate Employee
     Employee -> System : asks to buy a train
     activate System
 
-        System --> Employee : shows task category list and asks to select one
+        System --> Employee : displays list of available locomotives (filtered by scenario and date)
     deactivate System
 
-    Employee -> System : selects a task category (shop)
+    Employee -> System : selects a train category (shop)
     activate System
 
-        System --> Employee : requests data (i.e. train, price, current date)
+        System --> Employee : requests train information (type, price, availability)
     deactivate System
 
-    Employee -> System : types requested data
+    Employee -> System : confirms purchase
     activate System
 
-        System --> Employee : shows all data and requests confirmation
+        System --> Employee : generates unique ID for the locomotive
     deactivate System
 
-    Employee -> System : confirms data
-    activate System
+    note right of System
+   There is no logical limit to the number of locomotives,\n
+only the available memory
+    end note
 
-        System --> Employee : displays operation success
+        System --> Employee : confirms purchase success
     deactivate System
 @enduml
