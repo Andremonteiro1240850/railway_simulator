@@ -1,0 +1,40 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+    class Editor {
+        ID
+    }
+
+    class Map {
+        industries
+    }
+
+    class Industry {
+         IndustryType
+    }
+
+    class Position {
+        x
+        y
+    }
+
+    class IndustryType {
+        Primary
+        Transforming
+        Mixed
+    }
+
+    Editor --> Map : "select"
+    Map "1" --> "*" Industry : "have"
+    Industry "1" --> "1" Position : "have"
+    Industry "1" --> "1" IndustryType : "have"
+@enduml
