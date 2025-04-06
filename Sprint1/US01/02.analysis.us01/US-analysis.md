@@ -1,6 +1,4 @@
-# USXXX - YYY
-
-US01 - As an Editor, I want to create a map with a size and a name.
+# US01 - As an Editor, I want to create a map with a size and a name.
 
 ## 2. Analysis
 

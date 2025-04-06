@@ -1,6 +1,4 @@
-# USXXX - YYY
-
-As a Player, I want to build a station. 
+# US05 - As a Player, I want to build a station. 
 
 ## 2. Analysis
 

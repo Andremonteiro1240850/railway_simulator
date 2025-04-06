@@ -1,7 +1,4 @@
-# USXXX - YYY
-
-US03 - As an Editor, I want to add a city in a position XY of the selected
-map, with a name and a positive number of house blocks.
+# US03 - As an Editor, I want to add a city in a position XY of the selected map, with a name and a positive number of house blocks.
 
 ## 2. Analysis
 

@@ -1,6 +1,4 @@
-# USXXX - YYY
-
-As an Editor, I want to create a scenario for a selected map.
+# US04 - As an Editor, I want to create a scenario for a selected map.
 
 ## 2. Analysis
 

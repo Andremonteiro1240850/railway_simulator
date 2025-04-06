@@ -1,7 +1,4 @@
-# USXXX - YYY
-
-US02 - As an Editor, I want to add an industry in a position XY of
-the selected map.
+# US02 - As an Editor, I want to add an industry in a position XY of the selected map.
 
 ## 2. Analysis
 

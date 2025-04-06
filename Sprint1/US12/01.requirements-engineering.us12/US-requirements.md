@@ -1,6 +1,6 @@
-# USXXX - YYY
+# US12-As a Product Owner, I want to create a simulator that generates cargoes at current stations, automatically, considering the cities andindustries that the railway network serves.
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+
 
 ## 1. Requirements Engineering
 
@@ -46,11 +46,8 @@ input: scenario and map selection, start simulation, scenario confiruraton data,
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![USXXX-SSD](svg/USXXX-SSD.svg)
+![USXXX-SSD](C:\Users\andre\IdeaProjects\sem2-pi-24.25-g045-repo\Sprint1\US12\01.requirements-engineering.us12\us-Diagram\us12Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
-_Use this section to capture other relevant information that is related with this US such as:  
-&nbsp; &nbsp; (i) special requirements;  
-&nbsp; &nbsp; (ii) data and/or technology variations;  
-&nbsp; &nbsp; (iii) how often this US is held._
+none

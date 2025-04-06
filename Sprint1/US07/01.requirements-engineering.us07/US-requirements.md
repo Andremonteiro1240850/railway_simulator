@@ -1,6 +1,7 @@
-# USXXX - YYY
+# US07 - As a Player, I want to list all the stations to select one to see its
+details, including the existing building and the demand/supply cargoes.
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+
 
 ## 1. Requirements Engineering
 
@@ -13,7 +14,8 @@ details, including the existing building and the demand/supply cargoes.
 
 ### 1.2. Customer Specifications and Clarifications 
 
-_Insert here any related specification and/or clarification provided by the client together with **your interpretation**. When possible, provide a link to such specifications/clarifications._
+Name and a summary of available cargos to be collected and the ones that are demanded are information that should be visible directly in the list
+
 
 ### 1.3. Acceptance Criteria
 

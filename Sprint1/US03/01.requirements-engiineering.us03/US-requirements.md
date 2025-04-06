@@ -1,6 +1,5 @@
 # US03 - Creating a city
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
 
 ## 1. Requirements Engineering
 

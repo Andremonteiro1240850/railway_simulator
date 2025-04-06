@@ -1,6 +1,6 @@
-# USXXX - YYY
+# US10 - As a Player, I want to assign a selected train to a route withvalid stations and the respective list of cargoes to be picked up in eachstation
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+
 
 ## 1. Requirements Engineering
 
@@ -39,7 +39,7 @@ Output. confirm stations, check route, confirm route, confirm cargo
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![US10-SSD](us10Diagram.svg)
+![US10-SSD](C:\Users\andre\IdeaProjects\sem2-pi-24.25-g045-repo\Sprint1\US10\01.requirements-engineering.us10\us-Diagram\us10Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 

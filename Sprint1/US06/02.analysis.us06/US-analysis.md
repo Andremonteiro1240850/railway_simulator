@@ -1,6 +1,4 @@
-# USXXX - YYY
-
-As a Player, I want to upgrade a selected station with a building
+# US06 - As a Player, I want to upgrade a selected station with a building
 
 ## 2. Analysis
 
