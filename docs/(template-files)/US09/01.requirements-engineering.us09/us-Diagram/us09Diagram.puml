@@ -10,26 +10,26 @@ participant ":System" as System
 
 activate Employee
 
-    Employee -> System : requests to buy a train
+    Employee -> System : requests to buy a locomotive
     activate System
 
         System --> Employee : displays list of avaible locomotives(filtred by scenario and date
     deactivate System
 
-    Employee -> System : selects a train(shop)
+    Employee -> System : selects a locomotive(shop)
     activate System
 
-        System --> Employee : shows information about train (i.e. type, price, current date)
+        System --> Employee : shows information about locomotive (i.e. type, price, current date)
     deactivate System
 
     Employee -> System : confirms purchsase
     activate System
 
-        System --> Employee : generate unique id for train
+        System --> Employee : generate unique id for locomotive
     deactivate System
 
 note right of System
-There is no logical limit to the number of locomotives,\n
+There is no logical limit to the number of locomotives,
  only the available memorySystem"
 end note
 

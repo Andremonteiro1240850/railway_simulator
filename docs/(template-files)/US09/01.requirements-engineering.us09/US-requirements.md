@@ -12,8 +12,10 @@ As a Player, I want to buy a locomotive
 
 ### 1.2. Customer Specifications and Clarifications 
 
-Locomotives can be of steam, diesel and electricity.
-Electric Locomotives need electrified lines
+A player can buy the same type of locomotive, but these locomotives  have unique identification (like serial number).
+A player can hava an unlimited number of locomotives, just need to have available memory.
+
+
 
 ### 1.3. Acceptance Criteria
 
@@ -22,12 +24,13 @@ locomotives for the scenario as well as a current date.
 
 ### 1.4. Found out Dependencies
 
-us08(build railway lines)
+The implementation of this US is only possible if there is already a scenario created with locomotives defined as available and rules on temporal availability.
+Therefore, it depends on US 04.
 
 ### 1.5 Input and Output Data
 
-Input: specified locomotive
-Output: locomotive bought
+Input: player purchase request, selct a locomotiva, purchase confirmation
+Output: locomotives avaible,select locomotive information, locomotive id, purchase confirmation message
 
 ### 1.6. System Sequence Diagram (SSD)
 
@@ -39,3 +42,4 @@ _Insert here a SSD depicting the envisioned Actor-System interactions and throug
 
 a train is not a loocomotive ( train is a locomotive and the carriage)
 locomotives can be of steam, diesel or electricity
+Electric Locomotives need electrified lines

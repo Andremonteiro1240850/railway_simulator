@@ -1,32 +1,56 @@
 @startuml
-skinparam monochrome true
-skinparam packageStyle rectangle
-skinparam shadowing false
-
-'left to right direction
-
 skinparam classAttributeIconSize 0
+skinparam classFontStyle plain
+skinparam shadowing false
+skinparam linetype ortho
 
 hide circle
-hide methods
 
-'title Domain Model
+class Player  {
+  +name
+  +email
+}
 
-class BuyLocomotive {
-    locomotive
+class Scenario {
+  +name
+  +currentDate
+}
+
+class Locomotive {
+  +id
+  +type
+  +price
+  +availableFrom
+  +availableUntil
+}
+
+class Purchase {
+  +timestamp
+  +status
+  +price
+}
+
+class Inventory {
+  +list of locomotives
 
 }
 
-
-class Player {
-    name
-    email
-    password
+class Date {
+  +day
+  +month
+  +year
 }
 
+Player "1" --> "1" Scenario : plays in
+Scenario "1" --> "*" Locomotive : provides
+Scenario --> Date : uses
+
+Player "1" --> "1" Inventory : has
 
 
-Player "1" -- "*" BuyLocomotive : creates
+Player --> Purchase : makes
+Purchase --> Locomotive : involves
+Purchase --> Date : on
 
 
 @enduml
