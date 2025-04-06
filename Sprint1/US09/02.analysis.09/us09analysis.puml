@@ -1,0 +1,56 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam classFontStyle plain
+skinparam shadowing false
+skinparam linetype ortho
+
+hide circle
+
+class Player  {
+  name
+  email
+}
+
+class Scenario {
+  name
+  currentDate
+}
+
+class Locomotive {
+  id
+  type
+  price
+  availableFrom
+  availableUntil
+}
+
+class Purchase {
+  timestamp
+  status
+  price
+}
+
+class Inventory {
+  listOfLocomotives
+
+}
+
+class Date {
+  day
+  month
+  year
+}
+
+Player "1" --> "1" Scenario : plays in
+Scenario "1" --> "*" Locomotive : provides
+Scenario --> Date : uses
+
+Player "1" --> "1" Inventory : has
+
+
+Player --> Purchase : makes
+Purchase --> Locomotive : involves
+Purchase --> Date : on
+
+
+@enduml
