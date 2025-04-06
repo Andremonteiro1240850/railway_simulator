@@ -15,15 +15,20 @@ station
 
 ### 1.2. Customer Specifications and Clarifications 
 
-stations has to be valid 
-
+If there is no path between any pair of consective points of the route, the player should be warned, then the player can opt between buy or not a line..
+Multiple cargo types can be assigned to the same train.
+A route don´t have a limit of stations that can be assigned.
 ### 1.3. Acceptance Criteria
 
 unspecified
 
 ### 1.4. Found out Dependencies
 
-us05(station)
+US05 – Building stations: to create a route with valid stations, those stations must already exist on the map.
+
+US08 – Building a rail line between stations: there must be  connections between stations for the train to travel along the route.
+
+US09 – Purchasing a locomotive: before assigning a train to a route, the train (locomotive + cargo) must have been purchased.
 
 ### 1.5 Input and Output Data
 

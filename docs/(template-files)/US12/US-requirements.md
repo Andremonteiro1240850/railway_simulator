@@ -8,24 +8,40 @@ _In this section, it is suggested to capture the requirement description and spe
 
 ### 1.1. User Story Description
 
-_Insert here the User Story as described by the client._
+As a Product Owner, I want to create a simulator that generates cargoes at current stations, automatically, considering the cities and
+industries that the railway network serves.
 
 ### 1.2. Customer Specifications and Clarifications 
 
-_Insert here any related specification and/or clarification provided by the client together with **your interpretation**. When possible, provide a link to such specifications/clarifications._
+The user have customization options for cargo generation rules in the edition of the scenario.
+the limit to cargo storage is 24.
 
 ### 1.3. Acceptance Criteria
 
-_Insert here the client acceptance criteria._
+This simulator should provide options for start/pause.
 
 ### 1.4. Found out Dependencies
 
-_Identify here any found out dependency to other US and/or requirements._
+US02 - Add industry to the map.
+
+Cargo is based on the industries present on the map, so they must exist.
+
+US03 - Add city to the map.
+
+Cities generate/start consuming certain types of cargo.
+
+US04 - Create scenario for the selected map.
+
+The frequency of cargo generation (fixed or random) and the types of locomotion available come from the scenario definitions.
+
+US05 - Building stations.
+
+Cargo generation only occurs in cities/industries that have stations, so they must have been previously created.
 
 ### 1.5 Input and Output Data
+input: scenario and map selection, start simulation, scenario confiruraton data, pause simulation. 
 
-_Identify here the data to be inputted by the system actor as well as the output data that the system has/needs to present in order to properly support the actor actions. Regarding the inputted data, it is suggested to distinguish between typed data and selected data (e.g. from a list)_
-
+ output: simulator readiness confirmation, automatic cargo generation, cargo stored at stations, simulation pause confirmation
 ### 1.6. System Sequence Diagram (SSD)
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._

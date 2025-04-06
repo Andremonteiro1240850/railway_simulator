@@ -3,40 +3,56 @@ skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
-'left to right direction
+skinparam classAttributeIconSize 0
+hide circle
+hide methods
 
+@startuml
+'left to right direction
 skinparam classAttributeIconSize 0
 
 hide circle
 hide methods
 
-'title Domain Model
+class Player {
+name
+email
+password
+}
 
-class Organization {
-    name
-    vatNumber
-    website
-    phoneNumbe
-    email
+class Train {
+id
+type
+}
+
+class Route {
+id
+name
+}
+
+class Station {
+name
+location
+}
+
+class Cargo {
+type
+quantity
 }
 
 class TrainToRoute {
-    train
-    route
-    cargoe
+train
+rout
++assignCargo()
 }
-
-
-class Player {
-    name
-    email
-    password
-}
-
-Organization "1" - "*" Player : has
-Organization "1" - "*" TrainToRoute: owns
 
 Player "1" -- "*" TrainToRoute : creates
+Train "1" -- "*" TrainToRoute : assigned
+Route "1" -- "*" TrainToRoute : defines
 
+Route "1" -- "*" Station : has
+Station "1" -- "*" Cargo : provides
+TrainToRoute "1" -- "*" Cargo : carries
 
+@enduml
 @enduml
