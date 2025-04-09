@@ -14,7 +14,9 @@ As the Editor, we should be able to create a custom map with the specified size 
 The system should validate the specifications
 ### 1.3. Acceptance Criteria
 
-Unspecified
+The maps dimensions are positive integers.
+Map name should be a valid file name.
+
 ### 1.4. Found out Dependencies
 
 _Identify here any found out dependency to other US and/or requirements._
