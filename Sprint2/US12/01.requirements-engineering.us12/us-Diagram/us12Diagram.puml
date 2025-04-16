@@ -1,0 +1,39 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Product Owner" as PO
+participant ":System" as System
+
+activate PO
+
+    PO -> System : select scenario and map to simulate
+        activate System
+
+    System -> PO :  start simulator with selected scenario
+    deactivate System
+
+    PO -> System : confirms the simulator is ready
+        activate System
+
+    System --> PO : start simulation
+        deactivate System
+
+   activate ":System"
+        System --> System : cargo based on industries and cargo
+        System --> System : schedule cargo generation ( fixed or random frequency)
+        System --> System : store cargo at stations (limit: 24 per station)
+   ==Pause Flow==
+
+    PO -> System : pause simulation (scenario-specific)
+        activate System
+
+    System --> PO : confirms pause
+        deactivate System
+
+
+
+@enduml
