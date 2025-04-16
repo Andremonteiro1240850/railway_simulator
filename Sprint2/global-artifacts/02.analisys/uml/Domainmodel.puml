@@ -236,7 +236,7 @@ hide methods
     Industry --> Transform: "can be"
     Building --> Silo: "can be""
     City --> Station: "have"
-    Scenario --> Train: "create""
+    Scenario --> Train: "create"
     Scenario --> Inventory: "have"
     Scenario --> Locomotives: "need"
     Station --> Position: "have"
