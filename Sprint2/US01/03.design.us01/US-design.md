@@ -73,4 +73,6 @@ This final diagram shows how the result of the operation is communicated back to
 ![US01-SD-partial-feedback](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-feedback.svg)
 
 ## 3.3. Class Diagram (CD)
+This diagram shows the main software classes involved in the realization of this user story, including their relationships, attributes, and main responsibilities.
+
 ![US01-CD-](/Sprint2/US01/03.design.us01/svg/US01-CD.svg)
