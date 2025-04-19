@@ -40,9 +40,10 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 ## 3.2. Sequence Diagram (SD)
 
-_In this section, it is suggested to present an UML dynamic view representing the sequence of interactions between software objects that allows to fulfill the requirements._
+### Full Diagram
+This diagram shows the complete sequence of interactions between the classes involved in the realization of this user story.\
 
-![US01-SD](svg/USXXX-SD.svg)
+![US01-SD](\Sprint2\US01\03.design.us01\svg\US01-SD-full.svg)
 
 ### Split Diagrams
 The following diagrams show the same sequence of interactions between the classes involved in the realization of this user story, but split into partial diagrams to better illustrate the interactions between the classes.
@@ -51,12 +52,12 @@ They use Interaction Occurrence (a.k.a. Interaction Use) and reflect different l
 
 #### Input & Validation Phase
 This diagram shows how the user starts the use case and inputs map data, which is then validated by the controller.
-![US01-SD-partial-input-validation](Sprint2/US01/03.design.us01/svg/US01-SD-partial-input-validation.svg)
 
+![US01-SD-partial-input-validation](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-input-validation.svg)
+
+#### Get User
+This diagram shows how the controller retrieves the current authenticated user from the session.
+
+![US01-SD-partia-get-user](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-get-user.svg)
 ## 3.3. Class Diagram (CD)
-
-_In this section, it is suggested to present an UML static view representing the main related software classes that are involved in fulfilling the requirements as well as their relations, attributes and methods._\
-
-### Full Diagram
-This diagram shows the complete sequence of interactions between the classes involved in the realization of this user story.\
-![US01-CD-](Sprint2/US01/03.design.us01/svg/US01-SD-full.svg)
+![US01-CD-](/Sprint2/US01/03.design.us01/svg/US01-CD.svg)

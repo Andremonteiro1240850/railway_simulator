@@ -29,7 +29,7 @@ Output: Map displayed
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![US01-SSD](svg/us01Diagram.svg)
+![US01-SSD](/Sprint1/US01/01.requirements-engineering.us01/us-Diagram/us01Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
