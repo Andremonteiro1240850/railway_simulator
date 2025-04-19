@@ -10,6 +10,7 @@ skinparam classAttributeIconSize 0
 hide circle
 hide methods
 
+
     class Editor {
         ID
     }
@@ -20,5 +21,6 @@ hide methods
         height
     }
 
-    Editor --> Map : "creates"
+
+    Editor --> Map : "Creates"
 @enduml

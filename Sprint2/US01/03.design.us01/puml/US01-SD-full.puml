@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+' Editor inicia o caso de uso
+Editor -> CreateMapUI : startCreateMap()
+activate CreateMapUI
+
+' Editor insere os dados do mapa (nome e dimensões)
+Editor -> CreateMapUI : enterMapData(name, width, height)
+
+' UI envia os dados ao controller para validação
+CreateMapUI -> CreateMapController : validateInput(name, width, height)
+activate CreateMapController
+
+' Controller executa validações locais
+CreateMapController -> CreateMapController : validateName()
+CreateMapController -> CreateMapController : validateDimensions()
+
+' Controller obtém o utilizador autenticado
+CreateMapController -> UserSession : getUser()
+activate UserSession
+UserSession --> CreateMapController : User
+deactivate UserSession
+
+' Organização cria o mapa
+CreateMapController -> Organization : createMap(name, width, height)
+activate Organization
+Organization -> Map : new(name, width, height)
+activate Map
+Map --> Organization
+deactivate Map
+Organization --> CreateMapController : Map
+deactivate Organization
+
+' Controller persiste o mapa
+CreateMapController -> OrganizationRepository : save(Map)
+activate OrganizationRepository
+OrganizationRepository --> CreateMapController : confirmation
+deactivate OrganizationRepository
+
+' Controller devolve o resultado à UI
+CreateMapController --> CreateMapUI : success/failure
+deactivate CreateMapController
+
+' UI mostra mensagem ao Editor
+CreateMapUI -> Editor : showSuccessOrError()
+deactivate CreateMapUI
+
+@enduml
+
+
