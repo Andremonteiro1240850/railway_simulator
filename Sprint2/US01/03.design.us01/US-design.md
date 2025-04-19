@@ -59,6 +59,7 @@ This diagram shows how the user starts the use case and inputs map data, which i
 
 #### Get User
 This diagram shows how the controller retrieves the current authenticated user from the session.
+
 ![US01-SD-partia-get-user](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-get-user.svg)
 
 
