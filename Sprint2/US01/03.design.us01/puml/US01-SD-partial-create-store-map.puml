@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+'hide footbox
+
+CreateMapController -> Organization : createMap(name, width, height)
+activate Organization
+Organization -> Map : new(name, width, height)
+activate Map
+Map --> Organization
+deactivate Map
+Organization --> CreateMapController : Map
+deactivate Organization
+
+CreateMapController -> OrganizationRepository : save(Map)
+activate OrganizationRepository
+OrganizationRepository --> CreateMapController : success status
+deactivate OrganizationRepository
+@enduml

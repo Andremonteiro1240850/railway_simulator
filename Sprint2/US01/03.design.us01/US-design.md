@@ -43,21 +43,33 @@ Other software classes (i.e. Pure Fabrication) identified:
 ### Full Diagram
 This diagram shows the complete sequence of interactions between the classes involved in the realization of this user story.\
 
-![US01-SD](\Sprint2\US01\03.design.us01\svg\US01-SD-full.svg)
+![US01-SD](/Sprint2/US01/03.design.us01/svg/US01-SD-full.svg)
+
 
 ### Split Diagrams
 The following diagrams show the same sequence of interactions between the classes involved in the realization of this user story, but split into partial diagrams to better illustrate the interactions between the classes.
 
 They use Interaction Occurrence (a.k.a. Interaction Use) and reflect different logical phases of the interaction.
 
+
 #### Input & Validation Phase
 This diagram shows how the user starts the use case and inputs map data, which is then validated by the controller.
-
 ![US01-SD-partial-input-validation](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-input-validation.svg)
+
 
 #### Get User
 This diagram shows how the controller retrieves the current authenticated user from the session.
-
 ![US01-SD-partia-get-user](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-get-user.svg)
+
+
+####  Create and Store Map Phase
+This diagram shows how the map is created by the domain (Organization) and stored via the OrganizationRepository.
+![US01-SD-partial-create-store-map](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-create-store-map.svg)
+
+
+#### Feedback to UI Phase
+This final diagram shows how the result of the operation is communicated back to the user interface.
+![US01-SD-partial-feedback](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-feedback.svg)
+
 ## 3.3. Class Diagram (CD)
 ![US01-CD-](/Sprint2/US01/03.design.us01/svg/US01-CD.svg)

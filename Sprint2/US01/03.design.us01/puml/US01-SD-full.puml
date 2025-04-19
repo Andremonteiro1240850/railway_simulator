@@ -34,9 +34,9 @@ CreateMapController -> Organization : createMap(name, width, height)
 activate Organization
 Organization -> Map : new(name, width, height)
 activate Map
-Map --> Organization
+Map --> Organization : Map created
 deactivate Map
-Organization --> CreateMapController : Map
+Organization --> CreateMapController : Map created
 deactivate Organization
 
 ' Controller persiste o mapa
@@ -54,5 +54,6 @@ CreateMapUI -> Editor : showSuccessOrError()
 deactivate CreateMapUI
 
 @enduml
+
 
 
