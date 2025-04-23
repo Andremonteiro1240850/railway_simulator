@@ -22,7 +22,7 @@ This simulator should provide options for start/pause.
 
 ### 1.4. Found out Dependencies
 
-US02 - Add industry to the map.
+US02 - Add industry to the map..
 
 Cargo is based on the industries present on the map, so they must exist.
 

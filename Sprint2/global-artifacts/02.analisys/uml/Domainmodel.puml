@@ -51,6 +51,7 @@ hide methods
     class Position {
         x
         y
+        z
     }
 
     Map  -->  City : "have"
