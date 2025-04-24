@@ -1,0 +1,19 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+AddIndustryController -> Map : isPositionValid(x, y)
+activate Map
+Map --> AddIndustryController : boolean
+deactivate Map
+
+AddIndustryController -> Industry : create(type, x, y)
+activate Industry
+Industry --> AddIndustryController : industry
+@enduml

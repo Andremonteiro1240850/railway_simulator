@@ -1,0 +1,29 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor Editor
+
+Editor -> AddIndustryUI : startAddIndustry()
+activate AddIndustryUI
+
+Editor -> AddIndustryUI : inputIndustryData(type, x, y)
+
+AddIndustryUI -> AddIndustryController : handleAddIndustry(type, x, y)
+activate AddIndustryController
+
+AddIndustryController -> MapRepository : getCurrentMap()
+activate MapRepository
+MapRepository --> AddIndustryController : Map
+deactivate MapRepository
+
+AddIndustryController -> IndustryTypeRepository : isValidType(type)
+activate IndustryTypeRepository
+IndustryTypeRepository --> AddIndustryController : boolean
+deactivate IndustryTypeRepository
+@enduml
+

@@ -7,8 +7,9 @@ _In this section, it is suggested to capture the requirement description and spe
 
 ### 1.1. User Story Description
 
-As an Editor, I want to add an industry in a position XY of
-the selected map
+As an Editor, I want to add an industry (selected from the
+available industries) in a position XY of
+the selected (current) map
 ### 1.2. Customer Specifications and Clarifications 
 
 As the editor, we should be able to create an industry type building in a part of the chosen map with the specified x and y position values
@@ -26,7 +27,7 @@ Output: Display created industry
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![US02-SSD](us02Diagram.svg)
+![US02-SSD](us-Diagram/us02Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 

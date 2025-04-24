@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class AddIndustryUI {
+  + startAddIndustry()
+  + inputIndustryData()
+  + showSuccessOrError()
+}
+
+class AddIndustryController {
+  + handleAddIndustry(type, x, y)
+}
+
+class UserSession {
+  + getUser(): User
+}
+
+class MapRepository {
+  + getCurrentMap(): Map
+  + save(map: Map)
+}
+
+class IndustryTypeRepository {
+  + isValidType(type): boolean
+}
+
+class Map {
+  + isPositionValid(x, y): boolean
+  + addIndustry(industry: Industry)
+}
+
+class Industry {
+  + create(type, x, y)
+  + validatePlacement()
+}
+
+enum IndustryType {
+  PRIMARY
+  TRANSFORMING
+  MIXED
+}
+
+AddIndustryUI --> AddIndustryController
+AddIndustryController --> MapRepository
+AddIndustryController --> IndustryTypeRepository
+AddIndustryController --> Map
+AddIndustryController --> Industry
+AddIndustryController --> UserSession : uses
+Industry --> IndustryType : uses
+@enduml

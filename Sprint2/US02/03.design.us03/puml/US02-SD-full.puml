@@ -1,0 +1,58 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+actor Editor
+
+Editor -> AddIndustryUI : startAddIndustry()
+activate AddIndustryUI
+
+Editor -> AddIndustryUI : inputIndustryData(type, x, y)
+
+AddIndustryUI -> AddIndustryController : handleAddIndustry(type, x, y)
+activate AddIndustryController
+
+AddIndustryController -> MapRepository : getCurrentMap()
+activate MapRepository
+MapRepository --> AddIndustryController : Map
+deactivate MapRepository
+
+AddIndustryController -> IndustryTypeRepository : isValidType(type)
+activate IndustryTypeRepository
+IndustryTypeRepository --> AddIndustryController : boolean
+deactivate IndustryTypeRepository
+
+AddIndustryController -> Map : isPositionValid(x, y)
+activate Map
+Map --> AddIndustryController : boolean
+deactivate Map
+
+AddIndustryController -> Industry : create(type, x, y)
+activate Industry
+Industry --> AddIndustryController : industry
+
+AddIndustryController -> Industry : validatePlacement()
+deactivate Industry
+
+AddIndustryController -> Map : addIndustry(industry)
+activate Map
+Map --> AddIndustryController : success
+deactivate Map
+
+AddIndustryController -> MapRepository : save(map)
+activate MapRepository
+MapRepository --> AddIndustryController : confirmation
+deactivate MapRepository
+
+AddIndustryController --> AddIndustryUI : success/failure
+deactivate AddIndustryController
+
+AddIndustryUI -> Editor : showSuccessOrError()
+deactivate AddIndustryUI
+@enduml

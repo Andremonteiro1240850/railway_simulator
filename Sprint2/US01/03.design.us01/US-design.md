@@ -41,7 +41,7 @@ Other software classes (i.e. Pure Fabrication) identified:
 ## 3.2. Sequence Diagram (SD)
 
 ### Full Diagram
-This diagram shows the complete sequence of interactions between the classes involved in the realization of this user story.\
+This diagram shows the complete sequence of interactions between the classes involved in the realization of this user story.
 
 ![US01-SD](/Sprint2/US01/03.design.us01/svg/US01-SD-full.svg)
 
