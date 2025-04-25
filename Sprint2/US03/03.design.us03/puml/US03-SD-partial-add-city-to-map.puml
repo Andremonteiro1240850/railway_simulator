@@ -1,0 +1,20 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+AddCityController -> Map : addCity(city)
+activate Map
+Map --> AddCityController : success
+deactivate Map
+
+AddCityController -> MapRepository : save(map)
+activate MapRepository
+MapRepository --> AddCityController : confirmation
+deactivate MapRepository
+@enduml

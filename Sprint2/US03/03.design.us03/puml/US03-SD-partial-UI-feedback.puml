@@ -1,0 +1,16 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+AddCityController --> AddCityUI : success/failure
+deactivate AddCityController
+
+AddCityUI -> Editor : showSuccessOrError()
+deactivate AddCityUI
+@enduml

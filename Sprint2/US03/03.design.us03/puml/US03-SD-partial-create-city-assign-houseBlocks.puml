@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+AddCityController -> City : create(name, x, y)
+activate City
+City --> AddCityController : city
+
+' Check assignment method
+AddCityController -> City : isManualAssignment(houseBlocks)
+
+alt Manual assignment
+    AddCityController -> City : assignManualHouseBlocks(houseBlocks)
+else Automatic assignment
+    AddCityController -> City : assignRandomHouseBlocks(normalDistributionParameters)
+end
+
+deactivate City
+@enduml
+

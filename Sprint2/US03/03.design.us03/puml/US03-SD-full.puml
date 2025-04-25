@@ -1,0 +1,54 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor Editor
+
+Editor -> AddCityUI : startAddCity()
+activate AddCityUI
+
+Editor -> AddCityUI : inputCityData(name, x, y, houseBlocks)
+
+AddCityUI -> AddCityController : handleAddCity(name, x, y, houseBlocks)
+activate AddCityController
+
+AddCityController -> MapRepository : getCurrentMap()
+activate MapRepository
+MapRepository --> AddCityController : Map
+deactivate MapRepository
+
+AddCityController -> AddCityController : validateCityName(name)
+
+AddCityController -> Map : isPositionValid(x, y)
+activate Map
+Map --> AddCityController : boolean
+deactivate Map
+
+AddCityController -> City : create(name, x, y)
+activate City
+City --> AddCityController : city
+
+AddCityController -> City : assignHouseBlocks(houseBlocks, distributionType)
+deactivate City
+
+AddCityController -> Map : addCity(city)
+activate Map
+Map --> AddCityController : success
+deactivate Map
+
+AddCityController -> MapRepository : save(map)
+activate MapRepository
+MapRepository --> AddCityController : confirmation
+deactivate MapRepository
+
+AddCityController --> AddCityUI : success/failure
+deactivate AddCityController
+
+AddCityUI -> Editor : showSuccessOrError()
+deactivate AddCityUI
+@enduml

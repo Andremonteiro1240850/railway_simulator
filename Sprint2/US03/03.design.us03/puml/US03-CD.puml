@@ -1,0 +1,44 @@
+@startuml
+ 'https://plantuml.com/class-diagram
+
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+'skinparam linetype orto
+
+skinparam classAttributeIconSize 0
+
+'left to right direction
+
+class AddCityUI {
+  + startAddCity()
+  + inputCityData()
+  + showSuccessOrError()
+}
+
+class AddCityController {
+  + handleAddCity(name, x, y, houseBlocks)
+  + validateCityName(name)
+}
+
+class MapRepository {
+  + getCurrentMap(): Map
+  + save(map: Map)
+}
+
+class Map {
+  + isPositionValid(x, y): boolean
+  + addCity(city: City)
+}
+
+class City {
+  + create(name, x, y)
+  + assignHouseBlocks(houseBlocks, distributionType)
+}
+
+AddCityUI --> AddCityController
+AddCityController --> MapRepository
+AddCityController --> Map
+AddCityController --> City
+@enduml

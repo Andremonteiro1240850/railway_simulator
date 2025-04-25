@@ -41,24 +41,24 @@ According to the taken rationale, the conceptual classes promoted to software cl
 ### Full Diagram
 This diagram shows the complete sequence of interactions between the classes involved in the realization of US02.
 
-![US02-SD-full](/Sprint2/US02/03.design.us03/svg/US02-SD-full.svg)
+![US02-SD-full](/Sprint2/US02/03.design.us02/svg/US02-SD-full.svg)
 
 ### Partial Diagrams
 These partial diagrams break down the full sequence into logical steps.
 
 #### Input & Validation Phase
 The Editor provides the industry data, which is validated by the controller.
-![US02-SD-partial](/Sprint2/US02/03.design.us03/svg/US02-SD-partial-input-validation-phase.svg)
+![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-input-validation-phase.svg)
 
 ####  Map Position & Industry Creation
-![US02-SD-partial](/Sprint2/US02/03.design.us03/svg/US02-SD-partial-map-position.svg)
+![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-map-position.svg)
 
 #### Validate Placement & Add to Map
-![US02-SD-partial](/Sprint2/US02/03.design.us03/svg/US02-SD-partial-validate-placement-add-to-map.svg)
+![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-validate-placement-add-to-map.svg)
 
 #### UI Feedback
-![US02-SD-partial](/Sprint2/US02/03.design.us03/svg/US02-SD-partial-UI-feedback.svg)
+![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-UI-feedback.svg)
 
 ## 3.3. Class Diagram (CD)
 
-![USXXX-CD](/Sprint2/US02/03.design.us03/svg/US02-CD.svg)
+![USXXX-CD](/Sprint2/US02/03.design.us02/svg/US02-CD.svg)
