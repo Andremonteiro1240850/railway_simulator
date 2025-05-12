@@ -1,0 +1,133 @@
+@startuml
+' Estilo visual
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+' === UI Layer ===
+class AssignRouteUI <<C>> {
+  +requestAssignTrain()
+  +displayAvailableTrains()
+  +confirmRouteAssignment()
+  +displaySuccess()
+}
+
+' === Controller ===
+class AssignRouteController <<C>> {
+  +listAvailableTrains(): List<Train>
+  +assignRoute(trainId: String, stations: List<Station>, cargoMap: Map<Station, List<Cargo>>): void
+  +getCurrentPlayer(): Player
+  +checkConnectivity(route: Route): boolean
+}
+
+' === Repositories ===
+class Repositories <<C>> {
+  +getInstance(): Repositories
+  +getTrainRepository(): TrainRepository
+  +getStationRepository(): StationRepository
+  +getPlayerRepository(): PlayerRepository
+  +getRouteRepository(): RouteRepository
+}
+
+class TrainRepository <<C>> {
+  +findAvailable(): List<Train>
+  +findById(id: String): Train
+}
+
+class StationRepository <<C>> {
+  +findAll(): List<Station>
+  +checkConnectivity(stations: List<Station>): boolean
+}
+
+class PlayerRepository <<C>> {
+  +findByEmail(email: String): Player
+}
+
+class RouteRepository <<C>> {
+  +exists(route: Route): boolean
+  +save(route: Route): void
+}
+
+' === Session ===
+class ApplicationSession <<C>> {
+  +getInstance(): ApplicationSession
+  +getCurrentSession(): UserSession
+}
+
+class UserSession <<C>> {
+  +getUserEmail(): String
+}
+
+' === Domain ===
+class Player {
+  -name: String
+  -email: String
+  -trains: List<Train>
+  +getTrains(): List<Train>
+  +assignRoute(route: Route, cargoMap: Map<Station, List<Cargo>>): void
+}
+
+class Train {
+  -id: String
+  -model: String
+  -locomotive: Locomotive
+  -carriages: int
+  +assignToRoute(route: Route): void
+}
+
+class Locomotive {
+  -id: String
+  -type: String
+  -availableFrom: LocalDate
+  -availableUntil: LocalDate
+  +isAvailableOn(date: LocalDate): boolean
+}
+
+class Route {
+  -stations: List<Station>
+  +isValid(): boolean
+}
+
+class Station {
+  -name: String
+  -location: String
+}
+
+class Cargo {
+  -description: String
+  -weight: double
+  -destination: Station
+}
+
+' === Associations ===
+AssignRouteUI --> AssignRouteController : calls
+AssignRouteController --> Repositories : uses
+AssignRouteController --> ApplicationSession : gets context
+ApplicationSession --> UserSession : returns
+UserSession --> PlayerRepository : uses
+PlayerRepository --> Player : returns
+AssignRouteController --> TrainRepository : gets trains
+AssignRouteController --> StationRepository : checks connectivity
+AssignRouteController --> RouteRepository : checks & saves
+AssignRouteController --> Train : assigns route
+AssignRouteController --> Player : assigns route
+AssignRouteController --> Route : builds
+AssignRouteController --> Cargo : loads
+
+Repositories --> TrainRepository
+Repositories --> StationRepository
+Repositories --> PlayerRepository
+Repositories --> RouteRepository
+
+TrainRepository --> Train : stores
+StationRepository --> Station : manages
+RouteRepository --> Route : manages
+
+Player --> Train : owns *
+Player --> Route : manages
+Player --> Cargo : assigns
+Train --> Locomotive : has
+Train --> Route : assigned to
+Train --> Cargo : delivers
+Route --> Station : includes *
+Cargo --> Station : delivered to
+@enduml

@@ -1,0 +1,118 @@
+@startuml
+' === SD da US10: Atribuir comboio a uma rota ===
+' Padrões: GRASP (Controller, IE, Creator), RDD, SRP, LC/HC
+' Objetivo: Representar um fluxo completo de interação do jogador para atribuir um comboio a uma rota com cargas
+
+actor Player
+
+participant UI as ":AssignRouteUI"
+participant CTRL as ":AssignRouteController"
+participant AppSession as ":ApplicationSession"
+participant UserSession as ":UserSession"
+participant Repos as ":Repositories"
+participant TrainRepo as ":TrainRepository"
+participant PlayerRepo as ":PlayerRepository"
+participant StationRepo as ":StationRepository"
+participant RouteRepo as ":RouteRepository"
+participant PlayerObj as ":Player"
+participant Train as ":Train"
+participant Loco as ":Locomotive"
+participant Station as ":Station"
+participant Route as ":Route"
+participant Cargo as ":Cargo"
+
+autonumber
+
+== Início: Listagem de comboios ==
+Player -> UI : requestAssignTrain()
+activate UI
+UI -> CTRL : listAvailableTrains()
+activate CTRL
+
+CTRL -> AppSession : getInstance()
+activate AppSession
+AppSession -> UserSession : getCurrentSession()
+deactivate AppSession
+activate UserSession
+UserSession -> PlayerRepo : getUserEmail()
+deactivate UserSession
+activate PlayerRepo
+PlayerRepo -> PlayerObj : findByEmail(email)
+deactivate PlayerRepo
+
+CTRL -> Repos : getInstance()
+activate Repos
+Repos -> TrainRepo : getTrainRepository()
+deactivate Repos
+activate TrainRepo
+TrainRepo -> Train : findAvailable()
+Train --> TrainRepo : List<Train>
+deactivate TrainRepo
+
+CTRL -> UI : displayAvailableTrains()
+deactivate CTRL
+
+UI --> Player : shows available trains
+
+deactivate UI
+
+== Escolha da rota e comboio ==
+Player -> UI : confirmRouteAssignment(trainId, stations, cargoMap)
+activate UI
+UI -> CTRL : assignRoute(trainId, stations, cargoMap)
+activate CTRL
+
+== Validação de contexto ==
+CTRL -> Repos : getInstance()
+activate Repos
+Repos -> TrainRepo : getTrainRepository()
+deactivate Repos
+activate TrainRepo
+TrainRepo -> Train : findById(trainId)
+deactivate TrainRepo
+
+Train -> Loco : getLocomotive()
+activate Loco
+Loco -> Loco : isAvailableOn(date)
+deactivate Loco
+
+CTRL -> Repos : getInstance()
+activate Repos
+Repos -> StationRepo : getStationRepository()
+deactivate Repos
+activate StationRepo
+StationRepo -> Station : findAll()
+deactivate StationRepo
+
+CTRL -> Route : new Route(stations)
+activate Route
+Route -> Route : isValid()
+deactivate Route
+
+CTRL -> Repos : getInstance()
+activate Repos
+Repos -> RouteRepo : getRouteRepository()
+deactivate Repos
+activate RouteRepo
+RouteRepo -> RouteRepo : exists(route)
+alt [Route não existe]
+  RouteRepo -> RouteRepo : save(route)
+end
+
+CTRL -> PlayerObj : getTrains()
+PlayerObj -> Train : verifyOwnership(trainId)
+deactivate PlayerObj
+CTRL -> Train : assignToRoute(route)
+
+== Associar carga ==
+loop por cada estação
+  CTRL -> Cargo : createCargoList(station)
+  Cargo -> Station : setDestination()
+  Train -> Cargo : addCargo()
+end
+
+CTRL -> PlayerObj : assignRoute(route, cargoMap)
+CTRL -> UI : displaySuccess()
+deactivate CTRL
+deactivate UI
+@enduml

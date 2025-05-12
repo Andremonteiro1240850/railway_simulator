@@ -1,0 +1,62 @@
+@startuml
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+
+actor Player as player
+
+participant ":BuyLocomotiveUI" as ui
+participant ":BuyLocomotiveController" as controller
+participant ":Repositories" as repositories
+participant ":LocomotiveRepository" as locoRepo
+participant ":PlayerRepository" as playerRepo
+participant ":ApplicationSession" as appSession
+participant ":UserSession" as userSession
+participant ":Player" as playerInstance
+participant ":Scenario" as scenario
+participant ":Locomotive" as locomotive
+
+player -> ui :  requestLocomotive()
+ui -> controller :  listAvailableLocomotives()
+
+controller -> appSession :  getInstance()
+appSession -> userSession :  getCurrentSession()
+userSession -> playerRepo :  getUserEmail()
+playerRepo -> playerInstance :  findByEmail(email)
+playerInstance -> scenario :  getScenario()
+scenario -> scenario :  getCurrentDate()
+
+controller -> controller :  getCurrentPlayer()
+controller -> controller :  getCurrentScenario()
+
+controller -> repositories :  getInstance()
+repositories -> locoRepo :  getLocomotiveRepository()
+controller -> locoRepo :  findAvailableByScenario(scenario, date)
+locoRepo -> controller :  List<Locomotive>
+
+controller -> ui :  displayAvailableLocomotives(list)
+
+
+player -> ui :  confirmPurchase(locomotiveId)
+ui -> controller :  buyLocomotive(locomotiveId)
+
+controller -> controller :  getCurrentPlayer()
+controller -> controller :  getCurrentScenario()
+
+controller -> repositories :  getInstance()
+repositories -> locoRepo :  getLocomotiveRepository()
+controller -> locoRepo :  findById(locomotiveId)
+locoRepo -> locomotive :  return Locomotive
+
+controller -> locomotive :  isAvailableOn(date)
+alt Locomotive is available
+    controller -> playerInstance :  addPurchase(new Purchase(locomotive, now))
+    controller -> locoRepo :  save(locomotive)
+    controller -> ui :  displaySuccess(purchase)
+else Locomotive not available
+    controller -> ui :  // erro: locomotiva indisponível (detalhes omitidos)
+end
+@enduml

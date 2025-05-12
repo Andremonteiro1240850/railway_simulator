@@ -4,7 +4,6 @@
 ## 2. Analysis
 
 ### 2.1. Relevant Domain Model Excerpt 
-_In this section, it is suggested to present an excerpt of the domain model that is seen as relevant to fulfill this requirement._
 
 ![US09-DM](C:\Users\andre\IdeaProjects\sem2-pi-24.25-g045-repo\Sprint2\US09\02.analysis.09\us09analysis.svg)
 

@@ -1,0 +1,106 @@
+@startuml
+' Estilo visual
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+
+' === UI Layer ===
+class BuyLocomotiveUI {
+    +requestLocomotive()
+    +displayAvailableLocomotives()
+    +confirmPurchase(locomotiveId: String)
+}
+
+' === Controller Layer ===
+class BuyLocomotiveController {
+    +listAvailableLocomotives(): List<Locomotive>
+    +buyLocomotive(locomotiveId: String): Purchase
+    -getCurrentScenario(): Scenario
+    -getCurrentPlayer(): Player
+}
+
+' === Session Layer ===
+class ApplicationSession {
+    +getInstance(): ApplicationSession
+    +getCurrentSession(): UserSession
+}
+
+class UserSession {
+    +getUserEmail(): String
+}
+
+' === Repository Layer ===
+class Repositories {
+    +getInstance(): Repositories
+    +getLocomotiveRepository(): LocomotiveRepository
+    +getPlayerRepository(): PlayerRepository
+}
+
+class LocomotiveRepository {
+    +findAvailableByScenario(scenario: Scenario, date: LocalDate): List<Locomotive>
+    +findById(id: String): Locomotive
+    +save(loco: Locomotive): void
+}
+
+class PlayerRepository {
+    +findByEmail(email: String): Player
+}
+
+' === Domain Layer ===
+class Player {
+    -name: String
+    -email: String
+    -purchases: List<Purchase>
+    +getScenario(): Scenario
+    +addPurchase(p: Purchase): void
+}
+
+class Scenario {
+    -name: String
+    -currentDate: LocalDate
+    +getCurrentDate(): LocalDate
+}
+
+class Locomotive {
+    -id: String
+    -type: String
+    -price: double
+    -availableFrom: LocalDate
+    -availableUntil: LocalDate
+    +isAvailableOn(date: LocalDate): boolean
+}
+
+class Purchase {
+    -timestamp: LocalDateTime
+    -locomotive: Locomotive
+    -price: double
+    +Purchase(locomotive: Locomotive, date: LocalDateTime)
+}
+
+' === Relações ===
+BuyLocomotiveUI ..> BuyLocomotiveController : calls
+BuyLocomotiveController ..> LocomotiveRepository : uses
+BuyLocomotiveController --> PlayerRepository : uses
+BuyLocomotiveController --> Scenario : uses
+BuyLocomotiveController --> Purchase : creates
+BuyLocomotiveController --> ApplicationSession : gets context
+
+ApplicationSession --> UserSession : returns
+UserSession ..> PlayerRepository : getUserEmail
+PlayerRepository --> Player : returns
+
+Player --> Scenario : plays in
+Player --> Purchase : has
+Purchase --> Locomotive : involves
+
+LocomotiveRepository --> Locomotive : manages
+
+BuyLocomotiveController ..> Repositories : gets repos
+
+Repositories --> LocomotiveRepository : provides
+Repositories --> PlayerRepository : provides
+
+
+BuyLocomotiveController ..> PlayerRepository : uses
+
+
+@enduml

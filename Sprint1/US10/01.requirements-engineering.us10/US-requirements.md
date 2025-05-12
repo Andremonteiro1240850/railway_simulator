@@ -14,15 +14,14 @@ station
 
 
 ### 1.2. Customer Specifications and Clarifications 
-
-If there is no path between any pair of consective points of the route, the player should be warned, then the player can opt between buy or not a line..
+If there is no path between any pair of consective points of the route, the player should be warned, then the player can opt between buy or not a line. **
 Multiple cargo types can be assigned to the same train.
 A route don´t have a limit of stations that can be assigned.
 ### 1.3. Acceptance Criteria
 
 unspecified
 
-### 1.4. Found out Dependencies
+### 1.4. Found out Dependencies     
 
 US05 – Building stations: to create a route with valid stations, those stations must already exist on the map.
 
