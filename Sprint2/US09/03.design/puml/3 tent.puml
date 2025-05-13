@@ -1,0 +1,101 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype polyline
+
+' === UI ===
+class BuyLocomotiveUI <<UI>> {
+    +requestLocomotives()
+    +displayAvailableLocomotives()
+    +confirmPurchase(locomotiveId: String)
+}
+
+' === Controller ===
+class BuyLocomotiveController <<C>> {
+    +listAvailableLocomotives() : List<Locomotive>
+    +buyLocomotive(locomotiveId: String) : Purchase
+    +getCurrentScenario() : Scenario
+    +getCurrentPlayer() : Player
+}
+
+' === Session ===
+class ApplicationSession <<C>> {
+    +{static} getInstance() : ApplicationSession
+    +getCurrentSession() : UserSession
+}
+
+class UserSession {
+    +getUserEmail() : String
+}
+
+' === Repositories ===
+class Repositories <<C>> {
+    +{static} getInstance() : Repositories
+    +getLocomotiveRepository() : LocomotiveRepository
+    +getPlayerRepository() : PlayerRepository
+}
+
+class LocomotiveRepository <<C>> {
+    +findAvailableByScenario(scenario: Scenario, date: LocalDate) : List<Locomotive>
+    +findById(id: String) : Locomotive
+    +save(loco: Locomotive) : void
+}
+
+class PlayerRepository <<C>> {
+    +findByEmail(email: String) : Player
+    +save(player: Player) : void
+}
+
+' === Domain ===
+class Player {
+    -email : String
+    -purchases : List<Purchase>
+    +getScenario() : Scenario
+    +addPurchase(purchase: Purchase) : void
+}
+
+class Purchase {
+    -timestamp : LocalDateTime
+    -locomotive : Locomotive
+    -price : double
+    +Purchase(locomotive: Locomotive, date: LocalDateTime)
+}
+
+class Locomotive {
+    -id : String
+    -type : String
+    -price : double
+    -availableFrom : LocalDate
+    -availableUntil : LocalDate
+    +isAvailableOn(date: LocalDate) : boolean
+}
+
+class Scenario {
+    -name : String
+    -currentDate : LocalDate
+    +getCurrentDate() : LocalDate
+}
+
+' === Relationships ===
+BuyLocomotiveUI --> BuyLocomotiveController : confirmPurchase(id)
+BuyLocomotiveController --> ApplicationSession : getInstance()
+ApplicationSession --> UserSession : getCurrentSession()
+UserSession --> BuyLocomotiveController : getUserEmail()
+
+BuyLocomotiveController --> Repositories : getInstance()
+Repositories --> LocomotiveRepository : getLocomotiveRepository()
+Repositories --> PlayerRepository : getPlayerRepository()
+
+BuyLocomotiveController --> LocomotiveRepository : findAvailableByScenario(), findById()
+BuyLocomotiveController --> PlayerRepository : findByEmail(), save()
+
+BuyLocomotiveController --> Scenario : getCurrentDate()
+BuyLocomotiveController --> Player : addPurchase()
+BuyLocomotiveController --> Purchase : <<create>>
+
+Player --> Scenario : getScenario()
+Player --> Purchase : addPurchase()
+Purchase --> Locomotive : involves
+Scenario --> Locomotive : filters availability
+
+@enduml

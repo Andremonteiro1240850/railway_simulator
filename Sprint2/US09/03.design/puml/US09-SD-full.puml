@@ -1,62 +1,48 @@
 @startuml
-'skinparam monochrome true
-skinparam packageStyle rectangle
+' US09 - Full Sequence Diagram
 skinparam shadowing false
+skinparam linetype polyline
+skinparam monochrome true
 
 autonumber
 
+actor Player
 
-actor Player as player
+participant Player
+participant BuyLocomotiveUI
+participant BuyLocomotiveController
+participant ApplicationSession
+participant UserSession
+participant Repositories
+participant PlayerRepository
+participant LocomotiveRepository
+participant Locomotive
+participant Purchase
 
-participant ":BuyLocomotiveUI" as ui
-participant ":BuyLocomotiveController" as controller
-participant ":Repositories" as repositories
-participant ":LocomotiveRepository" as locoRepo
-participant ":PlayerRepository" as playerRepo
-participant ":ApplicationSession" as appSession
-participant ":UserSession" as userSession
-participant ":Player" as playerInstance
-participant ":Scenario" as scenario
-participant ":Locomotive" as locomotive
+activate Player
 
-player -> ui :  requestLocomotive()
-ui -> controller :  listAvailableLocomotives()
-
-controller -> appSession :  getInstance()
-appSession -> userSession :  getCurrentSession()
-userSession -> playerRepo :  getUserEmail()
-playerRepo -> playerInstance :  findByEmail(email)
-playerInstance -> scenario :  getScenario()
-scenario -> scenario :  getCurrentDate()
-
-controller -> controller :  getCurrentPlayer()
-controller -> controller :  getCurrentScenario()
-
-controller -> repositories :  getInstance()
-repositories -> locoRepo :  getLocomotiveRepository()
-controller -> locoRepo :  findAvailableByScenario(scenario, date)
-locoRepo -> controller :  List<Locomotive>
-
-controller -> ui :  displayAvailableLocomotives(list)
+    Player -> BuyLocomotiveUI : requests to buy a locomotive in the current scenario
+    activate BuyLocomotiveUI
 
 
-player -> ui :  confirmPurchase(locomotiveId)
-ui -> controller :  buyLocomotive(locomotiveId)
+      Player <-- BuyLocomotiveUI   : displays list of avaible locomotives(filtred by scenario)
+    deactivate BuyLocomotiveUI
 
-controller -> controller :  getCurrentPlayer()
-controller -> controller :  getCurrentScenario()
+    Player -> BuyLocomotiveUI : selects a locomotive(shop)
+   activate BuyLocomotiveUI
 
-controller -> repositories :  getInstance()
-repositories -> locoRepo :  getLocomotiveRepository()
-controller -> locoRepo :  findById(locomotiveId)
-locoRepo -> locomotive :  return Locomotive
+      Player <-- BuyLocomotiveUI : shows information about locomotive (i.e. type, price, current date)
+    deactivate BuyLocomotiveUI
 
-controller -> locomotive :  isAvailableOn(date)
-alt Locomotive is available
-    controller -> playerInstance :  addPurchase(new Purchase(locomotive, now))
-    controller -> locoRepo :  save(locomotive)
-    controller -> ui :  displaySuccess(purchase)
-else Locomotive not available
-    controller -> ui :  // erro: locomotiva indisponível (detalhes omitidos)
-end
+    Player -> BuyLocomotiveUI : confirms purchsase
+    activate BuyLocomotiveUI
+
+        Player <-- BuyLocomotiveUI: generate unique id for locomotive
+    deactivate BuyLocomotiveUI
+
+
+
+
+        Player -> BuyLocomotiveUI: confirms purchase and displays succes message
+    deactivate BuyLocomotiveUI
 @enduml
