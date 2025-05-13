@@ -10,10 +10,10 @@ participant ":System" as System
 
 activate Employee
 
-    Employee -> System : requests to buy a locomotive
+    Employee -> System : requests to buy a locomotive in the current scenario
     activate System
 
-        System --> Employee : displays list of avaible locomotives(filtred by scenario and date
+        System --> Employee : displays list of avaible locomotives(filtred by scenario)
     deactivate System
 
     Employee -> System : selects a locomotive(shop)

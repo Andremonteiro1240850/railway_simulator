@@ -1,42 +1,21 @@
 @startuml
-skinparam monochrome true
-skinparam packageStyle rectangle
-skinparam shadowing false
-
-autonumber
-
-actor "Player" as Employee
+actor Player
 participant ":System" as System
 
-activate Employee
+Player -> System: 1. Requests to assign a train to a route
+System -> Player: 2. Lists available trains and asks to select one
+Player -> System: 3. Selects a train
 
-    Employee -> System : asks to assign a selected train to a route
-    activate System
+loop While Player wants to add more stations
+    System -> Player: 4. Lists possible stations and requests selection
+    Player -> System: 5. Selects one station
+    System -> Player: 6. Lists possible cargo types to pick up at station
 
-        System --> Employee : shows list avilable and asks to select one
-    deactivate System
+    Player -> System: 8. Selects cargo to pick up
+end
 
-    Employee -> System : selects a train
-    activate System
-
-        System --> Employee : shows list avilable station
-    deactivate System
-
-    Employee -> System : define the route (order list of station)
-    activate System
-
-        System --> System : shecks connectivity between consecutive stations
-    deactivate System
-
-
-
-
-        System --> Employee : ask for cargo list per station
-    deactivate System
-
-    Employee -> System : assigns cargo types (multiple cargo types allowed)
-    activate System
-
-    System--> Employee :confirms successful route and cargo assigment
+System -> Player: 9. Displays route and cargo summary, requests confirmation
+Player -> System: 10. Confirms data
+System -> Player: 11. Displays operation success
 
 @enduml

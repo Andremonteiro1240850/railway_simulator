@@ -64,15 +64,16 @@ unspecified
 **Output Data:**
 
 * List of available stations.
+* List of trains
+
 
 * List of available cargo types per station.
 
-* (In)Success of the route and cargo assignment operation.
-
+* Success of the route and cargo assignment operation.
+* Summary of the route and assigned cargo operations
 
 
 ### 1.6. System Sequence Diagram (SSD)
-
 
 ![US10-SSD](svg/us10Diagram.svg)
 

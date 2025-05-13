@@ -1,47 +1,52 @@
 @startuml
-skinparam classAttributeIconSize 0
-skinparam classFontStyle plain
+
+skinparam monochrome true
+skinparam packageStyle rectangle
 skinparam shadowing false
-skinparam linetype ortho
+
+'left to right direction
+
+skinparam classAttributeIconSize 0
 
 hide circle
+hide methods
 
-class Player  {
-  +name
-  +email
+
+class Player {
+  name
+  email
 }
 
 class Scenario {
-  +name
-  +currentDate
-}
-
-class Locomotive {
-  +id
-  +type
-  +price
-  +availableFrom
-  +availableUntil
+  name
+  currentDate
 }
 
 class Purchase {
-  +timestamp
-  +status
-  +price
+  timestamp
+  status
+  price
+}
+
+class Locomotive {
+  type
+  price
+  speed
+  name
+  maintenanceCost
+  yearStart
+  acceleration
 }
 
 
 
 
+' Relações com multiplicidade
+Player "1" -- "*" Scenario : plays in
+Player "1" -- "*" Purchase : makes
+Scenario "1" -- "*" Locomotive : provides
+Purchase "1" -- "1" Locomotive : involves
 
-Player "1" --> "1" Scenario : plays in
-Scenario "1" --> "*" Locomotive : provides
-
-
-
-
-Player --> Purchase : makes
-Purchase --> Locomotive : involves
 
 
 @enduml

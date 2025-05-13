@@ -71,7 +71,6 @@ Is there a limit to how many trains a player can own, like a inventory that can 
 
 ### 1.6. System Sequence Diagram (SSD)
 
-
 ![US09-SSD](svg/us09Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
