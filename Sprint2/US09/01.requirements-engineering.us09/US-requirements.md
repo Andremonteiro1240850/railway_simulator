@@ -9,12 +9,30 @@
 As a Player, I want to buy a locomotive
 
 ### 1.2. Customer Specifications and Clarifications 
+
+**From specifications document:**
+
+>Each locomotive is characterized by a set of key technical attributes essential for its operation within the railway network. There are three main types: steam, diesel, and electric — with electric locomotives requiring electrified lines. Their main characteristics include power, acceleration, and top speed. Additionally, each locomotive has an annual fuel and maintenance cost, as well as a purchase price.
 **From the client clarifications:**
 
-> A player can buy the same type of locomotive, but these locomotives  have unique identification (like serial number). 
 
-> A player can hava an unlimited number of locomotives, just need to have available memory.
+**From the client clarifications:**
 
+> **Question:** Can a player buy the same train multiple times?
+> 
+> **Answer:** The same type of locomitve, yes; but these locomotives will have unique identification (like a plate or a serial number)
+
+> **Question:**
+Is there a limit to how many trains a player can own, like a inventory that can get full?
+> 
+> **Answer:** 
+> There is no physical limit, just the available memory.
+
+> **Question:**
+> Can the player purchase multiple locomotives at once?
+> 
+>  **Answer:**
+> Not planned.
 
 
 ### 1.3. Acceptance Criteria
@@ -24,35 +42,40 @@ As a Player, I want to buy a locomotive
 
 ### 1.4. Found out Dependencies
 
-* There is a dependency on "US04 - As an Editor, I want to create a scenario for a selected map" because the implementation of this US is only possible if there is already a scenario created with locomotives defined as available and rules on temporal availability.
+* There is a dependency on US04 - As an Editor, I want to create a scenario for a selected map" because the implementation of this US is only possible if there is already a scenario created with locomotives defined as available and rules on temporal availability.
 
 ### 1.5 Input and Output Data
 
 **Input Data:**
 
 * Typed data:
-    * purchase request
-  
+  * Purchase request
+
 
 
 * Selected data:
-    * a locomotiv
+  * Selected locomotive from the available list (filtered by scenario and current date)
+  * Confirms purchase
+
 
 **Output Data:**
 
-* locomotives avaible
-* locomotive id
-* Success of the purchase
+* List of available locomotives (filtered by scenario and date)
+
+* Detailed information about the selected locomotive (type, price, current date)
+
+* ID of the purchased locomotive
+
+* Operation status
 
 
 ### 1.6. System Sequence Diagram (SSD)
 
-_Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![US09-SSD](C:\Users\andre\IdeaProjects\sem2-pi-24.25-g045-repo\Sprint2\US09\01.requirements-engineering.us09\us-Diagram\us09Diagram.svg)
+![US09-SSD](svg/us09Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
 * A train is not a loocomotive ( train is a locomotive and the carriage)
 * Locomotives can be of steam, diesel or electricity
-* Electric Locomotives need electrified lines
+
