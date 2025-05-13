@@ -52,4 +52,6 @@ There aren't any dependencies on other US
 
 ### 1.7 Other Relevant Remarks
 
-* Default map size
+* The system should validate inputs before proceeding with map creation.
+* If the operation fails, the system should display a clear error message indicating the reason (e.g., invalid data, lack of permissions).
+* Upon success, the newly created map should be stored and become available for later editing or viewing in the interface.
