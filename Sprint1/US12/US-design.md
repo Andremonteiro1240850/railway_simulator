@@ -8,18 +8,18 @@ _XXX stands for User Story number and YYY for User Story description (e.g. US006
 
 **The rationale grounds on the SSD interactions and the identified input/output data.**
 
-| Interaction ID | Question: Which class is responsible for... | Answer  | Justification (with patterns)  |
-|:-------------  |:--------------------- |:------------|:---------------------------- |
-| Step 1  		 |							 |             |                              |
-| Step 2  		 |							 |             |                              |
-| Step 3  		 |							 |             |                              |
-| Step 4  		 |							 |             |                              |
-| Step 5  		 |							 |             |                              |
-| Step 6  		 |							 |             |                              |              
-| Step 7  		 |							 |             |                              |
-| Step 8  		 |							 |             |                              |
-| Step 9  		 |							 |             |                              |
-| Step 10  		 |							 |             |                              |  
+| Interaction ID | Question: Which class is responsible for... | Answer            | Justification (with patterns)                                      |
+|:---------------|:--------------------------------------------|:------------------|:-------------------------------------------------------------------|
+| Step 1  		     | ... interacting with the actor?             | CreateSimulatorUI | 	Pure Fabrication: interfaces should not belong to domain classes. |
+| Step 2  		     | 	... coordinating the US?                   |                   |                                                                    |
+| Step 3  		     | 							                                     |                   |                                                                    |
+| Step 4  		     | 							                                     |                   |                                                                    |
+| Step 5  		     | 							                                     |                   |                                                                    |
+| Step 6  		     | 							                                     |                   |                                                                    |              
+| Step 7  		     | 							                                     |                   |                                                                    |
+| Step 8  		     | 							                                     |                   |                                                                    |
+| Step 9  		     | 							                                     |                   |                                                                    |
+| Step 10        | 							                                     |                   |                                                                    |  
 
 ### Systematization ##
 

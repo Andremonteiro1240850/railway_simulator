@@ -8,105 +8,116 @@ To identify domain conceptual classes, start by making a list of candidate conce
 
 ### _Conceptual Class Category List_
 
-**Business Transactions**
-
-Order, payment
+**Business Transactions**  
+RouteAssignment   
+CargoTransaction   
+StationUpgrade   
+TrainPurchase 
 
 ___
 
-**Transaction Line Items**
-
-Order item
-
----
-
-**Product/Service related to a Transaction or Transaction Line Item**
-
-Product, service
+**Transaction Line Items**  
+CargoLoadItem
 
 ---
 
-**Transaction Records**
+**Product/Service related to a Transaction or Transaction Line Item**  
+Cargo (passengers, mail, coal, iron ore, steel, cars, etc.)  
+Railway Service (train service between stations)
+---
 
-Invoice, receipt
+**Transaction Records**  
+MaintenanceReport  
+SimulationLog
 
 ---  
 
 **Roles of People or Organizations**
 
-Seller, supplier, customer
+Player  
+Editor
 
 ---
 
-**Places**
-
-Store, warehouse
-
----
-
-**Noteworthy Events**
-
-Shipment, return
+**Places**  
+Map  
+City   
+Industry  
+Station  
+Port 
 
 ---
 
-**Physical Objects**
-
-Package, device
-
----
-
-**Descriptions of Things**
-
-Product description, service details
+**Noteworthy Events**  
+Shipment  
+HistoricalEvent
 
 ---
 
-**Catalogs**
-
-Product catalog
-
----
-
-**Containers**
-
-Shopping cart, Inventory
+**Physical Objects**  
+Locomotive   
+Carriage   
+Train   
+RailwayLine  
+Building 
 
 ---
 
-**Elements of Containers**
-
-Car item, stock item
-
----
-
-**(Other) Organizations**
-
-Manufacturer, distributor
+**Descriptions of Things**  
+Scenario (defines time, technological, historical restrictions)  
+LocomotiveSpecs (power, acceleration, fuel cost, etc.)  
+IndustrySpecs (resource generation rates, transformations)
 
 ---
 
-**Other (External/Collaborating) Systems**
-
-Payment gateway, shipping system
-
----
-
-**Records of finance, work, contracts, legal matters**
-
-Contract, invoice record
+**Catalogs**  
+LocomotiveCatalog   
+IndustryCatalog   
+CargoTypeCatalog
 
 ---
 
-**Financial Instruments**
-
-Credit card
+**Containers**  
+RailwayNetwork (collection of stations and lines)  
+TrainFleet (collection of available trains)
 
 ---
 
-**Documents mentioned/used to perform some work**
+**Elements of Containers**  
+StationList → contains instances of Station  
+TrainFleet → contains Train, each composed of Locomotive and Carriage  
+CargoManifest → list of cargo types loaded on a train
 
-Purchase, order, warranty document
+---
+
+**(Other) Organizations**  
+RailwayCompany  
+IndustryOperator
+
+---
+
+**Other (External/Collaborating) Systems**  
+ScenarioLoader (used to import predefined scenarios)  
+DataExporter (CSV output or save/load scenarios)
+
+---
+
+**Records of finance, work, contracts, legal matters**  
+ProfitReport   
+RevenueLog   
+SimulationEventLog 
+
+---
+
+**Financial Instruments**  
+Budget   
+CostEstimation 
+---
+
+**Documents mentioned/used to perform some work**  
+PurchaseRecord   
+MaintenanceRequest   
+UpgradeRequest 
 
 ---
 
@@ -124,18 +135,31 @@ An association is a relationship between instances of objects that indicates a r
 * etc.
 
 
-| Concept (A) 		 | Association   	 |     Concept (B) |
-|--------------|:---------------:|----------------:|
-|Customer  	   |     Places      |           Order |  
-| Order 	      |    Contains     |      Order Item |
-| Order Item   |    Refers to    |         Product |
-| Order        |    Generates    |         Invoice |
-| Invoice      |     Records     |         Payment |
-| Payment      | is processed by | Payment Manager |
-| Seller       |     Manages     |         Product |
-| Warehouse    |     Stores      |         Product |
-| Order        |  is shipped to  |        Customer |
-| Shipment     |    delivers     |           Order |
+| Concept (A) 		  | Association   	 |          Concept (B) |
+|-----------------|:---------------:|---------------------:|
+| Player  	       |     Creates     |        Map, Scenario |  
+| Editor	         |     Defines     |             Scenario |
+| Player          |     Builds      | Station, RailwayLine |
+| Player          |    Purchases    |           Locomotive |
+| Train           |    Contains     | Locomotive, Carriage |
+| RouteAssignment |     Assigns     |       Train to Route |
+| Station         |     Serves      |       City, Industry |
+| RailwayLine     |    Connects     |              Station |
+| Train           |     Follow      |                Route |
+| Scenario        |     Defines     |      HistoricalEvent |
+| Scenario        |    Restricts    |           Locomotive |
+| Station         |     stores      |                Cargo |
+| StationUpgrades |    upgrades     |              Station |
+|                 |                 |                      |
+|                 |                 |                      |
+|                 |                 |                      |
+|                 |                 |                      |
+|                 |                 |                      |
+|                 |                 |                      |
+|                 |                 |                      |
+|                 |                 |                      |
+|                 |                 |                      |
+|                 |                 |                      |
 
 
 

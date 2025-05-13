@@ -2,35 +2,54 @@
 
 ## 1. Requirements Engineering
 
-_In this section, it is suggested to capture the requirement description and specifications as provided by the client as well as any further clarification on it. It is also suggested to capture the requirements acceptance criteria and existing dependencies to other requirements. Finally, identify the involved input and output data and depict an Actor-System interaction in order to fulfill the requirement._
-
 ### 1.1. User Story Description
 
 As an Editor, I want to create a map with a size and a name
 
 ### 1.2. Customer Specifications and Clarifications 
 
-As the Editor, we should be able to create a custom map with the specified size and name.
-The system should validate the specifications
+>  Criar uma interface gráfica baseada em tkinter, onde seja possível visualizar os locais e os eventos do jogo num mapa.
+
+> A ideia é que o utilizador possa ver num mapa interativo:
+> A posição dos locais e os eventos que ocorrem nesses locais.
+
+**From the client clarifications:**
+
+> **Question:** Considering the map will need to accommodate multiple cities,industries and stations with their respective connections, would it be acceptable to establish a minimum map size like 20x20 or 50x50? A smaller size might not provide enough space for meaningful simulation elements.
+> 
+> **Answer:** Yes, you can define a minimum size
+
+> **Question:** Does the size of the map have to be a real number or does it need to be an integer?
+> 
+> **Answer:** The map is a set of cells, similar to a spreadsheet. The coordinates are integers (row and column, or alternatively X and Y)
 ### 1.3. Acceptance Criteria
 
-The maps dimensions are positive integers.\
-Map name should be a valid file name.
+AC1: The maps dimensions are positive integers.\
+AC2: Map name should be a valid file name.
 
 ### 1.4. Found out Dependencies
-
+There aren't any dependencies on other US
 
 
 ### 1.5 Input and Output Data
+**Input Data:**
 
-Input: Map size, Map name\
-Output: Map displayed
+* Typed data:
+  * A name for the map
+  * A width value for the map 
+  * A height value for the map
+
+* Selected data:
+  * An organization to which the map belongs (if applicable)
+
+**Output Data**
+* Success or failure of the operation
+* Error message if the input is invalid (e.g., empty name, negative dimensions)
+* (Optional) Confirmation message with map ID or initial map preview
 ### 1.6. System Sequence Diagram (SSD)
 
-_Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
-
-![US01-SSD](svg/us01Diagram.svg)
+![US01-SSD](/Sprint2/US01/01.requirements-engineering.us01/svg/us01Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
-Default map size
+* Default map size
