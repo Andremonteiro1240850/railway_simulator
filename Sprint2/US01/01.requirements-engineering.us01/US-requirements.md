@@ -9,7 +9,7 @@ As an Editor, I want to create a map with a size and a name
 ### 1.2. Customer Specifications and Clarifications 
 
 >  Criar uma interface gráfica baseada em tkinter, onde seja possível visualizar os locais e os eventos do jogo num mapa.
-
+>
 > A ideia é que o utilizador possa ver num mapa interativo:
 > A posição dos locais e os eventos que ocorrem nesses locais.
 
