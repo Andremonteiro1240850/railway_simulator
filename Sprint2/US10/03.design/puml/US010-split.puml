@@ -1,0 +1,45 @@
+@startuml
+skinparam shadowing false
+skinparam linetype polyline
+skinparam monochrome true
+autonumber
+
+actor Player
+participant AssignRouteUI
+participant AssignRouteController
+
+Player -> AssignRouteUI : requestAssignTrainToRoute()
+activate AssignRouteUI
+AssignRouteUI -> AssignRouteController : getAvailableTrains()
+activate AssignRouteController
+
+ref over AssignRouteController : SD-get-available-trains
+
+AssignRouteController --> AssignRouteUI : availableTrains
+deactivate AssignRouteController
+AssignRouteUI --> Player : Lists available trains and asks to select one
+deactivate AssignRouteUI
+
+Player -> AssignRouteUI : Selects a train
+activate AssignRouteUI
+AssignRouteUI -> AssignRouteController : selectTrain(trainId)
+activate AssignRouteController
+
+ref over AssignRouteController : SD-select-train
+
+ref over AssignRouteController : SD-create-and-fill-route
+
+AssignRouteController --> AssignRouteUI : showRouteSummary()
+AssignRouteUI --> Player : displayRouteAndCargoSummary, requests confirmation
+
+Player -> AssignRouteUI : confirms data
+AssignRouteUI -> AssignRouteController : confirmRoute()
+
+ref over AssignRouteController : SD-confirm-route
+
+AssignRouteController --> AssignRouteUI : operationSuccess()
+deactivate AssignRouteController
+AssignRouteUI --> Player : displaySuccessMessage
+deactivate AssignRouteUI
+
+@enduml

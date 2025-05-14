@@ -1,0 +1,26 @@
+@startuml
+autonumber
+participant AssignRouteController
+activate AssignRouteController
+participant PlayerSessionRepository
+participant PlayerSession
+participant TrainRepository
+participant Train
+
+AssignRouteController -> PlayerSessionRepository : getSessionByPlayerId()
+activate PlayerSessionRepository
+PlayerSessionRepository --> AssignRouteController : PlayerSession
+deactivate PlayerSessionRepository
+activate PlayerSession
+
+AssignRouteController -> TrainRepository : getAllTrains()
+activate TrainRepository
+TrainRepository --> AssignRouteController : List<Train>
+deactivate TrainRepository
+
+AssignRouteController -> PlayerSession : filterUnassignedTrains(List<Train>)
+PlayerSession --> AssignRouteController : List<Train>
+
+deactivate PlayerSession
+deactivate AssignRouteController
+@enduml

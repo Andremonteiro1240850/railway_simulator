@@ -1,0 +1,19 @@
+@startuml
+autonumber
+participant AssignRouteController
+activate AssignRouteController
+participant TrainRepository
+participant Train
+
+AssignRouteController -> TrainRepository : getTrainById(trainId)
+activate TrainRepository
+TrainRepository --> AssignRouteController : Train
+deactivate TrainRepository
+activate Train
+
+AssignRouteController -> Train : isAssignable()
+Train --> AssignRouteController : true
+
+deactivate Train
+deactivate AssignRouteController
+@enduml

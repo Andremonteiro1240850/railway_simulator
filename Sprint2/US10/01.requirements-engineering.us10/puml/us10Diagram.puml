@@ -1,104 +1,22 @@
 @startuml
-' US10 - Full Sequence Diagram (Based on SSD and Class Diagram)
-skinparam shadowing false
-skinparam linetype polyline
-skinparam monochrome true
-
- autonumber
-
 actor Player
+participant ":System"
 
+autonumber
 
-participant Player
-participant AssignRouteUI
-participant AssignRouteController
-participant ApplicationSession
-participant UserSession
-participant Repositories
-participant PlayerRepository
-participant TrainRepository
-participant StationRepository
-participant RouteRepository
-participant Train
-participant Route
-participant Cargo
+Player -> ":System" :  Requests to assign a train to a route
+":System" -> Player :  Lists available trains and asks to select one
+Player -> ":System" :  Selects a train
 
-
-activate Player
-== Step 1: Request train assignment ==
-Player -> AssignRouteUI : requestAssignTrain()
-activate AssignRouteUI
-AssignRouteUI -> AssignRouteController : listAvailableTrains()
-activate AssignRouteController
-AssignRouteController -> ApplicationSession : getInstance()
-activate ApplicationSession
-ApplicationSession -> UserSession : getCurrentSession()
-activate UserSession
-UserSession --> ApplicationSession : userSession
-deactivate UserSession
-ApplicationSession --> AssignRouteController : userSession
-deactivate ApplicationSession
-AssignRouteController -> UserSession : getUserEmail()
-AssignRouteController <-- UserSession : email
-AssignRouteController -> Repositories : getInstance()
-activate Repositories
-Repositories -> PlayerRepository : getPlayerRepository()
-Repositories -> TrainRepository : getTrainRepository()
-activate PlayerRepository
-PlayerRepository -> PlayerRepository : findByEmail(email)
-PlayerRepository --> AssignRouteController : player
-activate TrainRepository
-TrainRepository -> TrainRepository : findAvailable()
-TrainRepository --> AssignRouteController : List<Train>
-deactivate TrainRepository
-deactivate PlayerRepository
-deactivate Repositories
-AssignRouteController --> AssignRouteUI : List<Train>
-deactivate AssignRouteController
-AssignRouteUI -> Player : displayAvailableTrains()
-deactivate AssignRouteUI
-
-== Step 2: Select train ==
-Player -> AssignRouteUI : selectTrain(trainId)
-activate AssignRouteUI
-AssignRouteUI -> AssignRouteController : loadTrain(trainId)
-activate AssignRouteController
-AssignRouteController -> Repositories : getInstance()
-Repositories -> TrainRepository : getTrainRepository()
-TrainRepository -> TrainRepository : findById(trainId)
-TrainRepository --> AssignRouteController : train
-
-== Step 3-8: Loop through station selection ==
-loop [While Player wants to add more stations]
-    AssignRouteController -> StationRepository : findAll()
-    StationRepository --> AssignRouteController : List<Station>
-    AssignRouteController --> AssignRouteUI : listStations()
-    AssignRouteUI -> Player : requestStationSelection()
-    Player -> AssignRouteUI : selectStation(station)
-    AssignRouteUI -> AssignRouteController : listCargoTypes(station)
-    AssignRouteController --> AssignRouteUI : cargoTypes
-    AssignRouteUI -> Player : displayCargoOptions()
-    Player -> AssignRouteUI : selectCargo(cargo)
+loop
+    ":System" -> Player : Lists possible stations and requests selection
+    Player -> ":System" : Selects one station
+    ":System" -> Player : Lists possible cargo types to pick up at station
+    Player -> ":System" : Selects cargo to pick up
 end
 
-== Step 9: Display summary ==
-AssignRouteController --> AssignRouteUI : displaySummary(route, cargoMap)
-AssignRouteUI -> Player : showSummary()
-
-== Step 10: Confirm assignment ==
-Player -> AssignRouteUI : confirmAssignment()
-AssignRouteUI -> AssignRouteController : assignRoute(trainId, stations, cargoMap)
-AssignRouteController -> Player : assignRoute(route, cargoMap)
-Player -> Train : assignToRoute(route)
-AssignRouteController -> StationRepository : checkConnectivity(stations)
-StationRepository --> AssignRouteController : boolean
-AssignRouteController -> Route : isValid()
-AssignRouteController --> RouteRepository : save(route)
-
-== Step 11: Show success ==
-AssignRouteController --> AssignRouteUI : showSuccess()
-AssignRouteUI -> Player : displaySuccess()
-deactivate AssignRouteController
-deactivate AssignRouteUI
-deactivate Player
+":System" -> Player : Displays route and cargo summary, requests confirmation
+Player -> ":System" : Confirms data
+":System" -> Player : Displays operation success
 @enduml
+

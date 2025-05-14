@@ -1,103 +1,88 @@
 @startuml
+skinparam shadowing false
+skinparam linetype polyline
+skinparam monochrome true
+autonumber
 
 actor Player
+participant AssignRouteUI
+participant AssignRouteController
+participant TrainRepository
+participant StationRepository
+participant CargoRepository
+participant PlayerSessionRepository
+participant PlayerSession
+participant Train
+participant Route
 
-participant ":AssignRouteUI"
-participant ":AssignRouteController"
-participant ":ApplicationSession"
-participant ":UserSession"
-participant ":Repositories"
-participant ":TrainRepository"
-participant ":PlayerRepository"
-participant ":StationRepository"
-participant ":RouteRepository"
-participant ":Player"
-participant ":Train"
-participant ":Route"
-participant ":Cargo"
+Player -> AssignRouteUI : requestAssignTrainToRoute()
+activate AssignRouteUI
+AssignRouteUI -> AssignRouteController : getAvailableTrains()
+activate AssignRouteController
+AssignRouteController -> TrainRepository : getUnassignedTrains()
+activate TrainRepository
+TrainRepository --> AssignRouteController : List<Train>
+deactivate TrainRepository
+AssignRouteController --> AssignRouteUI : availableTrains
+deactivate AssignRouteController
+AssignRouteUI --> Player :Lists available trains and asks to select one
+deactivate AssignRouteUI
 
-== Begin assignment ==
+Player -> AssignRouteUI : Selects a train
+activate AssignRouteUI
+AssignRouteUI -> AssignRouteController : selectTrain(trainId)
+activate AssignRouteController
+AssignRouteController -> TrainRepository : getTrainById(trainId)
+activate TrainRepository
+TrainRepository --> AssignRouteController : Train
+deactivate TrainRepository
 
-Player -> ":AssignRouteUI" : 1. asks to assign a selected train to a route
-activate ":AssignRouteUI"
+' Criação da rota
+AssignRouteController -> Route : newRoute()
 
-":AssignRouteUI" -> ":AssignRouteController" : 2. listAvailableTrains()
-activate ":AssignRouteController"
+loop
+  AssignRouteController -> StationRepository : getAvailableStations()
+  activate StationRepository
+  StationRepository --> AssignRouteController : List<Station>
+  deactivate StationRepository
+  AssignRouteController --> AssignRouteUI : show Avialable stations
+  deactivate AssignRouteController
+  AssignRouteUI --> Player : Lists possible stations and requests selection
 
-":AssignRouteController" -> ":Repositories" : 3. getInstance()
-activate ":Repositories"
-":Repositories" --> ":AssignRouteController" : repositories
+  Player -> AssignRouteUI : Selects one station
+  AssignRouteUI -> AssignRouteController : selectStation()
 
-":AssignRouteController" -> ":TrainRepository" : 4. getTrainRepository()
-":TrainRepository" -> ":Train" : 5. findAvailable()
-":Train" --> ":TrainRepository" : List<Train>
-":TrainRepository" --> ":AssignRouteController" : List<Train>
+  AssignRouteController -> CargoRepository : getAvailableCargos()
+  activate CargoRepository
+  CargoRepository --> AssignRouteController : List<CargoType>
+  deactivate CargoRepository
+  AssignRouteController --> AssignRouteUI : showCargoTypes
+  AssignRouteUI --> Player : Lists possible cargo types to pick up at station
 
-":AssignRouteController" -> ":AssignRouteUI" : 6. displayAvailableTrains(list)
-deactivate ":Repositories"
-deactivate ":AssignRouteController"
+  Player -> AssignRouteUI : Selects cargo to pick up
+  AssignRouteUI -> AssignRouteController : selectCargo(cargoType)
 
-":AssignRouteUI" --> Player : 7. shows list available and asks to select one
-
-Player -> ":AssignRouteUI" : 8. selects a train
-activate ":AssignRouteUI"
-":AssignRouteUI" --> Player : 9. shows list of available stations
-
-Player -> ":AssignRouteUI" : 10. defines the route (ordered list of stations)
-":AssignRouteUI" -> ":AssignRouteController" : 11. confirmRouteAssignment(trainId, stationList, cargoMap)
-activate ":AssignRouteController"
-
-== Session & context ==
-":AssignRouteController" -> ":ApplicationSession" : 12. getInstance()
-activate ":ApplicationSession"
-":ApplicationSession" -> ":UserSession" : 13. getCurrentSession()
-":UserSession" -> ":PlayerRepository" : 14. getUserEmail()
-":PlayerRepository" -> ":Player" : 15. findByEmail(email)
-":Player" --> ":PlayerRepository" : Player
-":PlayerRepository" --> ":UserSession" : Player
-":UserSession" --> ":ApplicationSession" : Player
-":ApplicationSession" --> ":AssignRouteController" : Player
-
-== Validate context ==
-":AssignRouteController" -> ":TrainRepository" : 16. getTrainRepository()
-":TrainRepository" -> ":Train" : 17. findById(trainId)
-":Train" --> ":TrainRepository" : Train
-
-":AssignRouteController" -> ":StationRepository" : 18. getStationRepository()
-":StationRepository" -> ":StationRepository" : 19. checkConnectivity(stationList)
-":StationRepository" --> ":AssignRouteController" : valid/invalid
-
-alt Invalid Route
-    ":AssignRouteController" -> ":AssignRouteUI" : 20. warnInvalidRoute()
-    Player -> ":AssignRouteUI" : 21. chooses to continue or cancel
+  AssignRouteController -> Route : addStop(stationId, cargoType)
 end
 
-":AssignRouteController" -> ":Route" : 22. new Route(stationList)
-":Route" -> ":Route" : 23. isValid()
-":Route" --> ":AssignRouteController" : boolean
+AssignRouteController --> AssignRouteUI : showRouteSummary()
+AssignRouteUI --> Player : displayRouteAndCargoSummary, requests confirmation
 
-":AssignRouteController" -> ":RouteRepository" : 24. getRouteRepository()
-":RouteRepository" -> ":RouteRepository" : 25. exists(route)
-alt Route does not exist
-  ":RouteRepository" -> ":RouteRepository" : 26. save(route)
-end
+Player -> AssignRouteUI : confirms data
+AssignRouteUI -> AssignRouteController : confirmRoute()
+AssignRouteController -> PlayerSessionRepository : getSessionByPlayerId()
+activate PlayerSessionRepository
+PlayerSessionRepository --> AssignRouteController : PlayerSession
+deactivate PlayerSessionRepository
+activate PlayerSession
 
-== Ownership and assignment ==
-":AssignRouteController" -> ":Player" : 27. getTrains()
-":Player" -> ":Train" : 28. verifyOwnership(trainId)
-":Train" --> ":Player" : confirmed
+AssignRouteController -> Train : assignRoute(Route)
+deactivate Route
+AssignRouteController -> PlayerSession : registerTrainAssignment(train)
+deactivate PlayerSession
+AssignRouteController --> AssignRouteUI : operationSuccess()
+deactivate AssignRouteController
+AssignRouteUI --> Player : displaySuccessMessage
+deactivate AssignRouteUI
 
-":AssignRouteController" -> ":Train" : 29. assignToRoute(route)
-
-loop for each station
-    ":AssignRouteController" -> ":Cargo" : 30. createCargoList(station)
-    ":Cargo" -> ":Train" : 31. addCargo()
-end
-
-":AssignRouteController" -> ":Player" : 32. assignRoute(route, cargoMap)
-
-":AssignRouteController" -> ":AssignRouteUI" : 33. displaySuccess()
-deactivate ":AssignRouteController"
 @enduml
-
-

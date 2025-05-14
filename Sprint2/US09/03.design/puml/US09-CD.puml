@@ -1,106 +1,92 @@
 @startuml
-' Estilo visual
 skinparam classAttributeIconSize 0
-skinparam classFontStyle bold
 
-' === UI Layer ===
+' ===== CLASSES DO CASO DE USO PRINCIPAL =====
+
 class BuyLocomotiveUI {
-    +requestLocomotive()
-    +displayAvailableLocomotives()
-    +confirmPurchase(locomotiveId: String)
+  +requestToBuyLocomotive()
+  +displayAvailableLocomotives(locomotives)
+  +displayLocomotiveDetails(locomotive)
+  +confirmPurchase(locomotive)
 }
 
-' === Controller Layer ===
 class BuyLocomotiveController {
-    +listAvailableLocomotives(): List<Locomotive>
-    +buyLocomotive(locomotiveId: String): Purchase
-    -getCurrentScenario(): Scenario
-    -getCurrentPlayer(): Player
+  +getAvailableLocomotives()
+  +getLocomotiveDetails()
+  +confirmPurchase(locomotive)
 }
 
-' === Session Layer ===
-class ApplicationSession {
-    +getInstance(): ApplicationSession
-    +getCurrentSession(): UserSession
-}
-
-class UserSession {
-    +getUserEmail(): String
-}
-
-' === Repository Layer ===
 class Repositories {
-    +getInstance(): Repositories
-    +getLocomotiveRepository(): LocomotiveRepository
-    +getPlayerRepository(): PlayerRepository
+  +getInstance()
+  +getScenarioRepository()
+  +getLocomotiveRepository()
+  +getPlayerSessionRepository()
+}
+
+class ScenarioRepository {
+  +getScenario(): Scenario
 }
 
 class LocomotiveRepository {
-    +findAvailableByScenario(scenario: Scenario, date: LocalDate): List<Locomotive>
-    +findById(id: String): Locomotive
-    +save(loco: Locomotive): void
+  +getCurrentScenarioLocomotives(): List<Locomotive>
+  +getLocomotive(): Locomotive
 }
 
-class PlayerRepository {
-    +findByEmail(email: String): Player
-}
-
-' === Domain Layer ===
-class Player {
-    -name: String
-    -email: String
-    -purchases: List<Purchase>
-    +getScenario(): Scenario
-    +addPurchase(p: Purchase): void
-}
-
-class Scenario {
-    -name: String
-    -currentDate: LocalDate
-    +getCurrentDate(): LocalDate
+class PlayerSessionRepository {
+  +getSessionByPlayerId(email): PlayerSession
 }
 
 class Locomotive {
-    -id: String
-    -type: String
-    -price: double
-    -availableFrom: LocalDate
-    -availableUntil: LocalDate
-    +isAvailableOn(date: LocalDate): boolean
+  -type: String
+  -price: double
+  +getType(): String
+  +getPrice(): double
 }
 
-class Purchase {
-    -timestamp: LocalDateTime
-    -locomotive: Locomotive
-    -price: double
-    +Purchase(locomotive: Locomotive, date: LocalDateTime)
+class Scenario {
+  -currentDate: LocalDate
+  +getCurrentDate(): LocalDate
 }
 
-' === Relações ===
-BuyLocomotiveUI ..> BuyLocomotiveController : calls
-BuyLocomotiveController ..> LocomotiveRepository : uses
-BuyLocomotiveController --> PlayerRepository : uses
-BuyLocomotiveController --> Scenario : uses
-BuyLocomotiveController --> Purchase : creates
-BuyLocomotiveController --> ApplicationSession : gets context
+class PlayerSession {
+  -budget: double
+  -purchases: List<LocomotivePurchase>
+  +canAfford(price): boolean
+  +deductBudget(price)
+  +addPurchase(lp: LocomotivePurchase)
+}
 
-ApplicationSession --> UserSession : returns
-UserSession ..> PlayerRepository : getUserEmail
-PlayerRepository --> Player : returns
+class LocomotivePurchase {
+  +create(purchaseId, baseId, type, price, date)
+}
 
-Player --> Scenario : plays in
-Player --> Purchase : has
-Purchase --> Locomotive : involves
+class ApplicationSession {
+  +getInstance()
+  +getCurrentSession(): UserSession
+}
 
-LocomotiveRepository --> Locomotive : manages
+class UserSession {
+  +getUserEmail(): String
+}
 
-BuyLocomotiveController ..> Repositories : gets repos
+' ===== RELAÇÕES ENTRE CLASSES =====
 
-Repositories --> LocomotiveRepository : provides
-Repositories --> PlayerRepository : provides
-
-
-BuyLocomotiveController ..> PlayerRepository : uses
-
+BuyLocomotiveUI --> BuyLocomotiveController
+BuyLocomotiveController --> Repositories
+Repositories --> ScenarioRepository
+Repositories --> LocomotiveRepository
+Repositories --> PlayerSessionRepository
+BuyLocomotiveController --> ScenarioRepository : getScenario()
+BuyLocomotiveController --> LocomotiveRepository : getCurrentScenarioLocomotives()
+BuyLocomotiveController --> LocomotiveRepository : getLocomotive()
+BuyLocomotiveController --> PlayerSessionRepository : getSessionByPlayerId()
+BuyLocomotiveController --> Scenario : getCurrentDate()
+BuyLocomotiveController --> PlayerSession : canAfford(), deductBudget(), addPurchase()
+BuyLocomotiveController --> Locomotive : getType(), getPrice()
+BuyLocomotiveController --> LocomotivePurchase : create()
+ApplicationSession --> UserSession
+ApplicationSession --> ApplicationSession : getInstance()
+ApplicationSession --> ApplicationSession : getCurrentSession()
+UserSession --> BuyLocomotiveController : getUserEmail()
 
 @enduml
