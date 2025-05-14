@@ -7,109 +7,94 @@ skinparam monochrome true
 autonumber
 
 actor Player
+
 participant Player
 activate Player
 participant BuyLocomotiveUI
 participant BuyLocomotiveController
-participant ApplicationSession
-participant UserSession
-participant Repositories
-participant PlayerRepository
+participant ScenarioRepository
 participant LocomotiveRepository
-participant Scenario
 participant Locomotive
-participant Purchase
+participant PlayerSessionRepository
+participant PlayerSession
+participant Scenario
+participant LocomotivePurchase
 
-
-Player -> BuyLocomotiveUI : requestLocomotives()
-
+Player -> BuyLocomotiveUI : request to buy a locomotive
 activate BuyLocomotiveUI
-BuyLocomotiveUI -> BuyLocomotiveController : listAvailableLocomotives()
+BuyLocomotiveUI -> BuyLocomotiveController : getAvailableLocomotives()
 activate BuyLocomotiveController
-BuyLocomotiveController -> ApplicationSession : getInstance()
-activate ApplicationSession
-ApplicationSession -> UserSession : getCurrentSession()
-activate UserSession
-UserSession --> ApplicationSession : userSession
-deactivate UserSession
-ApplicationSession --> BuyLocomotiveController : userSession
-deactivate ApplicationSession
-BuyLocomotiveController -> UserSession : getUserEmail()
-BuyLocomotiveController <-- UserSession : email
-BuyLocomotiveController -> Repositories : getInstance()
-activate Repositories
-Repositories -> PlayerRepository : getPlayerRepository()
-activate PlayerRepository
-PlayerRepository -> PlayerRepository : findByEmail(email)
-PlayerRepository --> BuyLocomotiveController : player
-BuyLocomotiveController -> Player : getScenario()
-BuyLocomotiveController <-- Player : scenario
-BuyLocomotiveController -> Scenario : getCurrentDate()
-BuyLocomotiveController <-- Scenario : date
-Repositories -> LocomotiveRepository : getLocomotiveRepository()
+BuyLocomotiveController -> ScenarioRepository : getScenario()
+activate ScenarioRepository
+ScenarioRepository --> BuyLocomotiveController : Scenario
+deactivate ScenarioRepository
+BuyLocomotiveController -> LocomotiveRepository : getCurrentScenarioLocomotives()
 activate LocomotiveRepository
-LocomotiveRepository -> LocomotiveRepository : findAvailableByScenario(scenario, date)
-LocomotiveRepository --> BuyLocomotiveController : List<Locomotive>
+LocomotiveRepository --> BuyLocomotiveController : CurrentScenarioLocomotives
 deactivate LocomotiveRepository
-deactivate PlayerRepository
-deactivate Repositories
-BuyLocomotiveController --> BuyLocomotiveUI : List<Locomotive>
+BuyLocomotiveController --> BuyLocomotiveUI : AvailableLocomotives
 deactivate BuyLocomotiveController
-BuyLocomotiveUI -> Player : displayAvailableLocomotives()
+BuyLocomotiveUI --> Player : Displays list of available locomotives (filtered by scenario)
 deactivate BuyLocomotiveUI
 
-== Step 2: Select Locomotive ==
-Player -> BuyLocomotiveUI : selectLocomotive(locomotiveId)
+Player -> BuyLocomotiveUI : selects a locomotive
 activate BuyLocomotiveUI
-BuyLocomotiveUI -> BuyLocomotiveController : showLocomotiveInfo(locomotiveId)
+BuyLocomotiveUI -> BuyLocomotiveController : getLocomotiveDetails()
 activate BuyLocomotiveController
-BuyLocomotiveController -> Repositories : getInstance()
-activate Repositories
-Repositories -> LocomotiveRepository : getLocomotiveRepository()
+BuyLocomotiveController -> LocomotiveRepository : getLocomotive()
 activate LocomotiveRepository
-LocomotiveRepository -> LocomotiveRepository : findById(locomotiveId)
-LocomotiveRepository --> BuyLocomotiveController : locomotive
+LocomotiveRepository --> BuyLocomotiveController : Locomotive
 deactivate LocomotiveRepository
-deactivate Repositories
-BuyLocomotiveController -> Locomotive : getType(), getPrice(), getAvailableFrom(), getAvailableUntil()
-BuyLocomotiveController <-- Locomotive : type, price, availableFrom, availableUntil
-BuyLocomotiveController -> Scenario : getCurrentDate()
-BuyLocomotiveController <-- Scenario : date
-BuyLocomotiveController -> Locomotive : isAvailableOn(date)
-BuyLocomotiveController <-- Locomotive : boolean
-BuyLocomotiveController --> BuyLocomotiveUI : showLocomotiveDetails(...)
+BuyLocomotiveController -> Locomotive : getType()
+activate Locomotive
+BuyLocomotiveController <-- Locomotive : type
+deactivate Locomotive
+BuyLocomotiveController -> Locomotive : getPrice()
+activate Locomotive
+BuyLocomotiveController <-- Locomotive : price
+deactivate Locomotive
+BuyLocomotiveController --> BuyLocomotiveUI : LocomotiveDetails
 deactivate BuyLocomotiveController
-BuyLocomotiveUI -> Player : displayLocomotiveInfo()
+BuyLocomotiveUI --> Player : displayLocomotiveDetails
 deactivate BuyLocomotiveUI
 
-
-Player -> BuyLocomotiveUI : confirmPurchase(locomotiveId)
+Player -> BuyLocomotiveUI : confirmPurchase
 activate BuyLocomotiveUI
-BuyLocomotiveUI -> BuyLocomotiveController : buyLocomotive(locomotiveId)
+BuyLocomotiveUI -> BuyLocomotiveController : confirmPurchase (locomotive)
 activate BuyLocomotiveController
-BuyLocomotiveController -> Repositories : getInstance()
-activate Repositories
-Repositories -> PlayerRepository : getPlayerRepository()
-activate PlayerRepository
-PlayerRepository -> PlayerRepository : findByEmail(email)
-PlayerRepository --> BuyLocomotiveController : player
-Repositories -> LocomotiveRepository : getLocomotiveRepository()
-activate LocomotiveRepository
-LocomotiveRepository -> LocomotiveRepository : findById(locomotiveId)
-LocomotiveRepository --> BuyLocomotiveController : locomotive
-deactivate PlayerRepository
+BuyLocomotiveController -> PlayerSessionRepository : getSessionByPlayerId(playerId)
+activate PlayerSessionRepository
+PlayerSessionRepository --> BuyLocomotiveController : PlayerSession
+deactivate PlayerSessionRepository
+activate PlayerSession
+
+
 deactivate LocomotiveRepository
-deactivate Repositories
+BuyLocomotiveController -> Locomotive : getPrice()
+activate Locomotive
+Locomotive --> BuyLocomotiveController : price
+deactivate Locomotive
+BuyLocomotiveController -> PlayerSession : canAfford(price)
+BuyLocomotiveController -> PlayerSession : deductBudget(price)
+deactivate PlayerSession
+BuyLocomotiveController -> ScenarioRepository : getScenario()
+activate ScenarioRepository
+ScenarioRepository --> BuyLocomotiveController : Scenario
+deactivate ScenarioRepository
+activate Scenario
 BuyLocomotiveController -> Scenario : getCurrentDate()
-BuyLocomotiveController <-- Scenario : date
-BuyLocomotiveController -> Purchase : new Purchase(locomotive, date)
-Purchase -> Purchase : constructor
-BuyLocomotiveController <-- Purchase : purchase
-BuyLocomotiveController -> Player : addPurchase(purchase)
-Player -> PlayerRepository : save(player)
-BuyLocomotiveController -> BuyLocomotiveUI : showSuccess()
+Scenario --> BuyLocomotiveController : currentDate
+deactivate Scenario
+activate LocomotivePurchase
+BuyLocomotiveController -> LocomotivePurchase : create(purchaseId, baseId, type, price, date)
+deactivate LocomotivePurchase
+activate PlayerSession
+BuyLocomotiveController -> PlayerSession : addPurchase(LocomotivePurchase)
+deactivate PlayerSession
+BuyLocomotiveController --> BuyLocomotiveUI : return success message
 deactivate BuyLocomotiveController
-BuyLocomotiveUI -> Player : displayConfirmation()
+BuyLocomotiveUI --> Player : confirms purchase and displays succes message
 deactivate BuyLocomotiveUI
 deactivate Player
+
 @enduml
