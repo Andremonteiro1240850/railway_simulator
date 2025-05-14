@@ -1,0 +1,46 @@
+@startuml
+skinparam shadowing false
+skinparam linetype polyline
+skinparam monochrome true
+autonumber
+
+actor Player
+participant BuyLocomotiveUI
+participant BuyLocomotiveController
+
+Player -> BuyLocomotiveUI : request to buy a locomotive
+activate BuyLocomotiveUI
+BuyLocomotiveUI -> BuyLocomotiveController : getAvailableLocomotives()
+activate BuyLocomotiveController
+
+ref over BuyLocomotiveController : SD-get-available-locomotives
+
+BuyLocomotiveController --> BuyLocomotiveUI : AvailableLocomotives
+deactivate BuyLocomotiveController
+BuyLocomotiveUI --> Player : Displays list of available locomotives
+deactivate BuyLocomotiveUI
+
+Player -> BuyLocomotiveUI : selects a locomotive
+activate BuyLocomotiveUI
+BuyLocomotiveUI -> BuyLocomotiveController : getLocomotiveDetails()
+activate BuyLocomotiveController
+
+ref over BuyLocomotiveController : SD-get-locomotive-details
+
+BuyLocomotiveController --> BuyLocomotiveUI : LocomotiveDetails
+deactivate BuyLocomotiveController
+BuyLocomotiveUI --> Player : displayLocomotiveDetails
+deactivate BuyLocomotiveUI
+
+Player -> BuyLocomotiveUI : confirmPurchase
+activate BuyLocomotiveUI
+BuyLocomotiveUI -> BuyLocomotiveController : confirmPurchase(locomotive)
+activate BuyLocomotiveController
+
+ref over BuyLocomotiveController : SD-confirm-locomotive-purchase
+
+BuyLocomotiveController --> BuyLocomotiveUI : return success message
+deactivate BuyLocomotiveController
+BuyLocomotiveUI --> Player : confirms purchase and displays success message
+deactivate BuyLocomotiveUI
+@enduml

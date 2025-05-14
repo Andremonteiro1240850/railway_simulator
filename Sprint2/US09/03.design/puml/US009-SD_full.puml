@@ -1,5 +1,5 @@
 @startuml
-' US09 - Full Sequence Diagram (Aligned with SSD and Class Diagram)
+
 skinparam shadowing false
 skinparam linetype polyline
 skinparam monochrome true

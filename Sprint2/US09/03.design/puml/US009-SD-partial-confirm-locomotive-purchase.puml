@@ -1,0 +1,46 @@
+@startuml
+autonumber
+participant BuyLocomotiveController
+activate BuyLocomotiveController
+participant PlayerSessionRepository
+participant PlayerSession
+participant Locomotive
+participant ScenarioRepository
+participant Scenario
+participant LocomotivePurchase
+
+BuyLocomotiveController -> PlayerSessionRepository : getSessionByPlayerId(playerId)
+activate PlayerSessionRepository
+PlayerSessionRepository --> BuyLocomotiveController : PlayerSession
+deactivate PlayerSessionRepository
+
+
+BuyLocomotiveController -> Locomotive : getPrice()
+activate Locomotive
+Locomotive --> BuyLocomotiveController : price
+deactivate Locomotive
+
+BuyLocomotiveController -> PlayerSession : canAfford(price)
+BuyLocomotiveController -> PlayerSession : deductBudget(price)
+deactivate PlayerSession
+
+BuyLocomotiveController -> ScenarioRepository : getScenario()
+activate ScenarioRepository
+ScenarioRepository --> BuyLocomotiveController : Scenario
+deactivate ScenarioRepository
+activate Scenario
+
+BuyLocomotiveController -> Scenario : getCurrentDate()
+Scenario --> BuyLocomotiveController : currentDate
+deactivate Scenario
+
+activate LocomotivePurchase
+BuyLocomotiveController -> LocomotivePurchase : create(purchaseId, baseId, type, price, date)
+deactivate LocomotivePurchase
+
+activate PlayerSession
+BuyLocomotiveController -> PlayerSession : addPurchase(LocomotivePurchase)
+deactivate PlayerSession
+
+deactivate BuyLocomotiveController
+@enduml

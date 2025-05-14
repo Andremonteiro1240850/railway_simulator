@@ -1,0 +1,24 @@
+@startuml
+autonumber
+participant BuyLocomotiveController
+activate BuyLocomotiveController
+participant LocomotiveRepository
+participant Locomotive
+
+BuyLocomotiveController -> LocomotiveRepository : getLocomotive()
+activate LocomotiveRepository
+LocomotiveRepository --> BuyLocomotiveController : Locomotive
+deactivate LocomotiveRepository
+
+BuyLocomotiveController -> Locomotive : getType()
+activate Locomotive
+Locomotive --> BuyLocomotiveController : type
+deactivate Locomotive
+
+BuyLocomotiveController -> Locomotive : getPrice()
+activate Locomotive
+Locomotive --> BuyLocomotiveController : price
+deactivate Locomotive
+
+deactivate BuyLocomotiveController
+@enduml
