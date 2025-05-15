@@ -1,4 +1,4 @@
-# US12-As a Product Owner, I want to create a simulator that generates cargoes at current stations, automatically, considering the cities andindustries that the railway network serves.
+# US12-As a Product Owner, I want to create a simulator that generates cargoes at current stations, automatically, considering the cities and industries that the railway network serves.
 
 
 

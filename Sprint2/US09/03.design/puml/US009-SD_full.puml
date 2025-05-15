@@ -62,7 +62,7 @@ Player -> BuyLocomotiveUI : confirmPurchase
 activate BuyLocomotiveUI
 BuyLocomotiveUI -> BuyLocomotiveController : confirmPurchase (locomotive)
 activate BuyLocomotiveController
-BuyLocomotiveController -> PlayerSessionRepository : getSessionByPlayerId(playerId)
+BuyLocomotiveController -> PlayerSessionRepository : getSessionByPlayerId(gmailplayer)
 activate PlayerSessionRepository
 PlayerSessionRepository --> BuyLocomotiveController : PlayerSession
 deactivate PlayerSessionRepository
@@ -77,10 +77,6 @@ deactivate Locomotive
 BuyLocomotiveController -> PlayerSession : canAfford(price)
 BuyLocomotiveController -> PlayerSession : deductBudget(price)
 deactivate PlayerSession
-BuyLocomotiveController -> ScenarioRepository : getScenario()
-activate ScenarioRepository
-ScenarioRepository --> BuyLocomotiveController : Scenario
-deactivate ScenarioRepository
 activate Scenario
 BuyLocomotiveController -> Scenario : getCurrentDate()
 Scenario --> BuyLocomotiveController : currentDate

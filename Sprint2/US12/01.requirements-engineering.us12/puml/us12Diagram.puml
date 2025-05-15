@@ -26,7 +26,7 @@ activate PO
         System --> System : cargo based on industries and cargo
         System --> System : schedule cargo generation ( fixed or random frequency)
         System --> System : store cargo at stations (limit: 24 per station)
-   ==Pause Flow==
+
 
     PO -> System : pause simulation (scenario-specific)
         activate System
