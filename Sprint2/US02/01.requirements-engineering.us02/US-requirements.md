@@ -53,7 +53,7 @@ There is a dependecy on the US01- "Create a Map", because the maximum values of 
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![US02-SSD](us-Diagram/us02Diagram.svg)
+![US02-SSD](/Sprint2/US02/01.requirements-engineering.us02/svg/us02Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 * The coordinates (X, Y) must be within the bounds of the selected map.

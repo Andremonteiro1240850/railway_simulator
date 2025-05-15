@@ -1,0 +1,29 @@
+@startumlSplit2
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+actor Editor
+participant AddIndustryUI
+participant AddIndustryController
+participant IndustryTypeRepository
+
+AddIndustryUI -> Editor : askPosition()
+Editor -> AddIndustryUI : selectPosition(x, y)
+
+AddIndustryUI -> AddIndustryController : providePosition(x, y)
+AddIndustryController -> AddIndustryUI : requestIndustryType()
+
+AddIndustryUI -> Editor : askIndustryType()
+Editor -> AddIndustryUI : provideIndustryType(type)
+
+AddIndustryUI -> AddIndustryController : provideIndustryType(type)
+AddIndustryController -> IndustryTypeRepository : isValidType(type)
+IndustryTypeRepository --> AddIndustryController : true/false
+@enduml
+

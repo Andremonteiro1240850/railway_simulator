@@ -10,49 +10,113 @@ autonumber
 
 actor Editor
 
-Editor -> AddIndustryUI : startAddIndustry()
+participant AddIndustryUI
+participant AddIndustryController
+participant UserService
+participant MapRepository
+participant IndustryTypeRepository
+participant Map
+participant Industry
+
+activate Editor
+Editor -> AddIndustryUI : Start to Add Industry
 activate AddIndustryUI
-
-Editor -> AddIndustryUI : inputIndustryData(type, x, y)
-
-AddIndustryUI -> AddIndustryController : handleAddIndustry(type, x, y)
+AddIndustryUI -> AddIndustryController : requestAddIndustry()
+deactivate AddIndustryUI
 activate AddIndustryController
 
-AddIndustryController -> MapRepository : getCurrentMap()
-activate MapRepository
-MapRepository --> AddIndustryController : Map
-deactivate MapRepository
+AddIndustryController -> UserService : verifyPermission()
+deactivate AddIndustryController
+activate UserService
+UserService --> AddIndustryController : permissionGranted
+deactivate UserService
+
+AddIndustryUI --> Editor : Ask Position
+
+Editor -> AddIndustryUI : Select a position XY on the map
+
+activate AddIndustryUI
+
+AddIndustryUI -> AddIndustryController : providePosition(x, y)
+deactivate AddIndustryUI
+activate AddIndustryController
+AddIndustryController --> AddIndustryUI : requestIndustryType()
+deactivate AddIndustryController
+activate AddIndustryUI
+AddIndustryUI --> Editor : Ask Industry Type
+deactivate AddIndustryUI
+
+Editor -> AddIndustryUI : Provide Industry Type
+
+activate AddIndustryUI
+
+
+AddIndustryUI -> AddIndustryController : provideIndustryType(type)
+deactivate AddIndustryUI
+activate AddIndustryController
 
 AddIndustryController -> IndustryTypeRepository : isValidType(type)
+deactivate AddIndustryController
 activate IndustryTypeRepository
 IndustryTypeRepository --> AddIndustryController : boolean
 deactivate IndustryTypeRepository
+activate AddIndustryController
+
+AddIndustryController -> MapRepository : getCurrentMap()
+deactivate AddIndustryController
+activate MapRepository
+MapRepository --> AddIndustryController : Map
+deactivate MapRepository
+activate AddIndustryController
 
 AddIndustryController -> Map : isPositionValid(x, y)
+deactivate AddIndustryController
 activate Map
 Map --> AddIndustryController : boolean
 deactivate Map
+activate AddIndustryController
 
 AddIndustryController -> Industry : create(type, x, y)
+deactivate AddIndustryController
 activate Industry
-Industry --> AddIndustryController : industry
-
-AddIndustryController -> Industry : validatePlacement()
+Industry --> AddIndustryController : Industry
 deactivate Industry
+activate AddIndustryController
 
-AddIndustryController -> Map : addIndustry(industry)
+AddIndustryController -> AddIndustryUI : showIndustryInfo(industry)
+deactivate AddIndustryController
+activate AddIndustryUI
+AddIndustryUI --> Editor : Show industry information
+deactivate AddIndustryUI
+
+Editor -> AddIndustryUI : Confirm Industry Creation
+activate AddIndustryUI
+AddIndustryUI -> AddIndustryController : confirmCreation()
+deactivate AddIndustryUI
+activate AddIndustryController
+
+AddIndustryController -> Map : validatePlacement()
+deactivate AddIndustryController
 activate Map
-Map --> AddIndustryController : success
+
+Map --> AddIndustryController : addIndustry(industry)
 deactivate Map
+activate AddIndustryController
+
 
 AddIndustryController -> MapRepository : save(map)
+deactivate AddIndustryController
 activate MapRepository
 MapRepository --> AddIndustryController : confirmation
 deactivate MapRepository
+activate AddIndustryController
 
 AddIndustryController --> AddIndustryUI : success/failure
 deactivate AddIndustryController
+activate AddIndustryUI
 
-AddIndustryUI -> Editor : showSuccessOrError()
+AddIndustryUI --> Editor : Display operation Success
 deactivate AddIndustryUI
+deactivate Editor
+
 @enduml

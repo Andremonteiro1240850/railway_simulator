@@ -19,10 +19,10 @@ activate Editor
     Editor -> System : Select a position XY on the map
         activate System
 
-    System --> Editor : Request industry details
+    System --> Editor : Request industry type
         deactivate System
 
-    Editor -> System : Provide industry details
+    Editor -> System : Provide industry type
         activate System
 
     System --> Editor : Show industry information

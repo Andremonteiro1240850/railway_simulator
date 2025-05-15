@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor Editor
+participant AddIndustryController
+participant MapRepository
+participant Map
+participant Industry
+participant AddIndustryUI
+
+
+AddIndustryController -> MapRepository : getCurrentMap()
+MapRepository --> AddIndustryController : map
+
+AddIndustryController -> Map : isPositionValid(x, y)
+Map --> AddIndustryController : true/false
+
+AddIndustryController -> Industry : create(type, x, y)
+Industry --> AddIndustryController : industry
+
+AddIndustryController -> AddIndustryUI : showIndustryInfo(industry)
+AddIndustryUI -> Editor : displayIndustryInfo()
+@enduml
+

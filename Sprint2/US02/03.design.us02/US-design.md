@@ -41,23 +41,31 @@ According to the taken rationale, the conceptual classes promoted to software cl
 ### Full Diagram
 This diagram shows the complete sequence of interactions between the classes involved in the realization of US02.
 
-![US02-SD-full](/Sprint2/US02/03.design.us02/svg/US02-SD-full.svg)
+![US02-SD-full](US02-SD-full.svg)
 
 ### Partial Diagrams
 These partial diagrams break down the full sequence into logical steps.
 
-#### Input & Validation Phase
-The Editor provides the industry data, which is validated by the controller.
-![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-input-validation-phase.svg)
+#### Start Process and Permission Check
+This part of the sequence illustrates how the industry addition process is initiated by the Editor. The user interacts with the AddIndustryUI to begin the process. The AddIndustryController then checks whether the user has permission to perform this operation by calling the UserService.
 
-####  Map Position & Industry Creation
-![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-map-position.svg)
+![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-start-process-permisson-check.svg)
 
-#### Validate Placement & Add to Map
-![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-validate-placement-add-to-map.svg)
+####  Input Position and Industry Type
 
-#### UI Feedback
-![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-UI-feedback.svg)
+This section shows how the user selects the industry’s position on the map and provides the type of industry to be added. The AddIndustryController validates the type against the IndustryTypeRepository to ensure it's allowed.
+
+![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-input-position-industry-type.svg)
+
+#### Validation and Industry Preview
+This part focuses on validating the chosen position and preparing a preview of the new industry. It retrieves the map, checks if the position is valid, and creates a temporary industry object. This object is then displayed to the editor for confirmation.
+![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-validation-industry-preview.svg)
+
+#### Confirmation and Finalization
+
+In the final phase, the editor confirms the industry creation. The controller validates placement again, adds the industry to the map, and saves the updated map. Finally, a success or failure message is shown to the editor.
+
+![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-confirmation-finalization.svg)
 
 ## 3.3. Class Diagram (CD)
 
