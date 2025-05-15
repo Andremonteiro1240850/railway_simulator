@@ -1,5 +1,5 @@
-# US07 - As a Player, I want to list all the stations to select one to see its
-details, including the existing building and the demand/supply cargoes.
+# US07 - List all the stations to select one to see its details
+including the existing building and the demand/supply cargoes.
 
 
 

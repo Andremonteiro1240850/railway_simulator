@@ -1,6 +1,4 @@
-# USXXX - YYY
-
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+# US07 - List all the stations to select one to see its details
 
 ## 3. Design
 

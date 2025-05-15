@@ -1,6 +1,4 @@
-# USXXX - YYY
-
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+# US07 - List all the stations to select one to see its details
 
 ## 4. Tests
 _In this section, it is suggested to systematize how the tests were designed to allow a correct measurement of requirements fulfilling._ 

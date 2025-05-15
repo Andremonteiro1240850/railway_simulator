@@ -1,6 +1,5 @@
-# USXXX - YYY
+# US01 - Creating Map
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
 
 ## 3. Design
 
@@ -48,9 +47,6 @@ This diagram shows the complete sequence of interactions between the classes inv
 
 ### Split Diagrams
 The following diagrams show the same sequence of interactions between the classes involved in the realization of this user story, but split into partial diagrams to better illustrate the interactions between the classes.
-
-They use Interaction Occurrence (a.k.a. Interaction Use) and reflect different logical phases of the interaction.
-
 
 #### Input & Validation Phase
 This diagram shows how the user starts the use case and inputs map data, which is then validated by the controller.
