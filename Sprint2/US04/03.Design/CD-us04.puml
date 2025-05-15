@@ -7,43 +7,42 @@ class Editor {
 }
 
 class CreateScenarioUI {
-  + asksToCreateNewScenario()
+  + askToCreateNewScenario()
   + showAvailableMaps(mapsList)
   + requestScenarioDetails()
-  + showConfirmation()
+  + showConfirmation(data)
   + displaySuccess()
 }
 
 class CreateScenarioController {
-  + create()
-  + getAvailableMaps(): List<Map>
-  + getAvailablePortBehaviors(): List<BehaviorOption>
-  + getAvailableLocomotionTypes(): List<LocomotionType>
-  + getIndustryGenerationFactors(): List<IndustryFactor>
-  + createScenario(params): Scenario
+  + getAvailableMaps()
+  + getAvailablePortBehaviors()
+  + getAvailableLocomotionTypes()
+  + getIndustryGenerationFactors()
+  + createScenario(params)
 }
 
 class Organization {
 }
 
 class MapManager {
-  + getAllMaps(): List<Map>
+  + getAllMaps()
 }
 
 class PortManager {
-  + getBehaviorOptions(): List<BehaviorOption>
+  + getBehaviorOptions()
 }
 
 class TransportSystem {
-  + requestLocomotionTypes(): List<LocomotionType>
+  + requestLocomotionTypes()
 }
 
 class IndustryManager {
-  + getGenerationFrequency(): List<IndustryFactor>
+  + getGenerationFrequency()
 }
 
 class ScenarioManager {
-  + create(map, params): Scenario
+  + create(map, params)
   + setPortBehavior()
   + setLocomotionTypes()
   + configureIndustries()
@@ -56,41 +55,27 @@ CreateScenarioController --> MapManager : consulta
 CreateScenarioController --> PortManager : consulta
 CreateScenarioController --> TransportSystem : consulta
 CreateScenarioController --> IndustryManager : consulta
-CreateScenarioController --> ScenarioManager : cria
-Organization --* ScenarioManager : contém
+CreateScenarioController --> ScenarioManager : cria/gerencia
+CreateScenarioController --> Organization : verifica permissões
+ScenarioManager --> PortManager : configura
+ScenarioManager --> TransportSystem : configura
+ScenarioManager --> IndustryManager : configura
+Organization --> MapManager : possui
+Organization --> PortManager : possui
+Organization --> TransportSystem : possui
+Organization --> IndustryManager : possui
+Organization --> ScenarioManager : possui
 
-' Classes de dados
-class Map {
-  -id: String
-  -name: String
-}
+note right of CreateScenarioController::createScenario
+  1. Cria novo cenário
+  2. Configura comportamentos
+  3. Retorna cenário criado
+end note
 
-class BehaviorOption {
-  -type: String
-  -description: String
-}
-
-class LocomotionType {
-  -type: String
-  -description: String
-}
-
-class IndustryFactor {
-  -factor: Double
-  -description: String
-}
-
-class Scenario {
-  -map: Map
-  -portBehavior: BehaviorOption
-  -locomotionTypes: List<LocomotionType>
-  -industryFactors: List<IndustryFactor>
-}
-
-' Relacionamentos com classes de dados
-MapManager --> Map : gerencia
-PortManager --> BehaviorOption : fornece
-TransportSystem --> LocomotionType : fornece
-IndustryManager --> IndustryFactor : fornece
-ScenarioManager --> Scenario : cria e configura
+note bottom of ScenarioManager
+  Responsável por:
+  - Gerenciar configurações do cenário
+  - Persistir parâmetros
+  - Coordenar subsistemas
+end note
 @enduml

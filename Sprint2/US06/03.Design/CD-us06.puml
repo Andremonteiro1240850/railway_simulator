@@ -1,114 +1,94 @@
 @startuml
+skinparam monochrome false
 skinparam packageStyle rectangle
 skinparam shadowing false
-skinparam linetype polyline
-skinparam classAttributeIconSize 0
 
 class Player {
-    - id: String
-    - name: String
-    - balance: double
-}
-
-class Station {
-    - id: String
-    - name: String
-    - level: int
-    + getAvailableUpgrades(): List<BuildingType>
-}
-
-class Building {
-    - type: BuildingType
-    - cost: double
-}
-
-class BuildingType {
-    - name: String
-    - category: String
-}
-
-class Game {
-    - currentPlayer: Player
-    - organization: Organization
-}
-
-class Organization {
-    - name: String
-    - stations: List<Station>
-    + getStationsByPlayer(player: Player): List<Station>
-    + applyUpgrade(station: Station, building: Building): boolean
 }
 
 class UpgradeStationUI {
-    + showStations(stations: List<Station>)
-    + showBuildingOptions(buildings: List<Building>)
-    + showUpgradeConfirmation(station: Station, building: Building)
-    + showResult(success: boolean)
+  + askToUpgradeStation()
+  + showAvailableStations()
+  + requestBuildingType()
+  + showUpgradeSummary()
+  + displayUpgradeResult()
 }
 
 class UpgradeStationController {
-    + getStations(): List<Station>
-    + getAvailableBuildings(station: Station): List<Building>
-    + executeUpgrade(station: Station, building: Building): boolean
+  + initialize()
+  + getStations()
+  + selectUpgradeBuilding()
+  + executeUpgrade()
 }
 
-' Serviços e Repositórios
+class Organization {
+  + applyStationUpgrade()
+}
+
 class PlayerRepository {
-    + getCurrentPlayer(): Player
+  + getCurrentPlayer()
 }
 
 class StationRepository {
-    + getByPlayer(player: Player): List<Station>
-    + save(station: Station)
+  + getStationsByPlayer()
 }
 
 class BuildingRepository {
-    + getByTypes(types: List<BuildingType>): List<Building>
+  + getBuildingsByType()
 }
 
 class StationValidator {
-    + getAvailableBuildings(station: Station): List<BuildingType>
+  + getAvailableBuildings()
 }
 
 class EconomyManager {
-    + canAfford(player: Player, amount: double): boolean
-    + deduct(player: Player, amount: double)
+  + verifyIfPossible()
 }
 
 class StationUpgrader {
-    + upgrade(station: Station, building: Building): boolean
+  + applyUpgrade()
 }
 
-' Relacionamentos principais
-Game "1" *-- "1" Organization
-Game "1" *-- "1" Player
+' Relacionamentos
+Player --> UpgradeStationUI : usa
+UpgradeStationUI --> UpgradeStationController : comunica com
 
-Organization "1" *-- "*" Station
-Organization "1" *-- "1" PlayerRepository
-Organization "1" *-- "1" StationRepository
-
-PlayerRepository "1" --> "*" Player
-
-StationRepository "1" --> "*" Station
-
-BuildingRepository "1" --> "*" Building
-Building --> "1" BuildingType
-
-UpgradeStationUI .> UpgradeStationController : usa
-UpgradeStationController --> Game : acessa
+UpgradeStationController --> PlayerRepository : consulta
+UpgradeStationController --> StationRepository : consulta
+UpgradeStationController --> BuildingRepository : consulta
 UpgradeStationController --> StationValidator : valida
 UpgradeStationController --> EconomyManager : verifica fundos
-UpgradeStationController --> StationUpgrader : executa
+UpgradeStationController --> StationUpgrader : executa upgrade
+UpgradeStationController --> Organization : registra upgrade
 
-note top of Game
-    Ponto central do jogo
-    mantém o estado atual
-    do jogador e organização
+Organization --> PlayerRepository : gerencia
+Organization --> StationRepository : possui
+Organization --> BuildingRepository : mantém
+Organization --> EconomyManager : controla
+Organization --> StationUpgrader : coordena
+
+StationValidator --> BuildingRepository : filtra
+StationUpgrader --> StationValidator : valida pré-requisitos
+
+note right of UpgradeStationController::executeUpgrade
+  Fluxo principal:
+  1. Verifica fundos
+  2. Aplica upgrade
+  3. Registra na organização
+  4. Retorna status
 end note
 
-note right of Organization
-    Agregado raiz que controla
-    todas as estações e suas
-    regras de negócio
+note bottom of StationValidator
+  Responsável por:
+  - Validar edifícios compatíveis
+  - Verificar pré-requisitos
+  - Controlar upgrades permitidos
+end note
+
+note left of EconomyManager
+  Gerencia:
+  - Recursos do jogador
+  - Custo de upgrades
+  - Transações econômicas
 end note
 @enduml

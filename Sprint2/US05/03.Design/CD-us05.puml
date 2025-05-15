@@ -8,118 +8,110 @@ class Player {
 
 class CreateStationUI {
   + askToBuildStation()
-  + showStationTypes(types)
-  + requestStationInfo()
+  + showStationTypes()
+  + requestInformation()
   + showConfirmation()
   + displaySuccess()
 }
 
 class CreateStationController {
-  + create()
-  + getStationTypes(): List<StationType>
-  + getLocation(): Coordinates
-  + getName(): String
-  + getCentre(): Point
-  + createStation(type, location, name, centre): Station
+  + getStationTypes()
+  + getLocation()
+  + getName()
+  + getCentre()
+  + createStation()
 }
 
 class Organization {
 }
 
 class StationTypeRepositories {
-  + getStationType(): List<StationTypeRepository>
+  + getStationType()
 }
 
-class StationTypeRepository {
-  + getStationTypeList(): List<StationType>
+class StationTypeRepositoriesSingleton {
+  + getStationTypeList()
 }
 
 class StationTypeCategoryRepository {
-  + getStationTypeCategories(): List<StationTypeCategory>
+  + getStationTypeCategories()
 }
 
 class MapService {
-  + requestCoordinates(): Coordinates
+  + requestCoordinates()
 }
 
 class LocationValidator {
-  + validateXY(coords): boolean
+  + validateXY()
 }
 
 class StationNamingService {
-  + generateName(cityName, stationType): String
+  + generateName()
 }
 
 class CityRegistry {
-  + getNearestCity(location): String
+  + getNearestCity()
 }
 
 class StationGeometry {
-  + calculateCenter(stationType, location): Point
+  + calculateCenter()
 }
 
 class PositionValidator {
-  + validateCenter(point): boolean
+  + validateCenter()
 }
 
 class RailwayNetwork {
-  + buildStation(params): Station
+  + buildStation()
 }
 
 class BudgetManager {
-  + verifyIfPossible(stationType): boolean
-}
-
-' Classes de dados
-class StationType {
-  -id: String
-  -name: String
-  -category: StationTypeCategory
-}
-
-class StationTypeCategory {
-  -id: String
-  -name: String
-}
-
-class Coordinates {
-  -x: double
-  -y: double
-}
-
-class Point {
-  -x: double
-  -y: double
-}
-
-class Station {
-  -type: StationType
-  -location: Coordinates
-  -name: String
-  -center: Point
+  + verifyIfPossible()
 }
 
 ' Relacionamentos
 Player --> CreateStationUI : usa
 CreateStationUI --> CreateStationController : comunica com
 CreateStationController --> StationTypeRepositories : consulta
-CreateStationController --> StationTypeRepository : consulta
+CreateStationController --> StationTypeRepositoriesSingleton : consulta
 CreateStationController --> StationTypeCategoryRepository : consulta
-CreateStationController --> MapService : obtém localização
-CreateStationController --> LocationValidator : valida
+CreateStationController --> MapService : obtém coordenadas
+CreateStationController --> LocationValidator : valida local
 CreateStationController --> StationNamingService : gera nome
-CreateStationController --> CityRegistry : consulta
+CreateStationController --> CityRegistry : consulta cidades
 CreateStationController --> StationGeometry : calcula centro
-CreateStationController --> PositionValidator : valida
+CreateStationController --> PositionValidator : valida posição
+CreateStationController --> RailwayNetwork : constrói estação
 CreateStationController --> BudgetManager : verifica orçamento
-CreateStationController --> RailwayNetwork : constrói
-Organization --* RailwayNetwork : contém
+CreateStationController --> Organization : verifica permissões
 
-' Relações de composição
-StationTypeRepositories o-- StationTypeRepository
-StationTypeRepositories o-- StationTypeCategoryRepository
-StationType --> StationTypeCategory : possui
-Station --> StationType : possui
-Station --> Coordinates : possui
-Station --> Point : possui
+Organization --> StationTypeRepositories : possui
+Organization --> RailwayNetwork : possui
+Organization --> BudgetManager : possui
+
+StationTypeRepositoriesSingleton --> StationTypeRepositories : encapsula
+StationTypeCategoryRepository --> StationTypeRepositories : agrega
+
+RailwayNetwork --> StationGeometry : usa para construção
+RailwayNetwork --> PositionValidator : valida posições
+
+note right of CreateStationController::createStation
+  1. Verifica orçamento
+  2. Constrói estação
+  3. Retorna resultado
+end note
+
+note bottom of StationTypeRepositories
+  Padrão Repository para:
+  - Tipos de estações
+  - Categorias
+  - Dados persistentes
+end note
+
+note left of RailwayNetwork
+  Gerencia:
+  - Rede ferroviária
+  - Construção de estações
+  - Conexões
+end note
 @enduml
