@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+participant ":CreateStationController" as CTRL
+participant "StationTypeRepositories" as REPOS
+participant "stationTypeRepositories\n:StationTypeRepositories" as REPOS_SINGLETON
+participant "stationTypeCategoryRepository:\nStatioTypeCategoryRepository" as TASK_CAT_REPO
+
+autonumber 3
+
+ -> CTRL : getStationTypes()
+autonumber 3.1
+activate CTRL
+    group Get Station Type List
+
+            CTRL -> REPOS : getStationType()
+            activate REPOS
+                REPOS --> CTRL: repositories
+            deactivate REPOS
+
+            CTRL -> REPOS_SINGLETON : getStatioTypeList()
+            activate REPOS_SINGLETON
+                REPOS_SINGLETON --> CTRL:  stationTypeRepository
+            deactivate REPOS_SINGLETON
+
+            CTRL -> TASK_CAT_REPO : getStationTypeCategories()
+            activate TASK_CAT_REPO
+                TASK_CAT_REPO --> CTRL : stationTypeCategoryList
+            deactivate TASK_CAT_REPO
+
+    end
+    autonumber 4
+    <-- CTRL  : stationTypeList
+deactivate CTRL
+
+@enduml

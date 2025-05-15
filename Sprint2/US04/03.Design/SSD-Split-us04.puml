@@ -1,0 +1,83 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+actor "Editor" as ORG_EMPLOYEE
+
+participant ":CreateScenariokUI" as UI
+participant ":CreateScenarioController" as CTRL
+participant "organization\n:Organization" as ORG
+
+activate ORG_EMPLOYEE
+
+    ORG_EMPLOYEE -> UI : asks to create a new scenario
+
+    activate UI
+
+        UI --> CTRL** : create()
+        UI -> CTRL : getAvailableMaps()
+        ref over CTRL
+                                        Get map
+                                    end ref
+                activate CTRL
+                    CTRL --> UI : availableMaps
+                deactivate CTRL
+
+        UI --> ORG_EMPLOYEE : Verify permission and ask to select a map
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : selects a map
+    activate UI
+    UI -> CTRL : getAvailablePortBehaviors()
+                    ref over CTRL
+                        Get Port Behavior
+                    end ref
+                    activate CTRL
+                        CTRL --> UI : portBehaviorOptions
+                    deactivate CTRL
+
+                    UI -> CTRL : getAvailableLocomotionTypes()
+                    ref over CTRL
+                        Get Locomotion Types
+                    end ref
+                    activate CTRL
+                        CTRL --> UI : locomotionTypes
+                    deactivate CTRL
+
+                    UI -> CTRL : getIndustryGenerationFactors()
+                    ref over CTRL
+                        Get Industry Factors
+                    end ref
+                    activate CTRL
+                        CTRL --> UI : industryFactors
+                    deactivate CTRL
+
+        UI --> ORG_EMPLOYEE : requests scenario details (port behavior, cargoes transform and import or export,\n locomotion types, frequency of generating industries )
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : provide requested data
+    activate UI
+
+        UI --> ORG_EMPLOYEE : shows all data and requests confirmation
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : confirms data
+    activate UI
+
+        UI -> CTRL : createScenario()
+
+                ref over CTRL
+                    Create Task
+                end
+
+            CTRL --> UI: createScenario
+            deactivate CTRL
+            UI --> ORG_EMPLOYEE: displays operation success
+    deactivate UI
+
+deactivate ORG_EMPLOYEE
+@enduml

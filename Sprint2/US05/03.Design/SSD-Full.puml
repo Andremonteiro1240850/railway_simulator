@@ -1,0 +1,164 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+hide footbox
+actor "Player" as ORG_EMPLOYEE
+
+participant ":CreateStationUI" as UI
+participant ":CreateStationController" as CTRL
+participant "organization\n:Organization" as ORG
+participant "StationTypeRepositories" as REPOS
+participant "stationTypeRepositories\n:StationTypeRepositories" as REPOS_SINGLETON
+participant "stationTypeCategoryRepository:\nStatioTypeCategoryRepository" as TASK_CAT_REPO
+participant "map\n:MapService" as MAP
+participant "validation\n:LocationValidator" as VALID
+participant "naming\n:StationNamingService" as NAMING
+participant "city\n:CityRegistry" as CITY
+participant "geometry\n:StationGeometry" as GEO
+participant "validation\n:PositionValidator" as VALID
+participant "railway\n:RailwayNetwork" as RAIL
+participant "economy\n:BudgetManager" as BUDGET
+
+activate ORG_EMPLOYEE
+
+    ORG_EMPLOYEE -> UI : asks to build a staion
+    autonumber 1
+
+    activate UI
+        UI --> CTRL** : create()
+        autonumber 2
+        UI -> CTRL : getStationTypes()
+        autonumber 3
+        autonumber 3.1
+        activate CTRL
+
+                    CTRL -> REPOS : getStationType()
+                    activate REPOS
+                        REPOS --> CTRL: repositories
+                    deactivate REPOS
+
+                    CTRL -> REPOS_SINGLETON : getStatioTypeList()
+                    activate REPOS_SINGLETON
+                        REPOS_SINGLETON --> CTRL:  stationTypeRepository
+                    deactivate REPOS_SINGLETON
+
+                    CTRL -> TASK_CAT_REPO : getStationTypeCategories()
+                    activate TASK_CAT_REPO
+                        TASK_CAT_REPO --> CTRL : stationTypeCategoryList
+                    deactivate TASK_CAT_REPO
+
+            CTRL --> UI : stationTypesList
+            autonumber 4
+        deactivate CTRL
+        UI --> ORG_EMPLOYEE : verify if is allowed to build a station and\n show station types
+        autonumber 5
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : selects station type
+    autonumber 6
+    activate UI
+        UI -> CTRL : getLocation()
+        autonumber 6.1
+
+        activate CTRL
+
+                CTRL -> MAP : requestCoordinates()
+                activate MAP
+                    MAP --> CTRL : giveCoordinates
+                deactivate MAP
+
+                CTRL -> VALID : validateXY()
+                activate VALID
+                    VALID --> CTRL : isValid
+                deactivate VALID
+
+            CTRL --> UI : location
+            autonumber 6.2
+        deactivate CTRL
+
+        UI -> CTRL : getName()
+        autonumber 6.3
+
+        activate CTRL
+
+                CTRL -> CITY : getNearestCity(location)
+                activate CITY
+                    CITY --> CTRL : cityName
+                deactivate CITY
+
+                CTRL -> NAMING : generateName(cityName, stationType)
+                activate NAMING
+                    NAMING --> CTRL : suggestedName
+                deactivate NAMING
+                CTRL -> UI : name
+
+            autonumber 6.4
+
+        deactivate CTRL
+
+        UI -> CTRL : getCentre()
+        autonumber 6.5
+
+        activate CTRL
+
+                CTRL -> GEO : calculateCenter(stationType, location)
+                activate GEO
+                    GEO --> CTRL : centerPoint
+                deactivate GEO
+
+                CTRL -> VALID : validateCenter(centerPoint)
+                activate VALID
+                    VALID --> CTRL : isValid
+                deactivate VALID
+                CTRL -> UI : centre
+
+            autonumber 6.6
+
+        deactivate CTRL
+
+        UI --> ORG_EMPLOYEE : requests information (Location, (name, centre if Staion))
+        autonumber 7
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : types requested information
+    autonumber 8
+    activate UI
+        UI --> ORG_EMPLOYEE : shows all data and name suggested, and requests confirmation
+        autonumber 9
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : confirms data
+    autonumber 10
+    activate UI
+        UI -> CTRL : createStation(Type, location, name, centre)
+        autonumber 11
+        activate CTRL
+
+            autonumber 12
+
+            activate CTRL
+
+                    CTRL -> BUDGET : verifyIfPossible(stationType)
+                    activate BUDGET
+                        BUDGET --> CTRL : isPossible
+                    deactivate BUDGET
+
+                    CTRL -> RAIL : buildStation()
+                    activate RAIL
+                        RAIL --> CTRL : stationBuilt
+                    deactivate RAIL
+
+                autonumber 18
+                CTRL -> UI : stationCreated
+
+            deactivate CTRL
+        UI --> ORG_EMPLOYEE: displays operation success and build
+        autonumber 19
+    deactivate UI
+
+deactivate ORG_EMPLOYEE
+@enduml

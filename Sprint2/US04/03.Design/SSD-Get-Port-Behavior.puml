@@ -1,0 +1,18 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateScenarioController" as CTRL
+participant "port\n:PortManager" as PORT
+
+autonumber 7
+-> CTRL: getAvailablePortBehaviors()
+activate CTRL
+    CTRL --> PORT**: getBehaviorOptions()
+    activate PORT
+        PORT --> CTRL: behaviorOptions
+    deactivate PORT
+<-- CTRL: portBehaviorOptions
+deactivate CTRL
+@enduml

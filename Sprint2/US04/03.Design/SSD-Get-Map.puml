@@ -1,0 +1,19 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateScenarioController" as CTRL
+participant "map\n:MapManager" as MAP
+autonumber 3
+-> CTRL: getAvailableMaps()
+activate CTRL
+    CTRL --> MAP**: getAllMaps()
+    activate MAP
+        MAP --> CTRL: mapsList
+    deactivate MAP
+
+<-- CTRL: availableMaps
+deactivate CTRL
+
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateStationController" as CTRL
+participant "railway\n:RailwayNetwork" as RAIL
+participant "economy\n:BudgetManager" as BUDGET
+
+autonumber 12
+-> CTRL : createStation()
+activate CTRL
+
+        CTRL -> BUDGET : verifyIfPossible(stationType)
+        activate BUDGET
+            BUDGET --> CTRL : isPossible
+        deactivate BUDGET
+
+        CTRL -> RAIL : buildStation()
+        activate RAIL
+            RAIL --> CTRL : stationBuilt
+        deactivate RAIL
+
+    autonumber 18
+    <-- CTRL : stationCreated
+deactivate CTRL
+@enduml

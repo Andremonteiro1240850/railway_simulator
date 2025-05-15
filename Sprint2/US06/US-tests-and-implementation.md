@@ -1,34 +1,131 @@
-# USXXX - YYY
-
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+# US06 - Upgrade Station
 
 ## 4. Tests
-_In this section, it is suggested to systematize how the tests were designed to allow a correct measurement of requirements fulfilling._ 
 
-**_DO NOT COPY ALL DEVELOPED TESTS HERE_**
+**Test 1:** Test if upgrade does not work with null vallues
 
-**Test 1:** Check that it is not possible to create an instance of the Example class with null values. 
+    @Test(expected = IllegalArgumentException.class)
+        public void ensureNullIsNotAllowed() {
+            UpgradeStationController controller = new UpgradeStationController();
+            controller.executeUpgrade(null, null);
+        }
 
-	@Test(expected = IllegalArgumentException.class)
-		public void ensureNullIsNotAllowed() {
-		Exemplo instance = new Exemplo(null, null);
-	}
+**Test 2:** Test compatibility of the buildings
 
-_It is also recommended to organize this content by subsections._
+    @Test(expected = IllegalStateException.class)
+        public void preventIncompatibleUpgrades() {
+            Station station = new Station(...);
+            station.addBuilding(new Building("Small Hotel", 500, 1900));
+            Building upgrade = new Building("Grand Hotel", 1000, 1920);
+            
+                StationValidator validator = new StationValidator();
+                validator.validateUpgrade(station, upgrade); // Should fail - mutually exclusive
+        }
+
 
 
 ## 5. Construction (Implementation)
 
-_In this section, it is suggested to provide, if necessary, some evidence that the construction/implementation is in accordance with the previously carried out design. Furthermore, it is recommeded to mention/describe the existence of other relevant (e.g. configuration) files and highlight relevant commits._
+### Class UpgradeStationController
 
-_It is also recommended to organize this content by subsections._ 
+    public class UpgradeStationController {
+    private final StationRepository stationRepo;
+    private final BuildingRepository buildingRepo;
+    private final EconomyManager economy;
+    private final StationUpgrader upgrader;
+    
+        public UpgradeStationController() {
+            this.stationRepo = StationRepository.getInstance();
+            this.buildingRepo = BuildingRepository.getInstance();
+            this.economy = EconomyManager.getInstance();
+            this.upgrader = new StationUpgrader();
+        }
+        
+        public List<Station> getAvailableStations(Player player) {
+            return stationRepo.getStationsByPlayer(player);
+        }
+        
+        public List<Building> getAvailableUpgrades(Station station) {
+            List<Building> allBuildings = buildingRepo.getAllBuildings();
+            return StationValidator.filterAvailableUpgrades(station, allBuildings);
+        }
+        
+        public boolean executeUpgrade(Station station, Building upgrade) {
+            // Validate funds
+            if (!economy.canAfford(upgrade.getCost())) {
+                throw new IllegalArgumentException("Insufficient funds for upgrade");
+            }
+            
+            // Validate upgrade compatibility
+            if (!StationValidator.isValidUpgrade(station, upgrade)) {
+                throw new IllegalStateException("Incompatible upgrade");
+            }
+            
+            // Apply upgrade
+            boolean success = upgrader.applyUpgrade(station, upgrade);
+            if (success) {
+                economy.deduct(upgrade.getCost());
+                stationRepo.updateStation(station);
+            }
+            
+            return success;
+        }
+    }
 
+### Class StationUpgrader
 
-## 6. Integration and Demo 
+    public class StationUpgrader {
+    public boolean applyUpgrade(Station station, Building upgrade) {
+    // Handle replacement buildings (e.g., telephone replaces telegraph)
+    if (upgrade.replacesExisting()) {
+    station.removeBuildingsOfType(upgrade.getReplacedType());
+    }
+    
+            // Handle mutually exclusive buildings
+            if (upgrade.isMutuallyExclusive()) {
+                station.removeBuildingsInCategory(upgrade.getExclusiveCategory());
+            }
+            
+            return station.addBuilding(upgrade);
+        }
+    }
 
-_In this section, it is suggested to describe the efforts made to integrate this functionality with the other features of the system._
+### Class StationValidator
 
+    public class StationValidator {
+    public static boolean isValidUpgrade(Station station, Building upgrade) {
+    // Check historical availability
+    if (station.getYear() < upgrade.getAvailableFrom()) {
+    return false;
+    }
+    
+            // Check mutual exclusivity
+            if (upgrade.isMutuallyExclusive() && 
+                station.hasBuildingInCategory(upgrade.getExclusiveCategory())) {
+                return false;
+            }
+            
+            // Check replacement rules
+            if (upgrade.replacesExisting() && 
+                !station.hasBuildingOfType(upgrade.getReplacedType())) {
+                return false;
+            }
+            
+            return true;
+        }
+        
+        public static List<Building> filterAvailableUpgrades(Station station, List<Building> buildings) {
+            return buildings.stream()
+                .filter(b -> isValidUpgrade(station, b))
+                .collect(Collectors.toList());
+        }
+    }
+## 6. Integration and Demo
+
+* Building upgrade options now appear in the station management menu
+* Connected to the economic system for budget validation
+* Integrated with the existing station management system through StationRepository
 
 ## 7. Observations
 
-_In this section, it is suggested to present a critical perspective on the developed work, pointing, for example, to other alternatives and or future related work._
+n/a

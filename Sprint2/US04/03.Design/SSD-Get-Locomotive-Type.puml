@@ -1,0 +1,18 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateScenarioController" as CTRL
+participant "system\n:TransportSystem" as TS
+
+autonumber
+-> CTRL: getAvailableLocomotionTypes()
+activate CTRL
+    CTRL -> TS: requestLocomotionTypes()
+    activate TS
+        TS --> CTRL: availableTypes
+    deactivate TS
+<-- CTRL: locomotionTypes
+deactivate CTRL
+@enduml

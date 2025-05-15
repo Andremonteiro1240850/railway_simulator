@@ -1,0 +1,18 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateScenarioController" as CTRL
+participant "industry\n:IndustryManager" as IND
+
+autonumber 1
+-> CTRL: getIndustryGenerationFrequency()
+activate CTRL
+    CTRL --> IND**: getGenerationFrequency()
+    activate IND
+        IND --> CTRL: generateFrequency
+    deactivate IND
+<-- CTRL: industryGenerationFrequencyFrequency
+deactivate CTRL
+@enduml

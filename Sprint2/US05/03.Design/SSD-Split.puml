@@ -1,0 +1,102 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+hide footbox
+actor "Player" as ORG_EMPLOYEE
+
+participant ":CreateStationUI" as UI
+participant ":CreateStationController" as CTRL
+participant "organization\n:Organization" as ORG
+
+activate ORG_EMPLOYEE
+
+    ORG_EMPLOYEE -> UI : asks to build a staion
+    autonumber 1
+
+    activate UI
+        UI --> CTRL** : create()
+        autonumber 2
+        UI -> CTRL : getStationTypes()
+        autonumber 3
+        ref over CTRL
+            Get Station Types
+        end ref
+        activate CTRL
+            CTRL --> UI : stationTypesList
+            autonumber 4
+        deactivate CTRL
+        UI --> ORG_EMPLOYEE : verify if is allowed to build a station and\n show station types
+        autonumber 5
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : selects station type
+    autonumber 6
+    activate UI
+        UI -> CTRL : getLocation()
+        autonumber 6.1
+        ref over CTRL
+            Get Location Coordinates
+        end ref
+        activate CTRL
+            CTRL --> UI : location
+            autonumber 6.2
+        deactivate CTRL
+
+        UI -> CTRL : getName()
+        autonumber 6.3
+        ref over CTRL
+            Generate Station Name
+        end ref
+        activate CTRL
+            CTRL --> UI : suggestedName
+            autonumber 6.4
+        deactivate CTRL
+
+        UI -> CTRL : getCentre()
+        autonumber 6.5
+        ref over CTRL
+            Determine Station Center
+        end ref
+        activate CTRL
+            CTRL --> UI : centerPoint
+            autonumber 6.6
+        deactivate CTRL
+
+        UI --> ORG_EMPLOYEE : requests information (Location, (name, centre if Staion))
+        autonumber 7
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : types requested information
+    autonumber 8
+    activate UI
+        UI --> ORG_EMPLOYEE : shows all data and name suggested, and requests confirmation
+        autonumber 9
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : confirms data
+    autonumber 10
+    activate UI
+        UI -> CTRL : createStation(Type, location, name, centre)
+        autonumber 11
+        activate CTRL
+
+            autonumber 12
+            activate CTRL
+                ref over CTRL
+                    Create Station
+                end ref
+
+
+            CTRL --> UI: stationCreated
+            autonumber 18
+        deactivate CTRL
+        UI --> ORG_EMPLOYEE: displays operation success and build
+        autonumber 19
+    deactivate UI
+
+deactivate ORG_EMPLOYEE
+@enduml

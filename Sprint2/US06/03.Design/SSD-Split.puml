@@ -1,0 +1,83 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+hide footbox
+actor "Player" as PLAYER
+
+participant ":UpgradeStationUI" as UI
+participant ":UpgradeStationController" as CTRL
+participant "organization\n:Organization" as ORG
+
+activate PLAYER
+
+    PLAYER -> UI : asks to upgrade a station
+    autonumber 1
+
+    activate UI
+        UI --> CTRL** : initialize()
+        autonumber 2
+        UI -> CTRL : getStations()
+        autonumber 3
+        ref over CTRL
+            Get Player Stations
+        end ref
+        activate CTRL
+            CTRL --> UI : stationsList
+            autonumber 4
+        deactivate CTRL
+        UI --> PLAYER : show available stations
+        autonumber 5
+    deactivate UI
+
+    PLAYER -> UI : selects station
+    autonumber 6
+    activate UI
+        UI -> CTRL : selectUpgradeBuilding()
+        autonumber 6.1
+        ref over CTRL
+            Select Upgrade Building
+        end ref
+        activate CTRL
+            CTRL --> UI : buildingOptions
+            autonumber 6.2
+        deactivate CTRL
+
+        UI --> PLAYER : requests building type
+        autonumber 7
+    deactivate UI
+
+    PLAYER -> UI : selects building
+    autonumber 8
+    activate UI
+        UI --> PLAYER : shows summary and requests confirmation
+        autonumber 9
+    deactivate UI
+
+    PLAYER -> UI : confirms upgrade
+    autonumber 10
+    activate UI
+        UI -> CTRL : executeUpgrade(station, building)
+        autonumber 11
+        activate CTRL
+            ref over CTRL
+                 Upgrade Station
+            end ref
+            CTRL -> ORG: applyStationUpgrade()
+            autonumber 12
+            activate ORG
+                ORG --> CTRL : upgradeResult
+                autonumber 13
+            deactivate ORG
+            CTRL --> UI: upgradeStatus
+            autonumber 14
+        deactivate CTRL
+        UI --> PLAYER: displays upgrade success
+        autonumber 15
+    deactivate UI
+
+deactivate PLAYER
+@enduml

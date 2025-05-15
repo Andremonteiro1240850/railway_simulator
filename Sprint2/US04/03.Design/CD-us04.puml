@@ -1,0 +1,96 @@
+@startuml
+skinparam monochrome false
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+class Editor {
+}
+
+class CreateScenarioUI {
+  + asksToCreateNewScenario()
+  + showAvailableMaps(mapsList)
+  + requestScenarioDetails()
+  + showConfirmation()
+  + displaySuccess()
+}
+
+class CreateScenarioController {
+  + create()
+  + getAvailableMaps(): List<Map>
+  + getAvailablePortBehaviors(): List<BehaviorOption>
+  + getAvailableLocomotionTypes(): List<LocomotionType>
+  + getIndustryGenerationFactors(): List<IndustryFactor>
+  + createScenario(params): Scenario
+}
+
+class Organization {
+}
+
+class MapManager {
+  + getAllMaps(): List<Map>
+}
+
+class PortManager {
+  + getBehaviorOptions(): List<BehaviorOption>
+}
+
+class TransportSystem {
+  + requestLocomotionTypes(): List<LocomotionType>
+}
+
+class IndustryManager {
+  + getGenerationFrequency(): List<IndustryFactor>
+}
+
+class ScenarioManager {
+  + create(map, params): Scenario
+  + setPortBehavior()
+  + setLocomotionTypes()
+  + configureIndustries()
+}
+
+' Relacionamentos
+Editor --> CreateScenarioUI : usa
+CreateScenarioUI --> CreateScenarioController : comunica com
+CreateScenarioController --> MapManager : consulta
+CreateScenarioController --> PortManager : consulta
+CreateScenarioController --> TransportSystem : consulta
+CreateScenarioController --> IndustryManager : consulta
+CreateScenarioController --> ScenarioManager : cria
+Organization --* ScenarioManager : contém
+
+' Classes de dados
+class Map {
+  -id: String
+  -name: String
+}
+
+class BehaviorOption {
+  -type: String
+  -description: String
+}
+
+class LocomotionType {
+  -type: String
+  -description: String
+}
+
+class IndustryFactor {
+  -factor: Double
+  -description: String
+}
+
+class Scenario {
+  -map: Map
+  -portBehavior: BehaviorOption
+  -locomotionTypes: List<LocomotionType>
+  -industryFactors: List<IndustryFactor>
+}
+
+' Relacionamentos com classes de dados
+MapManager --> Map : gerencia
+PortManager --> BehaviorOption : fornece
+TransportSystem --> LocomotionType : fornece
+IndustryManager --> IndustryFactor : fornece
+ScenarioManager --> Scenario : cria e configura
+@enduml

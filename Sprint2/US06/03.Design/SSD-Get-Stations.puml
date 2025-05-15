@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+hide footbox
+
+participant ":UpgradeStationController" as CTRL
+participant "player\n:PlayerRepository" as PLAYER_REPO
+participant "station\n:StationRepository" as STATION_REPO
+
+autonumber 3
+-> CTRL : getStations()
+autonumber 3.1
+activate CTRL
+
+        CTRL -> PLAYER_REPO : getCurrentPlayer()
+        activate PLAYER_REPO
+            PLAYER_REPO --> CTRL : player
+        deactivate PLAYER_REPO
+
+        CTRL -> STATION_REPO : getStationsByPlayer(player)
+        activate STATION_REPO
+            STATION_REPO --> CTRL : stations
+        deactivate STATION_REPO
+
+    autonumber 4
+    <-- CTRL : stationsList
+deactivate CTRL
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+hide footbox
+
+participant ":UpgradeStationController" as CTRL
+participant "building\n:BuildingRepository" as BUILDING_REPO
+participant "station\n:StationValidator" as VALIDATOR
+
+autonumber 6.1
+-> CTRL : selectUpgradeBuilding()
+
+activate CTRL
+
+        CTRL -> VALIDATOR : getAvaibleBuildings()
+        activate VALIDATOR
+            VALIDATOR --> CTRL : avaiableBuildings
+        deactivate VALIDATOR
+
+        CTRL -> BUILDING_REPO : getBuildingsByType(avaibleBuildings)
+        activate BUILDING_REPO
+            BUILDING_REPO --> CTRL : buildings
+        deactivate BUILDING_REPO
+
+    autonumber 6.2
+    <-- CTRL : buildings
+deactivate CTRL
+@enduml

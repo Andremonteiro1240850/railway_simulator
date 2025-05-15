@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateStationController" as CTRL
+participant "map\n:MapService" as MAP
+participant "validation\n:LocationValidator" as VALID
+
+autonumber 6.1
+-> CTRL : getLocation()
+activate CTRL
+
+        CTRL -> MAP : requestCoordinates()
+        activate MAP
+            MAP --> CTRL : giveCoordinates
+        deactivate MAP
+
+        CTRL -> VALID : validateXY()
+        activate VALID
+            VALID --> CTRL : isValid
+        deactivate VALID
+
+    autonumber 6.2
+    <-- CTRL : location
+deactivate CTRL
+@enduml

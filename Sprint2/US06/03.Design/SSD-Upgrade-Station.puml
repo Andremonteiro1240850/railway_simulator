@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+hide footbox
+
+participant ":UpgradeStationController" as CTRL
+participant "economy\n:EconomyManager" as ECONOMY
+participant "station\n:StationUpgrader" as UPGRADER
+
+autonumber 11
+
+autonumber 11.1
+activate CTRL
+
+        CTRL -> ECONOMY : verifyIfPossible(upgradeCost)
+        activate ECONOMY
+            ECONOMY --> CTRL : isFunds
+        deactivate ECONOMY
+
+        CTRL -> UPGRADER : applyUpgrade(station, building)
+        activate UPGRADER
+            UPGRADER --> CTRL : upgradeResult
+        deactivate UPGRADER
+
+    autonumber 14
+
+deactivate CTRL
+@enduml

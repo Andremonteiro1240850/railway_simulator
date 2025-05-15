@@ -1,0 +1,124 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+hide footbox
+actor "Player" as PLAYER
+
+participant ":UpgradeStationUI" as UI
+participant ":UpgradeStationController" as CTRL
+participant "organization\n:Organization" as ORG
+participant "player\n:PlayerRepository" as PLAYER_REPO
+participant "station\n:StationRepository" as STATION_REPO
+participant "building\n:BuildingRepository" as BUILDING_REPO
+participant "station\n:StationValidator" as VALIDATOR
+participant "economy\n:EconomyManager" as ECONOMY
+participant "station\n:StationUpgrader" as UPGRADER
+
+activate PLAYER
+
+    PLAYER -> UI : asks to upgrade a station
+    autonumber 1
+
+    activate UI
+        UI --> CTRL** : initialize()
+        autonumber 2
+        UI -> CTRL : getStations()
+        autonumber 3
+
+        autonumber 3.1
+        activate CTRL
+
+                CTRL -> PLAYER_REPO : getCurrentPlayer()
+                activate PLAYER_REPO
+                    PLAYER_REPO --> CTRL : player
+                deactivate PLAYER_REPO
+
+                CTRL -> STATION_REPO : getStationsByPlayer(player)
+                activate STATION_REPO
+                    STATION_REPO --> CTRL : stations
+                deactivate STATION_REPO
+
+            autonumber 4
+            CTRL -> UI : stationsList
+
+        deactivate CTRL
+        UI --> PLAYER : show available stations
+        autonumber 5
+    deactivate UI
+
+    PLAYER -> UI : selects station
+    autonumber 6
+    activate UI
+        UI -> CTRL : selectUpgradeBuilding()
+autonumber 6.1
+
+
+activate CTRL
+
+        CTRL -> VALIDATOR : getAvaibleBuildings()
+        activate VALIDATOR
+            VALIDATOR --> CTRL : avaiableBuildings
+        deactivate VALIDATOR
+
+        CTRL -> BUILDING_REPO : getBuildingsByType(avaibleBuildings)
+        activate BUILDING_REPO
+            BUILDING_REPO --> CTRL : buildings
+        deactivate BUILDING_REPO
+
+    autonumber 6.2
+
+
+            CTRL --> UI : buildingOptions
+            autonumber 6.2
+        deactivate CTRL
+
+        UI --> PLAYER : requests building type
+        autonumber 7
+    deactivate UI
+
+    PLAYER -> UI : selects building
+    autonumber 8
+    activate UI
+        UI --> PLAYER : shows summary and requests confirmation
+        autonumber 9
+    deactivate UI
+
+    PLAYER -> UI : confirms upgrade
+    autonumber 10
+    activate UI
+        UI -> CTRL : executeUpgrade(station, building)
+        autonumber 11
+        autonumber 11.1
+        activate CTRL
+
+                CTRL -> ECONOMY : verifyIfPossible(upgradeCost)
+                activate ECONOMY
+                    ECONOMY --> CTRL : isFunds
+                deactivate ECONOMY
+
+                CTRL -> UPGRADER : applyUpgrade(station, building)
+                activate UPGRADER
+                    UPGRADER --> CTRL : upgradeResult
+                deactivate UPGRADER
+
+            autonumber 14
+
+            CTRL -> ORG: applyStationUpgrade()
+            autonumber 12
+            activate ORG
+                ORG --> CTRL : upgradeResult
+                autonumber 13
+            deactivate ORG
+            CTRL --> UI: upgradeStatus
+            autonumber 14
+        deactivate CTRL
+        UI --> PLAYER: displays upgrade success
+        autonumber 15
+    deactivate UI
+
+deactivate PLAYER
+@enduml

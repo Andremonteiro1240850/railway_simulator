@@ -1,0 +1,125 @@
+@startuml
+skinparam monochrome false
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+class Player {
+}
+
+class CreateStationUI {
+  + askToBuildStation()
+  + showStationTypes(types)
+  + requestStationInfo()
+  + showConfirmation()
+  + displaySuccess()
+}
+
+class CreateStationController {
+  + create()
+  + getStationTypes(): List<StationType>
+  + getLocation(): Coordinates
+  + getName(): String
+  + getCentre(): Point
+  + createStation(type, location, name, centre): Station
+}
+
+class Organization {
+}
+
+class StationTypeRepositories {
+  + getStationType(): List<StationTypeRepository>
+}
+
+class StationTypeRepository {
+  + getStationTypeList(): List<StationType>
+}
+
+class StationTypeCategoryRepository {
+  + getStationTypeCategories(): List<StationTypeCategory>
+}
+
+class MapService {
+  + requestCoordinates(): Coordinates
+}
+
+class LocationValidator {
+  + validateXY(coords): boolean
+}
+
+class StationNamingService {
+  + generateName(cityName, stationType): String
+}
+
+class CityRegistry {
+  + getNearestCity(location): String
+}
+
+class StationGeometry {
+  + calculateCenter(stationType, location): Point
+}
+
+class PositionValidator {
+  + validateCenter(point): boolean
+}
+
+class RailwayNetwork {
+  + buildStation(params): Station
+}
+
+class BudgetManager {
+  + verifyIfPossible(stationType): boolean
+}
+
+' Classes de dados
+class StationType {
+  -id: String
+  -name: String
+  -category: StationTypeCategory
+}
+
+class StationTypeCategory {
+  -id: String
+  -name: String
+}
+
+class Coordinates {
+  -x: double
+  -y: double
+}
+
+class Point {
+  -x: double
+  -y: double
+}
+
+class Station {
+  -type: StationType
+  -location: Coordinates
+  -name: String
+  -center: Point
+}
+
+' Relacionamentos
+Player --> CreateStationUI : usa
+CreateStationUI --> CreateStationController : comunica com
+CreateStationController --> StationTypeRepositories : consulta
+CreateStationController --> StationTypeRepository : consulta
+CreateStationController --> StationTypeCategoryRepository : consulta
+CreateStationController --> MapService : obtém localização
+CreateStationController --> LocationValidator : valida
+CreateStationController --> StationNamingService : gera nome
+CreateStationController --> CityRegistry : consulta
+CreateStationController --> StationGeometry : calcula centro
+CreateStationController --> PositionValidator : valida
+CreateStationController --> BudgetManager : verifica orçamento
+CreateStationController --> RailwayNetwork : constrói
+Organization --* RailwayNetwork : contém
+
+' Relações de composição
+StationTypeRepositories o-- StationTypeRepository
+StationTypeRepositories o-- StationTypeCategoryRepository
+StationType --> StationTypeCategory : possui
+Station --> StationType : possui
+Station --> Coordinates : possui
+Station --> Point : possui
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+participant ":CreateStationController" as CTRL
+participant "naming\n:StationNamingService" as NAMING
+participant "city\n:CityRegistry" as CITY
+
+autonumber 6.3
+-> CTRL : getName()
+activate CTRL
+
+        CTRL -> CITY : getNearestCity(location)
+        activate CITY
+            CITY --> CTRL : cityName
+        deactivate CITY
+
+        CTRL -> NAMING : generateName(cityName, stationType)
+        activate NAMING
+            NAMING --> CTRL : suggestedName
+        deactivate NAMING
+
+    autonumber 6.4
+    <-- CTRL : suggestedName
+deactivate CTRL
+@enduml

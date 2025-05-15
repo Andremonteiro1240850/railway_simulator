@@ -1,0 +1,114 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+
+class Player {
+    - id: String
+    - name: String
+    - balance: double
+}
+
+class Station {
+    - id: String
+    - name: String
+    - level: int
+    + getAvailableUpgrades(): List<BuildingType>
+}
+
+class Building {
+    - type: BuildingType
+    - cost: double
+}
+
+class BuildingType {
+    - name: String
+    - category: String
+}
+
+class Game {
+    - currentPlayer: Player
+    - organization: Organization
+}
+
+class Organization {
+    - name: String
+    - stations: List<Station>
+    + getStationsByPlayer(player: Player): List<Station>
+    + applyUpgrade(station: Station, building: Building): boolean
+}
+
+class UpgradeStationUI {
+    + showStations(stations: List<Station>)
+    + showBuildingOptions(buildings: List<Building>)
+    + showUpgradeConfirmation(station: Station, building: Building)
+    + showResult(success: boolean)
+}
+
+class UpgradeStationController {
+    + getStations(): List<Station>
+    + getAvailableBuildings(station: Station): List<Building>
+    + executeUpgrade(station: Station, building: Building): boolean
+}
+
+' Serviços e Repositórios
+class PlayerRepository {
+    + getCurrentPlayer(): Player
+}
+
+class StationRepository {
+    + getByPlayer(player: Player): List<Station>
+    + save(station: Station)
+}
+
+class BuildingRepository {
+    + getByTypes(types: List<BuildingType>): List<Building>
+}
+
+class StationValidator {
+    + getAvailableBuildings(station: Station): List<BuildingType>
+}
+
+class EconomyManager {
+    + canAfford(player: Player, amount: double): boolean
+    + deduct(player: Player, amount: double)
+}
+
+class StationUpgrader {
+    + upgrade(station: Station, building: Building): boolean
+}
+
+' Relacionamentos principais
+Game "1" *-- "1" Organization
+Game "1" *-- "1" Player
+
+Organization "1" *-- "*" Station
+Organization "1" *-- "1" PlayerRepository
+Organization "1" *-- "1" StationRepository
+
+PlayerRepository "1" --> "*" Player
+
+StationRepository "1" --> "*" Station
+
+BuildingRepository "1" --> "*" Building
+Building --> "1" BuildingType
+
+UpgradeStationUI .> UpgradeStationController : usa
+UpgradeStationController --> Game : acessa
+UpgradeStationController --> StationValidator : valida
+UpgradeStationController --> EconomyManager : verifica fundos
+UpgradeStationController --> StationUpgrader : executa
+
+note top of Game
+    Ponto central do jogo
+    mantém o estado atual
+    do jogador e organização
+end note
+
+note right of Organization
+    Agregado raiz que controla
+    todas as estações e suas
+    regras de negócio
+end note
+@enduml
