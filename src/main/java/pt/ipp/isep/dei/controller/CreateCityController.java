@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.controller;
 
+package pt.ipp.isep.dei.controller;
+
 import pt.ipp.isep.dei.domain.City;
 import pt.ipp.isep.dei.domain.Map;
 import pt.ipp.isep.dei.domain.Position;
