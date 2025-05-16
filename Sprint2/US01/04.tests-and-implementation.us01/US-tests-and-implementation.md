@@ -6,20 +6,22 @@
 **Test 1:** Check that map name validation works correctly 
 
         @Test
-        public void testValidMapName() {
-            assertTrue(MapEditorController.isValidMapName("valid_name"));
-            assertFalse(MapEditorController.isValidMapName("invalid/name"));
-            assertFalse(MapEditorController.isValidMapName(null));
+        public void testMapNameValidation() {
+            assertTrue(MapValidator.isValidName("valid_name"));
+            assertFalse(MapValidator.isValidName("invalid/name"));
+            assertFalse(MapValidator.isValidName(null));
+            assertFalse(MapValidator.isValidName("Name@123")); // New special chars test
         }
 
-**Test 2:** Check that map dimensions validation works correctly
+**Test 2:** Map dimensions validation with business rules
 
         @Test
-        public void testValidMapDimensions() {
-            assertTrue(MapEditorController.isValidDimensions(10, 20));
-            assertFalse(MapEditorController.isValidDimensions(0, 10));
-            assertFalse(MapEditorController.isValidDimensions(-5, 10));
-        }
+            public void testMapDimensionsValidation() {
+            // Test with MapConfig constraints
+                assertTrue(MapValidator.isValidSize(100, 100, MapConfig.DEFAULT));
+                assertFalse(MapValidator.isValidSize(0, 100, MapConfig.DEFAULT));
+                assertFalse(MapValidator.isValidSize(6000, 5000, MapConfig.DEFAULT)); // Exceeds max size
+            }
 
 **Test 3:** Check that map creation works with valid parameters
 
