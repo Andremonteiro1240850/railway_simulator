@@ -51,10 +51,10 @@ class ScenarioManager {
 ' Relacionamentos
 Editor --> CreateScenarioUI : usa
 CreateScenarioUI --> CreateScenarioController : comunica com
-CreateScenarioController --> MapManager : consulta
-CreateScenarioController --> PortManager : consulta
+CreateScenarioController --> MapRepository : consulta
+CreateScenarioController --> PortRepository : consulta
 CreateScenarioController --> TransportSystem : consulta
-CreateScenarioController --> IndustryManager : consulta
+CreateScenarioController --> IndustryRepository : consulta
 CreateScenarioController --> ScenarioManager : cria/gerencia
 CreateScenarioController --> Organization : verifica permissões
 ScenarioManager --> PortManager : configura
