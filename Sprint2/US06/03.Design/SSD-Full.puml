@@ -10,12 +10,10 @@ actor "Player" as PLAYER
 
 participant ":UpgradeStationUI" as UI
 participant ":UpgradeStationController" as CTRL
-participant "organization\n:Organization" as ORG
 participant "player\n:PlayerRepository" as PLAYER_REPO
 participant "station\n:StationRepository" as STATION_REPO
 participant "building\n:BuildingRepository" as BUILDING_REPO
-participant "station\n:StationValidator" as VALIDATOR
-participant "economy\n:EconomyManager" as ECONOMY
+participant "economy\n:BudgetManager" as ECONOMY
 participant "station\n:StationUpgrader" as UPGRADER
 
 activate PLAYER
@@ -59,13 +57,14 @@ autonumber 6.1
 
 activate CTRL
 
-        CTRL -> VALIDATOR : getAvaibleBuildings()
-        activate VALIDATOR
-            VALIDATOR --> CTRL : avaiableBuildings
-        deactivate VALIDATOR
+
+        CTRL -> BUILDING_REPO : getAvaibleBuildings()
+       activate BUILDING_REPO
+            BUILDING_REPO --> CTRL : avaiableBuildings
+
 
         CTRL -> BUILDING_REPO : getBuildingsByType(avaibleBuildings)
-        activate BUILDING_REPO
+
             BUILDING_REPO --> CTRL : buildings
         deactivate BUILDING_REPO
 
@@ -107,12 +106,7 @@ activate CTRL
 
             autonumber 14
 
-            CTRL -> ORG: applyStationUpgrade()
-            autonumber 12
-            activate ORG
-                ORG --> CTRL : upgradeResult
-                autonumber 13
-            deactivate ORG
+
             CTRL --> UI: upgradeStatus
             autonumber 14
         deactivate CTRL

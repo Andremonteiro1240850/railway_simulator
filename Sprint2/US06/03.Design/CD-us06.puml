@@ -21,9 +21,7 @@ class UpgradeStationController {
   + executeUpgrade()
 }
 
-class Organization {
-  + applyStationUpgrade()
-}
+
 
 class PlayerRepository {
   + getCurrentPlayer()
@@ -37,11 +35,8 @@ class BuildingRepository {
   + getBuildingsByType()
 }
 
-class StationValidator {
-  + getAvailableBuildings()
-}
 
-class EconomyManager {
+class BudgetManager{
   + verifyIfPossible()
 }
 
@@ -56,19 +51,14 @@ UpgradeStationUI --> UpgradeStationController : comunica com
 UpgradeStationController --> PlayerRepository : consulta
 UpgradeStationController --> StationRepository : consulta
 UpgradeStationController --> BuildingRepository : consulta
-UpgradeStationController --> StationValidator : valida
-UpgradeStationController --> EconomyManager : verifica fundos
+UpgradeStationController --> StationRepository : valida
+UpgradeStationController --> BudgetManager : verifica fundos
 UpgradeStationController --> StationUpgrader : executa upgrade
-UpgradeStationController --> Organization : registra upgrade
 
-Organization --> PlayerRepository : gerencia
-Organization --> StationRepository : possui
-Organization --> BuildingRepository : mantém
-Organization --> EconomyManager : controla
-Organization --> StationUpgrader : coordena
 
-StationValidator --> BuildingRepository : filtra
-StationUpgrader --> StationValidator : valida pré-requisitos
+
+
+
 
 note right of UpgradeStationController::executeUpgrade
   Fluxo principal:
@@ -78,14 +68,9 @@ note right of UpgradeStationController::executeUpgrade
   4. Retorna status
 end note
 
-note bottom of StationValidator
-  Responsável por:
-  - Validar edifícios compatíveis
-  - Verificar pré-requisitos
-  - Controlar upgrades permitidos
-end note
 
-note left of EconomyManager
+
+note left of BudgetManager
   Gerencia:
   - Recursos do jogador
   - Custo de upgrades
