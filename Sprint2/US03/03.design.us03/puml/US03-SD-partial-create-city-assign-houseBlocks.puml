@@ -11,6 +11,7 @@ autonumber
 AddCityController -> City : create(name, x, y)
 activate City
 City --> AddCityController : city
+activate AddCityController
 
 ' Check assignment method
 AddCityController -> City : isManualAssignment(houseBlocks)
@@ -19,6 +20,7 @@ alt Manual assignment
     AddCityController -> City : assignManualHouseBlocks(houseBlocks)
 else Automatic assignment
     AddCityController -> City : assignRandomHouseBlocks(normalDistributionParameters)
+    deactivate AddCityController
 end
 
 deactivate City

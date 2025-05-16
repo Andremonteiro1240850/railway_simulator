@@ -11,6 +11,6 @@ autonumber
 AddCityController --> AddCityUI : success/failure
 deactivate AddCityController
 
-AddCityUI -> Editor : showSuccessOrError()
+AddCityUI -> Editor : Show Success or Error
 deactivate AddCityUI
 @enduml

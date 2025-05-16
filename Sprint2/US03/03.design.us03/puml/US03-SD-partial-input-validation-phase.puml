@@ -9,6 +9,7 @@ autonumber
 'hide footbox
 
 actor Editor
+activate Editor
 
 Editor -> AddCityUI : startAddCity()
 activate AddCityUI
@@ -16,6 +17,7 @@ activate AddCityUI
 Editor -> AddCityUI : inputCityData(name, x, y, houseBlocks)
 
 AddCityUI -> AddCityController : handleAddCity(name, x, y, houseBlocks)
+deactivate AddCityUI
 activate AddCityController
 
 AddCityController -> MapRepository : getCurrentMap()
@@ -29,4 +31,5 @@ AddCityController -> Map : isPositionValid(x, y)
 activate Map
 Map --> AddCityController : boolean
 deactivate Map
+deactivate Editor
 @enduml
