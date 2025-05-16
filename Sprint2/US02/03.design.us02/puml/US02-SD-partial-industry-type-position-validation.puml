@@ -1,0 +1,45 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+hide footbox
+
+actor Editor
+participant "AddIndustryUI" as UI
+participant "AddIndustryController" as Controller
+participant "IndustryTypeRepository" as IndustryRepo
+participant "Map" as Map
+
+activate Editor
+UI --> Editor: Request Industry Position and Industry Type
+Editor -> UI : Provide Position (x,y) and Industry Type
+activate UI
+
+UI -> Controller : provideIndustryDetails(x, y, type)
+deactivate UI
+activate Controller
+
+Controller -> IndustryRepo : isValidIndustryType(type)
+activate IndustryRepo
+IndustryRepo --> Controller : boolean
+deactivate IndustryRepo
+
+alt Type is valid
+    Controller -> Map : isPositionValid(x, y)
+    activate Map
+    Map --> Controller : boolean
+    Controller --> UI : showSuccess("Industry added")
+    deactivate Map
+    activate UI
+    UI --> Editor : Display success message
+    deactivate UI
+else Type is invalid
+    Controller --> UI : showError("Invalid industry type")
+    deactivate Controller
+    activate UI
+    UI --> Editor : Display error message
+    deactivate UI
+end
+
+deactivate Editor
+@enduml

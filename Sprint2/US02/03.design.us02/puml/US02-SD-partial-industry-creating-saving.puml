@@ -1,0 +1,45 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+hide footbox
+
+actor Editor
+participant "AddIndustryUI" as UI
+participant "AddIndustryController" as Controller
+participant "Map" as Map
+participant "Industry" as Industry
+participant "MapRepository" as MapRepo
+
+activate Controller
+alt Position is valid
+    Controller -> Industry : create(type, x, y)
+    activate Industry
+    Industry --> Controller : newIndustry
+    deactivate Industry
+
+    Controller -> Map : addIndustry(newIndustry)
+    activate Map
+    Map --> Controller : success
+    deactivate Map
+
+    Controller -> MapRepo : saveMap(Map)
+    activate MapRepo
+    MapRepo --> Controller : confirmation
+    deactivate MapRepo
+
+    Controller --> UI : showSuccess(newIndustry)
+    deactivate Controller
+    activate UI
+    UI --> Editor : Display industry added successfully
+    deactivate UI
+else Position is invalid
+    Controller --> UI : showError("Invalid position / Invalid Type")
+    deactivate Controller
+    activate UI
+    UI --> Editor : Display error message
+    deactivate UI
+end
+
+deactivate Editor
+@enduml

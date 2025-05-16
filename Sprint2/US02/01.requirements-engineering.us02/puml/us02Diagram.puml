@@ -10,29 +10,31 @@ participant ":System" as System
 
 activate Editor
 
-    Editor -> System : Request to add an industry
-        activate System
+    Editor -> System : Start to add industry
+    activate System
 
-    System -> Editor : Verify permission
+    System -> Editor : Request map selection
     deactivate System
 
-    Editor -> System : Select a position XY on the map
-        activate System
+    Editor -> System : Select current map
+    activate System
 
-    System --> Editor : Request industry type
-        deactivate System
+    System -> Editor : Request position and industry type
+    deactivate System
 
-    Editor -> System : Provide industry type
-        activate System
+    Editor -> System : Provide position (x,y) and industry type
+    activate System
 
-    System --> Editor : Show industry information
-        deactivate System
+    alt Valid type and position
+        System -> System : Create industry
+        System -> System : Add to map
+        System --> Editor : Show industry added successfully
+    else Invalid type
+        System --> Editor : Display "Invalid industry type" error
+    else Invalid position
+        System --> Editor : Display "Invalid position" error
+    end
+    deactivate System
 
-    Editor -> System : Confirm industry creation
-        activate System
-
-    System --> Editor : Display operation success
-        deactivate System
-
+deactivate Editor
 @enduml
-

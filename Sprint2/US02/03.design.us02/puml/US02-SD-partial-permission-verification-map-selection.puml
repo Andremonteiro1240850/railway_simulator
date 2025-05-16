@@ -1,0 +1,45 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+hide footbox
+
+actor Editor
+participant "AddIndustryUI" as UI
+participant "AddIndustryController" as Controller
+participant "UserService" as UserService
+participant "MapRepository" as MapRepo
+
+activate Editor
+Editor -> UI : Start to Add Industry
+activate UI
+
+UI -> Controller : requestAddIndustry()
+deactivate UI
+activate Controller
+
+Controller -> UserService : verifyEditorPermission(Editor)
+activate UserService
+UserService --> Controller : permissionGranted
+deactivate UserService
+
+Controller --> UI : requestMapSelection()
+deactivate Controller
+activate UI
+UI --> Editor : Display available maps
+deactivate UI
+
+Editor -> UI : Select current map
+activate UI
+UI -> Controller : provideMapSelection(mapId)
+deactivate UI
+activate Controller
+
+Controller -> MapRepo : getMapById(mapId)
+activate MapRepo
+MapRepo --> Controller : Map
+deactivate MapRepo
+
+deactivate Controller
+deactivate Editor
+@enduml
