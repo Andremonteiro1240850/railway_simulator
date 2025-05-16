@@ -13,18 +13,35 @@ participant MapRepository
 participant Map
 participant Industry
 participant AddIndustryUI
-
+activate Editor
 
 AddIndustryController -> MapRepository : getCurrentMap()
+activate MapRepository
 MapRepository --> AddIndustryController : map
+deactivate MapRepository
+activate AddIndustryController
 
 AddIndustryController -> Map : isPositionValid(x, y)
+deactivate AddIndustryController
+activate Map
 Map --> AddIndustryController : true/false
+deactivate Map
+activate AddIndustryController
 
 AddIndustryController -> Industry : create(type, x, y)
+deactivate AddIndustryController
+activate Industry
+
 Industry --> AddIndustryController : industry
+deactivate Industry
+activate AddIndustryController
 
 AddIndustryController -> AddIndustryUI : showIndustryInfo(industry)
-AddIndustryUI -> Editor : displayIndustryInfo()
+deactivate AddIndustryController
+activate AddIndustryUI
+
+AddIndustryUI --> Editor : Display Industry Info
+deactivate AddIndustryUI
+deactivate Editor
 @enduml
 

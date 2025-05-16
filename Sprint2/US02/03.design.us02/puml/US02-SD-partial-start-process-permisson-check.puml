@@ -11,12 +11,23 @@ actor Editor
 participant AddIndustryUI
 participant AddIndustryController
 participant UserService
+activate Editor
 
-Editor -> AddIndustryUI : startAddIndustry()
+Editor -> AddIndustryUI : Start to Add Industry
+activate AddIndustryUI
 AddIndustryUI -> AddIndustryController : startAddProcess()
+deactivate AddIndustryUI
+activate AddIndustryController
 
 AddIndustryController -> UserService : verifyPermission()
+deactivate AddIndustryController
+activate UserService
+
 UserService --> AddIndustryController : permissionGranted
+deactivate UserService
+activate AddIndustryController
+
+deactivate Editor
 @enduml
 
 
