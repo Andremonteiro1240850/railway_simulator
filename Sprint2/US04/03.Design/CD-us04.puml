@@ -25,11 +25,11 @@ class CreateScenarioController {
 class Organization {
 }
 
-class MapManager {
+class MapRepository {
   + getAllMaps()
 }
 
-class PortManager {
+class PortRepository {
   + getBehaviorOptions()
 }
 
@@ -37,7 +37,7 @@ class TransportSystem {
   + requestLocomotionTypes()
 }
 
-class IndustryManager {
+class IndustryRepository {
   + getGenerationFrequency()
 }
 

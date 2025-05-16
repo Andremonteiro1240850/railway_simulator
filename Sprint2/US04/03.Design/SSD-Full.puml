@@ -11,10 +11,10 @@ actor "Editor" as ORG_EMPLOYEE
 participant ":CreateScenariokUI" as UI
 participant ":CreateScenarioController" as CTRL
 participant "organization\n:Organization" as ORG
-participant "map\n:MapManager" as MAP
-participant "port\n:PortManager" as PORT
+participant "map\n:MapRepository" as MAP
+participant "port\n:PortRepository" as PORT
 participant "system\n:TransportSystem" as TS
-participant "industry\n:IndustryManager" as IND
+participant "industry\n:IndustryRepository" as IND
 participant "scenario\n:ScenarioManager" as SCEN
 
 activate ORG_EMPLOYEE
