@@ -41,7 +41,7 @@ According to the taken rationale, the conceptual classes promoted to software cl
 ### Full Diagram
 This diagram shows the complete sequence of interactions between the classes involved in the realization of US02.
 
-![US02-SD-full](US02-SD-full.svg)
+![US02-SD-full](/Sprint2/US02/03.design.us02/svg/US02-SD-full.svg)
 
 ### Partial Diagrams
 These partial diagrams break down the full sequence into logical steps.

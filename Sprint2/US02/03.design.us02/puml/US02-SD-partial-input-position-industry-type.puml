@@ -12,18 +12,38 @@ actor Editor
 participant AddIndustryUI
 participant AddIndustryController
 participant IndustryTypeRepository
+activate Editor
 
-AddIndustryUI -> Editor : askPosition()
-Editor -> AddIndustryUI : selectPosition(x, y)
+AddIndustryUI -> Editor : Ask Position of Industry
+Editor -> AddIndustryUI : Select the Position
+activate AddIndustryUI
 
 AddIndustryUI -> AddIndustryController : providePosition(x, y)
-AddIndustryController -> AddIndustryUI : requestIndustryType()
+deactivate AddIndustryUI
+activate AddIndustryController
 
-AddIndustryUI -> Editor : askIndustryType()
-Editor -> AddIndustryUI : provideIndustryType(type)
+AddIndustryController -> AddIndustryUI : requestIndustryType()
+deactivate AddIndustryController
+activate AddIndustryUI
+
+
+AddIndustryUI -> Editor : Ask the Industry Type
+deactivate AddIndustryUI
+Editor -> AddIndustryUI : Provide Industry Type
+activate AddIndustryUI
 
 AddIndustryUI -> AddIndustryController : provideIndustryType(type)
+deactivate AddIndustryUI
+activate AddIndustryController
+
 AddIndustryController -> IndustryTypeRepository : isValidType(type)
+deactivate AddIndustryController
+activate IndustryTypeRepository
+
 IndustryTypeRepository --> AddIndustryController : true/false
+deactivate IndustryTypeRepository
+activate AddIndustryController
+
+deactivate Editor
 @enduml
 

@@ -44,7 +44,6 @@ This diagram shows the complete sequence of interactions between the classes inv
 
 ![US01-SD](/Sprint2/US01/03.design.us01/svg/US01-SD-full.svg)
 
-
 ### Split Diagrams
 The following diagrams show the same sequence of interactions between the classes involved in the realization of this user story, but split into partial diagrams to better illustrate the interactions between the classes.
 
