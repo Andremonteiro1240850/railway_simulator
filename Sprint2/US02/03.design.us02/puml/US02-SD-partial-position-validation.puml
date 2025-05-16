@@ -1,0 +1,39 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+hide footbox
+
+actor Editor
+participant "AddIndustryUI" as UI
+participant "AddIndustryController" as Controller
+participant "Map" as Map
+
+activate Editor
+UI --> Editor : Request Position
+Editor -> UI : Provide Position (x,y)
+activate UI
+UI -> Controller : providePosition(x, y)
+deactivate UI
+activate Controller
+
+Controller -> Map : isPositionValid(x, y)
+activate Map
+Map --> Controller : boolean
+deactivate Map
+
+alt Position is valid
+    Controller --> UI : proceedToCreation()
+    deactivate Controller
+    activate UI
+    UI --> Editor : Confirm industry creation
+    deactivate UI
+else Position is invalid
+    Controller --> UI : showError("Invalid position")
+    deactivate Controller
+    activate UI
+    UI --> Editor : Display error message
+    deactivate UI
+end
+deactivate Editor
+@enduml
