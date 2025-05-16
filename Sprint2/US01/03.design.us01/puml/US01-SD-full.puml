@@ -1,62 +1,53 @@
 @startuml
-'https://plantuml.com/sequence-diagram
-'skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
 autonumber
 
-'hide footbox
+actor Editor
 
-' Editor inicia o caso de uso
 activate Editor
-Editor -> CreateMapUI : Request to create map
+Editor -> CreateMapUI : Create Map Request
 activate CreateMapUI
 
-' Editor insere os dados do mapa (nome e dimensões)
-Editor -> CreateMapUI : enterMapData(name, width, height)
+CreateMapUI --> Editor : Request Map Name
+Editor -> CreateMapUI : Enter Map Name
+CreateMapUI -> MapValidator : validateName(name)
+activate MapValidator
 
-' UI envia os dados ao controller para validação
-CreateMapUI -> CreateMapController : validateInput(name, width, height)
-activate CreateMapController
+alt name is valid (AC02: no special chars/digits)
+  MapValidator --> CreateMapUI : nameValid
+  CreateMapUI --> Editor : Request Map Dimensions
+  Editor -> CreateMapUI : Enter Dimensions (width, height)
+  CreateMapUI -> MapValidator : validateDimensions(width, height)
 
+  alt dimensions are valid (AC01: positive integers)
+    MapValidator --> CreateMapUI : dimensionsValid
+    CreateMapUI -> MapController : createMap(name, width, height)
+    activate MapController
+    MapController -> Map : new(name, width, height)
+    activate Map
+    Map --> MapController : mapInstance
+    deactivate Map
 
-' Controller executa validações locais
-CreateMapController -> CreateMapController : validateName()
-CreateMapController -> CreateMapController : validateDimensions()
+    MapController -> MapRepository : save(mapInstance)
+    activate MapRepository
+    MapRepository --> MapController : saveConfirmed
+    deactivate MapRepository
 
-' Controller obtém o utilizador autenticado
-CreateMapController -> UserSession : getUser()
-activate UserSession
-UserSession --> CreateMapController : User
-deactivate UserSession
+    MapController --> CreateMapUI : mapCreated
+    deactivate MapController
+    CreateMapUI -> Editor : Show Success ("Map created")
+  else dimensions invalid
+    MapValidator --> CreateMapUI : invalidDimensions
+    CreateMapUI -> Editor : Show Error ("Dimensions must be positive integers")
+  end
+else name invalid
+  MapValidator --> CreateMapUI : invalidName
+  CreateMapUI -> Editor : Show Error ("Name cannot contain special characters/digits")
+end
 
-' Organização cria o mapa
-CreateMapController -> Organization : createMap(name, width, height)
-activate Organization
-Organization -> Map : new(name, width, height)
-activate Map
-Map --> Organization : Map initialized
-deactivate Map
-Organization --> CreateMapController : Map created
-deactivate Organization
-
-' Controller persiste o mapa
-CreateMapController -> OrganizationRepository : save(Map)
-activate OrganizationRepository
-OrganizationRepository --> CreateMapController : confirmation
-deactivate OrganizationRepository
-
-' Controller devolve o resultado à UI
-CreateMapController --> CreateMapUI : success/failure
-deactivate CreateMapController
-
-' UI mostra mensagem ao Editor
-CreateMapUI -> Editor : showSuccessOrError()
+deactivate MapValidator
 deactivate CreateMapUI
 deactivate Editor
-
 @enduml
-
-
-

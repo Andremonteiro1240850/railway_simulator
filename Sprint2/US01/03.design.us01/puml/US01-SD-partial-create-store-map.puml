@@ -1,28 +1,35 @@
 @startuml
-'https://plantuml.com/sequence-diagram
-'skinparam monochrome true
+skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
-
 autonumber
-'hide footbox
+hide footbox
 
-CreateMapController -> Organization : createMap(name, width, height)
-activate Organization
-Organization -> Map : new(name, width, height)
-deactivate Organization
-activate Map
-Map --> Organization
-deactivate Map
-activate Organization
-Organization --> CreateMapController : Map
-deactivate Organization
-activate CreateMapController
+actor User as "Editor (User)"
+participant ":AuthUI" as AuthUI
+participant ":AuthController" as AuthCtrl
+participant ":UserSession" as Session
+participant ":PasswordValidator" as Validator
 
-CreateMapController -> OrganizationRepository : save(Map)
-deactivate CreateMapController
-activate OrganizationRepository
-OrganizationRepository --> CreateMapController : success status
-deactivate OrganizationRepository
-activate CreateMapController
+
+
+
+activate AuthCtrl
+
+AuthCtrl -> Session : getCurrentUser()
+activate Session
+Session --> AuthCtrl : user()
+deactivate Session
+
+alt "Session valid"
+  AuthCtrl -> Validator : validatePermissions(user)
+  activate Validator
+  Validator --> AuthCtrl : hasAccess(true)
+  deactivate Validator
+
+
+
+end
+
+deactivate AuthCtrl
 @enduml
