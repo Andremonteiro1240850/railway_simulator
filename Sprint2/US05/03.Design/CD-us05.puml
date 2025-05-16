@@ -1,17 +1,18 @@
 @startuml
+
 skinparam monochrome false
-skinparam packageStyle rectangle
 skinparam shadowing false
+hide empty members
 
 class Player {
 }
 
 class CreateStationUI {
-  + askToBuildStation()
+  + asksToBuildStation()
   + showStationTypes()
-  + requestInformation()
-  + showConfirmation()
-  + displaySuccess()
+  + askForLocation()
+  + showDataAndRequestConfirmation()
+  + displayOperationSuccess()
 }
 
 class CreateStationController {
@@ -22,22 +23,13 @@ class CreateStationController {
   + createStation()
 }
 
-class Organization {
-}
-
-class StationTypeRepositories {
-  + getStationType()
-}
-
-class StationTypeRepositoriesSingleton {
+class StationRepository {
   + getStationTypeList()
+  + calculateCenterOptions()
+  + saveStation()
 }
 
-class StationTypeCategoryRepository {
-  + getStationTypeCategories()
-}
-
-class MapService {
+class MapRepository {
   + requestCoordinates()
 }
 
@@ -45,23 +37,19 @@ class LocationValidator {
   + validateXY()
 }
 
-class StationNamingService {
+class StationNaming {
   + generateName()
 }
 
-class CityRegistry {
+class City {
   + getNearestCity()
 }
 
-class StationGeometry {
-  + calculateCenter()
-}
-
 class PositionValidator {
-  + validateCenter()
+  + validateXY()
 }
 
-class RailwayNetwork {
+class Map {
   + buildStation()
 }
 
@@ -69,49 +57,22 @@ class BudgetManager {
   + verifyIfPossible()
 }
 
+class StationTypeRepository {
+  + getStationTypeList()
+}
+
 ' Relacionamentos
-Player --> CreateStationUI : usa
-CreateStationUI --> CreateStationController : comunica com
-CreateStationController --> StationTypeRepositories : consulta
-CreateStationController --> StationTypeRepositoriesSingleton : consulta
-CreateStationController --> StationTypeCategoryRepository : consulta
-CreateStationController --> MapService : obtém coordenadas
-CreateStationController --> LocationValidator : valida local
-CreateStationController --> StationNamingService : gera nome
-CreateStationController --> CityRegistry : consulta cidades
-CreateStationController --> StationGeometry : calcula centro
-CreateStationController --> PositionValidator : valida posição
-CreateStationController --> RailwayNetwork : constrói estação
-CreateStationController --> BudgetManager : verifica orçamento
-CreateStationController --> Organization : verifica permissões
+Player --> CreateStationUI
+CreateStationUI --> CreateStationController
 
-Organization --> StationTypeRepositories : possui
-Organization --> RailwayNetwork : possui
-Organization --> BudgetManager : possui
+CreateStationController --> StationRepository
+CreateStationController --> MapRepository
+CreateStationController --> LocationValidator
+CreateStationController --> StationNaming
+CreateStationController --> City
+CreateStationController --> PositionValidator
+CreateStationController --> Map
+CreateStationController --> BudgetManager
+CreateStationController --> StationTypeRepository
 
-StationTypeRepositoriesSingleton --> StationTypeRepositories : encapsula
-StationTypeCategoryRepository --> StationTypeRepositories : agrega
-
-RailwayNetwork --> StationGeometry : usa para construção
-RailwayNetwork --> PositionValidator : valida posições
-
-note right of CreateStationController::createStation
-  1. Verifica orçamento
-  2. Constrói estação
-  3. Retorna resultado
-end note
-
-note bottom of StationTypeRepositories
-  Padrão Repository para:
-  - Tipos de estações
-  - Categorias
-  - Dados persistentes
-end note
-
-note left of RailwayNetwork
-  Gerencia:
-  - Rede ferroviária
-  - Construção de estações
-  - Conexões
-end note
 @enduml

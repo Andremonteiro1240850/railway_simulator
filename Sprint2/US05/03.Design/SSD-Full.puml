@@ -10,18 +10,15 @@ actor "Player" as ORG_EMPLOYEE
 
 participant ":CreateStationUI" as UI
 participant ":CreateStationController" as CTRL
-participant "organization\n:Organization" as ORG
-participant "StationTypeRepositories" as REPOS
-participant "stationTypeRepositories\n:StationTypeRepositories" as REPOS_SINGLETON
-participant "stationTypeCategoryRepository:\nStatioTypeCategoryRepository" as TASK_CAT_REPO
-participant "map\n:MapService" as MAP
-participant "validation\n:LocationValidator" as VALID
-participant "naming\n:StationNamingService" as NAMING
-participant "city\n:CityRegistry" as CITY
-participant "geometry\n:StationGeometry" as GEO
-participant "validation\n:PositionValidator" as VALID
-participant "railway\n:RailwayNetwork" as RAIL
-participant "economy\n:BudgetManager" as BUDGET
+participant "StationRepository" as REPOS
+participant "MapRepository" as MAP
+participant "LocationValidator" as VALID
+participant "StationNaming" as NAMING
+participant "City" as CITY
+participant "PositionValidator" as VALID
+participant "Map" as RAIL
+participant "BudgetManager" as BUDGET
+participant "StationTypeRepository" as REPOT
 
 activate ORG_EMPLOYEE
 
@@ -36,20 +33,10 @@ activate ORG_EMPLOYEE
         autonumber 3.1
         activate CTRL
 
-                    CTRL -> REPOS : getStationType()
-                    activate REPOS
-                        REPOS --> CTRL: repositories
-                    deactivate REPOS
-
-                    CTRL -> REPOS_SINGLETON : getStatioTypeList()
-                    activate REPOS_SINGLETON
-                        REPOS_SINGLETON --> CTRL:  stationTypeRepository
-                    deactivate REPOS_SINGLETON
-
-                    CTRL -> TASK_CAT_REPO : getStationTypeCategories()
-                    activate TASK_CAT_REPO
-                        TASK_CAT_REPO --> CTRL : stationTypeCategoryList
-                    deactivate TASK_CAT_REPO
+                    CTRL -> REPOT : getStationTypeList()
+                    activate REPOT
+                        REPOT --> CTRL: stationTypesList
+                    deactivate REPOT
 
             CTRL --> UI : stationTypesList
             autonumber 4
@@ -59,6 +46,10 @@ activate ORG_EMPLOYEE
     deactivate UI
 
     ORG_EMPLOYEE -> UI : selects station type
+    activate UI
+    UI -> ORG_EMPLOYEE : Ask for location
+    deactivate UI
+    ORG_EMPLOYEE -> UI : Give location
     autonumber 6
     activate UI
         UI -> CTRL : getLocation()
@@ -105,26 +96,23 @@ activate ORG_EMPLOYEE
 
         activate CTRL
 
-                CTRL -> GEO : calculateCenter(stationType, location)
-                activate GEO
-                    GEO --> CTRL : centerPoint
-                deactivate GEO
+                CTRL -> REPOS : calculateCenterOptions()
+                activate REPOS
+                    REPOS --> CTRL : centerOptions
+                deactivate REPOS
 
-                CTRL -> VALID : validateCenter(centerPoint)
-                activate VALID
-                    VALID --> CTRL : isValid
-                deactivate VALID
-                CTRL -> UI : centre
+                CTRL -> UI : centreOptions
 
             autonumber 6.6
 
         deactivate CTRL
 
-        UI --> ORG_EMPLOYEE : requests information (Location, (name, centre if Staion))
+        UI --> ORG_EMPLOYEE : requests information (name, (centre if Staion)) and sugest name
         autonumber 7
     deactivate UI
 
     ORG_EMPLOYEE -> UI : types requested information
+
     autonumber 8
     activate UI
         UI --> ORG_EMPLOYEE : shows all data and name suggested, and requests confirmation
@@ -150,6 +138,11 @@ activate ORG_EMPLOYEE
                     CTRL -> RAIL : buildStation()
                     activate RAIL
                         RAIL --> CTRL : stationBuilt
+                        deactivate RAIL
+                        CTRL -> REPOS : saveStation()
+                        activate REPOS
+                        REPOS --> CTRL: stationSaved
+                        deactivate REPOS
                     deactivate RAIL
 
                 autonumber 18
