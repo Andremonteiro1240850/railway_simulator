@@ -47,9 +47,9 @@ This diagram shows the complete sequence of interactions between the classes inv
 ### Split Diagrams
 The following diagrams show the same sequence of interactions between the classes involved in the realization of this user story, but split into partial diagrams to better illustrate the interactions between the classes.
 
-#### Input & Validation Phase
+#### User Authentication & Session Validation
 This diagram shows how the user starts the use case and inputs map data, which is then validated by the controller.
-![US01-SD-partial-input-validation](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-input-validation.svg)
+![US01-SD-partial-input-validation](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-user-authentication-session-validation.svg)
 
 
 #### Get User
@@ -60,7 +60,7 @@ This diagram shows how the controller retrieves the current authenticated user f
 
 ####  Create and Store Map Phase
 This diagram shows how the map is created by the domain (Organization) and stored via the OrganizationRepository.
-![US01-SD-partial-create-store-map](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-create-store-map.svg)
+![US01-SD-partial-create-store-map](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-user-authentication-session-validation.svg)
 
 
 #### Feedback to UI Phase

@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+hide footbox
+
+actor Editor as "Editor"
+participant ":CreateMapUI" as UI
+participant ":MapValidator" as Validator
+
+activate Editor
+
+UI --> Editor : Request Map Name
+Editor -> UI : Enter Name
+UI -> Validator : validateName(name)
+activate Validator
+
+alt "AC02: Valid filename"
+  Validator --> UI : true
+  UI --> Editor: Show message of success
+else "Invalid"
+  Validator --> UI :  false
+  deactivate Validator
+  UI --> Editor : Show Error('Invalid name')"
+  deactivate UI
+  deactivate Editor
+end
+
+deactivate Validator
+@enduml

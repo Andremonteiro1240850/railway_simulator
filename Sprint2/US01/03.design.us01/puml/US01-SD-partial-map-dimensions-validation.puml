@@ -1,0 +1,32 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+hide footbox
+
+actor Editor as "Editor"
+participant ":CreateMapUI" as UI
+participant ":MapValidator" as Validator
+activate Editor
+
+
+
+UI -> Editor :  Request Map Size
+Editor -> UI : Enter Size (width, height)
+activate UI
+UI -> Validator : validateSize(width, height)
+activate Validator
+
+alt "AC01: Positive integers"
+  Validator --> UI :  true
+else "Invalid"
+  Validator --> UI : false
+  deactivate Validator
+  UI -> Editor : showError('Invalid dimensions')
+  deactivate UI
+  deactivate Editor
+end
+
+deactivate Validator
+@enduml

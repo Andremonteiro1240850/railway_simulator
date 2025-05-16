@@ -1,0 +1,42 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+autonumber
+hide footbox
+
+participant ":MapController" as Ctrl
+participant ":MapFactory" as Factory
+participant ":Map" as Map
+participant ":MapRepository" as Repo
+participant ":CreateMapUI" as UI
+
+activate Ctrl
+Ctrl -> Factory : createMap()
+activate Factory
+
+Factory -> Map : new(name, width, height)
+activate Map
+Map --> Factory : mapInstance
+deactivate Map
+
+Factory --> Ctrl : createdMap
+deactivate Factory
+
+Ctrl -> Repo : save(map)
+activate Repo
+
+alt "Persistence success"
+  Repo --> Ctrl : saveSuccess
+  Ctrl -> UI : mapCreated
+  UI -> User : Show Success('Map saved')
+else "Database error"
+  Repo --> Ctrl :  saveFailed
+  Ctrl -> Factory :  rollbackCreation()
+  Ctrl -> UI :  error: 'Storage failed'
+  UI -> User :  Show Error
+  end
+
+deactivate Repo
+deactivate Ctrl
+@enduml

@@ -5,8 +5,7 @@ skinparam shadowing false
 autonumber
 hide footbox
 
-actor User as "Editor (User)"
-participant ":AuthUI" as AuthUI
+
 participant ":AuthController" as AuthCtrl
 participant ":UserSession" as Session
 participant ":PasswordValidator" as Validator
@@ -26,9 +25,6 @@ alt "Session valid"
   activate Validator
   Validator --> AuthCtrl : hasAccess(true)
   deactivate Validator
-
-
-
 end
 
 deactivate AuthCtrl
