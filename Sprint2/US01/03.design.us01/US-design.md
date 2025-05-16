@@ -9,33 +9,34 @@
 
 | Interaction ID | Question: Which class is responsible for...                      | Answer                  | Justification (with patterns)                                                                                                                           |
 |:---------------|:-----------------------------------------------------------------|:------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Step 1  		     | ... interacting with the Editor?                                 | CreateMapUI             | Pure Fabrication: separates UI responsibility from domain logic.                                                                                        |
-| 		             | ... coordinating the flow of the use case?                       | CreateMapController     | Controller: mediates between UI and domain logic.                                                                                                       |
-| 		             | ... knowing the authenticated user?                              | UserSession             | Information Expert: maintains session data.                                                                                                             |
-| Step 2  		     | ... requesting the name and dimensions of the map from the user? | CreateMapUI             | Information Expert: handles user input.                                                                                                                 |
-| Step 3  		     | ... validating the map name (valid file name)?                   | CreateMapController     | Information Expert: Implements the business rule for validating the map name to ensure it adheres to valid file naming conventions.                     |
-| Step 4  		     | ... validating the map dimensions (positive integers)?           | CreateMapController     | Information Expert: This class is responsible for applying validation logic on map dimensions, ensuring they are positive integers as per domain rules. |
-| Step 5  		     | ... creating the map instance?                                   | Organization            | 	Creator: In the Domain Model, this class is responsible for creating instances of domain entities like the map, aligning with the Creator pattern.     |
-|                   | ... knowing the map data (name and dimensions)?                  | Map                     | Information Expert: The Map class owns the data related to the map (its name and dimensions) and manages it internally.                                 |
-| Step 6  		     | ... storing the created map?                                     | OrganizationRepository  | Repository: Handles the persistence of the Organization and its associated maps, ensuring data storage and retrieval.                                   |              
-| Step 7  		     | ... informing the result of the operation to the UI?             | CreateMapController     | Controller: This class is responsible for relaying the outcome of the operation (success or failure) back to the UI.                                    |
-| Step 8  		     | ... displaying a success or error message to the user?           | CreateMapUI             | Information Expert: The UI class is responsible for providing feedback to the user, either showing a success or error message based on the operation result.                                                                                                                                                        |
+| Step 1         | ... interacting with the Editor?                                 | CreateMapUI             | Pure Fabrication: separates UI responsibility from domain logic.                                                                                        |
+| Step 2         | ... coordinating the flow of the use case?                       | CreateMapController     | Controller: mediates between UI and domain logic.                                                                                                       |
+| Step 3         | ... knowing the authenticated user?                              | UserSession             | Information Expert: maintains session data.                                                                                                             |
+| Step 4         | ... requesting the name and dimensions of the map from the user? | CreateMapUI             | Information Expert: handles user input.                                                                                                                 |
+| Step 5         | ... validating the map name (valid file name)?                   | MapValidator            | Strategy Pattern: encapsulates validation rules that can vary independently.                                                                            |
+| Step 6         | ... validating the map dimensions (positive integers)?           | MapValidator            | Information Expert: centralizes all validation logic.                                                                                                   |
+| Step 7         | ... creating the map instance?                                   | MapFactory              | Factory Method: encapsulates creation logic and ensures valid object state.                                                                             |
+| Step 8         | ... knowing the map data (name and dimensions)?                  | Map                     | Information Expert: owns the core domain data.                                                                                                          |
+| Step 9         | ... storing the created map?                                     | MapRepository           | Repository: handles persistence with transaction support.                                                                                               |              
+| Step 10        | ... informing the result of the operation to the UI?             | CreateMapController     | Controller: relays outcomes between layers.                                                                                                             |
+| Step 11        | ... displaying success/error messages?                           | CreateMapUI             | Information Expert: manages user feedback.                                                                                                              |
 
 ### Systematization ##
 
 According to the taken rationale, the conceptual classes promoted to software classes are:
 
-* Organization
 * Map
+* User (extended with permissions)
 
 Other software classes (i.e. Pure Fabrication) identified:
 
 * CreateMapUI
 * CreateMapController
-* Repositories
-* OrganizationRepository
-* ApplicationSession
+* MapValidator
+* MapFactory
+* MapRepository
 * UserSession
+* MapConfig (new - stores business constraints)
 
 ## 3.2. Sequence Diagram (SD)
 
