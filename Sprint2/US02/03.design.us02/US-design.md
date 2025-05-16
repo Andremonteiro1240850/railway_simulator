@@ -60,11 +60,13 @@ This part of the sequence illustrates how the industry addition process is initi
 
 ####  Industry Type 
 
-This section shows how the user selects the industry’s position on the map and provides the type of industry to be added. The AddIndustryController validates the type against the IndustryTypeRepository to ensure it's allowed.
+This section shows how the user selects the industry’s type of industry to be added. 
 
 ![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-industry-type.svg)
 
 #### Position Validation
+
+This part focuses on validating the chosen position and preparing a preview of the new industry. It retrieves the map, checks if the position is valid, and creates a temporary industry object. This object is then displayed to the editor for confirmation.
 
 ![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-position-validation.svg)
 

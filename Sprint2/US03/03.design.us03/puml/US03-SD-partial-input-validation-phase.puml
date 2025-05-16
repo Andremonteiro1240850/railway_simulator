@@ -8,28 +8,74 @@ autonumber
 
 'hide footbox
 
-actor Editor
-activate Editor
 
-Editor -> AddCityUI : startAddCity()
-activate AddCityUI
+participant "AddCityUI" as UI
+participant AddCityController
+participant MapRepository
+participant Map
 
-Editor -> AddCityUI : inputCityData(name, x, y, houseBlocks)
+autonumber
 
-AddCityUI -> AddCityController : handleAddCity(name, x, y, houseBlocks)
-deactivate AddCityUI
+
+participant "AddCityUI" as UI
+participant AddCityController
+participant MapRepository
+participant Map
+
+autonumber
+
+UI -> AddCityController : handleAddCity(name, x, y, houseBlocks, distributionType)
 activate AddCityController
 
 AddCityController -> MapRepository : getCurrentMap()
 activate MapRepository
-MapRepository --> AddCityController : Map
+MapRepository --> AddCityController : currentMap
 deactivate MapRepository
 
-AddCityController -> AddCityController : validateCityName(name)
+group Validation
 
-AddCityController -> Map : isPositionValid(x, y)
-activate Map
-Map --> AddCityController : boolean
-deactivate Map
-deactivate Editor
+    AddCityController -> AddCityController : validateCityName(name)
+    note right : ✅ AC01 - Name must not contain digits or special characters
+    alt Invalid name
+        AddCityController --> UI : error("Invalid city name format")
+        deactivate AddCityController
+
+    end
+
+    AddCityController -> Map : isPositionWithinBounds(x, y)
+    activate Map
+    Map --> AddCityController : true/false
+    deactivate Map
+    alt Invalid coordinates
+        AddCityController --> UI : error("Coordinates out of map bounds")
+        deactivate AddCityController
+
+    end
+
+    AddCityController -> Map : isPositionFree(x, y)
+    activate Map
+    Map --> AddCityController : true/false
+    deactivate Map
+    alt Position already occupied
+        AddCityController --> UI : error("Position already used by another element")
+        deactivate AddCityController
+
+    end
+
+    AddCityController -> AddCityController : validateDistributionType(distributionType)
+    alt Invalid type
+        AddCityController --> UI : error("Invalid distribution type")
+        deactivate AddCityController
+
+    end
+
+    AddCityController -> AddCityController : validateHouseBlockCount(houseBlocks)
+    alt houseBlocks <= 0
+        AddCityController --> UI : error("House block count must be positive")
+        deactivate AddCityController
+
+    end
+
+end group
 @enduml
+

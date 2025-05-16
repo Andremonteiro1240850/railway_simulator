@@ -36,7 +36,7 @@ Other software classes (i.e. Pure Fabrication) identified:
 * MapFactory
 * MapRepository
 * UserSession
-* MapConfig (new - stores business constraints)
+* MapConfig 
 
 ## 3.2. Sequence Diagram (SD)
 

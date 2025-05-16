@@ -1,0 +1,49 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+
+participant AddCityController
+participant City
+participant Map
+participant MapRepository
+participant "AddCityUI" as UI
+actor Editor
+
+autonumber
+activate Editor
+
+group City Creation
+    AddCityController -> City : Instantiate City(name, x, y)
+    activate City
+
+    alt distributionType == "Manual"
+        City -> City : assignHouseBlocks(houseBlocks)
+    else
+        City -> City : assignHouseBlocksRandomly(houseBlocks)
+        note right : AC02 - Use normal distribution around city center
+    end
+
+    City --> AddCityController : Return city instance
+    deactivate City
+end group
+
+AddCityController -> Map : addCity(cityInstance)
+Map --> AddCityController : Success/failure
+
+AddCityController -> MapRepository : save(map)
+MapRepository --> AddCityController : Save result
+
+AddCityController --> UI : Notify result (success/failure)
+deactivate AddCityController
+
+UI -> Editor : Show confirmation message
+deactivate UI
+@enduml
+

@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+'hide footbox
+
+
+actor Editor
+participant "AddCityUI" as UI
+
+autonumber
+
+note over UI : The UI collects city details from the Editor step by step.
+
+UI --> Editor : Request city name
+Editor -> UI : Input city name
+
+UI --> Editor : Request coordinates (X, Y)
+Editor -> UI : Input coordinates
+
+UI --> Editor : Request number of house blocks
+Editor -> UI : Input quantity
+
+UI --> Editor : Request distribution type (Manual/Auto)
+Editor -> UI : Selects distribution type
+
+note right of UI : All required data is now collected\nand ready for processing.
+@enduml
+
+

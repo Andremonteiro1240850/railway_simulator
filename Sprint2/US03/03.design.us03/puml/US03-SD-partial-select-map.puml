@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+
+actor Editor
+participant "AddCityUI" as UI
+
+autonumber
+
+Editor -> UI : Initiates "Add City" process
+activate UI
+note right of UI : UI shows the list of available maps\nso the Editor can choose where to place the city.
+
+UI --> Editor : Display available maps
+Editor -> UI : Selects a map from the list
+
+note right of UI : The selected map becomes the current\nworking map for this operation.
+@enduml
