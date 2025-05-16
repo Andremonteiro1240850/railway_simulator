@@ -1,0 +1,22 @@
+@startuml SSD_US12_SimulatorCargoGeneration
+actor Player as "Player"
+participant "System" as System
+
+autonumber
+
+Player -> System: Start Simulation
+activate System
+  System -> System: Generate Cargos:
+  note right
+    1. Verifica estações existentes
+    2. Para cada estação:
+      - Identifica cidades/indústrias no raio
+      - Calcula cargas (ex: 2 carvões/ano por mina)
+      - Atualiza lista de cargas na estação
+  end note
+System --> Player: Display Updated Stations\n(Ex: "6 coal cargos at Porto Terminal")
+
+Player -> System: Pause Simulation
+  System --> Player: Confirmation "Simulation Paused"
+deactivate System
+@enduml
