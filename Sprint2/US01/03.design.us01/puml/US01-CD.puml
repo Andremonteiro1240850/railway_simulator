@@ -31,9 +31,6 @@ class MapValidator {
   + isValidSize(width: int, height: int): boolean {static}
 }
 
-class MapFactory {
-  + createMap(name: String, width: int, height: int): Map
-}
 
 class Map {
   - name: String
@@ -53,7 +50,9 @@ class MapRepository {
 ' ==== Dependencies ====
 CreateMapUI --> CreateMapController : delegates
 CreateMapController --> MapValidator : uses
-CreateMapController --> MapFactory : creates >
+MapValidator --> Map : validates
+CreateMapController --> Map : creates >
 CreateMapController --> MapRepository : persists >
-MapFactory --> Map : creates
+Map --> MapRepository : saved in
+
 @enduml
