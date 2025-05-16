@@ -31,4 +31,5 @@ public class MapRepository {
     public Map findByName(String name) {
         return store.get(name);
     }
+
 }
