@@ -8,10 +8,11 @@ import java.util.List;
  * Represents a Map with a name and dimensions (width and height).
  */
 public class Map {
-    private String name;
-    private int width;
-    private int height;
+    private final String name;
+    private final int width;
+    private final int height;
     private final List<Industry> industries;
+    private final List<City> cities;
 
     /**
      * Constructs a new Map.
@@ -24,38 +25,31 @@ public class Map {
         this.width = width;
         this.height = height;
         this.industries = new ArrayList<>();
+        this.cities = new ArrayList<>();
     }
 
-    /**
-     * @return the map name
-     */
-    public String getName() {
-        return name;
+    public String getName() { return name; }
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
+
+    public List<Industry> getIndustries() { return Collections.unmodifiableList(industries); }
+    public List<City> getCities() { return Collections.unmodifiableList(cities); }
+
+    /** Adds an industry to the map */
+    public void addIndustry(Industry industry) { industries.add(industry); }
+
+    /** Adds a city to the map */
+    public void addCity(City city) { cities.add(city); }
+
+    public boolean isPositionFree(int x, int y) {
+        return cities.stream().noneMatch(c -> c.getX() == x && c.getY() == y);
+    }
+    public boolean addCity(City city) {
+        if (isPositionValid(city.getX(), city.getY())) {
+            cities.add(city);
+            return true;
+        }
+        return false;
     }
 
-    /**
-     * @return the map width
-     */
-    public int getWidth() {
-        return width;
-    }
-
-    /**
-     * @return the map height
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    public List<Industry> getIndustries() {
-        return Collections.unmodifiableList(industries);
-    }
-
-    /**
-     * Adds an industry to the map.
-     * @param industry the industry to add
-     */
-    public void addIndustry(Industry industry) {
-        industries.add(industry);
-    }
 }
