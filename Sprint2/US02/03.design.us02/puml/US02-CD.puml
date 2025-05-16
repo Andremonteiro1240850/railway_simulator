@@ -32,6 +32,9 @@ class MapRepository {
 
 class IndustryTypeRepository {
   + isValidIndustryType(type: IndustryType): boolean
+   PRIMARY
+   TRANSFORMING
+   MIXED
 }
 
 class Map {
@@ -48,11 +51,6 @@ class Industry {
   + create(type: IndustryType, x: int, y: int)
 }
 
-enum IndustryType {
-  PRIMARY
-  TRANSFORMING
-  MIXED
-}
 
 ' Relationships
 AddIndustryUI --> AddIndustryController : triggers >
@@ -61,7 +59,7 @@ AddIndustryController --> MapRepository : retrieves/saves >
 AddIndustryController --> IndustryTypeRepository : validates type >
 AddIndustryController --> Map : validates position/adds industry >
 AddIndustryController --> Industry : creates >
-Industry --> IndustryType : uses >
+
 
 note top of IndustryTypeRepository: "Validates if type matches\nscenario restrictions (US02)"
 note right of Map :isPositionValid: "Checks:\n- Boundaries\n- Overlaps (AC01)"
