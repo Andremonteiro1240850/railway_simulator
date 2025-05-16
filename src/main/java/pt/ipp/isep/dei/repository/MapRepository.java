@@ -9,6 +9,16 @@ import java.util.Map;
 public class MapRepository {
 
     private final Map<String, Map> store = new HashMap<>();
+    private Map currentMap;
+
+    /**
+     * Gets the current selected map.
+     * @return The current map
+     */
+    public Map getCurrentMap() {
+        return currentMap;
+    }
+
 
     /**
      * Saves the given map in memory.
@@ -20,6 +30,8 @@ public class MapRepository {
             return false; // Prevent overwriting existing map
         }
         store.put(map.getName(), map);
+        return true;
+        this.currentMap = map;
         return true;
     }
 
