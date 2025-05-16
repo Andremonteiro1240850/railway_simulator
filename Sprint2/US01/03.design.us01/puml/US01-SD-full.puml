@@ -9,6 +9,7 @@ autonumber
 'hide footbox
 
 ' Editor inicia o caso de uso
+activate Editor
 Editor -> CreateMapUI : Request to create map
 activate CreateMapUI
 
@@ -53,6 +54,7 @@ deactivate CreateMapController
 ' UI mostra mensagem ao Editor
 CreateMapUI -> Editor : showSuccessOrError()
 deactivate CreateMapUI
+deactivate Editor
 
 @enduml
 

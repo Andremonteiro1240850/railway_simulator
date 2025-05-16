@@ -10,14 +10,19 @@ autonumber
 CreateMapController -> Organization : createMap(name, width, height)
 activate Organization
 Organization -> Map : new(name, width, height)
+deactivate Organization
 activate Map
 Map --> Organization
 deactivate Map
+activate Organization
 Organization --> CreateMapController : Map
 deactivate Organization
+activate CreateMapController
 
 CreateMapController -> OrganizationRepository : save(Map)
+deactivate CreateMapController
 activate OrganizationRepository
 OrganizationRepository --> CreateMapController : success status
 deactivate OrganizationRepository
+activate CreateMapController
 @enduml

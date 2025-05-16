@@ -8,16 +8,16 @@ autonumber
 'hide footbox
 
 alt sucesso
-    CreateMapController --> CreateMapUI : onSuccess("Map created successfully")
+    CreateMapController -> CreateMapUI : onSuccess("Map created successfully")
     deactivate CreateMapController
 
-    CreateMapUI -> CreateMapUI : showSuccessMessage()
+    CreateMapUI --> CreateMapUI : showSuccessMessage()
     deactivate CreateMapUI
 else erro
-    CreateMapController --> CreateMapUI : onError("Invalid input")
+    CreateMapController -> CreateMapUI : onError("Invalid input")
     deactivate CreateMapController
 
-    CreateMapUI -> CreateMapUI : showErrorMessage()
+    CreateMapUI --> CreateMapUI : showErrorMessage()
     deactivate CreateMapUI
 end
 @enduml
