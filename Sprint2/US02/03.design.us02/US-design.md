@@ -1,6 +1,4 @@
-# USXXX - YYY
-
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+# US02 - Add an Industry to the Map
 
 ## 3. Design
 
@@ -10,30 +8,39 @@ _XXX stands for User Story number and YYY for User Story description (e.g. US006
 
 | Interaction ID | Question: Which class is responsible for... | Answer                 | Justification (with patterns)                                                                                     |
 |:-------------  |:--------------------------------------------|:-----------------------|:------------------------------------------------------------------------------------------------------------------|
-| Step 1  		 | ... interacting with the actor (Editor)?	   | AddIndustryUI          | Pure Fabrication: UI class handles user interaction.                                                              |
-|                | ... coordinating the US?                    | AddIndustryController  | Controller pattern: mediates between UI and domain logic.                                                         |
+| Step 1         | ... interacting with the actor (Editor)?    | AddIndustryUI          | Pure Fabrication: Dedicated UI class handles user interaction.                                                    |
+|                | ... coordinating the US?                    | AddIndustryController  | Controller pattern: Mediates between UI and domain logic.                                                         |
+|                | ... verifying editor permissions?           | UserService            | IE: Centralizes user role validation.                                                                             |
 |                | ... knowing the current map being edited?   | MapRepository          | IE: Repository holds all maps.                                                                                    |
-| Step 2  		 | ... listing available industry types?       | IndustryTypeRepository | IE: Maintains industry types (primary/transforming/mixed).                                                        |
-| Step 3  		 | ... validating XY coordinates on the map?   | Map                    | IE: Map knows its dimensions and valid positions.                                                                 |
-| Step 4  		 | ... instantiating a new industry?           | Map                    | Creator (Rule 1): Map contains industries.                                                                        |
-|                 | ... validating industry placement rules?    | Industry               | IE: Industry validates its own constraints (e.g., no overlap).                                                    |
-| Step 5  		 | ... persisting the updated map?             | MapRepository          | IE: Repository manages map persistence.                                                                           |
-| Step 6  		 | ... confirming success to the user?         | AddIndustryUI          | Pure Fabrication: UI handles feedback.                                                                            |              
+| Step 2         | ... validating industry types?              | IndustryTypeRepository | IE: Maintains scenario-specific industry types (primary/transforming/mixed).                                      |
+| Step 3         | ... validating XY coordinates?              | Map                    | IE: Map knows its dimensions and occupied positions (AC01: Overbuilding prevention).                              |
+| Step 4         | ... instantiating a new industry?           | Industry               | Creator (Rule 2): Industry encapsulates creation logic (type/position validation).                                |
+|                | ... adding industry to map?                 | Map                    | IE: Map manages spatial containment of industries.                                                                |
+| Step 5         | ... persisting the updated map?             | MapRepository          | IE: Repository handles persistence.                                                                               |
+| Step 6         | ... confirming success to the user?         | AddIndustryUI          | Pure Fabrication: UI provides user feedback.                                                                      |
 
-### Systematization ##
+### Systematization
 
 According to the taken rationale, the conceptual classes promoted to software classes are:
+
 #### Conceptual classes promoted to software classes:
-* Map
-* Industry
-* IndustryType (enum: PRIMARY/TRANSFORMING/MIXED)
+- **Map**
+    - Manages spatial data and industry placement.
+- **Industry**
+    - Validates its own constraints (e.g., position rules).
+- **IndustryType** (enum: `PRIMARY`, `TRANSFORMING`, `MIXED`)
+    - Matches project requirements (US02).
 
 #### Pure Fabrications:
+- **AddIndustryUI**
+    - Handles user input/output (no domain logic).
+- **AddIndustryController**
+    - Orchestrates the workflow (Controller pattern).
+- **MapRepository** / **IndustryTypeRepository**
+    - Persistence and type management (Repository pattern).
+- **UserService**
+    - Centralizes permission checks.
 
-* AddIndustryUI
-* AddIndustryController
-* MapRepository
-* IndustryTypeRepository
 
 
 ## 3.2. Sequence Diagram (SD)
