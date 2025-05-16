@@ -1,6 +1,5 @@
 package pt.ipp.isep.dei;
 
-import pt.ipp.isep.dei.controller.AuthenticationController;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 
 public class Bootstrap implements Runnable {

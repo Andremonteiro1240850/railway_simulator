@@ -34,7 +34,7 @@ At last, remember that each User Story does not stand alone... it needs to be in
 | [Supplementary Specification](system-documentation/global-artifacts/01.requirements-engineering/suplementary-specification.md) | all                                  | all      | all      |
 | [Domain Model](system-documentation/global-artifacts/01.requirements-engineering/domain-model.md)                              | all                                  | all      | all      |
 | US01 (SDP Activities)                                                                                                          | [1240835](system-documentation/US01) | 1240835  |          |
-| US02 (SDP Activities)                                                                                                          | [1240835](system-documentation/US02) | 1240850  |          |
+| US02 (SDP Activities)                                                                                                          | [1240835](system-documentation/US02) | 1240835  |          |
 | US03 (SDP Activities)                                                                                                          | [1240835](system-documentation/US03) | 1240835  | ...      |
 | US04 (SDP Activities)                                                                                                          | 1240868                              | 1240868  | ...      |
 | US05 (SDP Activities)                                                                                                          | 1240868                              | 1240868  | ...      |
@@ -44,9 +44,9 @@ At last, remember that each User Story does not stand alone... it needs to be in
 | US10 (SDP Activities)                                                                                                          | 1240850                              | 1240850  | ...      |
 | US12 (SDP Activities)                                                                                                          | 1240850                              | 1240850  | ...      |
 | US13 (SDP Activities)                                                                                                          | ...                                  | all      | ...      |
-| US 14 (SDP  Activities)                                                                                                        |...|all|...|
-| US14 (SDP Activities)                                                                                                          |...|all|...|
-| US15(SDP Activities)                                                                                                           |...|all|...|
-| US16(SDP Activities)                                                                                                           |...|all|...|
-| US17(SDP Activities)                                                                                                           |...|all|...|
-| US18 (SDP Activities) |...|all|...|                                                                                                         
+| US 14 (SDP  Activities)                                                                                                        |...| all      |...|
+| US14 (SDP Activities)                                                                                                          |...| all      |...|
+| US15(SDP Activities)                                                                                                           |...| all      |...|
+| US16(SDP Activities)                                                                                                           |...| all      |...|
+| US17(SDP Activities)                                                                                                           |...| all      |...|
+| US18 (SDP Activities) |...| all      |...|                                                                                                         
