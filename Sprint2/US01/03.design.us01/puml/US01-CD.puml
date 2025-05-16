@@ -1,54 +1,59 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-'skinparam monochrome true
+skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam linetype polyline
-'skinparam linetype orto
-
 skinparam classAttributeIconSize 0
 
-'left to right direction
-
+' ==== Core Classes ====
 class CreateMapUI {
   - controller: CreateMapController
-  + startCreateMap()
-  + showSuccessOrError()
+  + startCreation()
+  + requestMapName()
+  + requestMapSize()
+  + showSuccess(message: String)
+  + showError(error: String)
 }
 
 class CreateMapController {
-  - userSession: UserSession
-  - orgRepo: OrganizationRepository
-  + validateName()
-  + validateDimensions()
-  + createMap(name, width, height)
+  - validator: MapValidator
+  - factory: MapFactory
+  - repo: MapRepository
+  + validateName(name: String): boolean
+  + validateSize(width: int, height: int): boolean
+  + createMap(name: String, width: int, height: int): boolean
 }
 
-class UserSession {
-  - userId: String
-  + getUser(): User
+class MapValidator {
+  + isValidName(name: String): boolean {static}
+  + isValidSize(width: int, height: int): boolean {static}
 }
 
-class Organization {
-  + createMap(name, width, height): Map
+class MapFactory {
+  + createMap(name: String, width: int, height: int): Map
 }
 
 class Map {
   - name: String
   - width: int
   - height: int
-  + getName()
-  + getDimensions()
+  + Map(name: String, width: int, height: int)
+  + getName(): String
+  + getWidth(): int
+  + getHeight(): int
 }
 
-class OrganizationRepository {
-  + save(map: Map)
+class MapRepository {
+  + save(map: Map): boolean
+  + rollback()
 }
 
-CreateMapUI --> CreateMapController
-CreateMapController --> UserSession
-CreateMapController --> Organization
-Organization --> Map
-CreateMapController --> OrganizationRepository
+' ==== Dependencies ====
+CreateMapUI --> CreateMapController : delegates
+CreateMapController --> MapValidator : uses
+CreateMapController --> MapFactory : creates >
+CreateMapController --> MapRepository : persists >
+MapFactory --> Map : creates
 @enduml

@@ -48,24 +48,25 @@ This diagram shows the complete sequence of interactions between the classes inv
 The following diagrams show the same sequence of interactions between the classes involved in the realization of this user story, but split into partial diagrams to better illustrate the interactions between the classes.
 
 #### User Authentication & Session Validation
-This diagram shows how the user starts the use case and inputs map data, which is then validated by the controller.
+This diagram validates user permissions before map creation
+
 ![US01-SD-partial-input-validation](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-user-authentication-session-validation.svg)
 
 
-#### Get User
-This diagram shows how the controller retrieves the current authenticated user from the session.
+#### Map Name Validation
+This diagram ensures the map name complies with business rules (US01-AC02).
 
-![US01-SD-partia-get-user](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-get-user.svg)
+![US01-SD-partia-get-user](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-map-name-validation.svg)
 
 
 ####  Create and Store Map Phase
-This diagram shows how the map is created by the domain (Organization) and stored via the OrganizationRepository.
-![US01-SD-partial-create-store-map](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-user-authentication-session-validation.svg)
+This diagram validates map size (US01-AC01). 
+![US01-SD-partial-create-store-map](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-map-dimensions-validation.svg)
 
 
-#### Feedback to UI Phase
-This final diagram shows how the result of the operation is communicated back to the user interface.
-![US01-SD-partial-feedback](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-feedback.svg)
+#### Error Handling & Persistence
+This final diagram manages failures during persistence and instantiates and stores the map object.
+![US01-SD-partial-feedback](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-map-persistence-&-error-handling.svg)
 
 ## 3.3. Class Diagram (CD)
 This diagram shows the main software classes involved in the realization of this user story, including their relationships, attributes, and main responsibilities.
