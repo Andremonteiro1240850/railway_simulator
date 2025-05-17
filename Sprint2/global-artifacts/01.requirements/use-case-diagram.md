@@ -3,7 +3,6 @@
 
 ![Use Case Diagram](/Sprint2/global-artifacts/01.requirements/svg/userCaseDiagram.svg)
 
-
 # Use Cases / User Stories
 | UC/US | Description                                                                                                                                                                               |                   
 |:------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
