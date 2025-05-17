@@ -51,6 +51,11 @@ class Industry {
   + create(type: IndustryType, x: int, y: int)
 }
 
+class IndustryRepository {
+    + getCurrentIndustry(): Industry
+    + save(industry: Industry): boolean
+}
+
 
 ' Relationships
 AddIndustryUI --> AddIndustryController : triggers >
@@ -59,6 +64,7 @@ AddIndustryController --> MapRepository : retrieves/saves >
 AddIndustryController --> IndustryTypeRepository : validates type >
 AddIndustryController --> Map : validates position/adds industry >
 AddIndustryController --> Industry : creates >
+AddIndustryController --> IndustryRepository : saves in
 
 
 note top of IndustryTypeRepository: "Validates if type matches\nscenario restrictions (US02)"
