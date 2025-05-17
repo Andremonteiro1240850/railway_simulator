@@ -31,6 +31,11 @@ public class StationRepository {
     public boolean contains(Station station) {
         return stations.stream().anyMatch(m -> m.equals(station));
     }
+    public Optional<Station> findByReference(String reference) {
+        return stations.stream()
+                .findFirst()
+                .map(Station::clone);
+    }
 
     public List<Station> getAll() {
         return new ArrayList<>(stations); // Retorna cópia defensiva

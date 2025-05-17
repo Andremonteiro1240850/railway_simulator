@@ -47,27 +47,25 @@ public class BuildStationController {
         return authenticationRepository;
     }
 
-    public Optional<Station> createStation(String type, String name,String region) {
 
+        public Optional<Station> createStation(String type, String name, String region) {
+            Employee employee = getEmployeeFromSession();
+            Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
 
+            // Gera uma referência automática
+            String reference = "ST-" + System.currentTimeMillis();
 
-        Employee employee = getEmployeeFromSession();
-        Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
+            Optional<Station> newStation = Optional.empty();
 
-        Optional<Station> newTask = Optional.empty();
-
-        if (organization.isPresent()) {
-            newTask = organization.get()
-                    .createStation(type,name,region, employee);
+            if (organization.isPresent()) {
+                newStation = organization.get()
+                        .createStation(reference, name, region, type, employee);
+            }
+            return newStation;
         }
-        return newTask;
-    }
-
     private Employee getEmployeeFromSession() {
         Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
         return new Employee(email.getEmail());
     }
 
-
 }
-

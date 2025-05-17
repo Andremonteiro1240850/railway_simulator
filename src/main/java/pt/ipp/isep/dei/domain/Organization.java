@@ -92,27 +92,20 @@ public class Organization {
         }
         return optionalValue;
     }
-    public Optional<Station> createStation(String name, String region, String type, Employee employee) {
-
-        //TODO: we could also check if the employee works for the organization before proceeding
-        //checkIfEmployeeWorksForOrganization(employee);
-
-        // When a Task is added, it should fail if the Task already exists in the list of Tasks.
-        // In order to not return null if the operation fails, we use the Optional class.
+    public Optional<Station> createStation(String reference, String name, String region, String type, Employee employee) {
         Optional<Station> optionalValue = Optional.empty();
+        Station station = new Station(reference, name, type, region);
 
-        Station task = new Station(name,type,region);
-        Optional<Station> repositoryResult = stationRepository.add(task);
+        Optional<Station> repositoryResult = stationRepository.add(station);
         if (repositoryResult.isPresent()) {
-            if (addStation(task)) {
-                return Optional.of(task);
+            if (addStation(station)) {
+                return Optional.of(station);
             }
-            // Se falhar em adicionar localmente, remove do repositório
-            stationRepository.getAll().remove(task);
+            stationRepository.getAll().remove(station);
         }
 
-        if (addStation(task)) {
-            optionalValue = Optional.of(task);
+        if (addStation(station)) {
+            optionalValue = Optional.of(station);
         }
         return optionalValue;
     }

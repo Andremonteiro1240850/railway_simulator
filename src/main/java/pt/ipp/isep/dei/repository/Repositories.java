@@ -15,6 +15,9 @@ public class Repositories {
     private final CityRepository cityRepository = new CityRepository();
     private final IndustryRepository industryRepository = new IndustryRepository();
     private final StationRepository stationRepository = new StationRepository();
+    private final UpgradeBuildingsRepository upgradeBuildingsRepository = new UpgradeBuildingsRepository();
+
+
 
     public CreateMapRepository getMapRepository() {
         return mapRepository;
@@ -27,6 +30,9 @@ public class Repositories {
     }
     public StationRepository getStationRepository() {
         return stationRepository;
+    }
+    public UpgradeBuildingsRepository getUpgradeBuildingsRepository() {
+        return upgradeBuildingsRepository;
     }
 
     /**
