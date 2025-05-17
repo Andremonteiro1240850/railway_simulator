@@ -3,6 +3,7 @@ package pt.ipp.isep.dei.domain;
 import pt.ipp.isep.dei.repository.CityRepository;
 import pt.ipp.isep.dei.repository.CreateMapRepository;
 import pt.ipp.isep.dei.repository.IndustryRepository;
+import pt.ipp.isep.dei.repository.StationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +17,11 @@ public class Organization {
     private final List<Task> tasks;
     private final List<City> cities;
     private final List<Industry> industries;
+    private final List<Station> stations;
     private final CreateMapRepository mapRepository;
     private final CityRepository cityRepository;
     private final IndustryRepository industryRepository;
+    private final StationRepository stationRepository;
     private String name;
     private String website;
     private String phone;
@@ -31,7 +34,7 @@ public class Organization {
      * @param vatNumber The vat number of the organization. This is the identity of the organization, therefore it
      *                  cannot be changed.
      */
-    public Organization(String vatNumber, CreateMapRepository mapRepository,CityRepository cityRepository, IndustryRepository industryRepository) {
+    public Organization(String vatNumber, CreateMapRepository mapRepository,CityRepository cityRepository, IndustryRepository industryRepository, StationRepository stationRepository) {
         if (mapRepository == null) {
             throw new IllegalArgumentException("MapRepository cannot be null");
         }
@@ -40,9 +43,11 @@ public class Organization {
         tasks = new ArrayList<>();
         cities = new ArrayList<>();
         industries = new ArrayList<>();
+        stations = new ArrayList<>();
         this.mapRepository = mapRepository;
         this.cityRepository = cityRepository;
         this.industryRepository = new IndustryRepository();
+        this.stationRepository = stationRepository;
     }
 
     /**
@@ -83,6 +88,30 @@ public class Organization {
                 taskCategory, employee);
 
         if (addTask(task)) {
+            optionalValue = Optional.of(task);
+        }
+        return optionalValue;
+    }
+    public Optional<Station> createStation(String name, String region, String type, Employee employee) {
+
+        //TODO: we could also check if the employee works for the organization before proceeding
+        //checkIfEmployeeWorksForOrganization(employee);
+
+        // When a Task is added, it should fail if the Task already exists in the list of Tasks.
+        // In order to not return null if the operation fails, we use the Optional class.
+        Optional<Station> optionalValue = Optional.empty();
+
+        Station task = new Station(name,type,region);
+        Optional<Station> repositoryResult = stationRepository.add(task);
+        if (repositoryResult.isPresent()) {
+            if (addStation(task)) {
+                return Optional.of(task);
+            }
+            // Se falhar em adicionar localmente, remove do repositório
+            stationRepository.getAll().remove(task);
+        }
+
+        if (addStation(task)) {
             optionalValue = Optional.of(task);
         }
         return optionalValue;
@@ -166,6 +195,14 @@ public class Organization {
         }
         return success;
     }
+    private boolean addStation(Station task) {
+        boolean success = false;
+        if (validateStation(task)) {
+            // A clone of the task is added to the list of tasks, to avoid side effects and outside manipulation.
+            success = stations.add(task.clone());
+        }
+        return success;
+    }
     private boolean addMap(Map map) {
         boolean success = false;
         if (validateMap(map)) {
@@ -204,6 +241,9 @@ public class Organization {
     private boolean validate (Task task) {
         return tasksDoNotContain(task);
     }
+    private boolean validateStation (Station task) {
+        return tasksDoNotContain(task);
+    }
     private boolean validateCity (City task) {
         return tasksDoNotContain(task);
     }
@@ -225,6 +265,7 @@ public class Organization {
         return !cities.contains(task);
     }
     private boolean tasksDoNotContain(Industry task) {return !industries.contains(task);}
+    private boolean tasksDoNotContain(Station task) {return !industries.contains(task);}
 
     /**
      * This methos checks if the organization has an employee with the given email.
@@ -278,7 +319,7 @@ public class Organization {
 
     //Clone organization
     public Organization clone() {
-        Organization clone = new Organization(this.vatNumber, this.mapRepository,this.cityRepository,this.industryRepository);
+        Organization clone = new Organization(this.vatNumber, this.mapRepository,this.cityRepository,this.industryRepository,this.stationRepository);
         clone.name = (this.name);
         clone.website = (this.website);
         clone.phone = (this.phone);
@@ -296,7 +337,7 @@ public class Organization {
         return clone;
     }
     public Organization mapClone() {
-        Organization mapClone = new Organization(this.vatNumber, this.mapRepository,this.cityRepository,this.industryRepository);
+        Organization mapClone = new Organization(this.vatNumber, this.mapRepository,this.cityRepository,this.industryRepository,this.stationRepository);
         mapClone.name = (this.name);
         mapClone.website = (this.website);
         mapClone.phone = (this.phone);

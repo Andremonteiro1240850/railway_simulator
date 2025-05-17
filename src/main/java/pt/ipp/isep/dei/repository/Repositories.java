@@ -12,9 +12,21 @@ public class Repositories {
     private final TaskCategoryRepository taskCategoryRepository;
     private final AuthenticationRepository authenticationRepository;
     private final CreateMapRepository mapRepository = new CreateMapRepository();
+    private final CityRepository cityRepository = new CityRepository();
+    private final IndustryRepository industryRepository = new IndustryRepository();
+    private final StationRepository stationRepository = new StationRepository();
 
     public CreateMapRepository getMapRepository() {
         return mapRepository;
+    }
+    public CityRepository getCityRepository() {
+        return cityRepository;
+    }
+    public IndustryRepository getIndustryRepository() {
+        return industryRepository;
+    }
+    public StationRepository getStationRepository() {
+        return stationRepository;
     }
 
     /**

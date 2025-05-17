@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.Employee;
+import pt.ipp.isep.dei.domain.Industry;
 import pt.ipp.isep.dei.domain.Map;
 import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;

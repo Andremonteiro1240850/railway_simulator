@@ -32,7 +32,7 @@ public class CityRepository {
     }
 
     public List<City> getAll() {
-        return new ArrayList<>(city); // Retorna cópia defensiva
+        return new ArrayList<>(cities); // Retorna cópia defensiva
     }
 }
 
