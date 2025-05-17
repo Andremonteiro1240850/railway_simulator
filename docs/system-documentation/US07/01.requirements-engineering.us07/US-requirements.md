@@ -87,14 +87,13 @@ As a Player, I want to list all existing stations to:
   
 ### 1.6. System Sequence Diagram (SSD)
 
-_Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
 ![US07-SSD](/docs/system-documentation/US07/01.requirements-engineering.us07/svg/us07Diagram.svg)
 
 
 ### 1.7. Other Relevant Remarks
 
-**Station Detail Components:**
+
 1. **Header Section**:
     - Station name/type icon
     - Construction date
@@ -110,9 +109,5 @@ _Insert here a SSD depicting the envisioned Actor-System interactions and throug
     - Requested for delivery
     - Historical trends
 
-**Performance Considerations:**
-- List should load instantly (<1s)
-- Details should update in real-time
-- Support 100+ stations without lag
 
 
