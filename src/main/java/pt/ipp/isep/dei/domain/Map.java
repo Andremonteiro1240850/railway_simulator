@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Map implements Cloneable {
@@ -57,5 +59,8 @@ public class Map implements Cloneable {
     public  Map mapClone() {
         return new Map(this.name,this.dimensionX,this.dimensionY,this.employee);
     }
+
+
+
 }
 
