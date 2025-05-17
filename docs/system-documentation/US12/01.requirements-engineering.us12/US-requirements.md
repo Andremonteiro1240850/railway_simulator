@@ -46,7 +46,7 @@ input: scenario and map selection, start simulation, scenario confiruraton data,
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![USXXX-SSD](svg/us12Diagram.svg)
+![USXXX-SSD](/docs/system-documentation/US12/01.requirements-engineering.us12/svg/us12Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 

@@ -6,7 +6,7 @@
 ### 2.1. Relevant Domain Model Excerpt 
 _In this section, it is suggested to present an excerpt of the domain model that is seen as relevant to fulfill this requirement._
 
-![USXXX-DM](svg/US10analysis.svg)
+![USXXX-DM](/docs/system-documentation/US10/02.analysis.10/svg/US10analysis.svg)
 
 ### 2.2. Other Remarks
 

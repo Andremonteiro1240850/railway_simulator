@@ -75,7 +75,7 @@ unspecified
 
 ### 1.6. System Sequence Diagram (SSD)
 
-![US10-SSD](svg/us10Diagram.svg)
+![US10-SSD](/docs/system-documentation/US10/01.requirements-engineering.us10/svg/us10Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 

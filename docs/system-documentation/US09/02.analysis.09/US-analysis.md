@@ -5,7 +5,7 @@
 
 ### 2.1. Relevant Domain Model Excerpt
 
-![US09-DM](svg/us09analysis.svg)
+![US09-DM](/docs/system-documentation/US09/02.analysis.09/svg/us09analysis.svg)
 
 ### 2.2. Other Remarks
 
