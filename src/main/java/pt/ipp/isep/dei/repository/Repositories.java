@@ -11,6 +11,11 @@ public class Repositories {
     private final OrganizationRepository organizationRepository;
     private final TaskCategoryRepository taskCategoryRepository;
     private final AuthenticationRepository authenticationRepository;
+    private final CreateMapRepository mapRepository = new CreateMapRepository();
+
+    public CreateMapRepository getMapRepository() {
+        return mapRepository;
+    }
 
     /**
      * The Singleton's constructor should always be private to prevent direct construction calls with the new operator.

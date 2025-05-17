@@ -5,6 +5,8 @@ import pt.ipp.isep.dei.domain.City;
 import pt.ipp.isep.dei.domain.Map;
 import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.TaskCategory;
+import pt.ipp.isep.dei.repository.CreateMapRepository;
+import pt.ipp.isep.dei.repository.Repositories;
 
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +67,9 @@ public class AddCityUI implements Runnable {
         return input.nextInt();
     }
     private Map requestMap() {
-        List<Map> availableMaps = organization.getMaps();
+
+        CreateMapRepository repository = Repositories.getInstance().getMapRepository();
+        List<Map> availableMaps = repository.getAll();
 
         if (availableMaps.isEmpty()) {
             System.out.println("No maps available.");
@@ -89,7 +93,7 @@ public class AddCityUI implements Runnable {
             }
         }
 
-        return availableMaps.get(selectedIndex - 1);
+        return availableMaps.get(selectedIndex - 1).mapClone();
     }
 
     private void displayTaskCategoryOptions(List<TaskCategory> taskCategories) {

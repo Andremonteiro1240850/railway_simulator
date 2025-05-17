@@ -1,4 +1,4 @@
-# US01 - Creating Map
+# US01 - As an Editor, I want to create a map with a size and a name.
 
 
 ## 3. Design
@@ -43,7 +43,7 @@ Other software classes (i.e. Pure Fabrication) identified:
 ### Full Diagram
 This diagram shows the complete sequence of interactions between the classes involved in the realization of this user story.
 
-![US01-SD](/Sprint2/US01/03.design.us01/svg/US01-SD-full.svg)
+![US01-SD](/docs/system-documentation/US01/03.design.us01/svg/US01-SD-full.svg)
 
 ### Split Diagrams
 The following diagrams show the same sequence of interactions between the classes involved in the realization of this user story, but split into partial diagrams to better illustrate the interactions between the classes.
@@ -51,26 +51,26 @@ The following diagrams show the same sequence of interactions between the classe
 #### User Authentication & Session Validation
 This diagram validates user permissions before map creation
 
-![US01-SD-partial-input-validation](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-user-authentication-session-validation.svg)
+![US01-SD-partial-input-validation](/docs/system-documentation/US01/03.design.us01/svg/US01-SD-partial-user-authentication-session-validation.svg)
 
 
 #### Map Name Validation
 This diagram ensures the map name complies with business rules (US01-AC02).
 
-![US01-SD-partia-get-user](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-map-name-validation.svg)
+![US01-SD-partia-get-user](/docs/system-documentation/US01/03.design.us01/svg/US01-SD-partial-map-name-validation.svg)
 
 
 ####  Create and Store Map Phase
 This diagram validates map size (US01-AC01). 
 
-![US01-SD-partial-create-store-map](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-map-dimensions-validation.svg)
+![US01-SD-partial-create-store-map](/docs/system-documentation/US01/03.design.us01/svg/US01-SD-partial-map-dimensions-validation.svg)
 
 
 #### Error Handling & Persistence
 This final diagram manages failures during persistence and instantiates and stores the map object.
-![US01-SD-partial-feedback](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-map-persistence-&-error-handling.svg)
+![US01-SD-partial-feedback](/docs/system-documentation/US01/03.design.us01/svg/US01-SD-partial-map-persistence-&-error-handling.svg)
 
 ## 3.3. Class Diagram (CD)
 This diagram shows the main software classes involved in the realization of this user story, including their relationships, attributes, and main responsibilities.
 
-![US01-CD-](/Sprint2/US01/03.design.us01/svg/US01-CD.svg)
+![US01-CD-](/docs/system-documentation/US01/03.design.us01/svg/US01-CD.svg)

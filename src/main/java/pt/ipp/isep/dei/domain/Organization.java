@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
+import pt.ipp.isep.dei.repository.CreateMapRepository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,10 +13,12 @@ public class Organization {
     private final List<Map> maps = new ArrayList<>();
     private final List<Task> tasks;
     private final List<City> cities;
+    private final CreateMapRepository mapRepository;
     private String name;
     private String website;
     private String phone;
     private String email;
+    private  CreateMapRepository createMapRepository;
 
     /**
      * This method is the constructor of the organization.
@@ -22,11 +26,15 @@ public class Organization {
      * @param vatNumber The vat number of the organization. This is the identity of the organization, therefore it
      *                  cannot be changed.
      */
-    public Organization(String vatNumber) {
+    public Organization(String vatNumber, CreateMapRepository mapRepository) {
+        if (mapRepository == null) {
+            throw new IllegalArgumentException("MapRepository cannot be null");
+        }
         this.vatNumber = vatNumber;
         employees = new ArrayList<>();
         tasks = new ArrayList<>();
         cities = new ArrayList<>();
+        this.mapRepository = mapRepository;
     }
 
     /**
@@ -81,6 +89,14 @@ public class Organization {
         Optional<Map> optionalValue = Optional.empty();
 
          Map task = new Map(name,x,y,employee);
+        Optional<Map> repositoryResult = mapRepository.add(task);
+        if (repositoryResult.isPresent()) {
+            if (addMap(task)) {
+                return Optional.of(task);
+            }
+            // Se falhar em adicionar localmente, remove do repositório
+            mapRepository.getAll().remove(task);
+        }
 
         if (addMap(task)) {
             optionalValue = Optional.of(task);
@@ -220,7 +236,7 @@ public class Organization {
 
     //Clone organization
     public Organization clone() {
-        Organization clone = new Organization(this.vatNumber);
+        Organization clone = new Organization(this.vatNumber, this.mapRepository);
         clone.name = (this.name);
         clone.website = (this.website);
         clone.phone = (this.phone);
@@ -238,7 +254,7 @@ public class Organization {
         return clone;
     }
     public Organization mapClone() {
-        Organization mapClone = new Organization(this.vatNumber);
+        Organization mapClone = new Organization(this.vatNumber, this.mapRepository);
         mapClone.name = (this.name);
         mapClone.website = (this.website);
         mapClone.phone = (this.phone);
