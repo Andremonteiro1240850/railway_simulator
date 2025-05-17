@@ -60,6 +60,16 @@ public class Map implements Cloneable {
         return new Map(this.name,this.dimensionX,this.dimensionY,this.employee);
     }
 
+    private Scenario scenario;
+
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
+    }
+
+    public Scenario getScenario() {
+        return scenario;
+    }
+
 
 
 }

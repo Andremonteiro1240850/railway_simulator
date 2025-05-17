@@ -14,6 +14,7 @@ public class Bootstrap implements Runnable {
         addTaskCategories();
         addOrganization(mapRepository);
         addUsers();
+
     }
 
     private void addOrganization(CreateMapRepository mapRepository) {
@@ -56,6 +57,6 @@ public class Bootstrap implements Runnable {
         authenticationRepository.addUserWithRole("Main Administrator", "admin@this.app", "admin", AuthenticationController.ROLE_ADMIN);
         authenticationRepository.addUserWithRole("Employee", "employee@this.app", "pwd", AuthenticationController.ROLE_EMPLOYEE);
         authenticationRepository.addUserWithRole("Player", "player@this.app", "plr", AuthenticationController.ROLE_PLAYER);
-        authenticationRepository.addUserWithRole("Editor", "editor@this.app", "edt", AuthenticationController.ROLE_EDITOR);
+            authenticationRepository.addUserWithRole("Editor", "editor@this.app", "edt", AuthenticationController.ROLE_EDITOR);
     }
 }
