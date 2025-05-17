@@ -1,4 +1,5 @@
 @startuml
+
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
@@ -10,28 +11,39 @@ skinparam classAttributeIconSize 0
 hide circle
 hide methods
 
-    class Editor {
-        ID
-    }
+enum LocomotionType {
+  Steam
+  Diesel
+  Electric
+}
 
-    class Scenario {
-        timeRestrictions
-        techRestrictions
-        portBehavior
-    }
+class Editor {
+   email
+   password
+}
 
-    class PortBehavior {
-        imports
-        exports
-    }
+class Scenario {
+   name
+   timePeriod
+   allowedTypes
+   generationFactors
+}
 
-    class LocomotionType {
-        Steam
-        Diesel
-        Electric
-    }
+class PortBehavior {
+   transform
+   imports
+   exports
+}
 
-    Editor --> Scenario : "makes"
-    Scenario "1" --> "1" PortBehavior : "define"
-    Scenario "1" --> "1" LocomotionType : "need"
+class Map {
+   name: String
+   width: int
+   height: int
+}
+
+Editor --> Scenario : makes
+Scenario --> "1" Map : uses
+Scenario --> "*" PortBehavior : defines
+Scenario --> "*" LocomotionType : needs
+
 @enduml
