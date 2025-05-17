@@ -173,6 +173,15 @@ public class Organization {
         }
         return optionalValue;
     }
+    private double budget;
+
+    public double getBudget() { return budget; }
+
+    public void deductFromBudget(double amount) {
+        if (amount > 0 && amount <= budget) {
+            budget -= amount;
+        }
+    }
 
     /**
      * This method adds a task to the list of tasks.

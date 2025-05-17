@@ -37,6 +37,9 @@ public class Map implements Cloneable {
             throw new IllegalArgumentException("Reference cannot be null or empty.");
         }
     }
+    public String getName() {
+        return name;
+    }
 
     @Override
     public boolean equals(Object o) {

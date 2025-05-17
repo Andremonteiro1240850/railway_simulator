@@ -17,6 +17,10 @@ public class Repositories {
     private final StationRepository stationRepository = new StationRepository();
     private final UpgradeBuildingsRepository upgradeBuildingsRepository = new UpgradeBuildingsRepository();
 
+    private final ScenarioRepository scenarioRepo = new ScenarioRepository();
+
+
+
 
 
     public CreateMapRepository getMapRepository() {
@@ -34,6 +38,21 @@ public class Repositories {
     public UpgradeBuildingsRepository getUpgradeBuildingsRepository() {
         return upgradeBuildingsRepository;
     }
+    private final ListLocomotivesRepository listLocomotivesRepo = new ListLocomotivesRepository();
+    private final LocomotiveRepository locomotiveRepo = new LocomotiveRepository();
+
+    public ListLocomotivesRepository getListLocomotivesRepository() {
+        return listLocomotivesRepo;
+    }
+
+    public LocomotiveRepository getLocomotiveRepository() {
+        return locomotiveRepo;
+    }
+
+    public ScenarioRepository getScenarioRepository() {
+        return scenarioRepo;
+    }
+
 
     /**
      * The Singleton's constructor should always be private to prevent direct construction calls with the new operator.
