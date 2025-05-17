@@ -1,0 +1,42 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+actor "Player" as PLAYER
+participant ":ViewStationUI" as UI
+participant ":ViewStationController" as CTRL
+participant "repositories" as REPOS
+participant "repositories\n:Repositories" as REPOS_SINGLE
+participant "stationRepository\n:StationRepository" as STATION_REPO
+
+autonumber
+
+activate PLAYER
+PLAYER -> UI : Requests to list all the stations to select one to see its details.
+activate UI
+
+UI -> CTRL : listAllStations()
+activate CTRL
+
+CTRL -> REPOS : getInstance()
+activate REPOS
+REPOS --> CTRL : repositories
+deactivate REPOS
+
+CTRL -> REPOS_SINGLE : getStationRepository()
+activate REPOS_SINGLE
+REPOS_SINGLE --> CTRL : stationRepository
+deactivate REPOS_SINGLE
+
+CTRL -> STATION_REPO : getAllStations()
+activate STATION_REPO
+STATION_REPO --> CTRL : listOfStations
+deactivate STATION_REPO
+
+CTRL --> UI : listOfStations
+deactivate CTRL
+
+UI --> PLAYER : Lists all stations and requests to select one.
+deactivate UI
+deactivate PLAYER
+@enduml
