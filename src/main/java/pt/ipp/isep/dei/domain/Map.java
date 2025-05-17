@@ -2,7 +2,7 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.Objects;
 
-public class Map {
+public class Map implements Cloneable {
     private String name;
     private int dimensionX;
     private int dimensionY;
@@ -20,6 +20,14 @@ public class Map {
         this.employee = employee;
 
     }
+    @Override
+    public Map clone() {
+        try {
+            return (Map) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Nunca deve acontecer pois implementamos Cloneable
+        }
+    }
 
     private void validateReference(String reference) {
         //TODO: missing from the diagrams
@@ -30,19 +38,15 @@ public class Map {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Map)) {
-            return false;
-        }
-        Map task = (Map) o;
-        return employee.equals(task.employee);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Map map = (Map) o;
+        return Objects.equals(name, map.name); // assumindo que 'name' identifica unicamente o mapa
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( employee);
+        return Objects.hash(name);
     }
 
     /**
