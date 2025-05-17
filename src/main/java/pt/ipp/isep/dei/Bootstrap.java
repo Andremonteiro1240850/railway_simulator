@@ -11,18 +11,22 @@ public class Bootstrap implements Runnable {
     //Add some task categories to the repository as bootstrap
     public void run() {
         CreateMapRepository mapRepository = Repositories.getInstance().getMapRepository();
+        IndustryRepository industryRepository = Repositories.getInstance().getIndustryRepository();
+        CityRepository cityRepository = Repositories.getInstance().getCityRepository();
+        StationRepository stationRepository = Repositories.getInstance().getStationRepository();
+        OrganizationRepository organizationRepository = Repositories.getInstance().getOrganizationRepository();
         addTaskCategories();
-        addOrganization(mapRepository);
+        addOrganization(mapRepository, industryRepository, cityRepository, stationRepository);
         addUsers();
 
     }
 
-    private void addOrganization(CreateMapRepository mapRepository) {
+    private void addOrganization(CreateMapRepository mapRepository, IndustryRepository industryRepository,CityRepository cityRepository,StationRepository stationRepository) {
         //TODO: add organizations bootstrap here
         //get organization repository
         OrganizationRepository organizationRepository = Repositories.getInstance().getOrganizationRepository();
 
-        Organization organization = new Organization("This Company",mapRepository);
+        Organization organization = new Organization("This Company",mapRepository,cityRepository,industryRepository,stationRepository);
         organization.addEmployee(new Employee("admin@this.app"));
         organization.addEmployee(new Employee("employee@this.app"));
         organization.addEmployee(new Employee("player@this.app"));
