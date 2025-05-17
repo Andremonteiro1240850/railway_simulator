@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.repository.CreateMapRepository;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.domain.Map;
@@ -13,22 +14,24 @@ import java.util.Optional;
 
 public class CreateMapController {
     private OrganizationRepository organizationRepository;
-    private Organization organization;
     private AuthenticationRepository authenticationRepository;
+    private CreateMapRepository createMapRepository;
 
 
     //Repository instances are obtained from the Repositories class
     public CreateMapController() {
         getOrganizationRepository();
         getAuthenticationRepository();
+        Repositories.getInstance().getMapRepository();
     }
 
     //Allows receiving the repositories as parameters for testing purposes
     public CreateMapController(OrganizationRepository organizationRepository,
-                               AuthenticationRepository authenticationRepository,Organization organization) {
+                               AuthenticationRepository authenticationRepository, CreateMapRepository createMapRepository) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
-        this.organization = organization;
+        this.createMapRepository = createMapRepository;
+
     }
 
 
@@ -69,6 +72,8 @@ public class CreateMapController {
         Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
         return new Employee(email.getEmail());
     }
+
+
 }
 
 
