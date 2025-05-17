@@ -1,0 +1,84 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+actor "Player" as PLAYER
+participant ":ViewStationUI" as UI
+participant ":ViewStationController" as CTRL
+participant "repositories" as REPOS
+participant "repositories\n:Repositories" as REPOS_SINGLETON
+participant "stationRepository\n:StationRepository" as STATION_REPO
+participant "station\n:Station" as STATION
+
+activate PLAYER
+
+PLAYER -> UI : Requests to list all the stations to select one to see its details.
+activate UI
+
+UI -> CTRL : listAllStations()
+activate CTRL
+
+CTRL -> REPOS : getInstance()
+activate REPOS
+
+REPOS --> CTRL : repositories
+deactivate REPOS
+
+CTRL -> REPOS_SINGLETON : getStationRepository()
+activate REPOS_SINGLETON
+
+REPOS_SINGLETON --> CTRL : stationRepository
+deactivate REPOS_SINGLETON
+
+CTRL -> STATION_REPO : getAllStations()
+activate STATION_REPO
+
+STATION_REPO --> CTRL : listOfStations
+deactivate STATION_REPO
+
+CTRL --> UI : listOfStations
+deactivate CTRL
+
+UI --> PLAYER : Lists all stations and requests to select one.
+deactivate UI
+
+PLAYER -> UI : Selects station.
+activate UI
+
+UI --> PLAYER : Displays all data and requests confirmation.
+deactivate UI
+
+PLAYER -> UI : Confirms data.
+activate UI
+
+UI -> CTRL : getStationDetails(station)
+activate CTRL
+
+CTRL -> STATION : getBuildings()
+activate STATION
+
+STATION --> CTRL : listOfBuildings
+deactivate STATION
+
+CTRL -> STATION : getCargoSupply()
+activate STATION
+
+STATION --> CTRL : listOfCargoSupply
+deactivate STATION
+
+CTRL -> STATION : getCargoDemand()
+activate STATION
+
+STATION --> CTRL : listOfCargoDemand
+deactivate STATION
+
+CTRL --> UI : stationDetails(listOfBuildings, listOfCargoSupply, listOfCargoDemand)
+deactivate CTRL
+
+UI --> PLAYER : Displays the operation success.
+deactivate UI
+
+deactivate PLAYER
+@enduml
