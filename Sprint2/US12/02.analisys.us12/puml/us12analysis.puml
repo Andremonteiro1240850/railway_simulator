@@ -1,4 +1,5 @@
 @startuml
+
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
@@ -10,20 +11,54 @@ skinparam classAttributeIconSize 0
 hide circle
 hide methods
 
-    class ProductOwner {
-    name
-    }
 
-    class Simulator {
-        start
-        pause
-        end
-    }
+class ProductOwner {
+  - nome : String
+}
 
-    class Station {
-       cargoSupply
-    }
+class Simulador {
+  - estado : String
+}
 
-    ProductOwner --> Simulator : "make"
-    Simulator "1" -->  "*" Station : "generate"
+class Estacao {
+  - nome : String
+  - localizacao : Coordenada
+}
+
+class Cidade {
+  - nome : String
+  - passageiros : int
+  - correio : int
+}
+
+class Industria {
+  - nome : String
+  - tipo : TipoIndustria
+}
+
+class Carga {
+  - tipo : String
+  - quantidade : int
+}
+
+class Coordenada {
+  - x : int
+  - y : int
+}
+
+enum TipoIndustria {
+  Primaria
+  Transformadora
+  Mista
+}
+
+ProductOwner "1" -- "1" Simulador : configura
+Simulador "1" -- "*" Estacao : gere
+Estacao "1" -- "*" Carga : gera
+Estacao "1" -- "0..1" Cidade : serve
+Estacao "1" -- "*" Industria : serve
+Cidade "1" -- "*" Carga : consome
+Industria "1" -- "*" Carga : produz
+Estacao "1" -- "1" Coordenada : está em
+
 @enduml
