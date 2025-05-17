@@ -28,25 +28,25 @@ At last, remember that each User Story does not stand alone... it needs to be in
 **This table must be always up-to-date.**
 
 | Task                                                                                                                                       | Sprint 1                             | Sprint 2 | Sprint 3 |
-|--------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|----------|----------|
-| [Glossary](system-documentation/global-artifacts/01.requirements-engineering/glossary.md)                                                  | all                                  | all      | all      |
-| [Use Case Diagram (UCD)](system-documentation/global-artifacts/01.requirements-engineering/use-case-diagram.md)                            | all                                  | all      | all      |
-| [Supplementary Specification](system-documentation/global-artifacts/01.requirements-engineering/suplementary-specification.md)             | all                                  | all      | all      |
-| [Domain Model](system-documentation/global-artifacts/01.requirements-engineering/domain-model.md)                                          | all                                  | all      | all      |
-| US01 (SDP Activities)                                                                                                                      | [1240835](system-documentation/US01) | 1240835  |          |
-| US02 (SDP Activities)                                                                                                                      | [1240835](system-documentation/US02) | 1240835  |          |
-| US03 (SDP Activities)                                                                                                                      | [1240835](system-documentation/US03) | 1240835  | ...      |
-| US04 (SDP Activities)                                                                                                                      | 1240868                              | 1240868  | ...      |
-| US05 (SDP Activities)                                                                                                                      | 1240868                              | 1240868  | ...      |
-| US06 (SDP Activities)                                                                                                                      | 1240868                              | 12240868 | ...      |
-| US07 (SDP Activiies)                                                                                                                       | 1240886                              | 1240886  | ...      |
-| US09 (SDP Activities)                                                                                                                      | 1240850                              | 1240850  | ...      |
-| US10 (SDP Activities)                                                                                                                      | 1240850                              | 1240850  | ...      |
-| US12 (SDP Activities)                                                                                                                      | 1240850                              | 1240850  | ...      |
-| US13 (SDP Activities)                                                                                                                      | ...                                  | all      | ...      |
-| US 14 (SDP  Activities)                                                                                                                    | ...                                  | all      |...|
-| US14 (SDP Activities)                                                                                                                      | ...                                  | all      |...|
-| US15(SDP Activities)                                                                                                                       | ...                                  | all      |...|
-| US16(SDP Activities)                                                                                                                       | ...                                  | all      |...|
-| US17(SDP Activities)                                                                                                                       | ...                                  | all      |...|
-| US18 (SDP Activities)                                                                                                                      | ...                                  | all      |...|                                                                                                         
+|--------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------|---------|----------|
+| [Glossary](system-documentation/global-artifacts/01.requirements-engineering/glossary.md)                                                  | all                                  | all     | all      |
+| [Use Case Diagram (UCD)](system-documentation/global-artifacts/01.requirements-engineering/use-case-diagram.md)                            | all                                  | all     | all      |
+| [Supplementary Specification](system-documentation/global-artifacts/01.requirements-engineering/suplementary-specification.md)             | all                                  | all     | all      |
+| [Domain Model](system-documentation/global-artifacts/01.requirements-engineering/domain-model.md)                                          | all                                  | all     | all      |
+| US01 (SDP Activities)                                                                                                                      | [1240835](system-documentation/US01) | 1240835 |          |
+| US02 (SDP Activities)                                                                                                                      | [1240835](system-documentation/US02) | 1240835 |          |
+| US03 (SDP Activities)                                                                                                                      | [1240835](system-documentation/US03) | 1240835 | ...      |
+| US04 (SDP Activities)                                                                                                                      | 1240868                              | 1240868 | ...      |
+| US05 (SDP Activities)                                                                                                                      | 1240868                              | 1240868 | ...      |
+| US06 (SDP Activities)                                                                                                                      | 1240868                              | 1240868 | ...      |
+| US07 (SDP Activiies)                                                                                                                       | 1240886                              | 1240886 | ...      |
+| US09 (SDP Activities)                                                                                                                      | 1240850                              | 1240850 | ...      |
+| US10 (SDP Activities)                                                                                                                      | 1240850                              | 1240850 | ...      |
+| US12 (SDP Activities)                                                                                                                      | 1240850                              | 1240850 | ...      |
+| US13 (SDP Activities)                                                                                                                      | ...                                  | all     | ...      |
+| US 14 (SDP  Activities)                                                                                                                    | ...                                  | all     |...|
+| US14 (SDP Activities)                                                                                                                      | ...                                  | all     |...|
+| US15(SDP Activities)                                                                                                                       | ...                                  | all     |...|
+| US16(SDP Activities)                                                                                                                       | ...                                  | all     |...|
+| US17(SDP Activities)                                                                                                                       | ...                                  | all     |...|
+| US18 (SDP Activities)                                                                                                                      | ...                                  | all     |...|                                                                                                         
