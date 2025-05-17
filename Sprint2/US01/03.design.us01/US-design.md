@@ -62,6 +62,7 @@ This diagram ensures the map name complies with business rules (US01-AC02).
 
 ####  Create and Store Map Phase
 This diagram validates map size (US01-AC01). 
+
 ![US01-SD-partial-create-store-map](/Sprint2/US01/03.design.us01/svg/US01-SD-partial-map-dimensions-validation.svg)
 
 
