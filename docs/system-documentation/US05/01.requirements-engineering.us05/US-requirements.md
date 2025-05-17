@@ -44,20 +44,24 @@ Overbuilding in the Simulator is NOT possible, the player gets a warning and gam
 
 ### 1.4. Found out Dependencies
 
-- **US01**: Requires existing map to build on
-- **US04**: Scenario defines available resources/budget
-- **US07**: Station list needed for overbuilding verification
-- **US12**: Simulator mode affects overbuilding behavior
+- There is a dependency on US01: Requires existing map to build on
+- There is a dependency on US04: Scenario defines available resources/budget
+- There is a dependency on US07: Station list needed for overbuilding verification
+- There is a dependency on US12: Simulator mode affects overbuilding behavior
 
 ### 1.5 Input and Output Data
 
 **Input Data:**
-- Selected map (from US01)
-- Station type (Depot/Station/Terminal)
-- Desired coordinates (X,Y)
-- For Stations only: center position 
-- Player confirmation/modification of auto-generated name
-- Current player budget
+
+*Typed Data*:
+ - Station name 
+ - Center position selection 
+
+*Selected Data*:
+ - Station type (predefined options: Depot/Station/Terminal)
+ - Map coordinates (X,Y from map interface click)
+ - Current map selection (from available maps)
+ - Player account (for budget verification)
 
 **Output Data:**
 - Success:
