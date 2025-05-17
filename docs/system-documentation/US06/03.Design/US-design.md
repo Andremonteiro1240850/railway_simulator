@@ -1,6 +1,4 @@
-# USXXX - YYY
-
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
+# US06 - As a Player, I want to upgrade a selected station with a building
 
 ## 3. Design
 
@@ -8,40 +6,63 @@ _XXX stands for User Story number and YYY for User Story description (e.g. US006
 
 **The rationale grounds on the SSD interactions and the identified input/output data.**
 
-| Interaction ID | Question: Which class is responsible for... | Answer  | Justification (with patterns)  |
-|:-------------  |:--------------------- |:------------|:---------------------------- |
-| Step 1  		 |							 |             |                              |
-| Step 2  		 |							 |             |                              |
-| Step 3  		 |							 |             |                              |
-| Step 4  		 |							 |             |                              |
-| Step 5  		 |							 |             |                              |
-| Step 6  		 |							 |             |                              |              
-| Step 7  		 |							 |             |                              |
-| Step 8  		 |							 |             |                              |
-| Step 9  		 |							 |             |                              |
-| Step 10  		 |							 |             |                              |  
+| Interaction ID | Question: Which class is responsible for... | Answer | Justification (with patterns) |
+|:---------------|:--------------------------------------------|:-------|:-----------------------------|
+| Step 1 | ... interacting with the Player? | UpgradeStationUI | Pure Fabrication: separates UI responsibility from domain logic |
+| Step 2 | ... coordinating the upgrade process? | UpgradeStationController | Controller: mediates between UI and domain logic |
+| Step 3 | ... retrieving the current player data? | PlayerRepository | Repository: handles player data persistence |
+| Step 4 | ... retrieving available stations? | StationRepository | Information Expert: knows about stations |
+| Step 5 | ... retrieving available buildings? | BuildingRepository | Information Expert: knows about building types |
+| Step 6 | ... verifying if upgrade is financially possible? | BudgetManager | Information Expert: manages player finances |
+| Step 7 | ... executing the station upgrade? | StationUpgrader | Expert: handles upgrade business rules |
+| Step 8 | ... validating building availability by date? | BuildingRepository | Information Expert: knows building constraints |
+| Step 9 | ... validating mutual exclusivity of buildings? | BuildingRepository | Information Expert: knows building dependencies |
+| Step 10 | ... persisting the upgraded station? | StationRepository | Repository: handles station data persistence |
+| Step 11 | ... updating player budget? | BudgetManager | Information Expert: manages financial transactions |
+| Step 12 | ... providing feedback to the player? | UpgradeStationUI | Pure Fabrication: handles user output |
 
-### Systematization ##
+### Systematization
 
 According to the taken rationale, the conceptual classes promoted to software classes are:
 
-* Class1
-* Class2
-* Class3
+* Player
+* Station
+* Building
+* Budget
 
 Other software classes (i.e. Pure Fabrication) identified:
 
-* xxxxUI  
-* xxxxController
+* UpgradeStationUI
+* UpgradeStationController
+* PlayerRepository
+* StationRepository
+* BuildingRepository
+* BudgetManager
+* StationUpgrader
 
 ## 3.2. Sequence Diagram (SD)
+* **Full Sequence Diagram**
 
-_In this section, it is suggested to present an UML dynamic view representing the sequence of interactions between software objects that allows to fulfill the requirements._
+![USXXX-SD](/docs/system-documentation/US06/03.Design/svg/SSD-Full.svg)
 
-![USXXX-SD](svg/USXXX-SD.svg)
+## Partial Diagrams
+
+* **Split Diagram**
+
+![](/docs/system-documentation/US06/03.Design/svg/SSD-Split.svg)
+
+* **Get Stations**
+
+![](/docs/system-documentation/US06/03.Design/svg/SSD-Get-Stations.svg)
+
+* **Get Upgrade**
+
+![](/docs/system-documentation/US06/03.Design/svg/SSD-Get-Upgrade.svg)
+
+* **Upgrade Station**
+
+![](/docs/system-documentation/US06/03.Design/svg/SSD-Upgrade-Station.svg)
 
 ## 3.3. Class Diagram (CD)
 
-_In this section, it is suggested to present an UML static view representing the main related software classes that are involved in fulfilling the requirements as well as their relations, attributes and methods._
-
-![USXXX-CD](svg/USXXX-CD.svg)
+![USXXX-CD](/docs/system-documentation/US06/03.Design/svg/CD-us06.svg)
