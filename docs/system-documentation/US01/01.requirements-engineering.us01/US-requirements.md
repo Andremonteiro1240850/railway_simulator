@@ -13,7 +13,7 @@ As an Editor, I want to create a map with a size and a name
 > A ideia é que o utilizador possa ver num mapa interativo:
 > A posição dos locais e os eventos que ocorrem nesses locais.
 
-`**From the client clarifications:**`
+**From the client clarifications:**
 
 > **Question:** Considering the map will need to accommodate multiple cities,industries and stations with their respective connections, would it be acceptable to establish a minimum map size like 20x20 or 50x50? A smaller size might not provide enough space for meaningful simulation elements.
 > 

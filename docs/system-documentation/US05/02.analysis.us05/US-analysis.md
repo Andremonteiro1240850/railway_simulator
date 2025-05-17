@@ -4,7 +4,7 @@
 
 ### 2.1. Relevant Domain Model Excerpt
 
-![US05-DM](us05DiagramAnalysis.svg)
+![US05-DM](/docs/system-documentation/US05/02.analysis.us05/svg/us05DiagramAnalysis.svg)
 
 ### 2.2. Other Remarks
 
