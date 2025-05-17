@@ -1,55 +1,75 @@
 package pt.ipp.isep.dei.controller;
 
-
+import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.repository.OrganizationRepository;
+import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.domain.Map;
-import pt.ipp.isep.dei.repository.MapRepository;
-import pt.ipp.isep.dei.ui.console.authorization.MapValidator;
+import pt.isep.lei.esoft.auth.domain.model.Email;
+import pt.ipp.isep.dei.domain.Organization;
 
-/**
- * Controller handling map creation logic.
- */
+import java.util.List;
+import java.util.Optional;
+
 public class CreateMapController {
+    private OrganizationRepository organizationRepository;
+    private Organization organization;
+    private AuthenticationRepository authenticationRepository;
 
-    private final MapRepository repository;
 
-    /**
-     * Constructs a new CreateMapController.
-     */
+    //Repository instances are obtained from the Repositories class
     public CreateMapController() {
-        this.repository = new MapRepository();
+        getOrganizationRepository();
+        getAuthenticationRepository();
     }
 
-    /**
-     * Validates the map name using MapValidator.
-     * @param name the name to validate
-     * @return true if valid; false otherwise
-     */
-    public boolean validateName(String name) {
-        return MapValidator.isValidName(name);
+    //Allows receiving the repositories as parameters for testing purposes
+    public CreateMapController(OrganizationRepository organizationRepository,
+                               AuthenticationRepository authenticationRepository,Organization organization) {
+        this.organizationRepository = organizationRepository;
+        this.authenticationRepository = authenticationRepository;
+        this.organization = organization;
     }
 
-    /**
-     * Validates the map dimensions.
-     * @param width the width to validate
-     * @param height the height to validate
-     * @return true if dimensions are valid; false otherwise
-     */
-    public boolean validateSize(int width, int height) {
-        return MapValidator.isValidSize(width, height);
-    }
 
-    /**
-     * Creates and stores a map if valid.
-     * @param name the map name
-     * @param width the map width
-     * @param height the map height
-     * @return true if creation and storage succeed; false otherwise
-     */
-    public boolean createMap(String name, int width, int height) {
-        if (!validateName(name) || !validateSize(width, height)) {
-            return false;
+    private OrganizationRepository getOrganizationRepository() {
+        if (organizationRepository == null) {
+            Repositories repositories = Repositories.getInstance();
+            organizationRepository = repositories.getOrganizationRepository();
         }
-        Map map = new Map(name, width, height);
-        return repository.save(map);
+        return organizationRepository;
+
+    }
+
+    private AuthenticationRepository getAuthenticationRepository() {
+        if (authenticationRepository == null) {
+            Repositories repositories = Repositories.getInstance();
+
+            //Get the AuthenticationRepository
+            authenticationRepository = repositories.getAuthenticationRepository();
+        }
+        return authenticationRepository;
+    }
+
+    public Optional<Map> createMap(String name, int x, int y) {
+
+        Employee employee = getEmployeeFromSession();
+        Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
+
+        Optional<Map> newMap = Optional.empty();
+
+        if (organization.isPresent()) {
+            newMap = organization.get()
+                    .createMap(name, x, y, employee);
+        }
+        return newMap;
+    }
+
+    private Employee getEmployeeFromSession() {
+        Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
+        return new Employee(email.getEmail());
     }
 }
+
+
+

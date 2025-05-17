@@ -1,58 +1,84 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.CreateMapController;
+import pt.ipp.isep.dei.domain.Map;
+import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.TaskCategory;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
-/**
- * User Interface for map creation via console.
- */
-public class CreateMapUI {
-
+public class CreateMapUI implements Runnable {
     private final CreateMapController controller;
-    private final Scanner scanner = new Scanner(System.in);
+    private String name;
+    private int dimensionX;
+    private int dimensionY;
+    private final Organization organization;
 
-    /**
-     * Constructs the UI with the given controller.
-     * @param controller the CreateMapController instance
-     */
-    public CreateMapUI(CreateMapController controller) {
-        this.controller = controller;
+
+    public CreateMapUI(Organization organization) {
+        controller = new CreateMapController();
+        this.organization = organization;
     }
 
-    /**
-     * Starts the map creation process.
-     */
-    public void startCreation() {
-        System.out.print("Request Map Name: ");
-        String name = scanner.nextLine();
-        if (!controller.validateName(name)) {
-            showError("Invalid name: only letters, digits, '_' and '-' allowed");
-            return;
-        }
+    private CreateMapController getController() {
+        return controller;
+    }
 
-        System.out.print("Request Map Size (width height): ");
-        int width = scanner.nextInt();
-        int height = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-        if (!controller.validateSize(width, height)) {
-            showError("Invalid dimensions: must be positive integers");
-            return;
-        }
+    public void run() {
+        System.out.println("\n\n--- Create map ------------------------");
 
-        boolean success = controller.createMap(name, width, height);
-        if (success) {
-            showSuccess("Map '" + name + "' created successfully.");
+        requestData();
+        submitData();
+    }
+
+    private void submitData() {
+        Optional<Map> task = getController().createMap(name,dimensionX,dimensionY);
+
+        if (task.isPresent()) {
+            System.out.println("\nMap successfully created!");
         } else {
-            showError("Map with name '" + name + "' already exists or invalid parameters.");
+            System.out.println("\nMap not created!");
         }
     }
 
-    private void showSuccess(String message) {
-        System.out.println(message);
+    private void requestData() {
+        //Request the Task Reference from the console
+        name = requestName();
+
+        //Request the Task Description from the console
+        dimensionX = requestDimensionX();
+
+        //Request the Task Informal Description from the console
+        dimensionY = requestDimensionY();
+
     }
 
-    private void showError(String error) {
-        System.err.println(error);
+    private String requestName() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Name: ");
+        return input.nextLine();
+    }
+
+    private int requestDimensionX() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("X: ");
+        return input.nextInt();
+    }
+    private int requestDimensionY() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Y: ");
+        return input.nextInt();
+    }
+
+    private void displayTaskCategoryOptions(List<TaskCategory> taskCategories) {
+        //display the task categories as a menu with number options to select
+        int i = 1;
+        for (TaskCategory taskCategory : taskCategories) {
+            System.out.println("  " + i + " - " + taskCategory.getDescription());
+            i++;
+        }
     }
 }
+

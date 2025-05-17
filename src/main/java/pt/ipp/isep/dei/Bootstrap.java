@@ -1,6 +1,13 @@
 package pt.ipp.isep.dei;
 
+import pt.ipp.isep.dei.controller.AuthenticationController;
+import pt.ipp.isep.dei.domain.Employee;
+import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.TaskCategory;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.repository.OrganizationRepository;
+import pt.ipp.isep.dei.repository.Repositories;
+import pt.ipp.isep.dei.repository.TaskCategoryRepository;
 
 public class Bootstrap implements Runnable {
 
@@ -19,6 +26,8 @@ public class Bootstrap implements Runnable {
         Organization organization = new Organization("This Company");
         organization.addEmployee(new Employee("admin@this.app"));
         organization.addEmployee(new Employee("employee@this.app"));
+        organization.addEmployee(new Employee("player@this.app"));
+        organization.addEmployee(new Employee("editor@this.app"));
         organizationRepository.add(organization);
     }
 
@@ -43,8 +52,12 @@ public class Bootstrap implements Runnable {
 
         authenticationRepository.addUserRole(AuthenticationController.ROLE_ADMIN, AuthenticationController.ROLE_ADMIN);
         authenticationRepository.addUserRole(AuthenticationController.ROLE_EMPLOYEE, AuthenticationController.ROLE_EMPLOYEE);
+        authenticationRepository.addUserRole(AuthenticationController.ROLE_EDITOR, AuthenticationController.ROLE_EDITOR);
+        authenticationRepository.addUserRole(AuthenticationController.ROLE_PLAYER, AuthenticationController.ROLE_PLAYER);
 
         authenticationRepository.addUserWithRole("Main Administrator", "admin@this.app", "admin", AuthenticationController.ROLE_ADMIN);
         authenticationRepository.addUserWithRole("Employee", "employee@this.app", "pwd", AuthenticationController.ROLE_EMPLOYEE);
+        authenticationRepository.addUserWithRole("Player", "player@this.app", "plr", AuthenticationController.ROLE_PLAYER);
+        authenticationRepository.addUserWithRole("Editor", "editor@this.app", "edt", AuthenticationController.ROLE_EDITOR);
     }
 }

@@ -1,55 +1,57 @@
 package pt.ipp.isep.dei.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
 
-/**
- * Represents a Map with a name and dimensions (width and height).
- */
 public class Map {
-    private final String name;
-    private final int width;
-    private final int height;
-    private final List<Industry> industries;
-    private final List<City> cities;
+    private String name;
+    private int dimensionX;
+    private int dimensionY;
 
-    /**
-     * Constructs a new Map.
-     * @param name the name of the map
-     * @param width the width of the map (must be positive)
-     * @param height the height of the map (must be positive)
-     */
-    public Map(String name, int width, int height) {
+
+
+
+    private Employee employee;
+
+    public Map(String name, int dimensionX, int dimensionY, Employee employee) {
+
         this.name = name;
-        this.width = width;
-        this.height = height;
-        this.industries = new ArrayList<>();
-        this.cities = new ArrayList<>();
+        this.dimensionX = dimensionX;
+        this.dimensionY = dimensionY;
+        this.employee = employee;
+
     }
 
-    public String getName() { return name; }
-    public int getWidth() { return width; }
-    public int getHeight() { return height; }
-
-    public List<Industry> getIndustries() { return Collections.unmodifiableList(industries); }
-    public List<City> getCities() { return Collections.unmodifiableList(cities); }
-
-    /** Adds an industry to the map */
-    public void addIndustry(Industry industry) { industries.add(industry); }
-
-    /** Adds a city to the map */
-    public void addCity(City city) { cities.add(city); }
-
-    public boolean isPositionFree(int x, int y) {
-        return cities.stream().noneMatch(c -> c.getX() == x && c.getY() == y);
+    private void validateReference(String reference) {
+        //TODO: missing from the diagrams
+        if (reference == null || reference.isEmpty()) {
+            throw new IllegalArgumentException("Reference cannot be null or empty.");
+        }
     }
-    public boolean addCity(City city) {
-        if (isPositionValid(city.getX(), city.getY())) {
-            cities.add(city);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        return false;
+        if (!(o instanceof Map)) {
+            return false;
+        }
+        Map task = (Map) o;
+        return employee.equals(task.employee);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash( employee);
+    }
+
+    /**
+     * Clone method.
+     *
+     * @return A clone of the current instance.
+     */
+    public  Map mapClone() {
+        return new Map(this.name,this.dimensionX,this.dimensionY,this.employee);
+    }
 }
+
