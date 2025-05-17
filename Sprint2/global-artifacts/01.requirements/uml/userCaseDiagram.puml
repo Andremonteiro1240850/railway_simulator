@@ -1,35 +1,27 @@
 @startuml
-top to bottom direction
+left to right direction
 skinparam packageStyle rectangle
 
 actor Editor
 actor Player
-actor "Product Owner" as PO
 
-  (US01: Create Map) as UC1
-  (US02: Add Industry) as UC2
-  (US03: Add City) as UC3
-  (US04: Create Scenario) as UC4
-  (US05: Build Station) as UC5
-  (US06: Upgrade Station) as UC6
-  (US07: List Stations) as UC7
-  (US08: Build Railway Line) as UC8
-  (US09: Buy Locomotive) as UC9
-  (US10: Assign Train to Route) as UC10
-  (US11: List Trains) as UC11
-  (US12: Start/Pause Simulation) as UC12
-  (US13: Verify Train Connectivity) as UC13
-  (US14: Generate Maintenance Route) as UC14
-  (US15: Analyze Station Profit) as UC15
-  (US16: Compare Passenger Arrivals) as UC16
-  (US17: Analyze Cargo Distribution) as UC17
-  (US18: Analyze Distribution) as UC18
+rectangle "Railway Simulation" {
+
+  (UC01: Create Map) as UC1
+  (UC02: Add Industry) as UC2
+  (UC03: Add City) as UC3
+  (UC04: Create Scenario) as UC4
+  (UC05: Build Station) as UC5
+  (UC06: Upgrade Station) as UC6
+  (UC07: List Stations) as UC7
+  (UC08: Build Railway Line) as UC8
+  (UC09: Buy Locomotive) as UC9
+  (UC10: Assign Train to Route) as UC10
+  (UC11: List Trains) as UC11
+  (UC12: Control a Simulation) as UC12
+}
 
 
-Editor --> UC1
-Editor --> UC2
-Editor --> UC3
-Editor --> UC4
 
 Player --> UC5
 Player --> UC6
@@ -39,12 +31,10 @@ Player --> UC9
 Player --> UC10
 Player --> UC11
 Player --> UC12
-Player --> UC13
-Player --> UC14
-Player --> UC15
-Player --> UC16
-Player --> UC17
-Player --> UC18
+Editor --> UC1
+Editor --> UC2
+Editor --> UC3
+Editor --> UC4
 
-PO --> UC12
+
 @enduml
