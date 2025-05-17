@@ -53,7 +53,6 @@ As an organization employee, I want to create a new task in order to be further 
 
 * List of existing task categories
 * (In)Success of the operation
-* All the available information about scenario
 
 ### 1.6. System Sequence Diagram (SSD)
 
@@ -63,4 +62,4 @@ As an organization employee, I want to create a new task in order to be further 
 
 ### 1.7 Other Relevant Remarks
 
-n/a
+* The created task stays in a "not published" state in order to distinguish from "published" tasks.
