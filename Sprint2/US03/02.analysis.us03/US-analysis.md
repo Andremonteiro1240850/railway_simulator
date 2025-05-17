@@ -9,6 +9,16 @@ _In this section, it is suggested to present an excerpt of the domain model that
 
 ### 2.2. Other Remarks
 
- A city name cannot have special characters or digits
- The house blocks can be assigned manually or automatically (randomly around the city
- tag position)
+* O nome da cidade deve ser único no mapa para evitar conflitos.
+
+* O número de blocos habitacionais deve influenciar a geração de passageiros e carga no simulador (ex: mais blocos = maior demanda).
+
+* A posição XY deve ser válida dentro dos limites do mapa e não pode sobrepor outras cidades ou indústrias.
+
+* Se os blocos forem gerados automaticamente (distribuição normal), o sistema deve garantir que eles estejam próximos ao centro da cidade.
+
+* O nome da cidade deve ser exibido no mapa, junto com um indicador visual (ex: ícone de cidade).
+
+* Validações devem garantir que:
+  * O nome não contenha caracteres especiais ou números. 
+  * O número de blocos seja positivo (blocos > 0).
