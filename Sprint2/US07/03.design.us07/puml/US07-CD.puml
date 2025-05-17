@@ -1,0 +1,51 @@
+@startuml
+
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam linetype ortho
+
+class Player {
+}
+
+class Station {
+  - name: String
+  - location: String
+  + listStations()
+  + getDetails()
+}
+
+class Building {
+  - type: String
+  - level: int
+  - efficiency: float
+  + getInfo()
+}
+
+class StationList {
+  - stations: List<Station>
+  + getAllStations()
+  + addStation()
+  + removeStation()
+}
+
+class CargoStatistics {
+  - cargoType: String
+  - demand: float
+  - supply: float
+  + getDemand()
+  + getSupply()
+}
+
+Player --> StationList : "requests list of"
+StationList --> Station : contains many
+Station ---> Building : has many
+Station ---> CargoStatistics : has many
+
+note right of Station
+  Details include:
+  - Basic info (name, location)
+  - List of buildings
+  - Cargo demand/supply stats
+end note
+
+@enduml

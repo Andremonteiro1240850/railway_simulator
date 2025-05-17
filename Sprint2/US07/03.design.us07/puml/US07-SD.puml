@@ -8,7 +8,7 @@ actor "Player" as PLAYER
 participant ":ViewStationUI" as UI
 participant ":ViewStationController" as CTRL
 participant "repositories" as REPOS
-participant "repositories\n:Repositories" as REPOS_SINGLETON
+participant "repositories\n:Repositories" as REPOS_SINGLE
 participant "stationRepository\n:StationRepository" as STATION_REPO
 participant "station\n:Station" as STATION
 
@@ -26,11 +26,11 @@ activate REPOS
 REPOS --> CTRL : repositories
 deactivate REPOS
 
-CTRL -> REPOS_SINGLETON : getStationRepository()
-activate REPOS_SINGLETON
+CTRL -> REPOS_SINGLE : getStationRepository()
+activate REPOS_SINGLE
 
-REPOS_SINGLETON --> CTRL : stationRepository
-deactivate REPOS_SINGLETON
+REPOS_SINGLE --> CTRL : stationRepository
+deactivate REPOS_SINGLE
 
 CTRL -> STATION_REPO : getAllStations()
 activate STATION_REPO
