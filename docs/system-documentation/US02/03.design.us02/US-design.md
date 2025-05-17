@@ -1,4 +1,5 @@
-# US02 - Add an Industry to the Map
+# US02 - As an Editor, I want to add an industry in a position XY of the selected map.
+
 
 ## 3. Design
 
@@ -48,7 +49,7 @@ According to the taken rationale, the conceptual classes promoted to software cl
 ### Full Diagram
 This diagram shows the complete sequence of interactions between the classes involved in the realization of US02.
 
-![US02-SD-full](/Sprint2/US02/03.design.us02/svg/US02-SD-full.svg)
+![US02-SD-full](/docs/system-documentation/US02/03.design.us02/svg/US02-SD-full.svg)
 
 ### Partial Diagrams
 These partial diagrams break down the full sequence into logical steps.
@@ -56,25 +57,25 @@ These partial diagrams break down the full sequence into logical steps.
 #### Permission Verification and Map Selection
 This part of the sequence illustrates how the industry addition process is initiated by the Editor. The user interacts with the AddIndustryUI to begin the process. The AddIndustryController then checks whether the user has permission to perform this operation by calling the UserService.
 
-![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-industry-creating-saving.svg)
+![US02-SD-partial](/docs/system-documentation/US02/03.design.us02/svg/US02-SD-partial-industry-creating-saving.svg)
 
 ####  Industry Type 
 
 This section shows how the user selects the industry’s type of industry to be added. 
 
-![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-industry-type.svg)
+![US02-SD-partial](/docs/system-documentation/US02/03.design.us02/svg/US02-SD-partial-industry-type.svg)
 
 #### Position Validation
 
 This part focuses on validating the chosen position and preparing a preview of the new industry. It retrieves the map, checks if the position is valid, and creates a temporary industry object. This object is then displayed to the editor for confirmation.
 
-![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-position-validation.svg)
+![US02-SD-partial](/docs/system-documentation/US02/03.design.us02/svg/US02-SD-partial-position-validation.svg)
 
 #### Industry Creation and Saving
 This part focuses on validating the chosen position and preparing a preview of the new industry. It retrieves the map, checks if the position is valid, and creates a temporary industry object. This object is then displayed to the editor for confirmation.
 
-![US02-SD-partial](/Sprint2/US02/03.design.us02/svg/US02-SD-partial-industry-creating-saving.svg)
+![US02-SD-partial](/docs/system-documentation/US02/03.design.us02/svg/US02-SD-partial-industry-creating-saving.svg)
 
 ## 3.3. Class Diagram (CD)
 
-![USXXX-CD](/Sprint2/US02/03.design.us02/svg/US02-CD.svg)
+![US02-CD](/docs/system-documentation/US02/03.design.us02/svg/US02-CD.svg)

@@ -1,4 +1,4 @@
-# US01 - Creating a Map
+# US01 - As an Editor, I want to create a map with a size and a name.
 
 ## 1. Requirements Engineering
 
@@ -48,7 +48,7 @@ There aren't any dependencies on other US
 * (Optional) Confirmation message with map ID or initial map preview
 ### 1.6. System Sequence Diagram (SSD)
 
-![US01-SSD](/Sprint2/US01/01.requirements-engineering.us01/svg/us01Diagram.svg)
+![US01-SSD](/docs/system-documentation/US01/01.requirements-engineering.us01/svg/us01Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 

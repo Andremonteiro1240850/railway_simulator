@@ -1,4 +1,4 @@
-# US03 - Creating a city
+# US03 - As an Editor, I want to add a city in a position XY of the selected map, with a name and a positive number of house blocks.
 
 
 ## 1. Requirements Engineering
@@ -68,7 +68,7 @@ This US is going to depend on US01, because the max X and Y values will depend o
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![US03-SSD](/Sprint2/US03/01.requirements-engiineering.us03/svg/us03Diagram.svg)
+![US03-SSD](/docs/system-documentation/US03/01.requirements-engiineering.us03/svg/us03Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 
