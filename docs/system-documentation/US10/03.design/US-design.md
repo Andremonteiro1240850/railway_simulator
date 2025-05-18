@@ -47,26 +47,23 @@ The following diagram shows the same sequence of interactions between the classe
 
 It uses Interaction Occurrence (a.k.a. Interaction Use).
 
-![Sequence Diagram - split](svg/US006-SD-split.svg)
+![Sequence Diagram - split](/docs/system-documentation/US10/03.design/svg/US010-split.svg)
 
 **Get Available train**
 
-![Sequence Diagram - Partial - Get Task Category List](svg/US006-SD-partial-get-task-category-list.svg)
+![Sequence Diagram - Partial - Get Task Category List](/docs/system-documentation/US10/03.design/svg/US10-SD-partial-get-available-trains.svg)
 
 **Confirm route**
 
-![Sequence Diagram - Partial - Get Task Category Object](svg/US006-SD-partial-get-task-category.svg)
+![Sequence Diagram - Partial - Get Task Category Object](/docs/system-documentation/US10/03.design/svg/US010-SD-partial-confirm-route.svg)
 
 **Select train**
 
-![Sequence Diagram - Partial - Get Employee](svg/US006-SD-partial-get-employee.svg)
+![Sequence Diagram - Partial - Get Employee](/docs/system-documentation/US10/03.design/svg/US010-SD-partiial-select-train.svg)
 
-**Create Task**
 
-![Sequence Diagram - Partial - Create Task](svg/US006-SD-partial-create-task.svg)
 
 ## 3.3. Class Diagram (CD)
 
-_In this section, it is suggested to present an UML static view representing the main related software classes that are involved in fulfilling the requirements as well as their relations, attributes and methods._
 
 ![USXXX-CD](/docs/system-documentation/US10/03.design/svg/US010-CD.svg)
