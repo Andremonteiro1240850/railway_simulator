@@ -72,7 +72,7 @@ public class Locomotive {
     /**
      * Creates and returns a copy of this locomotive.
      *
-     * @return A new Locomotive instance with identical properties
+     * @return A new Locomotive instance with identical properties.
      */
 
     public Locomotive clone() {
