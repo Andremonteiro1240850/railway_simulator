@@ -1,0 +1,66 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+hide circle
+
+class ProductOwner
+
+class SimulationUI {
+  + loadScenario(mapId)
+  + initSimulator()
+  + startSimulation()
+  + pause()
+}
+
+class SimulationController {
+  + initSimulator()
+  + startSimulation()
+  + pause()
+  + getAllStations()
+  + isValidForCargoGeneration()
+  + generateCargo()
+  + scheduleGeneration()
+  + storeCargo()
+}
+
+class ScenarioRepository {
+  + loadScenario(mapId)
+}
+
+class StationRepository {
+  + getAllStations()
+}
+
+class Station {
+  + isValidForCargoGeneration()
+  + storeCargo()
+}
+
+class CargoGenerator {
+  + generateCargo(Station, Scenario)
+}
+
+class SimulationScheduler {
+  + scheduleGeneration(Station, periodicity)
+}
+
+class Scenario {
+  - availableLocomotiveTypes : List<String>
+  - cargoGenerationModifiers : Map<String, Double>
+  - portBehavior : Map<String, List<String>>
+  - historicalEvents : List<String>
+}
+
+
+ProductOwner --> SimulationUI : startSimulation()
+SimulationUI --> ScenarioRepository : loadScenario()
+SimulationUI --> SimulationController : startSimulation()
+SimulationController --> StationRepository : getAllStations()
+SimulationController --> Station : storeCargo()
+SimulationController --> CargoGenerator : generateCargo()
+SimulationController --> SimulationScheduler : scheduleGeneration()
+ScenarioRepository --> Scenario : provides
+StationRepository --> Station : returns
+
+@enduml

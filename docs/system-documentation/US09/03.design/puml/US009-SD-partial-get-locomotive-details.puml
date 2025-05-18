@@ -1,10 +1,12 @@
 @startuml
 autonumber
 participant BuyLocomotiveController
-activate BuyLocomotiveController
+
 participant LocomotiveRepository
 participant Locomotive
 
+-> BuyLocomotiveController : getLocomotiveDetails()
+activate BuyLocomotiveController
 BuyLocomotiveController -> LocomotiveRepository : getLocomotive()
 activate LocomotiveRepository
 LocomotiveRepository --> BuyLocomotiveController : Locomotive
@@ -20,5 +22,7 @@ activate Locomotive
 Locomotive --> BuyLocomotiveController : price
 deactivate Locomotive
 
+
+<--BuyLocomotiveController  : LocomotiveDetails
 deactivate BuyLocomotiveController
 @enduml

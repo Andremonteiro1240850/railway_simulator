@@ -9,6 +9,7 @@ participant ScenarioRepository
 participant Scenario
 participant LocomotivePurchase
 
+-> BuyLocomotiveController : confirmPurchase (locomotive)
 BuyLocomotiveController -> PlayerSessionRepository : getSessionByPlayerId(playerId)
 activate PlayerSessionRepository
 PlayerSessionRepository --> BuyLocomotiveController : PlayerSession
@@ -20,27 +21,36 @@ activate Locomotive
 Locomotive --> BuyLocomotiveController : price
 deactivate Locomotive
 
-BuyLocomotiveController -> PlayerSession : canAfford(price)
 BuyLocomotiveController -> PlayerSession : deductBudget(price)
+activate PlayerSession
+PlayerSession--> BuyLocomotiveController: Budget atualized
 deactivate PlayerSession
 
 BuyLocomotiveController -> ScenarioRepository : getScenario()
 activate ScenarioRepository
 ScenarioRepository --> BuyLocomotiveController : Scenario
 deactivate ScenarioRepository
-activate Scenario
+
 
 BuyLocomotiveController -> Scenario : getCurrentDate()
+activate Scenario
 Scenario --> BuyLocomotiveController : currentDate
 deactivate Scenario
 
-activate LocomotivePurchase
 BuyLocomotiveController -> LocomotivePurchase : create(purchaseId, baseId, type, price, date)
+activate LocomotivePurchase
+LocomotivePurchase--> BuyLocomotiveController: created
+
 deactivate LocomotivePurchase
 
-activate PlayerSession
+
 BuyLocomotiveController -> PlayerSession : addPurchase(LocomotivePurchase)
+activate PlayerSession
+PlayerSession--> BuyLocomotiveController: Purchase added
 deactivate PlayerSession
 
+
+
+<--BuyLocomotiveController : purchase confirmed
 deactivate BuyLocomotiveController
 @enduml

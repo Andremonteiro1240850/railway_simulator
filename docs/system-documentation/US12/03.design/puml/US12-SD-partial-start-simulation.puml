@@ -1,0 +1,44 @@
+@startuml
+skinparam shadowing false
+skinparam linetype polyline
+skinparam monochrome true
+autonumber
+
+participant SimulationController
+activate SimulationController
+participant StationRepository
+participant Station
+participant CargoGenerator
+participant SimulationScheduler
+
+->SimulationController: starsimulation()
+
+SimulationController -> StationRepository : getAllStations()
+activate StationRepository
+StationRepository --> SimulationController : List<Station>
+deactivate StationRepository
+
+SimulationController -> Station : isValidForCargoGeneration()
+activate Station
+Station --> SimulationController : true/false
+deactivate Station
+
+SimulationController -> CargoGenerator : generateCargo(Station, Scenario)
+activate CargoGenerator
+CargoGenerator --> SimulationController : Cargo
+deactivate CargoGenerator
+
+SimulationController -> SimulationScheduler : scheduleGeneration(Station, periodicity)
+activate SimulationScheduler
+SimulationScheduler --> SimulationController : scheduled
+deactivate SimulationScheduler
+
+SimulationController -> Station : storeCargo(Cargo[])
+activate Station
+Station --> SimulationController : stored successfully
+deactivate Station
+<--SimulationController: simulation started
+deactivate SimulationController
+
+
+@enduml

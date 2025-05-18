@@ -1,0 +1,45 @@
+@startuml
+skinparam shadowing false
+skinparam linetype polyline
+skinparam monochrome true
+autonumber
+
+actor ProductOwner
+participant SimulationUI
+participant SimulationController
+
+ProductOwner -> SimulationUI : select scenario and map
+activate SimulationUI
+
+ref over SimulationUI : load-scenario
+SimulationUI --> ProductOwner : scenario loaded successfully
+deactivate SimulationUI
+
+ProductOwner -> SimulationUI : start simulator
+activate SimulationUI
+SimulationUI -> SimulationController : initSimulator()
+activate SimulationController
+SimulationController --> SimulationUI : simulator ready
+deactivate SimulationController
+SimulationUI --> ProductOwner : simulator ready
+deactivate SimulationUI
+
+ProductOwner -> SimulationUI : start simulation
+activate SimulationUI
+SimulationUI -> SimulationController : startSimulation()
+activate SimulationController
+
+ref over SimulationController : Sstart-simulation
+SimulationController --> SimulationUI : start simulation
+deactivate SimulationController
+SimulationUI --> ProductOwner : simulation started
+deactivate SimulationUI
+
+ProductOwner -> SimulationUI : pause simulation
+activate SimulationUI
+
+ref over SimulationUI : pause-simulation
+SimulationUI --> ProductOwner : simulation paused successfully
+deactivate SimulationUI
+
+@enduml
