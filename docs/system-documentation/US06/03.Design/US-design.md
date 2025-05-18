@@ -43,26 +43,26 @@ Other software classes (i.e. Pure Fabrication) identified:
 ## 3.2. Sequence Diagram (SD)
 * **Full Sequence Diagram**
 
-![USXXX-SD](/docs/system-documentation/US06/03.Design/svg/SSD-Full.svg)
+![USXXX-SD](SSD-Full.svg)
 
 ## Partial Diagrams
 
 * **Split Diagram**
 
-![](/docs/system-documentation/US06/03.Design/svg/SSD-Split.svg)
+![](SSD-Split.svg)
 
 * **Get Stations**
 
-![](/docs/system-documentation/US06/03.Design/svg/SSD-Get-Stations.svg)
+![](SSD-Get-Stations.svg)
 
 * **Get Upgrade**
 
-![](/docs/system-documentation/US06/03.Design/svg/SSD-Get-Upgrade.svg)
+![](SSD-Get-Upgrade.svg)
 
 * **Upgrade Station**
 
-![](/docs/system-documentation/US06/03.Design/svg/SSD-Upgrade-Station.svg)
+![](SSD-Upgrade-Station.svg)
 
 ## 3.3. Class Diagram (CD)
 
-![USXXX-CD](/docs/system-documentation/US06/03.Design/svg/CD-us06.svg)
+![USXXX-CD](CD-us06.svg)

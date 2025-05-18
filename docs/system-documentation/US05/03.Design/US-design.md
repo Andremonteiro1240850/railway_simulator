@@ -43,31 +43,32 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 ## 3.2. Sequence Diagram (SD)
 
-![USXXX-SD](/docs/system-documentation/US05/03.Design/svg/SSD-Full.svg)
+![USXXX-SD](SSD-Full.svg)
 ## Partial Diagrams ##
 
 ### Split Diagram ###
 
-![US05-partialSD](/docs/system-documentation/US05/03.Design/svg/SSD-Split.svg)
+![US05-partialSD](SSD-Split.svg)
 
 ### Get Station Type
-![US05-partialSD](/docs/system-documentation/US05/03.Design/svg/SSD-Get-Task-Category-List-us05.svg)
+
+![US05-partialSD](SSD-Get-Task-Category-List-us05.svg)
 
 ### Get Location
 
-![](/docs/system-documentation/US05/03.Design/svg/SSD-Get-Locatio.svg)
+![](SSD-Get-Locatio.svg)
 
 ### Generate Name
 
-![](/docs/system-documentation/US05/03.Design/svg/SSD-Generate-Name.svg)
+![](SSD-Generate-Name.svg)
 
 ### Define Centre
 
-![](/docs/system-documentation/US05/03.Design/svg/SSD-Define-Centre.svg)
+![](SSD-Define-Centre.svg)
 
 ### Create Station
 
-![](/docs/system-documentation/US05/03.Design/svg/SSD-Create-Station.svg)
+![](SSD-Create-Station.svg)
 ## 3.3. Class Diagram (CD)
 
-![USXXX-CD](/docs/system-documentation/US05/03.Design/svg/CD-us05.svg)
+![USXXX-CD](CD-us05.svg)

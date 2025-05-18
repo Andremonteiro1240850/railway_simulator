@@ -13,7 +13,7 @@ participant ":UpgradeStationController" as CTRL
 participant "player\n:PlayerRepository" as PLAYER_REPO
 participant "station\n:StationRepository" as STATION_REPO
 participant "building\n:BuildingRepository" as BUILDING_REPO
-participant "economy\n:BudgetManager" as ECONOMY
+participant "organization" as ECONOMY
 participant "station\n:StationUpgrader" as UPGRADER
 
 activate PLAYER

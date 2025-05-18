@@ -51,34 +51,34 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 # 3.2. Sequence Diagram (SD)
 
-![USXXX-SD](/docs/system-documentation/US04/03.Design/svg/SSD-Full.svg)
+![USXXX-SD](SSD-Full.svg)
 
 # Partial Diagrams
 
 ## Split Diagram
 
-![](/docs/system-documentation/US04/03.Design/svg/SSD-Split-us04.svg)
+![](SSD-Split-us04.svg)
 
 ## Get Map
 
-![](/docs/system-documentation/US04/03.Design/svg/SSD-Get-Map.svg)
+![](SSD-Get-Map.svg)
 
 ## Port Behavior
 
-![](/docs/system-documentation/US04/03.Design/svg/SSD-Get-Port-Behavior.svg)
+![](SSD-Get-Port-Behavior.svg)
 
 ## Locomotive Types
 
-![](/docs/system-documentation/US04/03.Design/svg/SSD-Get-Locomotive-Type.svg)
+![](SSD-Get-Locomotive-Type.svg)
 
 ## Industry Factors
 
-![](/docs/system-documentation/US04/03.Design/svg/SSD-Get-Industry-Factors.svg)
+![](SSD-Get-Industry-Factors.svg)
 
 ## Create a Scenario
 
-![](/docs/system-documentation/US04/03.Design/svg/SSD-Get-Create-Scenario.svg)
+![](SSD-Get-Create-Scenario.svg)
 
 # 3.3. Class Diagram (CD)
 
-![USXXX-CD](/docs/system-documentation/US04/03.Design/svg/CD-us04.svg)
+![USXXX-CD](CD-us04.svg)
