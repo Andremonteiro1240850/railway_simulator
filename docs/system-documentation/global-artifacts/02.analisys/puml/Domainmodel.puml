@@ -15,11 +15,12 @@ hide methods
     }
 
     class Editor {
-        ID
+        email
+        password
     }
 
     class Player {
-        name
+
         email
         password
     }
@@ -69,6 +70,7 @@ hide methods
     class PortBehavior {
         imports
         exports
+        trasnsform
     }
 
     Editor --> Scenario :"create"
@@ -206,7 +208,7 @@ hide methods
 
 
     Player --> Station: "own"
-    Station  --> RailwayLine :"have"
+
     RailwayLine  -->  Station : "connect"
     Train  -->  Route :"have"
     Player --> Train : "have"
@@ -225,7 +227,7 @@ hide methods
     Station --> Terminal: "can be"
     Station --> Depot: "can be"
     Station --> NormalStation: "can be"
-    Station --> Building : "can have"
+    Station --> Building : "upgrade with"
     Building --> Telegraph: "can be"
     Building --> Custom: "can be"
     Building --> Cafe: "can be"
@@ -244,6 +246,7 @@ hide methods
     Train --> Cargo: "Picks"
     Route --> Station: "have"
     Simulator --> Station: "generate"
+    Train --> RailwayLine: "Travel for"
 
 
 
