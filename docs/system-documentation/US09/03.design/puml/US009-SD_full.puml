@@ -66,7 +66,7 @@ BuyLocomotiveController -> PlayerSessionRepository : getSessionByPlayerId(gmailp
 activate PlayerSessionRepository
 PlayerSessionRepository --> BuyLocomotiveController : PlayerSession
 deactivate PlayerSessionRepository
-activate PlayerSession
+
 
 
 deactivate LocomotiveRepository
@@ -74,20 +74,24 @@ BuyLocomotiveController -> Locomotive : getPrice()
 activate Locomotive
 Locomotive --> BuyLocomotiveController : price
 deactivate Locomotive
-BuyLocomotiveController -> PlayerSession : canAfford(price)
 BuyLocomotiveController -> PlayerSession : deductBudget(price)
+activate PlayerSession
+PlayerSession--> BuyLocomotiveController : updated budget
 deactivate PlayerSession
-activate Scenario
 BuyLocomotiveController -> Scenario : getCurrentDate()
+activate Scenario
 Scenario --> BuyLocomotiveController : currentDate
 deactivate Scenario
-activate LocomotivePurchase
 BuyLocomotiveController -> LocomotivePurchase : create(purchaseId, baseId, type, price, date)
+activate LocomotivePurchase
+LocomotivePurchase --> BuyLocomotiveController : Purchase created
 deactivate LocomotivePurchase
-activate PlayerSession
+
 BuyLocomotiveController -> PlayerSession : addPurchase(LocomotivePurchase)
+activate PlayerSession
+PlayerSession--> BuyLocomotiveController :purchase added
 deactivate PlayerSession
-BuyLocomotiveController --> BuyLocomotiveUI : return success message
+BuyLocomotiveController --> BuyLocomotiveUI : purchase confirmed
 deactivate BuyLocomotiveController
 BuyLocomotiveUI --> Player : confirms purchase and displays succes message
 deactivate BuyLocomotiveUI

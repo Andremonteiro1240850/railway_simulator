@@ -1,26 +1,20 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-' ===== CLASSES DO CASO DE USO PRINCIPAL =====
+
+
 
 class BuyLocomotiveUI {
   +requestToBuyLocomotive()
-  +displayAvailableLocomotives(locomotives)
-  +displayLocomotiveDetails(locomotive)
-  +confirmPurchase(locomotive)
+  +displayAvailableLocomotives()
+  +displayLocomotiveDetails()
+  +confirmPurchase()
 }
 
 class BuyLocomotiveController {
   +getAvailableLocomotives()
   +getLocomotiveDetails()
-  +confirmPurchase(locomotive)
-}
-
-class Repositories {
-  +getInstance()
-  +getScenarioRepository()
-  +getLocomotiveRepository()
-  +getPlayerSessionRepository()
+  +confirmPurchase(locomotive: Locomotive)
 }
 
 class ScenarioRepository {
@@ -32,10 +26,6 @@ class LocomotiveRepository {
   +getLocomotive(): Locomotive
 }
 
-class PlayerSessionRepository {
-  +getSessionByPlayerId(email): PlayerSession
-}
-
 class Locomotive {
   -type: String
   -price: double
@@ -43,50 +33,48 @@ class Locomotive {
   +getPrice(): double
 }
 
-class Scenario {
-  -currentDate: LocalDate
-  +getCurrentDate(): LocalDate
+class PlayerSessionRepository {
+  +getSessionByPlayerId(email: String): PlayerSession
 }
 
 class PlayerSession {
   -budget: double
   -purchases: List<LocomotivePurchase>
-  +canAfford(price): boolean
-  +deductBudget(price)
-  +addPurchase(lp: LocomotivePurchase)
+  +canAfford(price: double): boolean
+  +deductBudget(price: double): void
+  +addPurchase(p: LocomotivePurchase): void
+}
+
+class Scenario {
+  -currentDate: LocalDate
+  +getCurrentDate(): LocalDate
 }
 
 class LocomotivePurchase {
   +create(purchaseId, baseId, type, price, date)
 }
 
-class ApplicationSession {
-  +getInstance()
-  +getCurrentSession(): UserSession
-}
 
-class UserSession {
-  +getUserEmail(): String
-}
 
-' ===== RELAÇÕES ENTRE CLASSES =====
 
-BuyLocomotiveUI --> BuyLocomotiveController
-BuyLocomotiveController --> Repositories
-Repositories --> ScenarioRepository
-Repositories --> LocomotiveRepository
-Repositories --> PlayerSessionRepository
+' ------------ ASSOCIATIONS (Updated) ------------
+
+BuyLocomotiveUI --> BuyLocomotiveController : handles interaction
+
 BuyLocomotiveController --> ScenarioRepository : getScenario()
 BuyLocomotiveController --> LocomotiveRepository : getCurrentScenarioLocomotives()
-BuyLocomotiveController --> LocomotiveRepository : getLocomotive()
 BuyLocomotiveController --> PlayerSessionRepository : getSessionByPlayerId()
 BuyLocomotiveController --> Scenario : getCurrentDate()
-BuyLocomotiveController --> PlayerSession : canAfford(), deductBudget(), addPurchase()
 BuyLocomotiveController --> Locomotive : getType(), getPrice()
-BuyLocomotiveController --> LocomotivePurchase : create()
-ApplicationSession --> UserSession
-ApplicationSession --> ApplicationSession : getInstance()
-ApplicationSession --> ApplicationSession : getCurrentSession()
-UserSession --> BuyLocomotiveController : getUserEmail()
+BuyLocomotiveController --> PlayerSession : canAfford(), deductBudget(), addPurchase()
+BuyLocomotiveController --> LocomotivePurchase : create(...)
+
+PlayerSessionRepository --> PlayerSession : returns session
+PlayerSession --> LocomotivePurchase : purchases
+
+LocomotiveRepository --> Locomotive : getLocomotive()
+ScenarioRepository --> Scenario : returns scenario
+
+UserSession --> PlayerSessionRepository : (via email)
 
 @enduml

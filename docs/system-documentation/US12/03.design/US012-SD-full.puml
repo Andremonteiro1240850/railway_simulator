@@ -1,0 +1,88 @@
+@startuml
+actor ProductOwner
+participant System
+participant SimulationController
+participant ScenarioRepository
+participant StationRepository
+participant Simulator
+participant Station
+participant CargoFactory
+participant Timer
+
+autonumber
+activate ProductOwner
+ProductOwner -> System : selectScenarioAndMap
+activate System
+System -> SimulationController : loadScenario()
+activate SimulationController
+SimulationController -> ScenarioRepository : getScenario()
+activate ScenarioRepository
+ScenarioRepository --> SimulationController : scenario
+SimulationController ->System : scenario loaded
+deactivate ScenarioRepository
+deactivate SimulationController
+ProductOwner <-- System : scenario loaded
+deactivate System
+
+ProductOwner -> System : startSimulator
+activate System
+System -> SimulationController : initializeSimulator()
+activate SimulationController
+SimulationController -> Simulator : initialize()
+activate Simulator
+Simulator --> SimulationController : ready
+deactivate Simulator
+SimulationController->System : simulator initialized
+deactivate SimulationController
+ProductOwner <-- System : simulator ready
+deactivate System
+
+ProductOwner -> System : startSimulation
+activate System
+System -> SimulationController : startSimulation()
+activate SimulationController
+SimulationController -> Simulator : start()
+activate Simulator
+
+Simulator -> StationRepository : getStationsWithCoverage()
+activate StationRepository
+StationRepository --> Simulator : List<Station>
+deactivate StationRepository
+
+loop for each station
+    Simulator -> Station : isValid()
+    activate Station
+    alt valid
+        Simulator -> CargoFactory : generateCargo(station, scenario)
+        activate CargoFactory
+        CargoFactory --> Simulator : cargoList
+        deactivate CargoFactory
+
+        Simulator -> Station : storeCargo(cargoList)
+    end
+    deactivate Station
+end
+
+Simulator -> Timer : schedulePeriodicGeneration()
+activate Timer
+deactivate Timer
+
+deactivate Simulator
+deactivate SimulationController
+deactivate System
+ProductOwner <-- System : simulation started
+
+ProductOwner -> System : pauseSimulation()
+activate System
+System -> SimulationController : pauseSimulation()
+activate SimulationController
+SimulationController -> Simulator : pause()
+activate Simulator
+Simulator --> SimulationController : paused
+deactivate Simulator
+deactivate SimulationController
+deactivate System
+ProductOwner <-- System : simulation paused
+
+deactivate ProductOwner
+@enduml

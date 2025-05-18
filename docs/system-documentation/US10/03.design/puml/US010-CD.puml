@@ -1,99 +1,83 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-' === UI e Controlador ===
+
+
+
 class AssignRouteUI {
   +requestAssignTrainToRoute()
-  +displayAvailableTrains(trains)
-  +promptSelectStation()
-  +promptSelectCargo()
-  +displayRouteSummary()
-  +displaySuccessMessage()
-}
-
-class AssignRouteController {
-  +getAvailableTrains(): List<Train>
-  +selectTrain(trainId): Train
-  +createRoute(): Route
-  +addStopToRoute(stationId, cargoType)
+  +displayAvailableTrains()
+  +displayAvailableStations()
+  +showCargoTypes()
+  +showRouteSummary()
   +confirmRoute()
 }
 
-' === Entidades ===
+class AssignRouteController {
+  +getAvailableTrains()
+  +selectTrain(trainId: String)
+  +getAvailableStations()
+  +getAvailableCargos()
+  +selectStation()
+  +selectCargo(cargoType: CargoType)
+  +confirmRoute()
+}
+
+class TrainRepository {
+  +getUnassignedTrains(): List<Train>
+  +getTrainById(trainId: String): Train
+}
+
 class Train {
-  -route: Route
-  +assignRoute(route: Route)
-  +isAssignable(): boolean
+  +newRoute(): Route
+  +assignRoute(route: Route): void
 }
 
 class Route {
-  -stops: List<RouteStop>
-  +addStop(stationId, cargoType)
-  +getStops(): List<RouteStop>
-  +validate(): boolean
-}
-
-class RouteStop {
-  -stationId: int
-  -cargoType: CargoType
-}
-
-class PlayerSession {
-  -assignedTrains: List<Train>
-  +registerTrainAssignment(train: Train)
-  +filterUnassignedTrains(all: List<Train>): List<Train>
-}
-
-' === Repositórios ===
-class TrainRepository {
-  +getInstance()
-  +getAllTrains(): List<Train>
-  +getUnassignedTrains(): List<Train>
-  +getTrainById(id: int): Train
+  +addStop(stationId: String, cargoType: CargoType): void
 }
 
 class StationRepository {
   +getAvailableStations(): List<Station>
 }
 
+class Station {
+  -id: String
+  -name: String
+}
+
 class CargoRepository {
-  +getAvailableCargos(stationId: int): List<CargoType>
+  +getAvailableCargos(): List<CargoType>
+}
+
+class CargoType {
+  -name: String
 }
 
 class PlayerSessionRepository {
-  +getSessionByPlayerId(): PlayerSession
+  +getSessionByPlayerId(email: String): PlayerSession
 }
 
-' === Tipos auxiliares ===
-class Station {
-  +getId(): int
-  +getName(): String
-}
-
-enum CargoType {
-  PASSENGERS
-  MAIL
-  COAL
-  STEEL
-  FOOD
+class PlayerSession {
+  +registerTrainAssignment(train: Train): void
 }
 
 
-AssignRouteUI --> AssignRouteController
-AssignRouteController --> TrainRepository
-AssignRouteController --> StationRepository
-AssignRouteController --> CargoRepository
-AssignRouteController --> PlayerSessionRepository
-AssignRouteController --> Route
-AssignRouteController --> Train
-AssignRouteController --> PlayerSession
 
-PlayerSessionRepository --> PlayerSession
-PlayerSession --> Train
+AssignRouteUI --> AssignRouteController : requestAssignTrainToRoute()\ndisplayX(), confirmRoute()
 
-Train --> Route
-Route --> RouteStop
-RouteStop --> CargoType
-RouteStop --> Station
+AssignRouteController --> TrainRepository : getUnassignedTrains()\ngetTrainById(trainId)
+AssignRouteController --> Train : newRoute(), assignRoute()
+AssignRouteController --> Route : addStop(stationId, cargoType)
+AssignRouteController --> StationRepository : getAvailableStations()
+AssignRouteController --> CargoRepository : getAvailableCargos()
+AssignRouteController --> PlayerSessionRepository : getSessionByPlayerId()
+AssignRouteController --> PlayerSession : registerTrainAssignment(train)
+
+' Relações entre objetos do domínio
+
+Train --> Route : owns
+Route --> Station : contains stops
+Route --> CargoType : defines cargo at stop
 
 @enduml

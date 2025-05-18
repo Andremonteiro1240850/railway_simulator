@@ -37,8 +37,11 @@ activate TrainRepository
 TrainRepository --> AssignRouteController : Train
 deactivate TrainRepository
 
-' Criação da rota
+
 AssignRouteController -> Route : newRoute()
+activate Route
+Route--> AssignRouteController : Route
+deactivate Route
 
 loop
   AssignRouteController -> StationRepository : getAvailableStations()
@@ -63,6 +66,9 @@ loop
   AssignRouteUI -> AssignRouteController : selectCargo(cargoType)
 
   AssignRouteController -> Route : addStop(stationId, cargoType)
+  activate Route
+  Route--> AssignRouteController: stop added
+  deactivate Route
 end
 
 AssignRouteController --> AssignRouteUI : showRouteSummary()
@@ -74,11 +80,17 @@ AssignRouteController -> PlayerSessionRepository : getSessionByPlayerId()
 activate PlayerSessionRepository
 PlayerSessionRepository --> AssignRouteController : PlayerSession
 deactivate PlayerSessionRepository
-activate PlayerSession
+
 
 AssignRouteController -> Train : assignRoute(Route)
+activate Train
+Train-->AssignRouteController: Route Assigned
+deactivate Train
+
 deactivate Route
 AssignRouteController -> PlayerSession : registerTrainAssignment(train)
+activate PlayerSession
+PlayerSession--> AssignRouteController: Train assigment
 deactivate PlayerSession
 AssignRouteController --> AssignRouteUI : operationSuccess()
 deactivate AssignRouteController
