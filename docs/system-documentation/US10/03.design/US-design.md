@@ -49,15 +49,15 @@ It uses Interaction Occurrence (a.k.a. Interaction Use).
 
 ![Sequence Diagram - split](svg/US006-SD-split.svg)
 
-**Get Task Category List Partial SD**
+**Get Available train**
 
 ![Sequence Diagram - Partial - Get Task Category List](svg/US006-SD-partial-get-task-category-list.svg)
 
-**Get Task Category Object**
+**Confirm route**
 
 ![Sequence Diagram - Partial - Get Task Category Object](svg/US006-SD-partial-get-task-category.svg)
 
-**Get Employee**
+**Select train**
 
 ![Sequence Diagram - Partial - Get Employee](svg/US006-SD-partial-get-employee.svg)
 
