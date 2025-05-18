@@ -61,7 +61,7 @@ public class Locomotive {
     /**
      * Returns a string representation of the locomotive.
      *
-     * @return Formatted string containing locomotive details
+     * @return Formatted string containing locomotive details.
      */
 
     @Override
