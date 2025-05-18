@@ -59,7 +59,7 @@ public class Locomotive {
     public int getStartYear() { return startYear; }
 
     /**
-     * Returns a string representation of the locomotive.
+     * Returns a string representation of the locomotive..
      *
      * @return Formatted string containing locomotive details.
      */
