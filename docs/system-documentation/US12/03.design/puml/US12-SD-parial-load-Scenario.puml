@@ -1,0 +1,38 @@
+@startuml
+skinparam shadowing false
+skinparam linetype polyline
+skinparam monochrome true
+autonumber
+
+actor ProductOwner
+participant SimulationUI
+participant ScenarioRepository
+
+ProductOwner -> SimulationUI : select scenario and map
+activate SimulationUI
+SimulationUI -> ScenarioRepository : loadScenario(mapId)
+activate ScenarioRepository
+ScenarioRepository --> SimulationUI : scenario loaded successfully
+deactivate ScenarioRepository
+SimulationUI --> ProductOwner : scenario loaded successfully
+deactivate SimulationUI
+@enduml
+@startuml
+skinparam shadowing false
+skinparam linetype polyline
+skinparam monochrome true
+autonumber
+
+actor ProductOwner
+participant SimulationUI
+participant ScenarioRepository
+
+ProductOwner -> SimulationUI : select scenario and map
+activate SimulationUI
+SimulationUI -> ScenarioRepository : loadScenario(mapId)
+activate ScenarioRepository
+ScenarioRepository --> SimulationUI : scenario loaded successfully
+deactivate ScenarioRepository
+SimulationUI --> ProductOwner : scenario loaded successfully
+deactivate SimulationUI
+@enduml

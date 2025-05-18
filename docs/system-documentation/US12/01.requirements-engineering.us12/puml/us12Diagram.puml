@@ -6,20 +6,20 @@ activate PO
 
 autonumber
 
-PO -> System :  selecionar cenário e mapa
-System -> PO :  cenário carregado com sucesso
+PO -> System : select scenario and map
+System --> PO : scenario successfully loaded
 
-PO -> System :  iniciar simulador
-System -> PO :  simulador pronto
+PO -> System : start simulator
+System --> PO : simulator ready
 
-PO -> System :  iniciar simulação
+PO -> System : start simulation
+activate System
+System -> System : identify valid stations (that serve cities/industries)
+System -> System : generate cargo based on scenario and nearby entities
+System -> System : schedule periodic generation (fixed or random)
+System -> System : store cargo at stations (max. 24)
 
-System -> System :  identificar estações válidas (que servem cidades/indústrias)
-System -> System :  gerar cargas com base em cenário e entidades próximas
-System -> System :  agendar geração periódica (fixa ou aleatória)
-System -> System :  armazenar carga nas estações (máx. 24)
-
-
-PO -> System : 10. pausar simulação
-System -> PO : 11. simulação pausada com sucesso
+PO -> System : pause simulation
+System --> PO : simulation successfully paused
+deactivate System
 @enduml

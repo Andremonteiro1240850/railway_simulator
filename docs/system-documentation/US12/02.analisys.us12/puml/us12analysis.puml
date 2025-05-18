@@ -4,61 +4,58 @@ skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
 
-'left to right direction
-
 skinparam classAttributeIconSize 0
 
 hide circle
 hide methods
 
-
 class ProductOwner {
-  - nome : String
+  - name : String
 }
 
-class Simulador {
-  - estado : String
+class Simulator {
+  - state : String
 }
 
-class Estacao {
-  - nome : String
-  - localizacao : Coordenada
+class Station {
+  - name : String
+  - location : Coordinate
 }
 
-class Cidade {
-  - nome : String
-  - passageiros : int
-  - correio : int
+class City {
+  - name : String
+  - passengers : int
+  - mail : int
 }
 
-class Industria {
-  - nome : String
-  - tipo : TipoIndustria
+class Industry {
+  - name : String
+  - type : IndustryType
 }
 
-class Carga {
-  - tipo : String
-  - quantidade : int
+class Cargo {
+  - type : String
+  - quantity : int
 }
 
-class Coordenada {
+class Coordinate {
   - x : int
   - y : int
 }
 
-enum TipoIndustria {
-  Primaria
-  Transformadora
-  Mista
+enum IndustryType {
+  Primary
+  Transforming
+  Mixed
 }
 
-ProductOwner "1" -- "1" Simulador : configura
-Simulador "1" -- "*" Estacao : gere
-Estacao "1" -- "*" Carga : gera
-Estacao "1" -- "0..1" Cidade : serve
-Estacao "1" -- "*" Industria : serve
-Cidade "1" -- "*" Carga : consome
-Industria "1" -- "*" Carga : produz
-Estacao "1" -- "1" Coordenada : está em
+ProductOwner "1" -- "1" Simulator : configures
+Simulator "1" -- "*" Station : manages
+Station "1" -- "*" Cargo : generates
+Station "1" -- "0..1" City : serves
+Station "1" -- "*" Industry : serves
+City "1" -- "*" Cargo : consumes
+Industry "1" -- "*" Cargo : produces
+Station "1" -- "1" Coordinate : is located at
 
 @enduml

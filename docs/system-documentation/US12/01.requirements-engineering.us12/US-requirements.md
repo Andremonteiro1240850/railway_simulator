@@ -4,8 +4,6 @@
 
 ## 1. Requirements Engineering
 
-_In this section, it is suggested to capture the requirement description and specifications as provided by the client as well as any further clarification on it. It is also suggested to capture the requirements acceptance criteria and existing dependencies to other requirements. Finally, identify the involved input and output data and depict an Actor-System interaction in order to fulfill the requirement._
-
 ### 1.1. User Story Description
 
 As a Product Owner, I want to create a simulator that generates cargoes at current stations, automatically, considering the cities and
@@ -13,12 +11,12 @@ industries that the railway network serves.
 
 ### 1.2. Customer Specifications and Clarifications 
 
-The user have customization options for cargo generation rules in the edition of the scenario.
-the limit to cargo storage is 24.
+* The user have customization options for cargo generation rules in the edition of the scenario.
+ the limit to cargo storage is 24.
 
 ### 1.3. Acceptance Criteria
 
-This simulator should provide options for start/pause.
+* AC01-This simulator should provide options for start/pause.
 
 ### 1.4. Found out Dependencies
 
@@ -44,10 +42,8 @@ input: scenario and map selection, start simulation, scenario confiruraton data,
  output: simulator readiness confirmation, automatic cargo generation, cargo stored at stations, simulation pause confirmation
 ### 1.6. System Sequence Diagram (SSD)
 
-_Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
-
-![USXXX-SSD](/docs/system-documentation/US12/01.requirements-engineering.us12/svg/us12Diagram.svg)
+![USXXX-SSD](/docs/system-documentation/US12/01.requirements-engineering.us12/svg/us12Diagram.png)
 
 ### 1.7 Other Relevant Remarks
 
-none
+n/a
