@@ -40,6 +40,14 @@ public class Repositories {
     }
     private final ListLocomotivesRepository listLocomotivesRepo = new ListLocomotivesRepository();
     private final LocomotiveRepository locomotiveRepo = new LocomotiveRepository();
+    private static CargoRepository cargoRepository = null;
+
+    public synchronized CargoRepository getCargoRepository() {
+        if (cargoRepository == null) {
+            cargoRepository = new CargoRepository();
+        }
+        return cargoRepository;
+    }
 
     public ListLocomotivesRepository getListLocomotivesRepository() {
         return listLocomotivesRepo;
