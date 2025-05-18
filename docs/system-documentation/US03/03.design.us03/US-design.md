@@ -44,34 +44,33 @@ Other software classes (i.e. Pure Fabrication) identified:
 ### Full Diagram
 This diagram shows the full sequence of interactions between the classes involved in the realization of this user story.
 
-
-![US03-SD](/docs/system-documentation/US03/03.design.us03/svg/US03-SD-full.svg)
+![US03-SD](US03-SD-full.svg)
 
 ### Partial Diagrams
 
 #### Select Map
 This diagram shows the interaction where the Editor selects the map from a list.
 
-![US03-SD-partial](/docs/system-documentation/US03/03.design.us03/svg/US03-SD-partial-select-map.svg)
+![US03-SD-partial](US03-SD-partial-select-map.svg)
 
 #### Collect the City Data
 
 This diagram shows the interaction where the Editor inputs the city data.
-![US03-SD-partial](/docs/system-documentation/US03/03.design.us03/svg/US03-SD-partial-collect-city-data.svg)
+![US03-SD-partial](US03-SD-partial-collect-city-data.svg)
 
 #### Input Validation Phase
 This diagram shows how the system creates a new city and assigns the house blocks either manually or randomly.
 
-![US03-SD-partial](/docs/system-documentation/US03/03.design.us03/svg/US03-SD-partial-input-validation-phase.svg)
+![US03-SD-partial](US03-SD-partial-input-validation-phase.svg)
 
 ####  Create City & Add to Map
 This diagram illustrates how the created city is added to the map and the updated map is saved in the repository.
 
-![US03-SD-partial](/docs/system-documentation/US03/03.design.us03/svg/US03-SD-partial-create-city-add-to-map.svg)
+![US03-SD-partial](US03-SD-partial-create-city-add-to-map.svg)
 
 
 ## 3.3. Class Diagram (CD)
 
 This diagram shows the main software classes involved in fulfilling the requirements of US03 and their relationships.
 
-![US03-CD](/docs/system-documentation/US03/03.design.us03/svg/US03-CD.svg)
+![US03-CD](US03-CD.svg)
