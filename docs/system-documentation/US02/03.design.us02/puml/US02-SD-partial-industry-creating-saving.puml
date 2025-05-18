@@ -9,7 +9,7 @@ participant "AddIndustryUI" as UI
 participant "AddIndustryController" as Controller
 participant "Map" as Map
 participant "Industry" as Industry
-participant "MapRepository" as MapRepo
+participant "CreateMapRepository" as MapRepo
 
 activate Controller
 alt Position is valid

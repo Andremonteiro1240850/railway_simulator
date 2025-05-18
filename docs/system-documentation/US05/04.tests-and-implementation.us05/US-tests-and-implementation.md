@@ -1,109 +1,231 @@
 # US05 - Build a station
 
 ## 4. Tests
-
-**Test 1:** Ensures that a valid station is added to the repository and can be retrieved.
+**Test 1:** Test create a station with reference
 
     @Test
-    void ensureStationIsAddedSuccessfully() {
-    Optional<Station> result = repo.add(station1);
-    assertTrue(result.isPresent());
-    assertEquals(1, repo.getAll().size());
+    public void testStationCreationWithReference() {
+    Station station = new Station("ST-123", "Main Station", "station", "NE");
+
+        assertEquals("ST-123", station.getReference());
+        assertEquals("Main Station", station.getName());
+        assertEquals("station", station.getType());
+        assertEquals("NE", station.getRegion());
     }
 
-**Test 2:** Ensures that the repository rejects a station with an already existing reference.
+**Test 2:** Teste create a station without reference
 
+    @Test
+    public void testStationCreationWithoutReference() {
+        Station station = new Station("Main Station", "terminal", null);
 
-     @Test
-    void ensureDuplicateReferenceStationIsNotAdded() {
-        repo.add(station1);
-        Station duplicate = new Station("ST-001", "Copy", "station", "South");
-        Optional<Station> result = repo.add(duplicate);
-        assertTrue(result.isEmpty());
+        assertNotNull(station.getReference());
+        assertTrue(station.getReference().startsWith("ST-"));
+        assertEquals("terminal", station.getType());
+        assertNull(station.getRegion());
+    }
+**Test 3:** Teste if 2 stations are equal
+
+    @Test
+    public void testStationEquality() {
+        Station station1 = new Station("ST-123", "Station A", "station", "NE");
+        Station station2 = new Station("ST-123", "Station B", "station", "NW");
+        Station station3 = new Station("ST-456", "Station A", "station", "NE");
+
+        assertEquals(station1, station2); // Mesma referência
+        assertNotEquals(station1, station3); // Referências diferentes
+    }
+**Test 4:** Test if stations are correctly cloned
+
+    @Test
+    public void testStationCloning() {
+        Station original = new Station("ST-123", "Main Station", "station", "NE");
+        original.addUpgrade(new StationUpgrade("signal", "basic"));
+
+        Station clone = original.clone();
+
+        assertEquals(original, clone);
+        assertNotSame(original, clone);
+        assertEquals(original.getUpgrades().size(), clone.getUpgrades().size());
+    }
+**Tets 5:** Test add a station to a repository
+
+    @Test
+    public void testAddStation() {
+        StationRepository repo = new StationRepository();
+        Station station = new Station("ST-123", "Main Station", "station", "NE");
+
+        Optional<Station> result = repo.add(station);
+
+        assertTrue(result.isPresent());
+        assertEquals(station, result.get());
         assertEquals(1, repo.getAll().size());
     }
-      
+**Test 6:** Test if is possible to add the same station
 
-**Test 3:** Ensures that a station can be correctly found using its unique reference.
-    
     @Test
-    void ensureStationIsFoundByReference() {
+    public void testAddDuplicateStation() {
+        StationRepository repo = new StationRepository();
+        Station station = new Station("ST-123", "Main Station", "station", "NE");
+
+        repo.add(station);
+        Optional<Station> duplicateResult = repo.add(station);
+
+        assertFalse(duplicateResult.isPresent());
+        assertEquals(1, repo.getAll().size());
+    }
+
+**Test 7:** Test if is possible to find a station by reference
+
+    @Test
+    public void testFindByReference() {
+        StationRepository repo = new StationRepository();
+        Station station1 = new Station("ST-123", "Station A", "station", "NE");
+        Station station2 = new Station("ST-456", "Station B", "terminal", null);
+
+        repo.add(station1);
         repo.add(station2);
-        Optional<Station> result = repo.findByReference("ST-002");
-        assertTrue(result.isPresent());
-        assertEquals("East", result.get().getName());
+
+        Optional<Station> found = repo.findByReference("ST-123");
+        Optional<Station> notFound = repo.findByReference("ST-999");
+
+        assertTrue(found.isPresent());
+        assertEquals("Station A", found.get().getName());
+        assertFalse(notFound.isPresent());
     }
-**Test 4:** Ensures that a valid upgrade is correctly added to an existing station and is stored in the repository.
+**Test 8:** Test if is possible to see all station types
 
     @Test
-    void ensureUpgradeIsAddedToStation() {
-    repo.add(station1);
-    StationUpgrade upgrade = new StationUpgrade("Telegraph", null);
-    boolean success = repo.addUpgradeToStation("ST-001", upgrade);
-    assertTrue(success);
-    List<StationUpgrade> upgrades = repo.getUpgradesForStation("ST-001");
-    assertFalse(upgrades.isEmpty());
-    assertEquals("Telegraph", upgrades.get(0).getType());
+    public void testGetAllStationTypes() {
+        TypeStationRepository repo = new TypeStationRepository();
+        List<String> types = repo.getAllStationTypes();
+
+        assertEquals(3, types.size());
+        assertTrue(types.contains("depot"));
+        assertTrue(types.contains("terminal"));
+        assertTrue(types.contains("station"));
     }
+**Test 9:** Test if is possible to see all station regions
+
+    @Test
+    public void testGetAllStationRegions() {
+        TypeStationRepository repo = new TypeStationRepository();
+        List<String> regions = repo.getAllStationRegions();
+
+        assertEquals(4, regions.size());
+        assertTrue(regions.contains("NE"));
+        assertTrue(regions.contains("NW"));
+        assertTrue(regions.contains("SE"));
+        assertTrue(regions.contains("SW"));
+    }
+**Test 10:** Test if a station type exist and is valid
+
+    @Test
+    public void testIsValidStationType() {
+        TypeStationRepository repo = new TypeStationRepository();
+
+        assertTrue(repo.isValidStationType("depot"));
+        assertTrue(repo.isValidStationType("STATION")); // Test case insensitivity
+        assertFalse(repo.isValidStationType("invalid"));
+    }
+
+**Test 11:** Test if a region is valid or exist
+
+    @Test
+    public void testIsValidStationRegion() {
+        TypeStationRepository repo = new TypeStationRepository();
+
+        assertTrue(repo.isValidStationRegion("NE"));
+        assertTrue(repo.isValidStationRegion("se")); // Test case insensitivity
+        assertFalse(repo.isValidStationRegion("XX"));
+    }
+
 
 ## 5. Construction (Implementation)
+### Class BuildStationController
+```java
+package pt.ipp.isep.dei.controller;
 
-### class CreateStationController
+import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.repository.*;
+import pt.isep.lei.esoft.auth.domain.model.Email;
 
-    public class CreateScenarioController {
-    private final OrganizationRepository orgRepo;
-    private final AuthenticationRepository authRepo;
-    private final CreateMapRepository mapRepo;
-    private final ScenarioRepository scenarioRepo;
+import java.util.List;
+import java.util.Optional;
 
-    public CreateScenarioController() {
-        this(Repositories.getInstance().getOrganizationRepository(),
-                Repositories.getInstance().getAuthenticationRepository(),
-                Repositories.getInstance().getMapRepository(),
-                Repositories.getInstance().getScenarioRepository());
+public class BuildStationController {
+    private OrganizationRepository organizationRepository;
+    private AuthenticationRepository authenticationRepository;
+    private StationRepository stationRepository;
+
+    //Repository instances are obtained from the Repositories class
+    public BuildStationController() {
+        getOrganizationRepository();
+        getAuthenticationRepository();
+        Repositories.getInstance().getStationRepository();
     }
 
-    public CreateScenarioController(OrganizationRepository orgRepo,
-                                    AuthenticationRepository authRepo,
-                                    CreateMapRepository mapRepo,
-                                    ScenarioRepository scenarioRepo) {
-        this.orgRepo = orgRepo;
-        this.authRepo = authRepo;
-        this.mapRepo = mapRepo;
-        this.scenarioRepo = scenarioRepo;
+    //Allows receiving the repositories as parameters for testing purposes
+    public BuildStationController(OrganizationRepository organizationRepository,
+                                AuthenticationRepository authenticationRepository,StationRepository stationRepository) {
+        this.organizationRepository = organizationRepository;
+        this.authenticationRepository = authenticationRepository;
+        this.stationRepository = stationRepository;
     }
 
-    public List<Map> getAvailableMaps() {
-        return mapRepo.getAll();
-    }
 
-    public Optional<Scenario> createScenario(String name, Map map, int startYear, int endYear,
-                                             List<String> locomotiveTypes, PortBehavior portBehavior) {
-        Employee employee = getEmployeeFromSession();
-        Optional<Organization> org = orgRepo.getOrganizationByEmployee(employee);
-
-        if (org.isEmpty()) return Optional.empty();
-
-        Scenario newScenario = new Scenario(name, map, startYear, endYear);
-
-        for (String type : locomotiveTypes) {
-            newScenario.addLocomotiveType(type);
+    private OrganizationRepository getOrganizationRepository() {
+        if (organizationRepository == null) {
+            Repositories repositories = Repositories.getInstance();
+            organizationRepository = repositories.getOrganizationRepository();
         }
+        return organizationRepository;
 
-        newScenario.setPortBehavior(portBehavior);
-
-        return scenarioRepo.add(newScenario);
     }
 
+    private AuthenticationRepository getAuthenticationRepository() {
+        if (authenticationRepository == null) {
+            Repositories repositories = Repositories.getInstance();
+
+            //Get the AuthenticationRepository
+            authenticationRepository = repositories.getAuthenticationRepository();
+        }
+        return authenticationRepository;
+    }
+
+
+        public Optional<Station> createStation(String type, String name, String region) {
+            Employee employee = getEmployeeFromSession();
+            Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
+
+            // Gera uma referência automática
+            String reference = "ST-" + System.currentTimeMillis();
+
+            Optional<Station> newStation = Optional.empty();
+
+            if (organization.isPresent()) {
+                newStation = organization.get()
+                        .createStation(reference, name, region, type, employee);
+            }
+            return newStation;
+        }
     private Employee getEmployeeFromSession() {
-        Email email = authRepo.getCurrentUserSession().getUserId();
+        Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
         return new Employee(email.getEmail());
     }
 
+}
 
+```
 ### Class Station
+```java
+package pt.ipp.isep.dei.domain;
 
-    public class Station {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+public class Station {
     private String name;
     private String type; // "depot", "terminal", "station"
     private String region;
@@ -181,12 +303,20 @@
     public List<StationUpgrade> getUpgrades() {
         return new ArrayList<>(upgrades);
     }
-
-
+}
+```
 ### Class StationRepository
+```java
+package pt.ipp.isep.dei.repository;
 
+import pt.ipp.isep.dei.domain.Station;
+import pt.ipp.isep.dei.domain.StationUpgrade;
 
-    public class StationRepository {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+public class StationRepository {
     private final List<Station> stations = new ArrayList<>();
 
     public Optional<Station> add(Station station) {
@@ -272,11 +402,22 @@
         }
         return sb.toString();
     }
-
+}
+```
 ### Class BuildStationUI
+```java
+package pt.ipp.isep.dei.ui.console;
 
-    
-    public class BuildStationUI implements Runnable {
+import pt.ipp.isep.dei.controller.BuildStationController;
+import pt.ipp.isep.dei.domain.Station;
+import pt.ipp.isep.dei.domain.TaskCategory;
+import pt.ipp.isep.dei.repository.TypeStationRepository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+
+public class BuildStationUI implements Runnable {
     private final BuildStationController controller;
     private final TypeStationRepository typeStationRepo;
     private String type;
@@ -355,9 +496,60 @@
     }
 
 }
+```
+### Class TypeStationRepository
+```java
+package pt.ipp.isep.dei.repository;
 
 
-    
+ import java.util.ArrayList;
+import java.util.List;
+
+    public class TypeStationRepository {
+        private final List<String> stationTypes;
+        private final List<String> stationRegions; // Apenas para estações do tipo "station"
+
+        public TypeStationRepository() {
+            this.stationTypes = new ArrayList<>();
+            this.stationRegions = new ArrayList<>();
+            initializeStationTypes();
+            initializeStationRegions();
+        }
+
+        private void initializeStationTypes() {
+            stationTypes.add("depot");
+            stationTypes.add("terminal");
+            stationTypes.add("station");
+        }
+
+        private void initializeStationRegions() {
+            stationRegions.add("NE");
+            stationRegions.add("NW");
+            stationRegions.add("SE");
+            stationRegions.add("SW");
+        }
+
+        // Métodos para obter os tipos de estações e regiões
+        public List<String> getAllStationTypes() {
+            return new ArrayList<>(stationTypes);
+        }
+
+        public List<String> getAllStationRegions() {
+            return new ArrayList<>(stationRegions);
+        }
+
+        // Verifica se um tipo de estação é válido
+        public boolean isValidStationType(String type) {
+            return stationTypes.contains(type.toLowerCase());
+        }
+
+        // Verifica se uma região é válida (apenas para estações do tipo "station")
+        public boolean isValidStationRegion(String region) {
+            return stationRegions.contains(region.toUpperCase());
+        }
+    }
+```
+
 ## 6. Integration and Demo
 
 * Connected to budget system to validate construction costs
@@ -367,7 +559,7 @@
 * For demo purposes, three basic station types (Depot, Station, Terminal) are preloaded
 
 * Station creation triggers map updates through the MapService observer
-
+*
 ## 7. Observations
 
-n/a
+n/ais section, it is suggested to present a critical perspective on the developed work, pointing, for example, to other alternatives and or future related work._

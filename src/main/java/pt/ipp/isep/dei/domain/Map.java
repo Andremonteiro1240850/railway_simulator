@@ -40,6 +40,13 @@ public class Map implements Cloneable {
     public String getName() {
         return name;
     }
+    public int getDimensionX() {
+        return dimensionX;
+    }
+
+    public int getDimensionY() {
+        return dimensionY;
+    }
 
     @Override
     public boolean equals(Object o) {

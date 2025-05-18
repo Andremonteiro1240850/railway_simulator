@@ -12,7 +12,7 @@ autonumber
 participant AddCityController
 participant City
 participant Map
-participant MapRepository
+participant CreateMapRepository
 participant "AddCityUI" as UI
 actor Editor
 
@@ -37,8 +37,8 @@ end group
 AddCityController -> Map : addCity(cityInstance)
 Map --> AddCityController : Success/failure
 
-AddCityController -> MapRepository : save(map)
-MapRepository --> AddCityController : Save result
+AddCityController -> CreateMapRepository : save(map)
+CreateMapRepository --> AddCityController : Save result
 
 AddCityController --> UI : Notify result (success/failure)
 deactivate AddCityController

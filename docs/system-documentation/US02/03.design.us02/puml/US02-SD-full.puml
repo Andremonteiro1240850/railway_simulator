@@ -11,7 +11,7 @@ actor Editor
 participant "AddIndustryUI" as UI
 participant "AddIndustryController" as Controller
 participant "UserService" as UserService
-participant "MapRepository" as MapRepo
+participant "CreateMapRepository" as MapRepo
 participant "IndustryTypeRepository" as IndustryRepo
 participant "Map" as Map
 participant "Industry" as Industry

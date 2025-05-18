@@ -11,7 +11,7 @@ autonumber
 
 participant "AddCityUI" as UI
 participant AddCityController
-participant MapRepository
+participant CreateMapRepository
 participant Map
 
 autonumber
@@ -19,7 +19,7 @@ autonumber
 
 participant "AddCityUI" as UI
 participant AddCityController
-participant MapRepository
+participant CreateMapRepository
 participant Map
 
 autonumber
@@ -27,10 +27,10 @@ autonumber
 UI -> AddCityController : handleAddCity(name, x, y, houseBlocks, distributionType)
 activate AddCityController
 
-AddCityController -> MapRepository : getCurrentMap()
-activate MapRepository
-MapRepository --> AddCityController : currentMap
-deactivate MapRepository
+AddCityController -> CreateMapRepository : getCurrentMap()
+activate CreateMapRepository
+CreateMapRepository --> AddCityController : currentMap
+deactivate CreateMapRepository
 
 group Validation
 

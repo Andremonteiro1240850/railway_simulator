@@ -8,7 +8,7 @@ actor Editor
 participant "AddIndustryUI" as UI
 participant "AddIndustryController" as Controller
 participant "UserService" as UserService
-participant "MapRepository" as MapRepo
+participant "CreateMapRepository" as MapRepo
 
 activate Editor
 Editor -> UI : Start to Add Industry

@@ -4,20 +4,20 @@ skinparam packageStyle rectangle
 skinparam shadowing false
 
 participant ":CreateStationController" as CTRL
-participant "railway\n:RailwayNetwork" as RAIL
-participant "economy\n:BudgetManager" as BUDGET
+participant "map" as RAIL
+
 
 autonumber 12
 -> CTRL : createStation()
 activate CTRL
 
-        CTRL -> BUDGET : verifyIfPossible(stationType)
-        activate BUDGET
-            BUDGET --> CTRL : isPossible
-        deactivate BUDGET
+        CTRL -> RAIL : verifyIfPossible(stationType)
+        activate RAIL
+            RAIL --> CTRL : isPossible
+
 
         CTRL -> RAIL : buildStation()
-        activate RAIL
+
             RAIL --> CTRL : stationBuilt
         deactivate RAIL
 

@@ -10,7 +10,7 @@ actor "Editor" as ORG_EMPLOYEE
 
 participant ":CreateScenariokUI" as UI
 participant ":CreateScenarioController" as CTRL
-participant "organization\n:Organization" as ORG
+
 
 activate ORG_EMPLOYEE
 
@@ -71,7 +71,7 @@ activate ORG_EMPLOYEE
         UI -> CTRL : createScenario()
 
                 ref over CTRL
-                    Create Task
+                    Create Scenario
                 end
 
             CTRL --> UI: createScenario

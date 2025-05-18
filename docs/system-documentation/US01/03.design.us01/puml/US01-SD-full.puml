@@ -23,20 +23,20 @@ alt name is valid (AC02: no special chars/digits)
 
   alt dimensions are valid (AC01: positive integers)
     MapValidator --> CreateMapUI : dimensionsValid
-    CreateMapUI -> MapController : createMap(name, width, height)
-    activate MapController
-    MapController -> Map : new(name, width, height)
+    CreateMapUI -> CreateMapController : createMap(name, width, height)
+    activate CreateMapController
+    CreateMapController -> Map : new(name, width, height)
     activate Map
-    Map --> MapController : mapInstance
+    Map --> CreateMapController : mapInstance
     deactivate Map
 
-    MapController -> MapRepository : save(mapInstance)
-    activate MapRepository
-    MapRepository --> MapController : saveConfirmed
-    deactivate MapRepository
+    CreateMapController -> CreateMapRepository : save(mapInstance)
+    activate CreateMapRepository
+    CreateMapRepository --> CreateMapController : saveConfirmed
+    deactivate CreateMapRepository
 
-    MapController --> CreateMapUI : mapCreated
-    deactivate MapController
+    CreateMapController --> CreateMapUI : mapCreated
+    deactivate CreateMapController
     CreateMapUI -> Editor : Show Success ("Map created")
   else dimensions invalid
     MapValidator --> CreateMapUI : invalidDimensions

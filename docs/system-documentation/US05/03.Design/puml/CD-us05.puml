@@ -29,15 +29,12 @@ class StationRepository {
   + saveStation()
 }
 
-class MapRepository {
+class CreateMapRepository {
   + requestCoordinates()
 }
 
-class LocationValidator {
-  + validateXY()
-}
 
-class StationNaming {
+class Station {
   + generateName()
 }
 
@@ -45,34 +42,26 @@ class City {
   + getNearestCity()
 }
 
-class PositionValidator {
-  + validateXY()
-}
+
 
 class Map {
   + buildStation()
 }
 
-class BudgetManager {
-  + verifyIfPossible()
-}
 
 class StationTypeRepository {
   + getStationTypeList()
 }
 
 ' Relacionamentos
-Player --> CreateStationUI
-CreateStationUI --> CreateStationController
+Player --> CreateStationUI:"use"
+CreateStationUI --> CreateStationController:"create"
 
-CreateStationController --> StationRepository
-CreateStationController --> MapRepository
-CreateStationController --> LocationValidator
-CreateStationController --> StationNaming
-CreateStationController --> City
-CreateStationController --> PositionValidator
-CreateStationController --> Map
-CreateStationController --> BudgetManager
-CreateStationController --> StationTypeRepository
+Station --> StationRepository: "save station on"
+CreateStationController --> CreateMapRepository:"check and validate"
+CreateStationController --> Station: "create"
+CreateStationController --> City: "get"
+CreateStationController --> Map: "get"
+CreateStationController --> StationTypeRepository: "get"
 
 @enduml

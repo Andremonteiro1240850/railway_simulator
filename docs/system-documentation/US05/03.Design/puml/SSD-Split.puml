@@ -10,7 +10,7 @@ actor "Player" as ORG_EMPLOYEE
 
 participant ":BuildStationUI" as UI
 participant ":CreateStationController" as CTRL
-participant "organization\n:Organization" as ORG
+
 
 activate ORG_EMPLOYEE
 
