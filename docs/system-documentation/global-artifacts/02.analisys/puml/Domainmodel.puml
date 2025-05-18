@@ -24,6 +24,8 @@ hide methods
         email
         password
     }
+    Player-->Scenario:"plays in"
+    Player --> Locomotives:"purchase"
 
     class ProductOwner {
         name
@@ -38,6 +40,7 @@ hide methods
         name
         width
         height
+
     }
 
     class City {
@@ -63,9 +66,12 @@ hide methods
 
 
     class Scenario {
+        name
         timePeriod
         availableLocomotives
+        generatingFactors
     }
+    Scenario --> Map :"use"
 
     class PortBehavior {
         imports
@@ -81,7 +87,16 @@ hide methods
         name
         type
         economicRadius
+        buildings
+        cargoDemand
+        cargoSuply
     }
+    class StationType {
+    Depot
+    Station
+    Terminal
+    }
+    Station --> StationType: "have"
 
     class RailwayLine {
         length
@@ -90,6 +105,9 @@ hide methods
     }
 
     class Train {
+        id
+        locomotive
+        carriage
         route
     }
 
@@ -125,12 +143,12 @@ hide methods
     yearStart
     acelaration
     }
-    class Steam{
+    class LocomotiveType{
+    Steam
+    Diesel
+    Electricity
     }
-    class Fuel{
-    }
-    class Electricity{
-    }
+    Locomotives --> LocomotiveType: "have"
     class Carriage{
     type
     capacity
@@ -141,59 +159,28 @@ hide methods
     class CargoCarriage{
     capacity
     }
-    class Depot{
-    cost
-    radius
-
-    }
-    class NormalStation{
-    radius
-    centre
-    cost
-    }
-    class Terminal{
-    cost
-    radius
-    }
     class Building{
     type
     cost
     }
-    class Telegraph{
-    cost
-    type
+    class BuildingType{
+            Telegraph
+            Telephone
+            SmallHotel
+            GrandHotel
+            Silo
+            LiquidStorage
+            Cafe
+            PostOffice
+
     }
-    class Cafe{
-    cost
-    size
-    }
-    class Silo{
-    cost
-    }
-    class Hotel{
-    cost
-    size
-    }
-    class PostOffice {
-    cost
-    }
-    class Custom {
-    cost
-    }
-    class LiquidStorage {
-    cost
-    }
-    class Primary{
-    resource
-    }
-    class Transform{
-    imports
-    export
-    }
-    class Mixed{
-    imports
-    export
-    }
+    Building --> BuildingType:"have"
+   class IndustryType{
+   Primary
+   Transforming
+   Mixed
+   }
+   Industry --> IndustryType: "have"
 
 
 
@@ -206,38 +193,20 @@ hide methods
 
 
 
-
+    Player --> Station: "List"
     Player --> Station: "own"
-
     RailwayLine  -->  Station : "connect"
-    Train  -->  Route :"have"
+    Train  -->  Route :"assign"
     Player --> Train : "have"
     Player --> Balance : "have"
     Player --> Inventory : "have"
     ProductOwner --> Simulator : "own"
     Simulator --> Cargo : "have"
-    Simulator --> Station : "generated in"
     Train --> Locomotives : "have"
-    Locomotives --> Steam :"can be"
-    Locomotives --> Fuel: "can be"
-    Locomotives --> Electricity: "can be"
     Train --> Carriage : "have"
     Carriage --> CargoCarriage: "can be"
     Carriage --> PassengerCarriage: "can be"
-    Station --> Terminal: "can be"
-    Station --> Depot: "can be"
-    Station --> NormalStation: "can be"
     Station --> Building : "upgrade with"
-    Building --> Telegraph: "can be"
-    Building --> Custom: "can be"
-    Building --> Cafe: "can be"
-    Building --> Hotel: "can be"
-    Building --> PostOffice: "can be"
-    Building --> LiquidStorage: "can be"
-    Industry --> Primary: "can be"
-    Industry --> Mixed: "can be"
-    Industry --> Transform: "can be"
-    Building --> Silo: "can be""
     City --> Station: "have"
     Scenario --> Train: "create"
     Scenario --> Inventory: "have"
@@ -247,7 +216,8 @@ hide methods
     Route --> Station: "have"
     Simulator --> Station: "generate"
     Train --> RailwayLine: "Travel for"
-
+    Station --> City: "Serve"
+    Station --> Industry: "Serve"
 
 
 

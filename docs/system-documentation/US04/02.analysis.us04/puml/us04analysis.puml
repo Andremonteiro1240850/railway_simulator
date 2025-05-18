@@ -25,7 +25,7 @@ class Editor {
 class Scenario {
    name
    timePeriod
-   allowedTypes
+   allowedLocomotives
    generationFactors
 }
 
@@ -44,6 +44,6 @@ class Map {
 Editor --> Scenario : makes
 Scenario --> "1" Map : uses
 Scenario --> "*" PortBehavior : defines
-Scenario --> "*" LocomotionType : needs
+Scenario --> "*" LocomotionType : defines
 
 @enduml
