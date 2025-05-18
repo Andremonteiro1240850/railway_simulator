@@ -1,9 +1,6 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-
-
-
 class AssignRouteUI {
   +requestAssignTrainToRoute()
   +displayAvailableTrains()
@@ -19,7 +16,7 @@ class AssignRouteController {
   +getAvailableStations()
   +getAvailableCargos()
   +selectStation()
-  +selectCargo(cargoType: CargoType)
+  +selectCargo(cargoType)
   +confirmRoute()
 }
 
@@ -34,24 +31,15 @@ class Train {
 }
 
 class Route {
-  +addStop(stationId: String, cargoType: CargoType): void
+  +addStop(stationId: String, cargoType)
 }
 
 class StationRepository {
-  +getAvailableStations(): List<Station>
-}
-
-class Station {
-  -id: String
-  -name: String
+  +getAvailableStations(): List
 }
 
 class CargoRepository {
-  +getAvailableCargos(): List<CargoType>
-}
-
-class CargoType {
-  -name: String
+  +getAvailableCargos(): List
 }
 
 class PlayerSessionRepository {
@@ -62,22 +50,20 @@ class PlayerSession {
   +registerTrainAssignment(train: Train): void
 }
 
+AssignRouteUI ..> AssignRouteController : requestAssignTrainToRoute()\ndisplayX(), confirmRoute()
 
-
-AssignRouteUI --> AssignRouteController : requestAssignTrainToRoute()\ndisplayX(), confirmRoute()
-
-AssignRouteController --> TrainRepository : getUnassignedTrains()\ngetTrainById(trainId)
+AssignRouteController ..> TrainRepository : getUnassignedTrains()\ngetTrainById(trainId)
 AssignRouteController --> Train : newRoute(), assignRoute()
 AssignRouteController --> Route : addStop(stationId, cargoType)
-AssignRouteController --> StationRepository : getAvailableStations()
-AssignRouteController --> CargoRepository : getAvailableCargos()
-AssignRouteController --> PlayerSessionRepository : getSessionByPlayerId()
+AssignRouteController ..> StationRepository : getAvailableStations()
+AssignRouteController ..> CargoRepository : getAvailableCargos()
+AssignRouteController ..> PlayerSessionRepository : getSessionByPlayerId()
 AssignRouteController --> PlayerSession : registerTrainAssignment(train)
 
-' Relações entre objetos do domínio
-
 Train --> Route : owns
-Route --> Station : contains stops
-Route --> CargoType : defines cargo at stop
+
+' === Correções aqui ===
+TrainRepository ..> Train : returns
+PlayerSessionRepository ..> PlayerSession : returns
 
 @enduml

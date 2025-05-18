@@ -7,7 +7,7 @@ hide empty members
 class Player {
 }
 
-class CreateStationUI {
+class BuildStationUI {
   + asksToBuildStation()
   + showStationTypes()
   + askForLocation()

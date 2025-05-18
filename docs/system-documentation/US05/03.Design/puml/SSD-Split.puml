@@ -8,7 +8,7 @@ autonumber
 hide footbox
 actor "Player" as ORG_EMPLOYEE
 
-participant ":CreateStationUI" as UI
+participant ":BuildStationUI" as UI
 participant ":CreateStationController" as CTRL
 participant "organization\n:Organization" as ORG
 
