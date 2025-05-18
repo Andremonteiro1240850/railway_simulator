@@ -1,6 +1,4 @@
-# US010 - As a Player, I want to assign a selected train to a route with
-valid stations and the respective list of cargoes to be picked up in each
-station.
+# US010 - As a Player, I want to assign a selected train to a route with  valid stations and the respective list of cargoes to be picked up in each station.
 
 ## 4. Tests
 
@@ -430,5 +428,4 @@ station.
 
 
 ## 7. Observations
-
-_In this section, it is suggested to present a critical perspective on the developed work, pointing, for example, to other alternatives and or future related work._
+n/a

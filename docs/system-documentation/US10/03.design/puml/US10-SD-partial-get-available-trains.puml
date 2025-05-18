@@ -11,16 +11,17 @@ AssignRouteController -> PlayerSessionRepository : getSessionByPlayerId()
 activate PlayerSessionRepository
 PlayerSessionRepository --> AssignRouteController : PlayerSession
 deactivate PlayerSessionRepository
-activate PlayerSession
+
 
 AssignRouteController -> TrainRepository : getAllTrains()
 activate TrainRepository
 TrainRepository --> AssignRouteController : List<Train>
+
 deactivate TrainRepository
 
 AssignRouteController -> PlayerSession : filterUnassignedTrains(List<Train>)
+activate PlayerSession
 PlayerSession --> AssignRouteController : List<Train>
-
 deactivate PlayerSession
 deactivate AssignRouteController
 @enduml

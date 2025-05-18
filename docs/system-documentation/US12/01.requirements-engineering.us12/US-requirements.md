@@ -42,7 +42,7 @@ input: scenario and map selection, start simulation, scenario confiruraton data,
  output: simulator readiness confirmation, automatic cargo generation, cargo stored at stations, simulation pause confirmation
 ### 1.6. System Sequence Diagram (SSD)
 
-![USXXX-SSD](/docs/system-documentation/US12/01.requirements-engineering.us12/svg/us12Diagram.png)
+![USXXX-SSD](/docs/system-documentation/US12/01.requirements-engineering.us12/svg/us12Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 

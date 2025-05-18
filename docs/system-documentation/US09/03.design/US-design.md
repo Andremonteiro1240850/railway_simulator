@@ -1,6 +1,5 @@
-# USXXX - YYY
+# US09 - As a Player, I want to buy a locomotive.
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
 
 ## 3. Design
 

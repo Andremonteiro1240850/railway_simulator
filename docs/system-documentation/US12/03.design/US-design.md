@@ -1,6 +1,4 @@
-# US12 - As a Product Owner, I want to create a simulator that generates
-cargoes at current stations, automatically, considering the cities and
-industries that the railway network serves.
+# US12 - As a Product Owner, I want to create a simulator that generates cargoes at current stations, automatically, considering the cities and industries that the railway network serves.
 
 
 
@@ -45,7 +43,6 @@ Other software classes (i.e. Pure Fabrication) identified:
 
 ## 3.2. Sequence Diagram (SD)
 
-_In this section, it is suggested to present an UML dynamic view representing the sequence of interactions between software objects that allows to fulfill the requirements._
 
 ![USXXX-SD](/docs/system-documentation/US12/03.design/svg/US012-SD-full.svg)
 
@@ -61,17 +58,17 @@ The following diagram shows the same sequence of interactions between the classe
 
 ![Sequence Diagram - Partial - Confirm Locomotive](/docs/system-documentation/US12/03.design/svg/US12-SD-parial-load-Scenario.svg)
 
-** Pause Simulation Partial SD**
+**Start Simulation Partial SD**
+
+![Sequence Diagram - Partial - Get Available Locomotive ](/docs/system-documentation/US12/03.design/svg/US12-SD-partial-start-simulation.svg)
+
+
+
+**Pause Simulation Partial SD**
 
 ![Sequence Diagram - Partial - Get Available Locomotive ](/docs/system-documentation/US12/03.design/svg/US12-SD-partial-pause-simulation.svg)
-
-**Get Locomotive details Partial SD**
-
-![Sequence Diagram - Partial - Get Locomotive Details](/docs/system-documentation/US09/03.design/svg/US009-SD-partial-get-locomotive-details.svg)
 
 
 ## 3.3. Class Diagram (CD)
 
-_In this section, it is suggested to present an UML static view representing the main related software classes that are involved in fulfilling the requirements as well as their relations, attributes and methods._
-
-![USXXX-CD](svg/USXXX-CD.svg)
+![USXXX-CD](/docs/system-documentation/US12/03.design/svg/US12-CD.svg)

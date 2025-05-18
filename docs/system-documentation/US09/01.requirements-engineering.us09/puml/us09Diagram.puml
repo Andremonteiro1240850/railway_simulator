@@ -25,11 +25,6 @@ activate Employee
     Employee -> System : confirms purchsase
     activate System
 
-        System --> Employee : generate unique id for locomotive
-    deactivate System
-
-
-
 
         System --> Employee : confirms purchase and displays succes message
     deactivate System

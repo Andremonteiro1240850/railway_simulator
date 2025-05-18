@@ -9,7 +9,7 @@ participant Route
 participant LocomotiveRepository
 participant StationRepository
 
-AssignRouteController -> AuthenticationRepository : getSessionByPlayerId()
+AssignRouteController -> AuthenticationRepository : getSessionPlayer()
 activate AuthenticationRepository
 AuthenticationRepository --> AssignRouteController : PlayerSession
 deactivate AuthenticationRepository
