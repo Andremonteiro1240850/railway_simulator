@@ -60,7 +60,7 @@ As a Player, I want to upgrade a selected station with a building
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![US06-SSD](/docs/system-documentation/US06/01.requirements-engineering.us06/svg/us06Diagram-ssd.svg)
+![US06-SSD](svg/us06Diagram-ssd.svg)
 
 ### 1.7 Other Relevant Remarks
 

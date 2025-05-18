@@ -2,18 +2,18 @@
 autonumber
 participant AssignRouteController
 activate AssignRouteController
-participant TrainRepository
-participant Train
+participant LocomotiveRepository
+participant Locomotive
 
-AssignRouteController -> TrainRepository : getTrainById(trainId)
-activate TrainRepository
-TrainRepository --> AssignRouteController : Train
-deactivate TrainRepository
-activate Train
+AssignRouteController -> LocomotiveRepository : getTrainById(trainId)
+activate LocomotiveRepository
+LocomotiveRepository --> AssignRouteController : Locomotive
+deactivate LocomotiveRepository
+activate Locomotive
 
-AssignRouteController -> Train : isAssignable()
-Train --> AssignRouteController : true
+AssignRouteController -> Locomotive : isAssignable()
+Locomotive --> AssignRouteController : true
 
-deactivate Train
+deactivate Locomotive
 deactivate AssignRouteController
 @enduml

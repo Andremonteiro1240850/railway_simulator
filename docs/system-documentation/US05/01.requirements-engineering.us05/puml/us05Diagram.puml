@@ -13,24 +13,28 @@ activate Employee
     Employee -> System : Ask to build a station
     activate System
 
-        System --> Employee : Verify if is alowed to build a station
+        System --> Employee : Verify if is alowed to build a station and show station types
     deactivate System
 
-    Employee -> System : select build category
+    Employee -> System : select station type
     activate System
 
-        System --> Employee :  Request information (Location, type of building, name, centre)
+        System --> Employee :  ask for location
     deactivate System
 
-    Employee -> System : Give information
+    Employee -> System : Give location
     activate System
 
-        System --> Employee : shows all the information given
+        System --> Employee : request name, (and centre if station) and sugest name
     deactivate System
 
-    Employee -> System : confirms information
+    Employee -> System : type requested information
     activate System
 
-        System --> Employee : displays operation success
+        System --> Employee : show all information and request confirmation
     deactivate System
+    Employee -> System : Confirm information
+    activate System
+    System -> Employee : display operation sucess and build station
+
 @enduml

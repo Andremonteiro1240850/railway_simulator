@@ -13,16 +13,16 @@ activate Employee
     Employee -> System : ask to upgrade a station
     activate System
 
-        System --> Employee : shows task category list and asks to select one
+        System --> Employee : shows available stations
     deactivate System
 
-    Employee -> System : selects Building category
+    Employee -> System : select station
     activate System
 
-        System --> Employee : requests data (Building, Station)
+        System --> Employee : requests building type
     deactivate System
 
-    Employee -> System : types requested data
+    Employee -> System : select building
     activate System
 
         System --> Employee : shows all data and requests confirmation
@@ -31,6 +31,6 @@ activate Employee
     Employee -> System : confirms data
     activate System
 
-        System --> Employee : displays operation success and gives date
+        System --> Employee : displays operation success and upgrade station
     deactivate System
 @enduml

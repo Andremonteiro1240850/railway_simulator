@@ -2,27 +2,31 @@
 autonumber
 participant AssignRouteController
 activate AssignRouteController
-participant PlayerSessionRepository
-participant PlayerSession
-participant Train
+participant AuthenticationRepository
+
+participant Locomotive
 participant Route
+participant LocomotiveRepository
+participant StationRepository
 
-AssignRouteController -> PlayerSessionRepository : getSessionByPlayerId()
-activate PlayerSessionRepository
-PlayerSessionRepository --> AssignRouteController : PlayerSession
-deactivate PlayerSessionRepository
-activate PlayerSession
+AssignRouteController -> AuthenticationRepository : getSessionByPlayerId()
+activate AuthenticationRepository
+AuthenticationRepository --> AssignRouteController : PlayerSession
+deactivate AuthenticationRepository
+AssignRouteController --> LocomotiveRepository: getLocomotive()
+activate LocomotiveRepository
+LocomotiveRepository--> AssignRouteController: availableLocomotives
+deactivate LocomotiveRepository
+AssignRouteController --> StationRepository: getStations()
+activate StationRepository
+StationRepository --> AssignRouteController: listStations
+deactivate StationRepository
+AssignRouteController -> Route : assignRoute(stations)
+activate Route
+Route --> AssignRouteController: routeCreated
+deactivate Locomotive
 
-AssignRouteController -> Route : validate()
-Route --> AssignRouteController : valid
 
-AssignRouteController -> Train : assignRoute(Route)
-activate Train
-Train -> Route : getStops()
-Route --> Train : List<Stops>
-deactivate Train
 
-AssignRouteController -> PlayerSession : registerTrainAssignment(train)
-deactivate PlayerSession
 deactivate AssignRouteController
 @enduml

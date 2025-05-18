@@ -74,7 +74,7 @@ Each entry must define the industry and the number of cargos generated per unit 
 
 _Insert here a SSD depicting the envisioned Actor-System interactions and throughout which data is inputted and outputted to fulfill the requirement. All interactions must be numbered._
 
-![US04-SSD](/docs/system-documentation/US04/01.requirements-engineering.us04/svg/us04Diagram.svg)
+![US04-SSD](svg/us04Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 

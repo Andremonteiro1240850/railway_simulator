@@ -75,8 +75,7 @@ Overbuilding in the Simulator is NOT possible, the player gets a warning and gam
 
 ### 1.6. System Sequence Diagram (SSD)
 
-
-![US05-SSD](/docs/system-documentation/US01/01.requirements-engineering.us01/svg/us01Diagram.svg)
+![US05-SSD](svg/us05Diagram.svg)
 
 ### 1.7 Other Relevant Remarks
 

@@ -13,13 +13,13 @@ activate Employee
     Employee -> System : Ask to create a scenario
         activate System
 
-    System -> Employee : Verify permission
+    System -> Employee : Verify permission and ask to select map
     deactivate System
 
     Employee -> System : Select a map
         activate System
 
-    System --> Employee :  Request scenario details
+    System --> Employee :  requests scenario details (port behavior, cargoes transform and import or export \n,locomotion types, frequency of generating industries )
         deactivate System
 
     Employee -> System : Provide scenario details
