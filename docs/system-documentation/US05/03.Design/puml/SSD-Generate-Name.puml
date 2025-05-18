@@ -4,8 +4,8 @@ skinparam packageStyle rectangle
 skinparam shadowing false
 
 participant ":CreateStationController" as CTRL
-participant "naming\n:StationNamingService" as NAMING
-participant "city\n:CityRegistry" as CITY
+participant "Station" as NAMING
+participant "City" as CITY
 
 autonumber 6.3
 -> CTRL : getName()

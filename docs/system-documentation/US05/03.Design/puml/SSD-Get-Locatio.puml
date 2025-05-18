@@ -4,8 +4,8 @@ skinparam packageStyle rectangle
 skinparam shadowing false
 
 participant ":CreateStationController" as CTRL
-participant "map\n:MapService" as MAP
-participant "validation\n:LocationValidator" as VALID
+participant "map" as MAP
+
 
 autonumber 6.1
 -> CTRL : getLocation()
@@ -14,12 +14,12 @@ activate CTRL
         CTRL -> MAP : requestCoordinates()
         activate MAP
             MAP --> CTRL : giveCoordinates
-        deactivate MAP
 
-        CTRL -> VALID : validateXY()
-        activate VALID
-            VALID --> CTRL : isValid
-        deactivate VALID
+
+        CTRL -> MAP : validateXY()
+
+            MAP --> CTRL : isValid
+        deactivate MAP
 
     autonumber 6.2
     <-- CTRL : location

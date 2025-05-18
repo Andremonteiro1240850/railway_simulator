@@ -4,8 +4,8 @@ skinparam packageStyle rectangle
 skinparam shadowing false
 
 participant ":CreateStationController" as CTRL
-participant "geometry\n:StationGeometry" as GEO
-participant "validation\n:PositionValidator" as VALID
+participant "TypeStationRepository" as GEO
+
 
 autonumber 6.5
 -> CTRL : getCentre()
@@ -16,10 +16,6 @@ activate CTRL
             GEO --> CTRL : centerPoint
         deactivate GEO
 
-        CTRL -> VALID : validateCenter(centerPoint)
-        activate VALID
-            VALID --> CTRL : isValid
-        deactivate VALID
 
     autonumber 6.6
     <-- CTRL : centerPoint

@@ -4,7 +4,7 @@ skinparam packageStyle rectangle
 skinparam shadowing false
 
 participant ":CreateScenarioController" as CTRL
-participant "map\n:MapManager" as MAP
+participant "map\n:CreateMapRepository" as MAP
 autonumber 3
 -> CTRL: getAvailableMaps()
 activate CTRL

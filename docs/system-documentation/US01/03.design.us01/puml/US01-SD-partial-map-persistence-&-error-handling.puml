@@ -6,9 +6,9 @@ autonumber
 hide footbox
 
 participant ":MapController" as Ctrl
-participant ":MapFactory" as Factory
-participant ":Map" as Map
-participant ":MapRepository" as Repo
+participant ":Map" as Factory
+participant ":Organization" as Map
+participant ":CreateMapRepository" as Repo
 participant ":CreateMapUI" as UI
 
 activate Ctrl

@@ -1,7 +1,7 @@
 @startuml
 'https://plantuml.com/class-diagram
 
-skinparam monochrome true
+skinparam monochrome false
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam linetype polyline
@@ -20,7 +20,7 @@ class CreateMapUI {
 class CreateMapController {
   - validator: MapValidator
   - factory: MapFactory
-  - repo: MapRepository
+  - repo: CreateMapRepository
   + validateName(name: String): boolean
   + validateSize(width: int, height: int): boolean
   + createMap(name: String, width: int, height: int): boolean
@@ -42,7 +42,7 @@ class Map {
   + getHeight(): int
 }
 
-class MapRepository {
+class CreateMapRepository {
   + save(map: Map): boolean
   + rollback()
 }
@@ -52,7 +52,7 @@ CreateMapUI --> CreateMapController : delegates
 CreateMapController --> MapValidator : uses
 MapValidator --> Map : validates
 CreateMapController --> Map : creates >
-CreateMapController --> MapRepository : persists >
-Map --> MapRepository : saved in
+CreateMapController --> CreateMapRepository : persists >
+Map --> CreateMapRepository : saved in
 
 @enduml

@@ -11,13 +11,12 @@ actor "Player" as ORG_EMPLOYEE
 participant ":CreateStationUI" as UI
 participant ":CreateStationController" as CTRL
 participant "StationRepository" as REPOS
-participant "MapRepository" as MAP
+participant "CreateMapRepository" as MAP
 participant "LocationValidator" as VALID
-participant "StationNaming" as NAMING
+participant "Station" as NAMING
 participant "City" as CITY
 participant "PositionValidator" as VALID
 participant "Map" as RAIL
-participant "BudgetManager" as BUDGET
 participant "StationTypeRepository" as REPOT
 
 activate ORG_EMPLOYEE
@@ -60,12 +59,12 @@ activate ORG_EMPLOYEE
                 CTRL -> MAP : requestCoordinates()
                 activate MAP
                     MAP --> CTRL : giveCoordinates
-                deactivate MAP
 
-                CTRL -> VALID : validateXY()
-                activate VALID
-                    VALID --> CTRL : isValid
-                deactivate VALID
+
+                CTRL -> MAP : validateXY()
+
+                    MAP --> CTRL : isValid
+                deactivate MAP
 
             CTRL --> UI : location
             autonumber 6.2
@@ -96,10 +95,10 @@ activate ORG_EMPLOYEE
 
         activate CTRL
 
-                CTRL -> REPOS : calculateCenterOptions()
-                activate REPOS
-                    REPOS --> CTRL : centerOptions
-                deactivate REPOS
+                CTRL -> REPOT : calculateCenterOptions()
+                activate REPOT
+                    REPOT --> CTRL : centerOptions
+                deactivate REPOT
 
                 CTRL -> UI : centreOptions
 
@@ -130,10 +129,10 @@ activate ORG_EMPLOYEE
 
             activate CTRL
 
-                    CTRL -> BUDGET : verifyIfPossible(stationType)
-                    activate BUDGET
-                        BUDGET --> CTRL : isPossible
-                    deactivate BUDGET
+                    CTRL -> RAIL : verifyIfPossible(stationType)
+                    activate RAIL
+                        RAIL --> CTRL : isPossible
+                    deactivate RAIL
 
                     CTRL -> RAIL : buildStation()
                     activate RAIL

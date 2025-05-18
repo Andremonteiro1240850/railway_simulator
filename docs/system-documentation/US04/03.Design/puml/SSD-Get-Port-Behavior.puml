@@ -4,7 +4,7 @@ skinparam packageStyle rectangle
 skinparam shadowing false
 
 participant ":CreateScenarioController" as CTRL
-participant "port\n:PortManager" as PORT
+participant "PortBehavior" as PORT
 
 autonumber 7
 -> CTRL: getAvailablePortBehaviors()

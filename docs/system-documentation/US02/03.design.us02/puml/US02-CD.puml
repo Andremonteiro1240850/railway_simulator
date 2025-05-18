@@ -25,7 +25,7 @@ class UserService {
   + verifyEditorPermission(editor: Editor): boolean
 }
 
-class MapRepository {
+class CreateMapRepository {
   + getMapById(mapId: String): Map
   + saveMap(map: Map): boolean
 }
@@ -60,7 +60,7 @@ class IndustryRepository {
 ' Relationships
 AddIndustryUI --> AddIndustryController : triggers >
 AddIndustryController --> UserService : checks permissions >
-AddIndustryController --> MapRepository : retrieves/saves >
+AddIndustryController --> CreateMapRepository : retrieves/saves >
 AddIndustryController --> IndustryTypeRepository : validates type >
 AddIndustryController --> Map : validates position/adds industry >
 AddIndustryController --> Industry : creates >

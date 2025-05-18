@@ -4,7 +4,7 @@ skinparam packageStyle rectangle
 skinparam shadowing false
 
 participant ":CreateScenarioController" as CTRL
-participant "system\n:TransportSystem" as TS
+participant "Locomotive" as TS
 
 autonumber
 -> CTRL: getAvailableLocomotionTypes()

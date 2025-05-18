@@ -23,7 +23,7 @@ class AddCityController {
   - validateHouseBlockCount(blocks: int): boolean
 }
 
-class MapRepository {
+class CreateMapRepository {
   + getCurrentMap(): Map
   + save(map: Map): boolean
 }
@@ -41,7 +41,7 @@ class City {
 }
 
 AddCityUI --> AddCityController
-AddCityController --> MapRepository
+AddCityController --> CreateMapRepository
 AddCityController --> Map
 AddCityController --> City
 
