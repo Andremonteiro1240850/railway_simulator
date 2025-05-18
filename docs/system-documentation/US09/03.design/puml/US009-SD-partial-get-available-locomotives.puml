@@ -1,10 +1,12 @@
 @startuml
 autonumber
 participant BuyLocomotiveController
-activate BuyLocomotiveController
+
 participant ScenarioRepository
 participant LocomotiveRepository
 
+-> BuyLocomotiveController : getAvailableLocomotives()
+activate BuyLocomotiveController
 BuyLocomotiveController -> ScenarioRepository : getScenario()
 activate ScenarioRepository
 ScenarioRepository --> BuyLocomotiveController : Scenario
@@ -12,8 +14,10 @@ deactivate ScenarioRepository
 
 BuyLocomotiveController -> LocomotiveRepository : getCurrentScenarioLocomotives()
 activate LocomotiveRepository
-LocomotiveRepository --> BuyLocomotiveController : AvailableLocomotives
+LocomotiveRepository --> BuyLocomotiveController : CurrentScenarioLocomotives
 deactivate LocomotiveRepository
 
+<--BuyLocomotiveController  : AvailableLocomotives
 deactivate BuyLocomotiveController
+
 @enduml

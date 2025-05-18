@@ -2,20 +2,22 @@
 actor "Product Owner" as PO
 participant System
 
+activate PO
 
+autonumber
 
-PO -> System : 1. selecionar cenário e mapa
-System -> PO : 2. cenário carregado com sucesso
+PO -> System :  selecionar cenário e mapa
+System -> PO :  cenário carregado com sucesso
 
-PO -> System : 3. iniciar simulador
-System -> PO : 4. simulador pronto
+PO -> System :  iniciar simulador
+System -> PO :  simulador pronto
 
-PO -> System : 5. iniciar simulação
+PO -> System :  iniciar simulação
 
-System -> System : 6. identificar estações válidas (que servem cidades/indústrias)
-System -> System : 7. gerar cargas com base em cenário e entidades próximas
-System -> System : 8. agendar geração periódica (fixa ou aleatória)
-System -> System : 9. armazenar carga nas estações (máx. 24)
+System -> System :  identificar estações válidas (que servem cidades/indústrias)
+System -> System :  gerar cargas com base em cenário e entidades próximas
+System -> System :  agendar geração periódica (fixa ou aleatória)
+System -> System :  armazenar carga nas estações (máx. 24)
 
 
 PO -> System : 10. pausar simulação

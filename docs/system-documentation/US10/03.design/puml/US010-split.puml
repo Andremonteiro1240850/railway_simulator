@@ -5,41 +5,43 @@ skinparam monochrome true
 autonumber
 
 actor Player
+activate Player
 participant AssignRouteUI
 participant AssignRouteController
 
-Player -> AssignRouteUI : requestAssignTrainToRoute()
+Player -> AssignRouteUI : request to assign train to route
 activate AssignRouteUI
 AssignRouteUI -> AssignRouteController : getAvailableTrains()
 activate AssignRouteController
 
-ref over AssignRouteController : SD-get-available-trains
+ref over AssignRouteController : SD-get-unassigned-trains
 
 AssignRouteController --> AssignRouteUI : availableTrains
 deactivate AssignRouteController
-AssignRouteUI --> Player : Lists available trains and asks to select one
+AssignRouteUI --> Player : Displays list of available trains
 deactivate AssignRouteUI
 
-Player -> AssignRouteUI : Selects a train
+Player -> AssignRouteUI : selects a train
 activate AssignRouteUI
 AssignRouteUI -> AssignRouteController : selectTrain(trainId)
 activate AssignRouteController
 
-ref over AssignRouteController : SD-select-train
+ref over AssignRouteController : SD-create-route-and-assign-train
 
-ref over AssignRouteController : SD-create-and-fill-route
+AssignRouteController --> AssignRouteUI : Route created
+deactivate AssignRouteController
+AssignRouteUI --> Player : displayRouteSetup
+deactivate AssignRouteUI
 
-AssignRouteController --> AssignRouteUI : showRouteSummary()
-AssignRouteUI --> Player : displayRouteAndCargoSummary, requests confirmation
-
-Player -> AssignRouteUI : confirms data
+Player -> AssignRouteUI : confirmRoute
+activate AssignRouteUI
 AssignRouteUI -> AssignRouteController : confirmRoute()
+activate AssignRouteController
 
-ref over AssignRouteController : SD-confirm-route
+ref over AssignRouteController : SD-confirm-train-assignment
 
 AssignRouteController --> AssignRouteUI : operationSuccess()
 deactivate AssignRouteController
-AssignRouteUI --> Player : displaySuccessMessage
+AssignRouteUI --> Player : display success message
 deactivate AssignRouteUI
-
 @enduml

@@ -15,6 +15,8 @@ participant PlayerSession
 participant Train
 participant Route
 
+activate Player
+
 Player -> AssignRouteUI : requestAssignTrainToRoute()
 activate AssignRouteUI
 AssignRouteUI -> AssignRouteController : getAvailableTrains()
@@ -51,20 +53,23 @@ loop
   AssignRouteController --> AssignRouteUI : show Avialable stations
   deactivate AssignRouteController
   AssignRouteUI --> Player : Lists possible stations and requests selection
-
+  deactivate AssignRouteUI
   Player -> AssignRouteUI : Selects one station
+  activate AssignRouteUI
   AssignRouteUI -> AssignRouteController : selectStation()
-
+  activate AssignRouteController
   AssignRouteController -> CargoRepository : getAvailableCargos()
   activate CargoRepository
   CargoRepository --> AssignRouteController : List<CargoType>
   deactivate CargoRepository
   AssignRouteController --> AssignRouteUI : showCargoTypes
+  deactivate AssignRouteController
   AssignRouteUI --> Player : Lists possible cargo types to pick up at station
-
+deactivate AssignRouteUI
   Player -> AssignRouteUI : Selects cargo to pick up
+  activate AssignRouteUI
   AssignRouteUI -> AssignRouteController : selectCargo(cargoType)
-
+  activate AssignRouteController
   AssignRouteController -> Route : addStop(stationId, cargoType)
   activate Route
   Route--> AssignRouteController: stop added
@@ -72,11 +77,14 @@ loop
 end
 
 AssignRouteController --> AssignRouteUI : showRouteSummary()
+deactivate AssignRouteController
 AssignRouteUI --> Player : displayRouteAndCargoSummary, requests confirmation
-
+deactivate AssignRouteUI
 Player -> AssignRouteUI : confirms data
+activate AssignRouteUI
 AssignRouteUI -> AssignRouteController : confirmRoute()
-AssignRouteController -> PlayerSessionRepository : getSessionByPlayerId()
+activate AssignRouteController
+AssignRouteController -> PlayerSessionRepository : getSessionPlayer()
 activate PlayerSessionRepository
 PlayerSessionRepository --> AssignRouteController : PlayerSession
 deactivate PlayerSessionRepository

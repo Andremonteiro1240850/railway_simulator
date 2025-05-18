@@ -7,7 +7,7 @@ participant PlayerSession
 participant TrainRepository
 participant Train
 
-AssignRouteController -> PlayerSessionRepository : getSessionByPlayerId()
+AssignRouteController -> PlayerSessionRepository : getSessionPlayer()
 activate PlayerSessionRepository
 PlayerSessionRepository --> AssignRouteController : PlayerSession
 deactivate PlayerSessionRepository
