@@ -26,10 +26,10 @@ public class ListStationUI implements Runnable {
 
         stationRepository.getAll().forEach(station -> {
             System.out.printf("Reference: %s\n", station.getReference());
-            System.out.printf("Name: %s\n", station.getName());
-            System.out.printf("Type: %s\n", station.getType());
+            System.out.printf("Name: %s\n", station.getType());
+            System.out.printf("Type: %s\n", station.getName());
 
-            if (station.getType().equals("station")) {
+            if (station.getName().equals("station")) {
                 System.out.printf("Region: %s\n", station.getRegion());
             }
 
