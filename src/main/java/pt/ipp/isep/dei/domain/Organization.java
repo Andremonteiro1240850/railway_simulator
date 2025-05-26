@@ -173,7 +173,7 @@ public class Organization {
         }
         return optionalValue;
     }
-    private double budget;
+    private double budget=10000.0;
 
     public double getBudget() { return budget; }
 

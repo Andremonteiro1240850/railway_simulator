@@ -47,20 +47,19 @@ public class Industry {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Task)) {
-            return false;
-        }
-        Industry task = (Industry) o;
-        return  employee.equals(task.employee);
+        if (this == o) return true;
+        if (!(o instanceof Industry)) return false;
+        Industry industry = (Industry) o;
+        return positionX == industry.positionX &&
+                positionY == industry.positionY &&
+                map.equals(industry.map);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(employee);
+        return Objects.hash(map, positionX, positionY);
     }
+
 
     /**
      * Clone method.

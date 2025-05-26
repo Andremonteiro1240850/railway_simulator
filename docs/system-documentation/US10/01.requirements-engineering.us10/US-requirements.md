@@ -8,8 +8,7 @@
 ### 1.1. User Story Description
 
 As a Player, I want to assign a selected train to a route with
-valid stations and the respective list of cargoes to be picked up in each
-station
+valid stations and the respective list of cargoes to be picked up in each  station
 
 
 ### 1.2. Customer Specifications and Clarifications 
