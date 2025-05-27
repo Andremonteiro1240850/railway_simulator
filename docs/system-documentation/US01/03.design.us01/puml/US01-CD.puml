@@ -19,7 +19,6 @@ class CreateMapUI {
 
 class CreateMapController {
   - validator: MapValidator
-  - factory: MapFactory
   - repo: CreateMapRepository
   + validateName(name: String): boolean
   + validateSize(width: int, height: int): boolean
