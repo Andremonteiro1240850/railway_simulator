@@ -49,17 +49,29 @@ public class AddIndustryController {
     }
 
     public Optional<Industry> createIndustry(int positionX, int positionY, Map map) {
+        try {
+            // Validações específicas para US02
+            validatePosition(map, positionX, positionY);
 
-        Employee employee = getEmployeeFromSession();
-        Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
+            Employee employee = getEmployeeFromSession();
+            Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
 
-        Optional<Industry> newIndustry = Optional.empty();
-
-        if (organization.isPresent()) {
-            newIndustry = organization.get()
-                    .createIndustry(positionX,positionY,map,employee);
+            return organization.flatMap(org ->
+                    org.createIndustry(positionX, positionY, map, employee)
+            );
+        } catch (IllegalArgumentException e) {
+            System.err.println("[Erro US02] " + e.getMessage());
+            return Optional.empty();
         }
-        return newIndustry;
+    }
+
+    private void validatePosition(Map map, int x, int y) {
+        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
+            throw new IllegalArgumentException("Coordinates out of bounds");
+        }
+        if (map.hasIndustryAt(x, y)) {
+            throw new IllegalArgumentException("Position industry j<UNK> existe");
+        }
     }
 
     private Employee getEmployeeFromSession() {

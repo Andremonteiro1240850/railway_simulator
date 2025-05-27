@@ -103,4 +103,19 @@ public class Map {
         return String.format("Map: %s [%dx%d %s] | Org: %s | Cities: %d | Industries: %d",
                 name, width, height, scale, cities.size(), industries.size());
     }
+
+    public void addIndustry(Industry industry) {
+        if (industry == null) throw new IllegalArgumentException("Industry cannot be null");
+        if (hasIndustryAt(industry.getPositionX(), industry.getPositionY())) {
+            throw new IllegalArgumentException("Position occupied");
+        }
+        industries.add(industry);
+    }
+
+    // Novo método de validação para US02
+    public boolean hasIndustryAt(int x, int y) {
+        return industries.stream().anyMatch(i ->
+                i.getPositionX() == x && i.getPositionY() == y
+        );
+    }
 }

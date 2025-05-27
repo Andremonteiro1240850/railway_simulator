@@ -1,49 +1,35 @@
 package pt.ipp.isep.dei.domain;
 
+import pt.ipp.isep.dei.domain.enums.IndustryType;
 import java.util.Objects;
 
 public class Industry {
-   private int positionX;
-   private int positionY;
-   private Map map;
+    private final IndustryType type;
+    private final int positionX;
+    private final int positionY;
+    private final Map map;
 
-    private Employee employee;
-    /**
-     * Constructs a new Industry with the specified map coordinates and employee.
-     *
-     * @param map       The map to which this industry belongs
-     * @param positionX The x-coordinate of the industry on the map
-     * @param positionY The y-coordinate of the industry on the map
-     * @param employee  The employee associated with this industry
-     */
-
-    public Industry(Map map, int positionX, int positionY, Employee employee) {
-        this.positionX = positionX;
-        this.positionY = positionY;
-        this.employee = employee;
+    public Industry(IndustryType type, Map map, int x, int y) {
+        validate(type, map, x, y);
+        this.type = type;
         this.map = map;
+        this.positionX = x;
+        this.positionY = y;
     }
-    /**
-     * Validates a reference string.
-     * This method checks if the reference is not null and not empty.
-     *
-     * @param reference The reference string to validate
-     * @throws IllegalArgumentException if the reference is null or empty
-     */
 
-    private void validateReference(String reference) {
-        //TODO: missing from the diagrams
-        if (reference == null || reference.isEmpty()) {
-            throw new IllegalArgumentException("Reference cannot be null or empty.");
-        }
+    private void validate(IndustryType type, Map map, int x, int y) {
+        if (type == null) throw new IllegalArgumentException("Invalid Industry Type");
+        if (map == null) throw new IllegalArgumentException("Map can't be null");
+        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight())
+            throw new IllegalArgumentException("Position out of bounds");
+        if (map.hasIndustryAt(x, y))
+            throw new IllegalArgumentException("Position is already occupied");
     }
-    /**
-     * Compares this industry to another object for equality.
-     * Two industries are considered equal if they have the same employee.
-     *
-     * @param o The object to compare with
-     * @return true if the objects are equal (same employee), false otherwise
-     */
+
+    // Getters
+    public IndustryType getType() { return type; }
+    public int getPositionX() { return positionX; }
+    public int getPositionY() { return positionY; }
 
     @Override
     public boolean equals(Object o) {
@@ -52,21 +38,12 @@ public class Industry {
         Industry industry = (Industry) o;
         return positionX == industry.positionX &&
                 positionY == industry.positionY &&
+                type == industry.type &&
                 map.equals(industry.map);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(map, positionX, positionY);
-    }
-
-
-    /**
-     * Clone method.
-     *
-     * @return A clone of the current instance.
-     */
-    public Industry clone() {
-        return new Industry(this.map,this.positionX,positionY, this.employee);
+        return Objects.hash(type, positionX, positionY, map);
     }
 }
