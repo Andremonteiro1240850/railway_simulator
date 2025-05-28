@@ -40,9 +40,6 @@ public class ScenarioManager {
      * @return An Optional containing the current scenario if present, empty Optional otherwise.
      */
 
-    public Optional<Scenario> getCurrentScenario() {
-        return Optional.ofNullable(currentScenario);
-    }
     /**
      * Gets the current year of the active scenario.
      *

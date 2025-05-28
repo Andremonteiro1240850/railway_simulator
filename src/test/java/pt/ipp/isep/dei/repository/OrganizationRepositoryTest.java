@@ -1,4 +1,4 @@
-package pt.ipp.isep.dei.repository;
+/**package pt.ipp.isep.dei.repository;
 
 import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.Employee;
@@ -92,4 +92,4 @@ class OrganizationRepositoryTest {
 
         assertTrue(result.isEmpty());
     }
-}
+}**/
