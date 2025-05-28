@@ -1,84 +1,61 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.CreateMapController;
-import pt.ipp.isep.dei.domain.Map;
 import pt.ipp.isep.dei.domain.Organization;
-import pt.ipp.isep.dei.domain.TaskCategory;
+import pt.ipp.isep.dei.domain.enums.ScaleUnit;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * UI for map creation.
+ */
 public class CreateMapUI implements Runnable {
-    private final CreateMapController controller;
-    private String name;
-    private int dimensionX;
-    private int dimensionY;
+    private final CreateMapController controller = new CreateMapController();
     private final Organization organization;
 
-
     public CreateMapUI(Organization organization) {
-        controller = new CreateMapController();
         this.organization = organization;
     }
 
-    private CreateMapController getController() {
-        return controller;
-    }
-
     public void run() {
-        System.out.println("\n\n--- Create map ------------------------");
+        System.out.println("\n--- Create Map ---");
 
-        requestData();
-        submitData();
+        Scanner input = new Scanner(System.in);
+        String name = requestName(input);
+        int width = requestDimension(input, "Width (X)");
+        int height = requestDimension(input, "Height (Y)");
+        ScaleUnit scale = requestScale(input);
+
+        Optional<String> message = controller.createMap(name, width, height, scale, organization);
+        message.ifPresent(System.out::println);
     }
 
-    private void submitData() {
-        Optional<Map> task = getController().createMap(name,dimensionX,dimensionY);
+    private String requestName(Scanner input) {
+        System.out.print("Map Name: ");
+        return input.nextLine().trim();
+    }
 
-        if (task.isPresent()) {
-            System.out.println("\nMap successfully created!");
-        } else {
-            System.out.println("\nMap not created!");
+    private int requestDimension(Scanner input, String label) {
+        while (true) {
+            try {
+                System.out.print(label + ": ");
+                int value = Integer.parseInt(input.nextLine());
+                if (value > 0) return value;
+                System.out.println("❌ Must be positive.");
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Invalid input.");
+            }
         }
     }
 
-    private void requestData() {
-        //Request the Task Reference from the console
-        name = requestName();
-
-        //Request the Task Description from the console
-        dimensionX = requestDimensionX();
-
-        //Request the Task Informal Description from the console
-        dimensionY = requestDimensionY();
-
-    }
-
-    private String requestName() {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Name: ");
-        return input.nextLine();
-    }
-
-    private int requestDimensionX() {
-        Scanner input = new Scanner(System.in);
-        System.out.print("X: ");
-        return input.nextInt();
-    }
-    private int requestDimensionY() {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Y: ");
-        return input.nextInt();
-    }
-
-    private void displayTaskCategoryOptions(List<TaskCategory> taskCategories) {
-        //display the task categories as a menu with number options to select
-        int i = 1;
-        for (TaskCategory taskCategory : taskCategories) {
-            System.out.println("  " + i + " - " + taskCategory.getDescription());
-            i++;
+    private ScaleUnit requestScale(Scanner input) {
+        System.out.print("Scale (KM/MILES/METERS): ");
+        try {
+            return ScaleUnit.valueOf(input.nextLine().trim().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            System.out.println("❌ Defaulting to KM.");
+            return ScaleUnit.KM;
         }
     }
 }
-

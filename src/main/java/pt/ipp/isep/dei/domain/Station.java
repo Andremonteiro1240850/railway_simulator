@@ -84,7 +84,7 @@ public class Station {
      */
 
     public String getName() {
-        return name;
+        return type;
     }
     /**
      * Gets the station type.
@@ -93,7 +93,7 @@ public class Station {
      */
 
     public String getType() {
-        return type;
+        return name;
     }
     /**
      * Gets the station region.

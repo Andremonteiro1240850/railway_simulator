@@ -21,7 +21,7 @@ class AssignRouteTest {
         stationRepository = new StationRepository();
         cargoRepository = new CargoRepository();
 
-        testLocomotive = new Locomotive("L001", "Diesel", 10000.0, 1200, 1950);
+
 
         Station s1 = new Station("S001", "North Station", "station", "North");
         Station s2 = new Station("S002", "South Station", "station", "South");

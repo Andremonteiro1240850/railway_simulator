@@ -1,33 +1,35 @@
 package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.domain.Locomotive;
+import pt.ipp.isep.dei.domain.LocomotiveType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+
 
 public class LocomotiveRepository {
-    private final List<Locomotive> purchasedLocomotives = new ArrayList<>();
+    private final List<Locomotive> locomotives = new ArrayList<>();
 
-    public Optional<Locomotive> add(Locomotive locomotive) {
-        if (locomotive == null) return Optional.empty();
-
-        Locomotive clone = locomotive.clone();
-        purchasedLocomotives.add(clone);
-        return Optional.of(clone);
+    public LocomotiveRepository() {
+        // Dummy data for testing
+        locomotives.add(new Locomotive("Atlantic Express", LocomotiveType.STEAM, 3000, 0.5, 1900, 500, 1000));
+        locomotives.add(new Locomotive("Diesel Master", LocomotiveType.DIESEL, 4000, 0.6, 1959, 600, 1500));
+        locomotives.add(new Locomotive("Electric Arrow", LocomotiveType.ELECTRIC, 5000,0.7 , 1800, 700, 2000));
     }
 
-    public List<Locomotive> getAll() {
-        List<Locomotive> result = new ArrayList<>();
-        for (Locomotive loco : purchasedLocomotives) {
-            result.add(loco.clone());
-        }
-        return result;
+    public List<Locomotive> availableLocomotivesForYear(int year) {
+        return locomotives.stream()
+                .filter(l -> l.getStartYear() <= year)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Locomotive> findByReference(String reference) {
-        return purchasedLocomotives.stream()
-                .filter(l -> l.getReference().equals(reference))
+    public Locomotive getByName(String name) {
+        return locomotives.stream()
+                .filter(l -> l.getName().equalsIgnoreCase(name))
                 .findFirst()
-                .map(Locomotive::clone);
+                .orElse(null);
     }
 }

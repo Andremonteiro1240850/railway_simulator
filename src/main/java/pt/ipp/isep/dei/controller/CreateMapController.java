@@ -1,80 +1,30 @@
 package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.*;
-import pt.ipp.isep.dei.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.domain.enums.ScaleUnit;
 import pt.ipp.isep.dei.repository.CreateMapRepository;
-import pt.ipp.isep.dei.repository.OrganizationRepository;
-import pt.ipp.isep.dei.repository.Repositories;
-import pt.ipp.isep.dei.domain.Map;
-import pt.isep.lei.esoft.auth.domain.model.Email;
-import pt.ipp.isep.dei.domain.Organization;
 
-import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller responsible for validating and creating new maps.
+ */
 public class CreateMapController {
-    private OrganizationRepository organizationRepository;
-    private AuthenticationRepository authenticationRepository;
-    private CreateMapRepository createMapRepository;
+    private final MapValidator validator = new MapValidator();
+    private final CreateMapRepository repo = new CreateMapRepository();
 
+    /**
+     * Creates a new map for the given organization.
+     */
+    public Optional<String> createMap(String name, int width, int height, ScaleUnit scale, Organization organization) {
+        if (!validator.isValidName(name)) return Optional.of("❌ Invalid map name.");
+        if (!validator.isValidSize(width, height)) return Optional.of("❌ Invalid dimensions.");
+        if (!validator.isValidScale(scale)) return Optional.of("❌ Invalid scale.");
+        if (organization == null) return Optional.of("❌ Organization is required.");
 
-    //Repository instances are obtained from the Repositories class
-    public CreateMapController() {
-        getOrganizationRepository();
-        getAuthenticationRepository();
-        Repositories.getInstance().getMapRepository();
+        Map map = new Map(name, width, height, scale, organization);
+        return repo.save(map).isPresent()
+                ? Optional.of("✅ Map created successfully:\n" + map)
+                : Optional.of("❌ Map already exists for this organization.");
     }
-
-    //Allows receiving the repositories as parameters for testing purposes
-    public CreateMapController(OrganizationRepository organizationRepository,
-                               AuthenticationRepository authenticationRepository, CreateMapRepository createMapRepository) {
-        this.organizationRepository = organizationRepository;
-        this.authenticationRepository = authenticationRepository;
-        this.createMapRepository = createMapRepository;
-
-    }
-
-
-    private OrganizationRepository getOrganizationRepository() {
-        if (organizationRepository == null) {
-            Repositories repositories = Repositories.getInstance();
-            organizationRepository = repositories.getOrganizationRepository();
-        }
-        return organizationRepository;
-
-    }
-
-    private AuthenticationRepository getAuthenticationRepository() {
-        if (authenticationRepository == null) {
-            Repositories repositories = Repositories.getInstance();
-
-            //Get the AuthenticationRepository
-            authenticationRepository = repositories.getAuthenticationRepository();
-        }
-        return authenticationRepository;
-    }
-
-    public Optional<Map> createMap(String name, int x, int y) {
-
-        Employee employee = getEmployeeFromSession();
-        Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
-
-        Optional<Map> newMap = Optional.empty();
-
-        if (organization.isPresent()) {
-            newMap = organization.get()
-                    .createMap(name, x, y, employee);
-        }
-        return newMap;
-    }
-
-    private Employee getEmployeeFromSession() {
-        Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
-        return new Employee(email.getEmail());
-    }
-
-
 }
-
-
-

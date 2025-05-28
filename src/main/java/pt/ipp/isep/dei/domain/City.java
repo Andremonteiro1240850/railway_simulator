@@ -50,21 +50,16 @@ public class City {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Task)) {
+        if (!(o instanceof City)) {
             return false;
         }
-        City task = (City) o;
-        return  employee.equals(task.employee);
+        City city = (City) o;
+        return x == city.x && y == city.y && map.equals(city.map);
     }
-    /**
-     * Returns a hash code value for the city based on the employee.
-     *
-     * @return A hash code value for this city
-     */
 
     @Override
     public int hashCode() {
-        return Objects.hash( employee);
+        return Objects.hash(map, x, y);
     }
 
     /**

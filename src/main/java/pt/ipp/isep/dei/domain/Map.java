@@ -1,114 +1,121 @@
 package pt.ipp.isep.dei.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import pt.ipp.isep.dei.domain.enums.ScaleUnit;
 
-public class Map implements Cloneable {
-    private String name;
-    private int dimensionX;
-    private int dimensionY;
-    /**
-     * Constructs a new Map with the specified characteristics.
-     *
-     * @param name       The unique name/identifier for the map
-     * @param dimensionX The horizontal dimension (width) of the map
-     * @param dimensionY The vertical dimension (height) of the map
-     * @param employee   The employee associated with this map
-     */
+import java.util.*;
 
-    private Employee employee;
+/**
+ * Represents a map with all elements and associated to an organization.
+ */
+public class Map {
+    private final String name;
+    private final int width;
+    private final int height;
+    private final ScaleUnit scale;
+    private final Organization organization;
 
-    public Map(String name, int dimensionX, int dimensionY, Employee employee) {
+    private final List<City> cities = new ArrayList<>();
+    private final List<Industry> industries = new ArrayList<>();
+    private final List<Station> stations = new ArrayList<>();
+    private final List<HistoricalEvent> events = new ArrayList<>();
 
+    public Map(String name, int width, int height, ScaleUnit scale, Organization organization) {
         this.name = name;
-        this.dimensionX = dimensionX;
-        this.dimensionY = dimensionY;
-        this.employee = employee;
+        this.width = width;
+        this.height = height;
+        this.scale = scale;
+        this.organization = organization;
+    }
 
-    }
-    /**
-     * Creates and returns a shallow copy of this map using Object.clone().
-     *
-     * @return A cloned Map instance
-     * @throws AssertionError if cloning is not supported (should never happen as class implements Cloneable)
-     */
-    @Override
-    public Map clone() {
-        try {
-            return (Map) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError(); // Nunca deve acontecer pois implementamos Cloneable
-        }
-    }
-    /**
-     * Validates that a reference string is not null or empty.
-     *
-     * @param reference The reference string to validate
-     * @throws IllegalArgumentException if the reference is null or empty
-     */
-
-    private void validateReference(String reference) {
-        //TODO: missing from the diagrams
-        if (reference == null || reference.isEmpty()) {
-            throw new IllegalArgumentException("Reference cannot be null or empty.");
-        }
-    }
-    /**
-     * Gets the name of the map.
-     *
-     * @return The map's name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Gets the horizontal dimension (width) of the map.
-     *
-     * @return The X dimension
-     */
-    public int getDimensionX() {
-        return dimensionX;
+    public int getWidth() {
+        return width;
     }
-    /**
-     * Gets the vertical dimension (height) of the map.
-     *
-     * @return The Y dimension
-     */
 
-    public int getDimensionY() {
-        return dimensionY;
+    public int getHeight() {
+        return height;
     }
-    /**
-     * Compares this map to another object for equality.
-     * Two maps are considered equal if they have the same name.
-     *
-     * @param o The object to compare with
-     * @return true if the objects are equal (same name), false otherwise
-     */
+
+    public ScaleUnit getScale() {
+        return scale;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public List<City> getCities() {
+        return new ArrayList<>(cities);
+    }
+
+    public List<Industry> getIndustries() {
+        return new ArrayList<>(industries);
+    }
+
+    public List<Station> getStations() {
+        return new ArrayList<>(stations);
+    }
+
+
+    public List<HistoricalEvent> getEvents() {
+        return new ArrayList<>(events);
+    }
+
+    public void addCity(City city) {
+        cities.add(city);
+    }
+
+    public void addIndustry(Industry industry) {
+        industries.add(industry);
+    }
+
+    public void addStation(Station station) {
+        stations.add(station);
+    }
+
+
+    public void addHistoricalEvent(HistoricalEvent event) {
+        events.add(event);
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Map)) return false;
         Map map = (Map) o;
-        return Objects.equals(name, map.name); // assumindo que 'name' identifica unicamente o mapa
+        return width == map.width &&
+                height == map.height &&
+                scale == map.scale &&
+                name.equalsIgnoreCase(map.name) &&
+                organization.equals(map.organization);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(name.toLowerCase(), width, height, scale, organization);
     }
 
-    /**
-     * Clone method.
-     *
-     * @return A clone of the current instance.
-     */
-    public  Map mapClone() {
-        return new Map(this.name,this.dimensionX,this.dimensionY,this.employee);
+    @Override
+    public String toString() {
+        return String.format("Map: %s [%dx%d %s] | Org: %s | Cities: %d | Industries: %d",
+                name, width, height, scale, cities.size(), industries.size());
     }
 
+    public void addIndustry(Industry industry) {
+        if (industry == null) throw new IllegalArgumentException("Industry cannot be null");
+        if (hasIndustryAt(industry.getPositionX(), industry.getPositionY())) {
+            throw new IllegalArgumentException("Position occupied");
+        }
+        industries.add(industry);
+    }
+
+    // Novo método de validação para US02
+    public boolean hasIndustryAt(int x, int y) {
+        return industries.stream().anyMatch(i ->
+                i.getPositionX() == x && i.getPositionY() == y
+        );
+    }
 }
-

@@ -18,6 +18,9 @@ public class ListLocomotivesRepository {
         availableLocomotives.add(new Locomotive("L-001", "Steam", 4000, 100, 1850));
         availableLocomotives.add(new Locomotive("L-002", "Diesel", 5000, 120, 1920));
         availableLocomotives.add(new Locomotive("L-003", "Electric", 6000, 150, 1895));
+        availableLocomotives.add(new Locomotive("L-004", "Steam", 4000, 100, 2000));
+        availableLocomotives.add(new Locomotive("L-005", "Diesel", 5000, 120, 1950));
+        availableLocomotives.add(new Locomotive("L-006", "Electric", 6000, 150, 2010));
     }
 
     public List<Locomotive> getAvailableLocomotives(int currentYear) {

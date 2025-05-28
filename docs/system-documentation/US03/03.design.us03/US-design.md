@@ -1,7 +1,5 @@
 # US03 - As an Editor, I want to add a city in a position XY of the selected map, with a name and a positive number of house blocks.
 
-_XXX stands for User Story number and YYY for User Story description (e.g. US006 - Create a Task)_
-
 ## 3. Design
 
 ### 3.1. Rationale

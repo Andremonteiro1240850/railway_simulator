@@ -1,100 +1,65 @@
 package pt.ipp.isep.dei.ui.console;
 
-import pt.ipp.isep.dei.controller.AddIndustryController;
-import pt.ipp.isep.dei.domain.Industry;
-import pt.ipp.isep.dei.domain.Map;
-import pt.ipp.isep.dei.domain.TaskCategory;
-import pt.ipp.isep.dei.repository.CreateMapRepository;
-import pt.ipp.isep.dei.repository.Repositories;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.domain.enums.IndustryType;
+import java.util.*;
 
 public class AddIndustryUI implements Runnable {
     private final AddIndustryController controller;
-    private int x;
-    private int y;
-    private Map map;
+    private final Scanner input;
 
     public AddIndustryUI() {
         controller = new AddIndustryController();
-    }
-
-    private AddIndustryController getController() {
-        return controller;
+        input = new Scanner(System.in);
     }
 
     public void run() {
-        System.out.println("\n\n--- Add Industry ------------------------");
+        System.out.println("\n--- Adicionar Indústria ---");
+        IndustryType type = selectIndustryType();
+        int x = requestCoordinate("X");
+        int y = requestCoordinate("Y");
+        String mapName = requestMap();
 
-        requestData();
-        submitData();
+        Optional<Industry> result = controller.createIndustry(type, x, y, mapName);
+        result.ifPresentOrElse(
+                industry -> showSuccess(industry),
+                () -> showError("Falha ao criar indústria")
+        );
     }
 
-    private void submitData() {
-        Optional<Industry> task = getController().createIndustry(x,y,map);
+    private IndustryType selectIndustryType() {
+        System.out.println("\nTipos disponíveis:");
+        System.out.println("1 - Primary (Mines/Farms)");
+        System.out.println("2 - Transforming (Factories)");
+        System.out.println("3 - Mixed (Ports)");
 
-        if (task.isPresent()) {
-            System.out.println("\nIndustry successfully created!");
-        } else {
-            System.out.println("\nIndustry not created!");
-        }
+        int choice = input.nextInt();
+        return switch(choice) {
+            case 1 -> IndustryType.PRIMARY;
+            case 2 -> IndustryType.TRANSFORMING;
+            case 3 -> IndustryType.MIXED;
+            default -> throw new IllegalArgumentException("Invalid choice");
+        };
     }
 
-    private void requestData() {
-        //Request the Task Reference from the console
-        x = requestX();
-        y = requestY();
-        map= requestMap();
-    }
-
-    private int requestX() {
-        Scanner input = new Scanner(System.in);
-        System.out.print("X: ");
+    private int requestCoordinate(String label) {
+        System.out.print(label + ": ");
         return input.nextInt();
     }
-    private int requestY() {
-        Scanner input = new Scanner(System.in);
-        System.out.print("Y: ");
-        return input.nextInt();
-    }
-    private Map requestMap() {
 
-        CreateMapRepository repository = Repositories.getInstance().getMapRepository();
-        List<Map> availableMaps = repository.getAll();
-
-        if (availableMaps.isEmpty()) {
-            System.out.println("No maps available.");
-            return null;
-        }
-
-        System.out.println("Available Maps:");
-        for (int i = 0; i < availableMaps.size(); i++) {
-            System.out.println((i + 1) + " - " + availableMaps.get(i));
-        }
-
-        Scanner input = new Scanner(System.in);
-        int selectedIndex = -1;
-
-        while (selectedIndex < 1 || selectedIndex > availableMaps.size()) {
-            System.out.print("Select a map by number (1 to " + availableMaps.size() + "): ");
-            if (input.hasNextInt()) {
-                selectedIndex = input.nextInt();
-            } else {
-                input.next(); // limpar inválido
-            }
-        }
-
-        return availableMaps.get(selectedIndex - 1).mapClone();
+    private String requestMap() {
+        System.out.print("Map name: ");
+        return input.next();
     }
 
-    private void displayTaskCategoryOptions(List<TaskCategory> taskCategories) {
-        //display the task categories as a menu with number options to select
-        int i = 1;
-        for (TaskCategory taskCategory : taskCategories) {
-            System.out.println("  " + i + " - " + taskCategory.getDescription());
-            i++;
-        }
+    private void showSuccess(Industry industry) {
+        System.out.printf(
+                "\n✅ Indústria %s criada em (%d,%d)",
+                industry.getType(), industry.getPositionX(), industry.getPositionY()
+        );
+    }
+
+    private void showError(String message) {
+        System.out.println("\n❌ " + message);
     }
 }

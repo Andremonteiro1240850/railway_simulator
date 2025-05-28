@@ -13,7 +13,7 @@ As a Player, I want to buy a locomotive
 **From specifications document:**
 
 >Each locomotive is characterized by a set of key technical attributes essential for its operation within the railway network. There are three main types: steam, diesel, and electric — with electric locomotives requiring electrified lines. Their main characteristics include power, acceleration, and top speed. Additionally, each locomotive has an annual fuel and maintenance cost, as well as a purchase price.
-**From the client clarifications:**
+
 
 
 **From the client clarifications:**

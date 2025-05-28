@@ -1,7 +1,7 @@
 # Use Case Diagram (UCD)
 
 
-![Use Case Diagram](/Sprint2/global-artifacts/01.requirements/svg/userCaseDiagram.svg)
+![Use Case Diagram](/docs/system-documentation/global-artifacts/01.requirements/svg/userCaseDiagram.svg)
 # Use Cases / User Stories
 | UC/US | Description                                                                                                                                                                               |                   
 |:------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
