@@ -2,6 +2,8 @@ package pt.ipp.isep.dei.domain;
 
 
 
+import pt.ipp.isep.dei.domain.enums.LocomotiveType;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +21,13 @@ public class Scenario {
      * Constructs a new Scenario with the given parameters.
      *
      * @param name The name of the scenario.
-     * @param map The map associated with the scenario.
+
      * @param startYear The starting year of the scenario.
      * @param endYear The ending year of the scenario.
      */
 
-    public Scenario(String name, Map map, int startYear, int endYear) {
+    public Scenario(String name, int startYear, int endYear) {
         this.name = name;
-        this.map = map;
         this.startYear = startYear;
         this.currentYear = startYear;
         this.endYear = endYear;
@@ -49,12 +50,6 @@ public class Scenario {
      */
     public String getName() { return name; }
     /**
-     * Gets the map associated with the scenario.
-     *
-     * @return The scenario map.
-     */
-    public Map getMap() { return map; }
-    /**
      * Gets the starting year of the scenario.
      *
      * @return The starting year.
@@ -72,7 +67,7 @@ public class Scenario {
      *
      * @return A new ArrayList containing the available locomotive types.
      */
-    public List<String> getAvailableLocomotiveTypes() { return new ArrayList<>(availableLocomotiveTypes); }
+    public List<Locomotive> getAvailableLocomotiveTypes() { return new ArrayList<>(availableLocomotiveTypes); }
     /**
      * Gets the port behavior configuration.
      *
@@ -102,18 +97,6 @@ public class Scenario {
     public void setCurrentYear(int currentYear) {
         this.currentYear = currentYear;
     }
-
-    /**
-     * Adds a locomotive type to the list of available types if it's not already present.
-     *
-     * @param type The locomotive type to add.
-     */
-
-    public void addLocomotiveType(String type) {
-        if (!availableLocomotiveTypes.contains(type)) {
-            availableLocomotiveTypes.add(type);
-        }
-    }
     /**
      * Adds a historical event to the scenario.
      *
@@ -130,7 +113,7 @@ public class Scenario {
      */
 
     public Scenario clone() {
-        Scenario clone = new Scenario(name, map.clone(), startYear, endYear);
+        Scenario clone = new Scenario(name, startYear, endYear);
         clone.availableLocomotiveTypes = new ArrayList<>(this.availableLocomotiveTypes);
         clone.portBehavior = this.portBehavior != null ? this.portBehavior.clone() : null;
         clone.historicalEvents = new ArrayList<>(this.historicalEvents);
