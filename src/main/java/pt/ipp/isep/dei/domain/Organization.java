@@ -50,6 +50,8 @@ public class Organization {
         this.stationRepository = stationRepository;
     }
 
+
+
     /**
      * This method checks if an employee works for the organization.
      *
