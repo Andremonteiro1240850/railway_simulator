@@ -12,10 +12,7 @@ Academic Year 2024/2025
 1. Glossary
 2. Introduction
 3. System Overview
-4. System Requirements
-5. Features
-6. Troubleshooting & Helpdesk
-7. Frequently Asked Questions (FAQs)
+
 ---
 
 ## 1. Glossary
