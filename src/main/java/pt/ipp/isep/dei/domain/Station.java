@@ -1,32 +1,33 @@
 package pt.ipp.isep.dei.domain;
 
+import pt.ipp.isep.dei.domain.enums.Buildings;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-/**
- * Represents a station in the transportation network, which can be of different types
- * (depot, terminal, or regular station) and belongs to a specific region.
- * Stations can have upgrades and may be assigned an employee.
- */
 
+/**
+ * Represents a train station that can be upgraded and managed with employees.
+ * A station has a type (depot, terminal, or station), a name, a region,
+ * and may have multiple building upgrades that provide various bonuses.
+ */
 public class Station {
     private String name;
-    private String type; // "depot", "terminal", "station"
+    private String type;
     private String region;
     private Employee employee;
-    private String reference;  // Novo campo adicionado
-    private List<StationUpgrade> upgrades = new ArrayList<>();
-    /**
-     * Constructs a new Station with the specified reference, name, type, and region.
-     *
-     * @param reference The unique reference identifier for the station
-     * @param name The name of the station
-     * @param type The type of station ("depot", "terminal", or "station")
-     * @param region The region where the station is located
-     * @throws IllegalArgumentException if type or region are invalid
-     */
+    private String reference;
+    private List<Buildings> upgrades = new ArrayList<>();
 
-    // Construtor modificado para incluir reference
+    /**
+     * Constructs a new Station with a specific reference.
+     *
+     * @param reference The unique identifier for the station.
+     * @param name      The name of the station.
+     * @param type      The type of the station (e.g., "depot", "terminal", or "station").
+     * @param region    The region where the station is located.
+     * @throws IllegalArgumentException If the station type or region is invalid.
+     */
     public Station(String reference, String name, String type, String region) {
         this.reference = reference;
         this.name = name;
@@ -34,127 +35,156 @@ public class Station {
         this.region = region;
         validateTypeAndRegion(type, region);
     }
-    /**
-     * Constructs a new Station with auto-generated reference, name, type, and region.
-     *
-     * @param name The name of the station
-     * @param type The type of station ("depot", "terminal", or "station")
-     * @param region The region where the station is located
-     * @throws IllegalArgumentException if type or region are invalid
-     */
 
-    // Construtor antigo mantido para compatibilidade
+    /**
+     * Constructs a new Station with a generated reference.
+     *
+     * @param name   The name of the station.
+     * @param type   The type of the station (e.g., "depot", "terminal", or "station").
+     * @param region The region where the station is located.
+     */
     public Station(String name, String type, String region) {
         this(generateDefaultReference(), name, type, region);
     }
-    /**
-     * Generates a default unique reference for the station.
-     *
-     * @return A unique reference string in format "ST-[timestamp]"
-     */
 
+    /**
+     * Generates a unique default reference using the current system time.
+     *
+     * @return A unique reference string.
+     */
     private static String generateDefaultReference() {
-        return "ST-" + System.currentTimeMillis(); // Gera uma referência única
+        return "ST-" + System.currentTimeMillis();
     }
-    /**
-     * Validates that the station type and region are acceptable values.
-     *
-     * @param type The station type to validate
-     * @param region The region to validate
-     * @throws IllegalArgumentException if type or region are invalid
-     */
 
+    /**
+     * Validates the station type and region.
+     *
+     * @param type   The station type.
+     * @param region The station region.
+     * @throws IllegalArgumentException If the type is invalid or the region is empty.
+     */
     private void validateTypeAndRegion(String type, String region) {
+        List<String> validTypes = List.of("depot", "terminal", "station");
+        if (!validTypes.contains(type.toLowerCase())) {
+            throw new IllegalArgumentException("Invalid station type: " + type);
+        }
 
+        if (region == null || region.trim().isEmpty()) {
+            throw new IllegalArgumentException("Region must not be empty.");
+        }
     }
-    /**
-     * Gets the station's unique reference identifier.
-     *
-     * @return The station reference
-     */
 
-    // Getters
+    /**
+     * @return The unique reference of the station.
+     */
     public String getReference() {
         return reference;
     }
-    /**
-     * Gets the station name.
-     *
-     * @return The station name
-     */
 
+    /**
+     * @return The name of the station.
+     */
     public String getName() {
-        return type;
-    }
-    /**
-     * Gets the station type.
-     *
-     * @return The station type ("depot", "terminal", or "station")
-     */
-
-    public String getType() {
         return name;
     }
-    /**
-     * Gets the station region.
-     *
-     * @return The region where the station is located
-     */
 
+    /**
+     * @return The type of the station.
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @return The region where the station is located.
+     */
     public String getRegion() {
         return region;
     }
-    /**
-     * Gets the employee assigned to this station, if any.
-     *
-     * @return The assigned employee, or null if none is assigned
-     */
 
+    /**
+     * @return The employee assigned to this station, or null if none.
+     */
     public Employee getEmployee() {
         return employee;
     }
-    /**
-     * Compares stations based on their unique reference.
-     *
-     * @param o The object to compare with
-     * @return true if the stations have the same reference, false otherwise
-     */
 
+    /**
+     * Assigns an employee to the station.
+     *
+     * @param employee The employee to assign.
+     */
+    public void assignEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    /**
+     * Adds a building upgrade to the station if not already present.
+     *
+     * @param upgrade The building upgrade to add.
+     */
+    public void addUpgrade(Buildings upgrade) {
+        if (!upgrades.contains(upgrade)) {
+            upgrades.add(upgrade);
+        }
+    }
+
+    /**
+     * @return A list of all upgrades applied to the station.
+     */
+    public List<Buildings> getUpgrades() {
+        return new ArrayList<>(upgrades);
+    }
+
+    /**
+     * Calculates the total cost of all applied upgrades.
+     *
+     * @return Total cost in game currency.
+     */
+    public int getTotalUpgradeCost() {
+        return upgrades.stream().mapToInt(Buildings::getPrice).sum();
+    }
+
+    /**
+     * Retrieves the list of all bonuses from applied upgrades.
+     *
+     * @return A list of bonus descriptions.
+     */
+    public List<String> getAllBonuses() {
+        return upgrades.stream().map(Buildings::getBonus).toList();
+    }
+
+    /**
+     * Checks equality based on the station reference.
+     *
+     * @param o The object to compare.
+     * @return True if the stations have the same reference.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Station)) return false;
         Station station = (Station) o;
-        return reference.equals(station.reference); // Agora compara por reference
+        return reference.equals(station.reference);
     }
 
+    /**
+     * @return A hash code based on the reference.
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(reference); // Agora usa reference
+        return Objects.hash(reference);
     }
 
+    /**
+     * Creates a deep copy of the station, including upgrades and assigned employee.
+     *
+     * @return A clone of this station.
+     */
     public Station clone() {
         Station clone = new Station(this.reference, this.name, this.type, this.region);
         clone.employee = this.employee != null ? this.employee.clone() : null;
         clone.upgrades = new ArrayList<>(this.upgrades);
         return clone;
-    }
-    /**
-     * Adds an upgrade to this station.
-     *
-     * @param upgrade The upgrade to add
-     */
-
-    public void addUpgrade(StationUpgrade upgrade) {
-        this.upgrades.add(upgrade);
-    }
-    /**
-     * Gets a list of all upgrades applied to this station.
-     *
-     * @return A new ArrayList containing all station upgrades
-     */
-
-    public List<StationUpgrade> getUpgrades() {
-        return new ArrayList<>(upgrades);
     }
 }

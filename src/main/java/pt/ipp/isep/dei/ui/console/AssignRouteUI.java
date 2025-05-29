@@ -113,7 +113,7 @@ public class AssignRouteUI implements Runnable {
         for (int i = 0; i < locomotives.size(); i++) {
             Locomotive loco = locomotives.get(i);
             System.out.printf("%d. %s (%s, Power: %d)%n",
-                    i+1, loco.getReference(), loco.getType(), loco.getPower());
+                    i+1, loco.getName(), loco.getType(), loco.getPower());
         }
 
         System.out.print("Select locomotive: ");
