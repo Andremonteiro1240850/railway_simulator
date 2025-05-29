@@ -37,6 +37,7 @@ public enum ListLocomotives {
     CLASS_232("Diesel", 492000, 35000, 72625, 75, "Average", "Average", 1997, 9999);
 
     private final String fuelType;
+    private final LocomotiveType locomotiveType;
     private final int buildCost;
     private final int maintenanceCost;
     private final int fuelCost;
@@ -50,6 +51,7 @@ public enum ListLocomotives {
                     int topSpeed, String acceleration, String reliability,
                     int availableYear, int retiredYear) {
         this.fuelType = fuelType;
+        this.locomotiveType = LocomotiveType.fromString(fuelType);
         this.buildCost = buildCost;
         this.maintenanceCost = maintenanceCost;
         this.fuelCost = fuelCost;
@@ -62,6 +64,10 @@ public enum ListLocomotives {
 
     public String getFuelType() {
         return fuelType;
+    }
+
+    public LocomotiveType getLocomotiveType() {
+        return locomotiveType;
     }
 
     public int getBuildCost() {
@@ -101,4 +107,3 @@ public enum ListLocomotives {
                 topSpeed, acceleration, reliability, availableYear, retiredYear);
     }
 }
-

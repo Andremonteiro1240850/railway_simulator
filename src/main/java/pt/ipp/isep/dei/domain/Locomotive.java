@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
+import pt.ipp.isep.dei.domain.enums.LocomotiveType;
+
 public class Locomotive {
     private final String reference;
     private final LocomotiveType type;
