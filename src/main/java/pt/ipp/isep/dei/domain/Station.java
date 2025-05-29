@@ -5,6 +5,7 @@ import pt.ipp.isep.dei.domain.enums.Buildings;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Represents a train station that can be upgraded and managed with employees.
@@ -15,7 +16,6 @@ public class Station {
     private String name;
     private String type;
     private String region;
-    private Employee employee;
     private String reference;
     private List<Buildings> upgrades = new ArrayList<>();
 
@@ -103,22 +103,6 @@ public class Station {
     }
 
     /**
-     * @return The employee assigned to this station, or null if none.
-     */
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    /**
-     * Assigns an employee to the station.
-     *
-     * @param employee The employee to assign.
-     */
-    public void assignEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    /**
      * Adds a building upgrade to the station if not already present.
      *
      * @param upgrade The building upgrade to add.
@@ -151,7 +135,9 @@ public class Station {
      * @return A list of bonus descriptions.
      */
     public List<String> getAllBonuses() {
-        return upgrades.stream().map(Buildings::getBonus).toList();
+        return upgrades.stream()
+                .map(Buildings::getBonus)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -163,17 +149,20 @@ public class Station {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Station)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Station station = (Station) o;
-        return reference.equals(station.reference);
+        return Objects.equals(name, station.name) &&
+                Objects.equals(type, station.type) &&
+                Objects.equals(region, station.region) &&
+                Objects.equals(reference, station.reference) &&
+                Objects.equals(upgrades, station.upgrades);
     }
-
     /**
      * @return A hash code based on the reference.
      */
     @Override
     public int hashCode() {
-        return Objects.hash(reference);
+        return Objects.hash(reference,name,type,region,upgrades);
     }
 
     /**
@@ -183,7 +172,6 @@ public class Station {
      */
     public Station clone() {
         Station clone = new Station(this.reference, this.name, this.type, this.region);
-        clone.employee = this.employee != null ? this.employee.clone() : null;
         clone.upgrades = new ArrayList<>(this.upgrades);
         return clone;
     }

@@ -18,6 +18,7 @@ public class Map {
     private final List<Industry> industries = new ArrayList<>();
     private final List<Station> stations = new ArrayList<>();
     private final List<HistoricalEvent> events = new ArrayList<>();
+    private final List<Scenario> scenarios = new ArrayList<>();
 
     public Map(String name, int width, int height, ScaleUnit scale, Organization organization) {
         this.name = name;
@@ -51,6 +52,8 @@ public class Map {
         return new ArrayList<>(cities);
     }
 
+    public List<Scenario> getScenarios() {return new ArrayList<>(scenarios);}
+
     public List<Industry> getIndustries() {
         return new ArrayList<>(industries);
     }
@@ -68,9 +71,6 @@ public class Map {
         cities.add(city);
     }
 
-    public void addIndustry(Industry industry) {
-        industries.add(industry);
-    }
 
     public void addStation(Station station) {
         stations.add(station);

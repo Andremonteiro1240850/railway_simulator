@@ -7,11 +7,11 @@ import java.util.List;
 
 public class Scenario {
     private final String name;
-    private final Map map;
+
     private int startYear;
     private int endYear;
     private int currentYear;
-    private List<String> availableLocomotiveTypes;
+    private List<Locomotive> availableLocomotiveTypes;
     private PortBehavior portBehavior;
     private List<HistoricalEvent> historicalEvents;
 
