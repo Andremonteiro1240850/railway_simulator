@@ -10,20 +10,11 @@ public class Industry {
     private final Map map;
 
     public Industry(IndustryType type, Map map, int x, int y) {
-        validate(type, map, x, y);
+        // Validação já está implementada em Map
         this.type = type;
         this.map = map;
         this.positionX = x;
         this.positionY = y;
-    }
-
-    private void validate(IndustryType type, Map map, int x, int y) {
-        if (type == null) throw new IllegalArgumentException("Invalid Industry Type");
-        if (map == null) throw new IllegalArgumentException("Map can't be null");
-        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight())
-            throw new IllegalArgumentException("Position out of bounds");
-        if (map.hasIndustryAt(x, y))
-            throw new IllegalArgumentException("Position is already occupied");
     }
 
     // Getters

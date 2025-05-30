@@ -7,9 +7,24 @@ public class Employee {
     private String name;
     private String position;
     private String phone;
+    private Organization organization;  // Campo para armazenar a organização associada
 
     public Employee(String email) {
         this.email = email;
+    }
+
+    public Employee(String email, Organization organization) {
+        this.email = email;
+        this.organization = organization;
+    }
+
+    // Getter e setter para a organização
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     @Override

@@ -18,11 +18,11 @@ public class CreateMapRepository {
      * @param map the map to add
      * @return Optional with the added map, or empty if it already exists
      */
-    public Optional<Map> add(Map map) {
+    public Optional<Map> save(Map map) {
         if (map == null) return Optional.empty();
 
         if (!contains(map)) {
-            maps.add(map); // no clone
+            maps.add(map);
             return Optional.of(map);
         }
 
@@ -31,7 +31,7 @@ public class CreateMapRepository {
 
     /**
      * Checks if a map already exists in the repository.
-     * Uses Map.equals(), which includes name, dimensions, scale and organization.
+     * Uses Map.equals(), which includes name, dimensions, scale, and organization.
      *
      * @param map the map to check
      * @return true if already exists

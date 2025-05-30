@@ -10,24 +10,24 @@ import pt.ipp.isep.dei.repository.Repositories;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
 import java.util.Optional;
+import pt.ipp.isep.dei.domain.enums.IndustryType;
 
 public class AddIndustryController {
     private OrganizationRepository organizationRepository;
     private AuthenticationRepository authenticationRepository;
 
-    //Repository instances are obtained from the Repositories class
+    // Repository instances are obtained from the Repositories class
     public AddIndustryController() {
         getOrganizationRepository();
         getAuthenticationRepository();
     }
 
-    //Allows receiving the repositories as parameters for testing purposes
+    // Allows receiving the repositories as parameters for testing purposes
     public AddIndustryController(OrganizationRepository organizationRepository,
                                  AuthenticationRepository authenticationRepository) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
     }
-
 
     private OrganizationRepository getOrganizationRepository() {
         if (organizationRepository == null) {
@@ -35,32 +35,44 @@ public class AddIndustryController {
             organizationRepository = repositories.getOrganizationRepository();
         }
         return organizationRepository;
-
     }
 
     private AuthenticationRepository getAuthenticationRepository() {
         if (authenticationRepository == null) {
             Repositories repositories = Repositories.getInstance();
-
-            //Get the AuthenticationRepository
             authenticationRepository = repositories.getAuthenticationRepository();
         }
         return authenticationRepository;
     }
 
-    public Optional<Industry> createIndustry(int positionX, int positionY, Map map) {
+    public Optional<Industry> createIndustry(IndustryType type, int positionX, int positionY, Map map) {
         try {
-            // Validações específicas para US02
+            // Verifica se o tipo de indústria é válido
+            if (type == null) {
+                throw new IllegalArgumentException("Industry type cannot be null");
+            }
+
+            // Validação da posição no mapa
             validatePosition(map, positionX, positionY);
 
+            // Obtém o funcionário atual da sessão
             Employee employee = getEmployeeFromSession();
+
+            // Obtém a organização do funcionário
             Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
 
-            return organization.flatMap(org ->
-                    org.createIndustry(positionX, positionY, map, employee)
-            );
+            // Cria a indústria e adiciona ao mapa
+            return organization.flatMap(org -> {
+                // Cria a nova indústria
+                Industry industry = new Industry(type, map, positionX, positionY);
+
+                // Adiciona a indústria ao mapa
+                map.addIndustry(industry);
+
+                return Optional.of(industry);
+            });
         } catch (IllegalArgumentException e) {
-            System.err.println("[Erro US02] " + e.getMessage());
+            System.err.println("[Error US02] " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -70,7 +82,7 @@ public class AddIndustryController {
             throw new IllegalArgumentException("Coordinates out of bounds");
         }
         if (map.hasIndustryAt(x, y)) {
-            throw new IllegalArgumentException("Position industry j<UNK> existe");
+            throw new IllegalArgumentException("Position already occupied by another industry");
         }
     }
 
@@ -78,6 +90,5 @@ public class AddIndustryController {
         Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
         return new Employee(email.getEmail());
     }
-
 
 }

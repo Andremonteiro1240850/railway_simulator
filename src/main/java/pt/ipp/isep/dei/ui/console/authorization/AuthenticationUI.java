@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.ui.console.authorization;
 
 import pt.ipp.isep.dei.controller.AuthenticationController;
+import pt.ipp.isep.dei.domain.Employee;
 import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.ui.console.menu.AdminUI;
 import pt.ipp.isep.dei.ui.console.menu.EditorUI;
@@ -27,30 +28,30 @@ public class AuthenticationUI implements Runnable {
         boolean success = doLogin();
 
         if (success) {
-            List<UserRoleDTO> roles = this.ctrl.getUserRoles();
-            if ((roles == null) || (roles.isEmpty())) {
-                System.out.println("No role assigned to user.");
-            } else {
-                UserRoleDTO role = selectsRole(roles);
-                if (!Objects.isNull(role)) {
-                    List<MenuItem> rolesUI = getMenuItemForRoles();
-                    this.redirectToRoleUI(rolesUI, role);
-                } else {
-                    System.out.println("No role selected.");
+            // Após login, obtemos o employee logado
+            Employee loggedInEmployee = ctrl.loggedInEmployee();
+            if (loggedInEmployee != null) {
+                // Passamos o Employee logado para o EditorUI
+                List<UserRoleDTO> roles = this.ctrl.getUserRoles();
+                if (roles != null && !roles.isEmpty()) {
+                    UserRoleDTO role = selectsRole(roles);
+                    if (role != null) {
+                        List<MenuItem> rolesUI = getMenuItemForRoles(loggedInEmployee);
+                        this.redirectToRoleUI(rolesUI, role);
+                    } else {
+                        System.out.println("No role selected.");
+                    }
                 }
             }
         }
         this.logout();
     }
 
-    private List<MenuItem> getMenuItemForRoles() {
+    private List<MenuItem> getMenuItemForRoles(Employee loggedInEmployee) {
         List<MenuItem> rolesUI = new ArrayList<>();
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_ADMIN, new AdminUI()));
-        rolesUI.add(new MenuItem(AuthenticationController.ROLE_EDITOR, new EditorUI(organization)));
+        rolesUI.add(new MenuItem(AuthenticationController.ROLE_EDITOR, new EditorUI(organization, loggedInEmployee))); // Passando o loggedInEmployee
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_PLAYER, new PlayerUI()));
-
-
-        //TODO: Complete with other user roles and related RoleUI
         return rolesUI;
     }
 
@@ -64,9 +65,9 @@ public class AuthenticationUI implements Runnable {
             String id = Utils.readLineFromConsole("Enter UserId/Email: ");
             String pwd = Utils.readLineFromConsole("Enter Password: ");
 
-            success = ctrl.doLogin(id, pwd);
+            success = ctrl.doLogin(id, pwd);  // Tenta fazer o login
             if (!success) {
-                System.out.println("Invalid UserId and/or Password. \n You have  " + maxAttempts + " more attempt(s).");
+                System.out.println("Invalid UserId and/or Password. \n You have " + maxAttempts + " more attempt(s).");
             }
 
         } while (!success && maxAttempts > 0);
@@ -79,16 +80,15 @@ public class AuthenticationUI implements Runnable {
 
     private void redirectToRoleUI(List<MenuItem> rolesUI, UserRoleDTO role) {
         boolean found = false;
-        Iterator<MenuItem> it = rolesUI.iterator();
-        while (it.hasNext() && !found) {
-            MenuItem item = it.next();
-            found = item.hasDescription(role.getDescription());
-            if (found) {
+        for (MenuItem item : rolesUI) {
+            if (item.hasDescription(role.getDescription())) {
                 item.run();
+                found = true;
+                break;
             }
         }
         if (!found) {
-            System.out.println("There is no UI for users with role '" + role.getDescription() + "'");
+            System.out.println("No UI for users with role '" + role.getDescription() + "'");
         }
     }
 

@@ -159,6 +159,14 @@ public class Organization {
         }
         return optionalValue;
     }
+
+    private Map getMapByName(String mapName) {
+        Optional<Organization> organization = getOrganizationFromSession();
+        return organization.flatMap(org -> org.getMaps().stream()
+                .filter(map -> map.getName().equals(mapName))
+                .findFirst()).orElse(null);
+    }
+
     public Optional<City> createCity(Map map,int x, int y, Employee employee) {
 
         //TODO: we could also check if the employee works for the organization before proceeding

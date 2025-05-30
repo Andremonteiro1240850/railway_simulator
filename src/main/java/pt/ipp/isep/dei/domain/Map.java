@@ -4,9 +4,6 @@ import pt.ipp.isep.dei.domain.enums.ScaleUnit;
 
 import java.util.*;
 
-/**
- * Represents a map with all elements and associated to an organization.
- */
 public class Map {
     private final String name;
     private final int width;
@@ -21,6 +18,20 @@ public class Map {
     private final List<Scenario> scenarios = new ArrayList<>();
 
     public Map(String name, int width, int height, ScaleUnit scale, Organization organization) {
+        // Validação de nome, dimensões e escala
+        if (name == null || name.isEmpty() || !name.matches("^[a-zA-Z0-9 _.-]+$")) {
+            throw new IllegalArgumentException("Invalid map name");
+        }
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Invalid dimensions");
+        }
+        if (scale == null) {
+            throw new IllegalArgumentException("Invalid scale");
+        }
+        if (organization == null) {
+            throw new IllegalArgumentException("Organization is required");
+        }
+
         this.name = name;
         this.width = width;
         this.height = height;
@@ -49,36 +60,39 @@ public class Map {
     }
 
     public List<City> getCities() {
-        return new ArrayList<>(cities);
+        return Collections.unmodifiableList(cities);
     }
 
-    public List<Scenario> getScenarios() {return new ArrayList<>(scenarios);}
-
     public List<Industry> getIndustries() {
-        return new ArrayList<>(industries);
+        return Collections.unmodifiableList(industries);
     }
 
     public List<Station> getStations() {
-        return new ArrayList<>(stations);
+        return Collections.unmodifiableList(stations);
     }
-
 
     public List<HistoricalEvent> getEvents() {
-        return new ArrayList<>(events);
+        return Collections.unmodifiableList(events);
     }
 
-    public void addCity(City city) {
-        cities.add(city);
+    public List<Scenario> getScenarios() {
+        return Collections.unmodifiableList(scenarios);
     }
 
+    // Método para adicionar indústria
+    public void addIndustry(Industry industry) {
+        if (industry == null) throw new IllegalArgumentException("Industry cannot be null");
 
-    public void addStation(Station station) {
-        stations.add(station);
+        // Valida se a posição está ocupada
+        if (hasIndustryAt(industry.getPositionX(), industry.getPositionY())) {
+            throw new IllegalArgumentException("Position is already occupied by another industry");
+        }
+        industries.add(industry);
     }
 
-
-    public void addHistoricalEvent(HistoricalEvent event) {
-        events.add(event);
+    // Verifica se já existe uma indústria na posição indicada
+    public boolean hasIndustryAt(int x, int y) {
+        return industries.stream().anyMatch(i -> i.getPositionX() == x && i.getPositionY() == y);
     }
 
     @Override
@@ -100,22 +114,7 @@ public class Map {
 
     @Override
     public String toString() {
-        return String.format("Map: %s [%dx%d %s] | Org: %s | Cities: %d | Industries: %d",
-                name, width, height, scale, cities.size(), industries.size());
-    }
-
-    public void addIndustry(Industry industry) {
-        if (industry == null) throw new IllegalArgumentException("Industry cannot be null");
-        if (hasIndustryAt(industry.getPositionX(), industry.getPositionY())) {
-            throw new IllegalArgumentException("Position occupied");
-        }
-        industries.add(industry);
-    }
-
-    // Novo método de validação para US02
-    public boolean hasIndustryAt(int x, int y) {
-        return industries.stream().anyMatch(i ->
-                i.getPositionX() == x && i.getPositionY() == y
-        );
+        return String.format("Map: %s [%dx%d %s] | Org: %s | Cities: %d | Industries: %d | Stations: %d | Events: %d",
+                name, width, height, scale, organization, cities.size(), industries.size(), stations.size(), events.size());
     }
 }
