@@ -18,7 +18,6 @@ public class Map {
     private final List<Scenario> scenarios = new ArrayList<>();
 
     public Map(String name, int width, int height, ScaleUnit scale, Organization organization) {
-        // Validação de nome, dimensões e escala
         if (name == null || name.isEmpty() || !name.matches("^[a-zA-Z0-9 _.-]+$")) {
             throw new IllegalArgumentException("Invalid map name");
         }
@@ -63,20 +62,25 @@ public class Map {
         return Collections.unmodifiableList(cities);
     }
 
-    public List<Industry> getIndustries() {
-        return Collections.unmodifiableList(industries);
+    // Método para adicionar cidade com a opção de definir blocos de casas manualmente
+    public Optional<City> addCity(String name, int x, int y, List<int[]> houseBlocks, Employee employee) {
+        if (!isValidCityName(name)) {
+            throw new IllegalArgumentException("City name cannot have special characters or digits.");
+        }
+
+        if (houseBlocks == null || houseBlocks.isEmpty()) {
+            throw new IllegalArgumentException("There must be at least one house block.");
+        }
+
+        City city = new City(this, name, x, y, houseBlocks, employee); // Criando cidade no mapa com as coordenadas, blocos e funcionário
+        cities.add(city);
+
+        return Optional.of(city);
     }
 
-    public List<Station> getStations() {
-        return Collections.unmodifiableList(stations);
-    }
-
-    public List<HistoricalEvent> getEvents() {
-        return Collections.unmodifiableList(events);
-    }
-
-    public List<Scenario> getScenarios() {
-        return Collections.unmodifiableList(scenarios);
+    // Método para validar nome da cidade
+    private boolean isValidCityName(String name) {
+        return name.matches("^[a-zA-Z ]+$"); // Apenas letras e espaços
     }
 
     // Método para adicionar indústria

@@ -223,21 +223,34 @@ public class Organization {
         }
         return success;
     }
-    private boolean addCity(City city) {
-        boolean success = false;
-        if (validateCity(city)) {
-            // A clone of the task is added to the list of tasks, to avoid side effects and outside manipulation.
-            success = cities.add(city.clone());
+    public Optional<City> addCity(String name, int x, int y, List<int[]> houseBlocks, Employee employee) {
+        // Validate employee belongs to organization
+        if (!employs(employee)) {
+            throw new IllegalArgumentException("Employee does not belong to this organization");
         }
-        return success;
-    }
-    private boolean addIndustry(Industry industry) {
-        boolean success = false;
-        if (validateIndustry(industry)) {
-            // A clone of the task is added to the list of tasks, to avoid side effects and outside manipulation.
-            success = industries.add(industry.clone());
+
+        // Validate city name (letters and spaces only)
+        if (!name.matches("^[a-zA-Z ]+$")) {
+            throw new IllegalArgumentException("City name can only contain letters and spaces");
         }
-        return success;
+
+        // Validate house blocks (must have at least one)
+        if (houseBlocks == null || houseBlocks.isEmpty()) {
+            throw new IllegalArgumentException("City must have at least one house block");
+        }
+
+        // Check if city already exists (same name and coordinates)
+        if (cities.stream().anyMatch(c ->
+                c.getName().equalsIgnoreCase(name) &&
+                        c.getX() == x &&
+                        c.getY() == y)) {
+            return Optional.empty();
+        }
+
+        // Create and add the city
+        City city = new City(null, name, x, y, houseBlocks, employee);
+        cities.add(city);
+        return Optional.of(city);
     }
 
 
