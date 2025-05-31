@@ -135,29 +135,44 @@ public class Organization {
         }
         return optionalValue;
     }
-    public Optional<Map> createMap(String name, int x, int y,Employee employee) {
-
-        //TODO: we could also check if the employee works for the organization before proceeding
-        //checkIfEmployeeWorksForOrganization(employee);
-
-        // When a Task is added, it should fail if the Task already exists in the list of Tasks.
-        // In order to not return null if the operation fails, we use the Optional class.
-        Optional<Map> optionalValue = Optional.empty();
-
-         Map task = new Map(name,x,y,employee);
-        Optional<Map> repositoryResult = mapRepository.add(task);
-        if (repositoryResult.isPresent()) {
-            if (addMap(task)) {
-                return Optional.of(task);
-            }
-            // Se falhar em adicionar localmente, remove do repositório
-            mapRepository.getAll().remove(task);
+    public Optional<Map> createMap(String name, int width, int height, ScaleUnit scale, Employee employee) {
+        // Validate map name is a valid filename (AC02)
+        if (name == null || name.isEmpty() || !name.matches("^[a-zA-Z0-9_\\- .]+$")) {
+            return Optional.empty();
         }
 
-        if (addMap(task)) {
-            optionalValue = Optional.of(task);
+        // Validate dimensions are positive (AC01)
+        if (width <= 0 || height <= 0) {
+            return Optional.empty();
         }
-        return optionalValue;
+
+        // Validate scale exists
+        if (scale == null) {
+            return Optional.empty();
+        }
+
+        // Check if employee belongs to organization
+        if (!employs(employee)) {
+            return Optional.empty();
+        }
+
+        // Create the map
+        Map newMap = new Map(name, width, height, scale, this);
+
+        // Add to repository first
+        Optional<Map> repositoryResult = mapRepository.add(newMap);
+        if (repositoryResult.isEmpty()) {
+            return Optional.empty();
+        }
+
+        // Then add to local list
+        if (!addMap(newMap)) {
+            // Rollback if local add fails
+            mapRepository.getAll().remove(newMap);
+            return Optional.empty();
+        }
+
+        return Optional.of(newMap);
     }
 
     private Map getMapByName(String mapName) {
