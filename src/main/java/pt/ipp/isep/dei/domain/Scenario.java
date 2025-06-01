@@ -13,7 +13,7 @@ public class Scenario {
     private int startYear;
     private int endYear;
     private int currentYear;
-    private List<Locomotive> availableLocomotiveTypes;
+    private List<LocomotiveType> availableLocomotiveTypes;
     private PortBehavior portBehavior;
     private List<HistoricalEvent> historicalEvents;
 
@@ -26,14 +26,15 @@ public class Scenario {
      * @param endYear The ending year of the scenario.
      */
 
-    public Scenario(String name, int startYear, int endYear) {
+    public Scenario(String name, int startYear, int endYear, List<LocomotiveType> availableLocomotiveTypes) {
         this.name = name;
         this.startYear = startYear;
         this.currentYear = startYear;
         this.endYear = endYear;
-        this.availableLocomotiveTypes = new ArrayList<>();
+        this.availableLocomotiveTypes = availableLocomotiveTypes;
         this.historicalEvents = new ArrayList<>();
     }
+
 
     /**
      * Gets the current year of the scenario.
@@ -67,7 +68,8 @@ public class Scenario {
      *
      * @return A new ArrayList containing the available locomotive types.
      */
-    public List<Locomotive> getAvailableLocomotiveTypes() { return new ArrayList<>(availableLocomotiveTypes); }
+    public List<LocomotiveType> getAvailableLocomotiveTypes() {return new ArrayList<>(availableLocomotiveTypes);}
+
     /**
      * Gets the port behavior configuration.
      *
@@ -113,7 +115,7 @@ public class Scenario {
      */
 
     public Scenario clone() {
-        Scenario clone = new Scenario(name, startYear, endYear);
+        Scenario clone = new Scenario(name, startYear, endYear, availableLocomotiveTypes);
         clone.availableLocomotiveTypes = new ArrayList<>(this.availableLocomotiveTypes);
         clone.portBehavior = this.portBehavior != null ? this.portBehavior.clone() : null;
         clone.historicalEvents = new ArrayList<>(this.historicalEvents);

@@ -21,26 +21,11 @@ public class BuyLocomotiveUI implements Runnable {
             System.out.print("Enter current year: ");
             int year = Integer.parseInt(scanner.nextLine());
 
-            List<Locomotive> locomotives = controller.listAvailableLocomotives(year);
-            if (locomotives.isEmpty()) {
-                System.out.println("No locomotives available for this year.");
-                return;
-            }
+           controller.showAvailableLocomotives(year);
 
-            System.out.println("Available Locomotives:");
-            for (int i = 0; i < locomotives.size(); i++) {
-                System.out.printf("%d - %s%n", i + 1, locomotives.get(i));
-            }
+            System.out.println("write the name of the locomotive you want to buy");
+            String locomotiveName = scanner.nextLine();
 
-            System.out.print("Choose a locomotive (number): ");
-            int choice = Integer.parseInt(scanner.nextLine());
-
-            if (choice < 1 || choice > locomotives.size()) {
-                System.out.println("Invalid choice.");
-                return;
-            }
-
-            Locomotive bought = controller.buyLocomotive(locomotives.get(choice - 1).getName());
-            System.out.println("You bought: " + bought);
+            controller.buyLocomotive(locomotiveName);
         }
     }

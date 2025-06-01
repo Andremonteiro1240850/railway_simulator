@@ -11,27 +11,22 @@ public class Locomotive {
     private final double maintenanceCostPerYear;
     private final double purchasePrice;
 
-    public Locomotive(String reference, LocomotiveType type, int power, double acceleration,
-                      int startYear, double maintenanceCostPerYear, double purchasePrice) {
-        this.reference = reference;
-        this.type = type;
-        this.power = power;
-        this.acceleration = acceleration;
-        this.startYear = startYear;
-        this.maintenanceCostPerYear = maintenanceCostPerYear;
-        this.purchasePrice = purchasePrice;
-    }
+
 
     // Novo construtor para integração com o enum ListLocomotives
     public Locomotive(String name, String fuelType, int buildCost, int maintenanceCost, int fuelCost,
                       int topSpeed, String accelerationRating, String reliability, int availableYear, int retiredYear) {
         this.reference = name;
-        this.type = LocomotiveType.fromString(fuelType);  // converte String para enum
+        this.type = LocomotiveType.fromString(fuelType);// converte String para enum
+        this.purchasePrice = buildCost;
+        this.maintenanceCostPerYear = maintenanceCost;
+
         this.power = topSpeed * 10; // suposição simples para potência com base na velocidade
         this.acceleration = convertAcceleration(accelerationRating);
+
         this.startYear = availableYear;
-        this.maintenanceCostPerYear = maintenanceCost;
-        this.purchasePrice = buildCost;
+
+
     }
 
     private double convertAcceleration(String rating) {

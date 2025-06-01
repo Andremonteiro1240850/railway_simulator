@@ -1,6 +1,8 @@
 package pt.ipp.isep.dei.domain.enums;
 
 public enum Buildings {
+
+
     TELEGRAPH("telegraph", null, 10000, "+10% receita de passageiros"),
     TELEPHONE("telephone", null, 15000, "+15% receita de passageiros"),
     CAFE_SMALL("cafe", "small", 8000, "+5% receita de passageiros"),
