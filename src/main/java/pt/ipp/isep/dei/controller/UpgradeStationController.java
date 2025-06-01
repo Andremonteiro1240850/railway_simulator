@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.domain.enums.Buildings;
 import pt.ipp.isep.dei.repository.*;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
@@ -12,6 +13,7 @@ public class UpgradeStationController {
     private  AuthenticationRepository authenticationRepository;
     private  StationRepository stationRepository;
     private  UpgradeBuildingsRepository upgradeBuildingsRepository;
+    private Player player;
 
     public UpgradeStationController() {
         this(Repositories.getInstance().getOrganizationRepository(),
@@ -66,24 +68,46 @@ public class UpgradeStationController {
         return stationRepository.getAll();
     }
 
-    public Optional<Station> upgradeStation(String stationId, String upgradeType, String subType) {
-        Employee employee = getEmployeeFromSession();
-        Optional<Organization> organization = organizationRepository.getOrganizationByEmployee(employee);
+    public boolean upgradeStation(String stationId, String type, String subType) {
+        // 1. Validar tipo e subtipo
+        Buildings upgrade = Buildings.from(type, subType);
+        if (upgrade == null) {
+            System.out.println("Erro: Tipo ou subtipo de upgrade inválido.");
+            return false;
+        }
 
-        // Busca a estação pelo ID (ou referência)
-        Optional<Station> stationOptional = stationRepository.getAll().stream()
-                .filter(s -> s.getReference().equals(stationId))
-                .findFirst();
-
-        if (organization.isEmpty() || stationOptional.isEmpty()) {
-            return Optional.empty();
+        // 2. Procurar estação
+        Optional<Station> stationOptional = stationRepository.findByReference(stationId);
+        if (stationOptional.isEmpty()) {
+            System.out.println("Erro: Estação não encontrada com ID " + stationId);
+            return false;
         }
 
         Station station = stationOptional.get();
-        station.addUpgrade(new StationUpgrade(upgradeType, subType));
 
-        return Optional.of(station);
+        // 3. Verificar orçamento
+        double price = upgrade.getPrice();
+        if (player.getBudget() < price) {
+            System.out.printf("Erro: Orçamento insuficiente (necessário: €%.2f, disponível: €%.2f).\n", price, player.getBudget());
+            return false;
+        }
+
+        // 4. Aplicar upgrade
+        StationUpgrade stationUpgrade = new StationUpgrade(type, subType);
+        station.addUpgrade(stationUpgrade);
+        stationRepository.addUpgradeToStation(station.getReference(), stationUpgrade);
+
+        // 5. Descontar orçamento
+        player.setBudget(player.getBudget() - price);
+        System.out.printf("✅ Upgrade aplicado com sucesso: %s (%s) - Custo: €%.2f\n", type,
+                subType != null ? subType : "sem subtipo", price);
+
+        return true;
     }
+
+
+
+
     private Employee getEmployeeFromSession() {
         Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
         return new Employee(email.getEmail());

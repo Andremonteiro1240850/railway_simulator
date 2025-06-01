@@ -20,7 +20,7 @@ public class Station {
     private int area;
     private int x;
     private int y;
-    private List<Buildings> upgrades = new ArrayList<>();
+    private List<StationUpgrade> upgrades = new ArrayList<>();
 
     /**
      * Constructs a new Station with a specific reference.
@@ -110,7 +110,7 @@ public class Station {
      *
      * @param upgrade The building upgrade to add.
      */
-    public void addUpgrade(Buildings upgrade) {
+    public void addUpgrade(StationUpgrade upgrade) {
         if (!upgrades.contains(upgrade)) {
             upgrades.add(upgrade);
         }
@@ -119,7 +119,7 @@ public class Station {
     /**
      * @return A list of all upgrades applied to the station.
      */
-    public List<Buildings> getUpgrades() {
+    public List<StationUpgrade> getUpgrades() {
         return new ArrayList<>(upgrades);
     }
 
@@ -129,7 +129,12 @@ public class Station {
      * @return Total cost in game currency.
      */
     public int getTotalUpgradeCost() {
-        return upgrades.stream().mapToInt(Buildings::getPrice).sum();
+        return upgrades.stream()
+                .mapToInt(upgrade -> {
+                    Buildings building = Buildings.from(upgrade.getType(), upgrade.getSubType());
+                    return building != null ? building.getPrice() : 0;
+                })
+                .sum();
     }
 
     /**
@@ -139,9 +144,13 @@ public class Station {
      */
     public List<String> getAllBonuses() {
         return upgrades.stream()
-                .map(Buildings::getBonus)
+                .map(upgrade -> {
+                    Buildings building = Buildings.from(upgrade.getType(), upgrade.getSubType());
+                    return building != null ? building.getBonus() : "❌ Bónus desconhecido";
+                })
                 .collect(Collectors.toList());
     }
+
 
     /**
      * Checks equality based on the station reference.

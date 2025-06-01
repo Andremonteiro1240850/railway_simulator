@@ -60,6 +60,11 @@ public class Repositories {
     public ScenarioRepository getScenarioRepository() {
         return scenarioRepo;
     }
+    private final PlayerRepository playerRepository = new PlayerRepository();
+    public PlayerRepository getPlayerRepository() {
+        return playerRepository;
+    }
+
 
 
     /**

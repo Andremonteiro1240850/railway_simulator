@@ -1,7 +1,9 @@
 package pt.ipp.isep.dei.repository;
 
+import pt.ipp.isep.dei.controller.BuildStationController;
 import pt.ipp.isep.dei.domain.Station;
 import pt.ipp.isep.dei.domain.StationUpgrade;
+import pt.ipp.isep.dei.domain.enums.Buildings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,13 +56,13 @@ public class StationRepository {
             Station station = stationOpt.get();
             station.addUpgrade(upgrade);
 
-            // Atualiza a estação no repositório
             stations.removeIf(s -> s.getReference().equals(stationReference));
             stations.add(station);
             return true;
         }
         return false;
     }
+
 
     public List<StationUpgrade> getUpgradesForStation(String stationReference) {
         return findByReference(stationReference)

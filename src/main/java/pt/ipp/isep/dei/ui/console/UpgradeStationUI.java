@@ -73,15 +73,15 @@ public class UpgradeStationUI implements Runnable {
         }
 
         // 5. Aplicar upgrade
-        Optional<Station> result = controller.upgradeStation(
+        boolean success = controller.upgradeStation(
                 selectedStation.getReference(),
                 upgradeType,
                 subType
         );
 
-        if (result.isPresent()) {
+        if (success) {
             System.out.println("\nUpgrade applied successfully!");
-            System.out.println("Station now has upgrades: " + result.get().getUpgrades());
+            System.out.println("Station now has upgrades: " + selectedStation.getUpgrades());
         } else {
             System.out.println("\nFailed to apply upgrade!");
         }
