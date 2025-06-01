@@ -17,6 +17,9 @@ public class Station {
     private String type;
     private String region;
     private String reference;
+    private int area;
+    private int x;
+    private int y;
     private List<Buildings> upgrades = new ArrayList<>();
 
     /**
@@ -28,12 +31,14 @@ public class Station {
      * @param region    The region where the station is located.
      * @throws IllegalArgumentException If the station type or region is invalid.
      */
-    public Station(String reference, String name, String type, String region) {
+    public Station(String reference, String name, String type, String region, int area,int x, int y) {
         this.reference = reference;
         this.name = name;
         this.type = type;
         this.region = region;
-        validateTypeAndRegion(type, region);
+        this.area = area;
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -43,8 +48,8 @@ public class Station {
      * @param type   The type of the station (e.g., "depot", "terminal", or "station").
      * @param region The region where the station is located.
      */
-    public Station(String name, String type, String region) {
-        this(generateDefaultReference(), name, type, region);
+    public Station(String name, String type, String region,int area,int x, int y) {
+        this(generateDefaultReference(), name, type, region,area,x,y);
     }
 
     /**
@@ -63,17 +68,6 @@ public class Station {
      * @param region The station region.
      * @throws IllegalArgumentException If the type is invalid or the region is empty.
      */
-    private void validateTypeAndRegion(String type, String region) {
-        List<String> validTypes = List.of("depot", "terminal", "station");
-        if (!validTypes.contains(type.toLowerCase())) {
-            throw new IllegalArgumentException("Invalid station type: " + type);
-        }
-
-        if (region == null || region.trim().isEmpty()) {
-            throw new IllegalArgumentException("Region must not be empty.");
-        }
-    }
-
     /**
      * @return The unique reference of the station.
      */
@@ -100,6 +94,15 @@ public class Station {
      */
     public String getRegion() {
         return region;
+    }
+    public int getArea() {
+        return area;
+    }
+    public int getX() {
+        return x;
+    }
+    public int getY() {
+        return y;
     }
 
     /**
@@ -155,6 +158,8 @@ public class Station {
                 Objects.equals(type, station.type) &&
                 Objects.equals(region, station.region) &&
                 Objects.equals(reference, station.reference) &&
+                Objects.equals(x, station.x) &&
+                Objects.equals(y, station.y) &&
                 Objects.equals(upgrades, station.upgrades);
     }
     /**
@@ -162,7 +167,7 @@ public class Station {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(reference,name,type,region,upgrades);
+        return Objects.hash(reference,name,type,region,upgrades,x,y);
     }
 
     /**
@@ -171,7 +176,7 @@ public class Station {
      * @return A clone of this station.
      */
     public Station clone() {
-        Station clone = new Station(this.reference, this.name, this.type, this.region);
+        Station clone = new Station(this.reference, this.name, this.type, this.region,this.area,this.x,this.y);
         clone.upgrades = new ArrayList<>(this.upgrades);
         return clone;
     }

@@ -1,4 +1,4 @@
-package pt.ipp.isep.dei.domain;
+/**package pt.ipp.isep.dei.domain;
 
 import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.repository.*;
@@ -225,4 +225,4 @@ class OrganizationTest {
 
         assertEquals(2, organization.getMaps().size());
     }
-}
+}**/

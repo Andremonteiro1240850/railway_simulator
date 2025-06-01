@@ -48,26 +48,26 @@ public class BuyLocomotiveController {
        * Tenta comprar uma locomotiva com nome fornecido.
        */
       public boolean buyLocomotive(String locomotiveName) {
-         List<Locomotive> purchased = locomotiveRepository.getPurchasedLocomotives();
+            List<Locomotive> purchased = locomotiveRepository.getPurchasedLocomotives();
 
-         // Verificar se já foi comprada
-         for (Locomotive loco : purchased) {
-            if (loco.getName().equalsIgnoreCase(locomotiveName)) {
-               System.out.println("Erro: Locomotiva já comprada.");
-               return false;
+            // Verificar se já foi comprada
+            for (Locomotive loco : purchased) {
+               if (loco.getName().equalsIgnoreCase(locomotiveName)) {
+                  System.out.println("Erro: Locomotiva já comprada.");
+                  return false;
+               }
             }
-         }
 
-         // Procurar no enum
-         Locomotive toBuy = null;
-         for (ListLocomotives locoEnum : ListLocomotives.values()) {
-            if (locoEnum.name().equalsIgnoreCase(locomotiveName)) {
-               toBuy = locoEnum.toLocomotive();
-               break;
+            // Procurar no enum
+            Locomotive toBuy = null;
+            for (ListLocomotives locoEnum : ListLocomotives.values()) {
+               if (locoEnum.name().equalsIgnoreCase(locomotiveName)) {
+                  toBuy = locoEnum.toLocomotive();
+                  break;
+               }
             }
-         }
 
-         if (toBuy == null) {
+            if (toBuy == null) {
             System.out.println("Erro: Locomotiva não encontrada.");
             return false;
          }

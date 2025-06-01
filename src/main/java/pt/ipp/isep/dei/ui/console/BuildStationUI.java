@@ -1,24 +1,30 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.BuildStationController;
+import pt.ipp.isep.dei.domain.Player;
 import pt.ipp.isep.dei.domain.Station;
 import pt.ipp.isep.dei.domain.TaskCategory;
+import pt.ipp.isep.dei.domain.enums.Regions;
+import pt.ipp.isep.dei.domain.enums.StationTypes;
+import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.repository.TypeStationRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class BuildStationUI implements Runnable {
     private final BuildStationController controller;
-    private final TypeStationRepository typeStationRepo;
     private String type;
     private String region;
     private String name;
+    private int x;
+    private int y;
+    private Player player;
 
     public BuildStationUI() {
         this.controller = new BuildStationController();
-        this.typeStationRepo = new TypeStationRepository();
     }
 
     public void run() {
@@ -29,37 +35,48 @@ public class BuildStationUI implements Runnable {
     }
 
     private void submitData() {
-        Optional<Station> station = controller.createStation(
-                name,
-                type,
-                region);
+        boolean success = controller.createStation(name, type, region, x, y);
 
-        if (station.isPresent()) {
-            System.out.println("\nStation successfully created!");
+        if (success) {
+            System.out.println("\n✅ Station successfully created!");
         } else {
-            System.out.println("\nStation not created!");
+            System.out.println("\n❌ Station not created! Please check if the type, region, location, or budget are valid.");
         }
     }
+
+
 
     private void requestStationData() {
         // Request basic station information
         name = requestName();
+        x = requestx();
+        y = requesty();
         // Select station type and region if applicable
-        selectStationTypeAndRegion();
+        selectType();
+        selectRegion();
+
     }
+    private int requestx() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("X: ");
+        return input.nextInt();
+    }
+    private int requesty() {
+        Scanner input = new Scanner(System.in);
+        System.out.print("Y: ");
+        return input.nextInt();
+    }
+    private void selectType(){
+        List<StationTypes> types = List.of(StationTypes.values());
+        StationTypes selectType = selectFromList(types,"Select Type");
+        type = selectType.getType();
 
-    private void selectStationTypeAndRegion() {
-        // Get available station types from repository
-        List<String> types = typeStationRepo.getAllStationTypes();
-        type = selectFromList(types, "Station Type");
+    }
+    private void selectRegion(){
+        List<Regions> regions = List.of(Regions.values());
+        Regions selectRegion = selectFromList(regions,"Select Region");
+        region = selectRegion.getRegion();
 
-        // Only ask for region if station type is "station"
-        if ("station".equalsIgnoreCase(type)) {
-            List<String> regions = typeStationRepo.getAllStationRegions();
-            region = selectFromList(regions, "Station Region");
-        } else {
-            region = null;
-        }
     }
 
     // Helper method to select from a list of items

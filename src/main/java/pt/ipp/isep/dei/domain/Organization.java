@@ -94,9 +94,9 @@ public class Organization {
         }
         return optionalValue;
     }
-    public Optional<Station> createStation(String reference, String name, String region, String type, Employee employee) {
+    public Optional<Station> createStation(String reference, String name, String region, String type, Employee employee, int x, int y,int area) {
         Optional<Station> optionalValue = Optional.empty();
-        Station station = new Station(reference, name, type, region);
+        Station station = new Station(reference, name, type, region,area,x,y);
 
         Optional<Station> repositoryResult = stationRepository.add(station);
         if (repositoryResult.isPresent()) {

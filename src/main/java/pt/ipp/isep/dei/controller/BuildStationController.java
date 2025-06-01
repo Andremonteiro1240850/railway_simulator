@@ -1,6 +1,8 @@
 package pt.ipp.isep.dei.controller;
 
 import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.domain.enums.Regions;
+import pt.ipp.isep.dei.domain.enums.StationTypes;
 import pt.ipp.isep.dei.repository.*;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
@@ -11,6 +13,10 @@ public class BuildStationController {
     private OrganizationRepository organizationRepository;
     private AuthenticationRepository authenticationRepository;
     private StationRepository stationRepository;
+    private StationTypes stationTypes;
+    private Station station;
+    private Player player;
+    private Regions region;
 
     //Repository instances are obtained from the Repositories class
     public BuildStationController() {
@@ -48,24 +54,71 @@ public class BuildStationController {
     }
 
 
-        public Optional<Station> createStation(String type, String name, String region) {
-            Employee employee = getEmployeeFromSession();
-            Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
-
-            // Gera uma referência automática
-            String reference = "ST-" + System.currentTimeMillis();
-
-            Optional<Station> newStation = Optional.empty();
-
-            if (organization.isPresent()) {
-                newStation = organization.get()
-                        .createStation(reference, name, region, type, employee);
+    public boolean createStation(String typeName, String name, String region, int x, int y) {
+        // 1. Verificar se o tipo é válido
+        StationTypes stationType = null;
+        for (StationTypes st : StationTypes.values()) {
+            if (st.getType().equalsIgnoreCase(typeName)) {
+                stationType = st;
+                break;
             }
-            return newStation;
         }
-    private Employee getEmployeeFromSession() {
-        Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
-        return new Employee(email.getEmail());
+
+        if (stationType == null) {
+            System.out.println("Erro: Tipo de estação inválido.");
+            return false;
+        }
+
+        //Valida região
+
+        Regions regionType = null;
+        for (Regions r : Regions.values()) {
+            if(r.getRegion().equalsIgnoreCase(region)) {
+                regionType = r;
+                break;
+            }
+        }
+        if (regionType == null) {
+            System.out.println("Erro: Região inválida.");
+            return false;
+
+        }
+
+        // 2. Verificar se já existe uma estação com a mesma localização
+        List<Station> existingStations = Repositories.getInstance().getStationRepository().getAll();
+        for (Station s : existingStations) {
+            if (s.getX() == x && s.getY() == y) {
+                System.out.println("Erro: Já existe uma estação nessa localização (" + x + ", " + y + ").");
+                return false;
+            }
+        }
+
+        // 3. Verificar orçamento do jogador
+
+        double budget = player.getBudget();
+        double cost = stationType.getCost();
+
+        //Valida orçamento
+
+        if (budget < cost) {
+            System.out.println("Erro: Orçamento insuficiente para construir esta estação (necessário: " + cost + ").");
+            return false;
+        }
+
+        // 4. Criar e adicionar estação
+        Station newStation = new Station(name, stationType.getType(), regionType.getRegion(), stationType.getArea(), x, y);
+        Optional<Station> added = Repositories.getInstance().getStationRepository().add(newStation);
+
+        if (added.isPresent()) {
+            // 5. Descontar orçamento
+            player.setBudget(budget - cost);
+            System.out.println("Estação criada com sucesso: " + newStation.getReference());
+            return true;
+        } else {
+            System.out.println("Erro: Estação não foi criada (duplicada ou erro interno).");
+            return false;
+        }
     }
+
 
 }
