@@ -243,13 +243,13 @@ public class Map implements Cloneable {
 
 ```
 ### Class CreateMapUI
+
 ```java
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.CreateMapController;
 import pt.ipp.isep.dei.domain.Map;
 import pt.ipp.isep.dei.domain.Organization;
-import pt.ipp.isep.dei.domain.TaskCategory;
 
 import java.util.List;
 import java.util.Optional;
@@ -280,7 +280,7 @@ public class CreateMapUI implements Runnable {
     }
 
     private void submitData() {
-        Optional<Map> task = getController().createMap(name,dimensionX,dimensionY);
+        Optional<Map> task = getController().createMap(name, dimensionX, dimensionY);
 
         if (task.isPresent()) {
             System.out.println("\nMap successfully created!");
@@ -312,6 +312,7 @@ public class CreateMapUI implements Runnable {
         System.out.print("X: ");
         return input.nextInt();
     }
+
     private int requestDimensionY() {
         Scanner input = new Scanner(System.in);
         System.out.print("Y: ");

@@ -405,12 +405,12 @@ public class StationRepository {
 }
 ```
 ### Class BuildStationUI
+
 ```java
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.BuildStationController;
 import pt.ipp.isep.dei.domain.Station;
-import pt.ipp.isep.dei.domain.TaskCategory;
 import pt.ipp.isep.dei.repository.TypeStationRepository;
 
 import java.util.List;
@@ -478,7 +478,7 @@ public class BuildStationUI implements Runnable {
         while (selection < 1 || selection > items.size()) {
             System.out.println("\n" + prompt + " options:");
             for (int i = 0; i < items.size(); i++) {
-                System.out.printf("  %d - %s%n", i+1, items.get(i).toString());
+                System.out.printf("  %d - %s%n", i + 1, items.get(i).toString());
             }
             System.out.print("Select " + prompt + ": ");
             selection = input.nextInt();

@@ -2,16 +2,10 @@ package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.BuildStationController;
 import pt.ipp.isep.dei.domain.Player;
-import pt.ipp.isep.dei.domain.Station;
-import pt.ipp.isep.dei.domain.TaskCategory;
 import pt.ipp.isep.dei.domain.enums.Regions;
 import pt.ipp.isep.dei.domain.enums.StationTypes;
-import pt.ipp.isep.dei.repository.Repositories;
-import pt.ipp.isep.dei.repository.TypeStationRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class BuildStationUI implements Runnable {

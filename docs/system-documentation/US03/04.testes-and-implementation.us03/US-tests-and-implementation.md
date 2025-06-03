@@ -95,6 +95,7 @@
 
 ## 5. Construction (Implementation)
 ### Class AddCityController
+
 ```java
 package pt.ipp.isep.dei.controller;
 
@@ -102,10 +103,8 @@ import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.OrganizationRepository;
 import pt.ipp.isep.dei.repository.Repositories;
-import pt.ipp.isep.dei.repository.TaskCategoryRepository;
 import pt.isep.lei.esoft.auth.domain.model.Email;
 
-import java.util.List;
 import java.util.Optional;
 
 public class AddCityController {
@@ -121,13 +120,12 @@ public class AddCityController {
 
     //Allows receiving the repositories as parameters for testing purposes
     public AddCityController(OrganizationRepository organizationRepository,
-                                TaskCategoryRepository taskCategoryRepository,
-                                AuthenticationRepository authenticationRepository) {
+                             TaskCategoryRepository taskCategoryRepository,
+                             AuthenticationRepository authenticationRepository) {
         this.organizationRepository = organizationRepository;
 
         this.authenticationRepository = authenticationRepository;
     }
-
 
 
     private OrganizationRepository getOrganizationRepository() {
@@ -158,7 +156,7 @@ public class AddCityController {
 
         if (organization.isPresent()) {
             newCity = organization.get()
-                    .createCity(map,x,y,employee);
+                    .createCity(map, x, y, employee);
         }
         return newCity;
     }
@@ -270,6 +268,7 @@ public class CityRepository {
 
 ```
 ### Class AddCityUI
+
 ```java
 package pt.ipp.isep.dei.ui.console;
 
@@ -277,7 +276,6 @@ import pt.ipp.isep.dei.controller.AddCityController;
 import pt.ipp.isep.dei.domain.City;
 import pt.ipp.isep.dei.domain.Map;
 import pt.ipp.isep.dei.domain.Organization;
-import pt.ipp.isep.dei.domain.TaskCategory;
 import pt.ipp.isep.dei.repository.CreateMapRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 
@@ -291,7 +289,6 @@ public class AddCityUI implements Runnable {
     private int locationX;
     private int locationY;
     private final Organization organization;
-
 
 
     public AddCityUI(Organization organization) {
@@ -311,7 +308,7 @@ public class AddCityUI implements Runnable {
     }
 
     private void submitData() {
-        Optional<City> task = getController().createCity(map,locationX,locationY);
+        Optional<City> task = getController().createCity(map, locationX, locationY);
 
         if (task.isPresent()) {
             System.out.println("\nCity successfully created!");
@@ -328,17 +325,18 @@ public class AddCityUI implements Runnable {
     }
 
 
-
     private int requestLocationX() {
         Scanner input = new Scanner(System.in);
         System.out.print("X: ");
         return input.nextInt();
     }
+
     private int requestLocationY() {
         Scanner input = new Scanner(System.in);
         System.out.print("Y: ");
         return input.nextInt();
     }
+
     private Map requestMap() {
 
         CreateMapRepository repository = Repositories.getInstance().getMapRepository();

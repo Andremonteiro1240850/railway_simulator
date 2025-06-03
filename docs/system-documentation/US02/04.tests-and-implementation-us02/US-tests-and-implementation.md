@@ -174,13 +174,13 @@ public class AddIndustryController {
 
 ```
 ### Class AddIndustryUI
+
 ```java
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.AddIndustryController;
 import pt.ipp.isep.dei.domain.Industry;
 import pt.ipp.isep.dei.domain.Map;
-import pt.ipp.isep.dei.domain.TaskCategory;
 import pt.ipp.isep.dei.repository.CreateMapRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 
@@ -210,7 +210,7 @@ public class AddIndustryUI implements Runnable {
     }
 
     private void submitData() {
-        Optional<Industry> task = getController().createIndustry(x,y,map);
+        Optional<Industry> task = getController().createIndustry(x, y, map);
 
         if (task.isPresent()) {
             System.out.println("\nIndustry successfully created!");
@@ -223,7 +223,7 @@ public class AddIndustryUI implements Runnable {
         //Request the Task Reference from the console
         x = requestX();
         y = requestY();
-        map= requestMap();
+        map = requestMap();
     }
 
     private int requestX() {
@@ -231,11 +231,13 @@ public class AddIndustryUI implements Runnable {
         System.out.print("X: ");
         return input.nextInt();
     }
+
     private int requestY() {
         Scanner input = new Scanner(System.in);
         System.out.print("Y: ");
         return input.nextInt();
     }
+
     private Map requestMap() {
 
         CreateMapRepository repository = Repositories.getInstance().getMapRepository();
