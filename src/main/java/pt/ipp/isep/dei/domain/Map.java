@@ -14,7 +14,6 @@ public class Map {
     private final List<City> cities = new ArrayList<>();
     private final List<Industry> industries = new ArrayList<>();
     private final List<Station> stations = new ArrayList<>();
-    private final List<HistoricalEvent> events = new ArrayList<>();
     private final List<Scenario> scenarios = new ArrayList<>();
 
     public Map(String name, int width, int height, ScaleUnit scale, Organization organization) {

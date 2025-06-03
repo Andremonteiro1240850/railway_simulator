@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.CreateScenarioController;
+import pt.ipp.isep.dei.domain.HistoricalEvent;
 import pt.ipp.isep.dei.domain.Map;
 import pt.ipp.isep.dei.domain.PortBehavior;
 import pt.ipp.isep.dei.domain.Scenario;
@@ -43,11 +44,12 @@ public class CreateScenarioUI implements Runnable {
         // 4. Configurar comportamento dos portos
         PortBehavior portBehavior = configurePortBehavior();
 
-        // 5. Criar cenário
-        Optional<Scenario> result = controller.createScenario(
-                name, selectedMap, startYear, endYear, locomotiveTypes, portBehavior);
+        showHistoricalEvents(startYear);
 
-        if (result.isPresent()) {
+        // 5. Criar cenário
+       boolean sucess = controller.createScenario(name,selectedMap,startYear,endYear,locomotiveTypes,portBehavior,budget,historicalEvents);
+
+        if (sucess) {
             System.out.println("\nScenario created successfully!");
         } else {
             System.out.println("\nFailed to create scenario.");
@@ -74,6 +76,23 @@ public class CreateScenarioUI implements Runnable {
         if (choice == 0 || choice > maps.size()) return null;
 
         return maps.get(choice - 1);
+    }
+    private void showHistoricalEvents(int startYear) {
+        List<HistoricalEvent> events = controller.loadApplicableHistoricalEvents(startYear);
+
+        if (events.isEmpty()) {
+            System.out.println("Não existem eventos históricos aplicáveis para o ano " + startYear);
+            return;
+        }
+
+        System.out.println("\nEventos Históricos Aplicáveis:");
+        System.out.println("----------------------------");
+        for (HistoricalEvent event : events) {
+            System.out.println("- " + event.getName() +
+                    " (" + event.getStartYear() + "-" + event.getEndYear() + ")");
+            System.out.println("  " + event.getEffect());
+            System.out.println();
+        }
     }
 
     private List<String> selectLocomotiveTypes() {

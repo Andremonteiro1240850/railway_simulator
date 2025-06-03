@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.domain;
 
 
 
+import pt.ipp.isep.dei.domain.enums.Eventos;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class Scenario {
     private final String name;
-
+    private double budget = 150000;
     private int startYear;
     private int endYear;
     private int currentYear;
@@ -26,14 +27,19 @@ public class Scenario {
      * @param endYear The ending year of the scenario.
      */
 
-    public Scenario(String name, int startYear, int endYear, List<LocomotiveType> availableLocomotiveTypes) {
+    public Scenario(String name, int startYear, int endYear, List<LocomotiveType> availableLocomotiveTypes,
+                    List<HistoricalEvent> historicalEvents, PortBehavior portBehavior, double budget) {
         this.name = name;
         this.startYear = startYear;
         this.currentYear = startYear;
         this.endYear = endYear;
         this.availableLocomotiveTypes = availableLocomotiveTypes;
-        this.historicalEvents = new ArrayList<>();
+        this.historicalEvents = (historicalEvents != null) ? new ArrayList<>(historicalEvents) : new ArrayList<>();
+        this.portBehavior = portBehavior;
+        this.budget = budget;
+        loadApplicableHistoricalEvents();
     }
+
 
 
     /**
@@ -82,11 +88,13 @@ public class Scenario {
      * @return A new ArrayList containing the historical events.
      */
     public List<HistoricalEvent> getHistoricalEvents() { return new ArrayList<>(historicalEvents); }
+    public double getBudget() { return budget; }
     /**
      * Sets the port behavior configuration.
      *
      * @param portBehavior The port behavior to set.
      */
+
 
     public void setPortBehavior(PortBehavior portBehavior) {
         this.portBehavior = portBehavior;
@@ -99,15 +107,16 @@ public class Scenario {
     public void setCurrentYear(int currentYear) {
         this.currentYear = currentYear;
     }
-    /**
-     * Adds a historical event to the scenario.
-     *
-     * @param event The historical event to add.
-     */
+    public void setBudget(double budget) { this.budget = budget; }
 
-    public void addHistoricalEvent(HistoricalEvent event) {
-        historicalEvents.add(event);
+    private void loadApplicableHistoricalEvents() {
+        for (Eventos eventoEnum : Eventos.values()) {
+            if (eventoEnum.getDataInicio() <= this.startYear && this.startYear <= eventoEnum.getDataFim()) {
+                this.historicalEvents.add(new HistoricalEvent(eventoEnum));
+            }
+        }
     }
+
     /**
      * Creates and returns a deep copy of this Scenario.
      *
@@ -115,7 +124,7 @@ public class Scenario {
      */
 
     public Scenario clone() {
-        Scenario clone = new Scenario(name, startYear, endYear, availableLocomotiveTypes);
+        Scenario clone = new Scenario(name, startYear, endYear, availableLocomotiveTypes, historicalEvents, portBehavior, budget);
         clone.availableLocomotiveTypes = new ArrayList<>(this.availableLocomotiveTypes);
         clone.portBehavior = this.portBehavior != null ? this.portBehavior.clone() : null;
         clone.historicalEvents = new ArrayList<>(this.historicalEvents);
