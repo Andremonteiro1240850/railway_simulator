@@ -135,6 +135,10 @@ public class CreateScenarioController {
         }
         scenario.setBudget(scenario.getBudget() + amount);
     }
+    public Scenario getScenario() {
+        return scenario;
+    }
+
 
     private Employee getEmployeeFromSession() {
         Email email = authRepo.getCurrentUserSession().getUserId();

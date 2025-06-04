@@ -43,6 +43,8 @@ public class CreateScenarioUI implements Runnable {
 
         // 4. Configurar comportamento dos portos
         PortBehavior portBehavior = configurePortBehavior();
+        double budget = controller.getScenario().getBudget();
+        List<HistoricalEvent> historicalEvents = controller.loadApplicableHistoricalEvents(startYear);
 
         showHistoricalEvents(startYear);
 
