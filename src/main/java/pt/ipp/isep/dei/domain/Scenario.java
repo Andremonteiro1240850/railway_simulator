@@ -8,6 +8,7 @@ import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Scenario {
     private final String name;
@@ -140,14 +141,32 @@ public class Scenario {
      * @return A cloned Scenario object.
      */
 
+    @Override
     public Scenario clone() {
         Scenario clone = new Scenario(name, startYear, endYear, availableLocomotiveTypes, historicalEvents, portBehavior, budget);
         clone.availableLocomotiveTypes = new ArrayList<>(this.availableLocomotiveTypes);
         clone.portBehavior = this.portBehavior != null ? this.portBehavior.clone() : null;
         clone.historicalEvents = new ArrayList<>(this.historicalEvents);
         clone.currentYear = this.currentYear;
+
+        // Clonar a lista de estações usando copy()
+        clone.stationsPurchased = this.stationsPurchased.stream()
+                .map(Station::copy)
+                .collect(Collectors.toList());
+
+        // Clonar locomotivas
+        clone.locomotivePurchased = this.locomotivePurchased.stream()
+                .map(Locomotive::copy)
+                .collect(Collectors.toList());
+
+        // Clonar carruagens
+        clone.cariagePurchased = this.cariagePurchased.stream()
+                .map(Carriage::copy)
+                .collect(Collectors.toList());
+
         return clone;
     }
+
 
     @Override
     public String toString() {
@@ -180,8 +199,5 @@ public class Scenario {
 
         return sb.toString();
     }
-
-
-
 }
 

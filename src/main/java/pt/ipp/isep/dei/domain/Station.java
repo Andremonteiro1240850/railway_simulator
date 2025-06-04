@@ -104,6 +104,12 @@ public class Station {
     public int getY() {
         return y;
     }
+    public Station copy() {
+        Station copy = new Station(this.reference, this.name, this.type, this.region, this.area, this.x, this.y);
+        copy.upgrades = new ArrayList<>(this.upgrades);  // Considera clonar upgrades também se necessário
+        return copy;
+    }
+
 
     /**
      * Adds a building upgrade to the station if not already present.

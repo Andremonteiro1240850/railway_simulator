@@ -19,6 +19,6 @@ public class Route {
     public void setTrain(Train train) {this.train = train;}
 
     public void toString(){
-        System.out.println("Route: " + <PointsOfRoute>;
+        System.out.println("Route: " + <PointsOfRoute>);
     }
 }

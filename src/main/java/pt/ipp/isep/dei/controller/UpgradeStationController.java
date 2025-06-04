@@ -14,6 +14,7 @@ public class UpgradeStationController {
     private  StationRepository stationRepository;
     private  UpgradeBuildingsRepository upgradeBuildingsRepository;
     private Player player;
+    private Scenario scenario;
 
     public UpgradeStationController() {
         this(Repositories.getInstance().getOrganizationRepository(),
@@ -68,6 +69,7 @@ public class UpgradeStationController {
         return stationRepository.getAll();
     }
 
+
     public boolean upgradeStation(String stationId, String type, String subType) {
         // 1. Validar tipo e subtipo
         Buildings upgrade = Buildings.from(type, subType);
@@ -85,10 +87,21 @@ public class UpgradeStationController {
 
         Station station = stationOptional.get();
 
+        // ❗️ NOVO: Verificar se o upgrade já foi aplicado
+        boolean upgradeExists = station.getUpgrades().stream()
+                .anyMatch(u -> u.getType().equalsIgnoreCase(type) &&
+                        ((subType == null && u.getSubType() == null) ||
+                                (subType != null && subType.equalsIgnoreCase(u.getSubType()))));
+
+        if (upgradeExists) {
+            System.out.println("Erro: Este upgrade já foi aplicado a esta estação.");
+            return false;
+        }
+
         // 3. Verificar orçamento
         double price = upgrade.getPrice();
-        if (player.getBudget() < price) {
-            System.out.printf("Erro: Orçamento insuficiente (necessário: €%.2f, disponível: €%.2f).\n", price, player.getBudget());
+        if (scenario.getBudget() < price) {
+            System.out.printf("Erro: Orçamento insuficiente (necessário: €%.2f, disponível: €%.2f).\n", price, scenario.getBudget());
             return false;
         }
 
@@ -98,15 +111,12 @@ public class UpgradeStationController {
         stationRepository.addUpgradeToStation(station.getReference(), stationUpgrade);
 
         // 5. Descontar orçamento
-        player.setBudget(player.getBudget() - price);
+        scenario.setBudget(scenario.getBudget() - price);
         System.out.printf("✅ Upgrade aplicado com sucesso: %s (%s) - Custo: €%.2f\n", type,
                 subType != null ? subType : "sem subtipo", price);
 
         return true;
     }
-
-
-
 
     private Employee getEmployeeFromSession() {
         Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();

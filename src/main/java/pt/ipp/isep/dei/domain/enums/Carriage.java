@@ -43,6 +43,8 @@ package pt.ipp.isep.dei.domain.enums;
             public int getCapacity() {
                 return capacity;
             }
-        }
+
+
+    }
 
 
