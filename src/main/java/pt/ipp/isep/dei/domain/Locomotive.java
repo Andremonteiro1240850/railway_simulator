@@ -10,24 +10,47 @@ public class Locomotive {
     private final int startYear;
     private final double maintenanceCostPerYear;
     private final double purchasePrice;
+    private final int retiredYear;
 
 
 
     // Novo construtor para integração com o enum ListLocomotives
-    public Locomotive(String name, String fuelType, int buildCost, int maintenanceCost, int fuelCost,
-                      int topSpeed, String accelerationRating, String reliability, int availableYear, int retiredYear) {
+    public Locomotive(String name, String fuelType, int buildCost, int maintenanceCost,
+                      int topSpeed, String accelerationRating, int availableYear, int retiredYear) {
         this.reference = name;
-        this.type = LocomotiveType.fromString(fuelType);// converte String para enum
+        this.type = LocomotiveType.valueOf(fuelType);// converte String para enum
         this.purchasePrice = buildCost;
         this.maintenanceCostPerYear = maintenanceCost;
-
         this.power = topSpeed * 10; // suposição simples para potência com base na velocidade
         this.acceleration = convertAcceleration(accelerationRating);
-
         this.startYear = availableYear;
+        this.retiredYear = retiredYear;
 
 
     }
+    public Locomotive copy() {
+        String fuelType = type.name();
+        int buildCost = (int) purchasePrice;
+        int maintenanceCost = (int) maintenanceCostPerYear;
+        int topSpeed = power / 10;
+
+        // Reverter aceleração para rating aproximado
+        String accelerationRating;
+        if (acceleration >= 3.5) {
+            accelerationRating = "Very Fast";
+        } else if (acceleration >= 3.0) {
+            accelerationRating = "Above Average";
+        } else if (acceleration >= 2.5) {
+            accelerationRating = "Average";
+        } else if (acceleration >= 2.0) {
+            accelerationRating = "Below Average";
+        } else {
+            accelerationRating = "Poor";
+        }
+
+        return new Locomotive(reference, fuelType, buildCost, maintenanceCost, topSpeed, accelerationRating, startYear, retiredYear);
+    }
+
 
     private double convertAcceleration(String rating) {
         return switch (rating.toLowerCase()) {
@@ -47,6 +70,7 @@ public class Locomotive {
     public int getStartYear() { return startYear; }
     public double getMaintenanceCostPerYear() { return maintenanceCostPerYear; }
     public double getPurchasePrice() { return purchasePrice; }
+
 
     @Override
     public String toString() {
