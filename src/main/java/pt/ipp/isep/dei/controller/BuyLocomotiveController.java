@@ -14,9 +14,9 @@ public class BuyLocomotiveController {
       private final Player player;
       private final LocomotiveRepository locomotiveRepository;
 
-      public BuyLocomotiveController(Player player, LocomotiveRepository locomotiveRepository) {
+      public BuyLocomotiveController(Player player) {
          this.player = player;
-         this.locomotiveRepository = locomotiveRepository;
+         this.locomotiveRepository = new LocomotiveRepository();
       }
 
    public void showAvailableLocomotives(int yearCurrrent) {
@@ -84,6 +84,7 @@ public class BuyLocomotiveController {
          // Realizar compra
          double newBudget= budget - cost;
          player.setBudget(newBudget);
+
          locomotiveRepository.addPurchasedLocomotive(toBuy);
          System.out.println("Compra realizada: " + toBuy.toString());
          return true;

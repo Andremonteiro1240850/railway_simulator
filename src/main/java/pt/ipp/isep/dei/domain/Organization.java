@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.domain;
 
+import pt.ipp.isep.dei.domain.enums.ScaleUnit;
 import pt.ipp.isep.dei.repository.CityRepository;
 import pt.ipp.isep.dei.repository.CreateMapRepository;
 import pt.ipp.isep.dei.repository.IndustryRepository;

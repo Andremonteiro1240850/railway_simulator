@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.domain;
 
 
 
+import pt.ipp.isep.dei.domain.enums.Carriage;
 import pt.ipp.isep.dei.domain.enums.Eventos;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 
@@ -17,6 +18,9 @@ public class Scenario {
     private List<LocomotiveType> availableLocomotiveTypes;
     private PortBehavior portBehavior;
     private List<HistoricalEvent> historicalEvents;
+    private List<Locomotive> locomotivePurchased;
+    private List<Carriage> cariagePurchased;
+    private List<Station> stationsPurchased;
 
     /**
      * Constructs a new Scenario with the given parameters.
@@ -38,6 +42,10 @@ public class Scenario {
         this.portBehavior = portBehavior;
         this.budget = budget;
         loadApplicableHistoricalEvents();
+        this.locomotivePurchased = new ArrayList<>();
+        this.cariagePurchased = new ArrayList<>();
+        this.stationsPurchased = new ArrayList<>();
+
     }
 
 
@@ -89,6 +97,11 @@ public class Scenario {
      */
     public List<HistoricalEvent> getHistoricalEvents() { return new ArrayList<>(historicalEvents); }
     public double getBudget() { return budget; }
+
+    public List<Locomotive> getLocomotivePurchased() {return locomotivePurchased;}
+    public List<Carriage> getCarriagePurchased() {return cariagePurchased;}
+    public List<Station> getStationsPurchased() {return stationsPurchased;}
+
     /**
      * Sets the port behavior configuration.
      *
@@ -108,6 +121,10 @@ public class Scenario {
         this.currentYear = currentYear;
     }
     public void setBudget(double budget) { this.budget = budget; }
+
+    public void addLomotivePurchased(Locomotive locomotive) {locomotivePurchased.add(locomotive);}
+    public void addCarriagePurchased(Carriage carriage) {cariagePurchased.add(carriage);}
+    public void addStationPurchased(Station station) {stationsPurchased.add(station);}
 
     private void loadApplicableHistoricalEvents() {
         for (Eventos eventoEnum : Eventos.values()) {
@@ -131,5 +148,40 @@ public class Scenario {
         clone.currentYear = this.currentYear;
         return clone;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== Scenario: ").append(name).append(" ===\n");
+        sb.append("Budget: ").append(String.format("%.2f", budget)).append("€\n");
+        sb.append("Time Period: ").append(startYear).append(" - ").append(endYear)
+                .append(" (Current Year: ").append(currentYear).append(")\n\n");
+
+        sb.append("Available Locomotive Types:\n");
+        if (availableLocomotiveTypes != null && !availableLocomotiveTypes.isEmpty()) {
+            for (LocomotiveType lt : availableLocomotiveTypes) {
+                sb.append("  - ").append(lt).append("\n");
+            }
+        } else {
+            sb.append("  None\n");
+        }
+
+        sb.append("\nPort Behavior:\n");
+        sb.append(portBehavior != null ? portBehavior : "  None").append("\n");
+
+        sb.append("\nHistorical Events:\n");
+        if (historicalEvents != null && !historicalEvents.isEmpty()) {
+            for (HistoricalEvent event : historicalEvents) {
+                sb.append("  - ").append(event).append("\n");
+            }
+        } else {
+            sb.append("  None\n");
+        }
+
+        return sb.toString();
+    }
+
+
+
 }
 

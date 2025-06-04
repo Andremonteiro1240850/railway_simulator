@@ -13,11 +13,16 @@ public class BuyLocomotiveUI implements Runnable {
         private final BuyLocomotiveController controller;
         private final Scanner scanner = new Scanner(System.in);
 
-        public BuyLocomotiveUI(BuyLocomotiveController controller) {
+
+        public BuyLocomotiveUI() {
             this.controller = controller;
         }
 
         public void run() {
+            boolean continuar;
+
+            do {
+
             System.out.print("Enter current year: ");
             int year = Integer.parseInt(scanner.nextLine());
 
@@ -27,5 +32,11 @@ public class BuyLocomotiveUI implements Runnable {
             String locomotiveName = scanner.nextLine();
 
             controller.buyLocomotive(locomotiveName);
+
+                System.out.print("Do you want to buy another locomotive? (yes/no): ");
+                String resposta = scanner.nextLine().trim().toLowerCase();
+                continuar = resposta.equals("yes") || resposta.equals("y");
+
+            } while (continuar);
         }
     }

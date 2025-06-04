@@ -20,14 +20,9 @@ public class AssignRouteUI implements Runnable {
     }
 
     public void run() {
-        System.out.println("\n=== Assign Train to Route ===");
+        System.out.println("\n=== Choose the scenario where you want to do this operation. ===");
 
-        // 1. Selecionar estações para a rota
-        List<Station> selectedStations = selectStationsForRoute();
-        if (selectedStations.size() < 2) {
-            System.out.println("A route must have at least 2 stations.");
-            return;
-        }
+
 
         // 2. Selecionar locomotiva
         Locomotive selectedLocomotive = selectLocomotive();
