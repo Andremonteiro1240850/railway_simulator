@@ -4,91 +4,74 @@ import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.domain.enums.ListLocomotives;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 import pt.ipp.isep.dei.repository.*;
-import pt.isep.lei.esoft.auth.domain.model.Email;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BuyLocomotiveController {
 
-      private final Player player;
-      private final LocomotiveRepository locomotiveRepository;
 
-      public BuyLocomotiveController(Player player) {
-         this.player = player;
-         this.locomotiveRepository = new LocomotiveRepository();
-      }
+    private final LocomotiveRepository locomotiveRepository;
 
-   public void showAvailableLocomotives(int yearCurrrent) {
-      Scenario scenario = player.getScenario();
+    public BuyLocomotiveController() {
+        this.locomotiveRepository = new LocomotiveRepository();
+    }
 
-      int currentYear = yearCurrrent;
+    public void showAvailableLocomotives(Scenario scenario) {
 
-      // Obter os tipos de locomotiva disponíveis no cenário
-      List<LocomotiveType> allowedTypes = scenario.getAvailableLocomotiveTypes();
+        List<LocomotiveType> allowedTypes = scenario.getAvailableLocomotiveTypes();
+        int startYear = scenario.getStartYear();
+        int endYear = scenario.getEndYear();
 
+        System.out.println("\nAvailable locomotives for scenario '" + scenario.getName() + "':\n");
 
-      System.out.println("Available Locomotives:");
-
-      for (ListLocomotives locoEnum : ListLocomotives.values()) {
-         Locomotive loco = locoEnum.toLocomotive();
-
-         if (loco.getStartYear() >= currentYear && allowedTypes.contains(loco.getType())) {
-            System.out.println(loco); // usa o toString() da classe Locomotive
-         }
-         else{
-            System.out.println("No Available Locomotives in this scenario");
-         }
-      }
-   }
-
-
-
-      /**
-       * Tenta comprar uma locomotiva com nome fornecido.
-       */
-      public boolean buyLocomotive(String locomotiveName) {
-            List<Locomotive> purchased = locomotiveRepository.getPurchasedLocomotives();
-
-            // Verificar se já foi comprada
-            for (Locomotive loco : purchased) {
-               if (loco.getName().equalsIgnoreCase(locomotiveName)) {
-                  System.out.println("Erro: Locomotiva já comprada.");
-                  return false;
-               }
+        for (ListLocomotives locoEnum : ListLocomotives.values()) {
+            if (allowedTypes.contains(locoEnum.getLocomotiveType())) {
+                if (locoEnum.getAvailableYear() >= startYear && locoEnum.getRetiredYear() <= endYear) {
+                    Locomotive loco = locoEnum.toLocomotive();
+                    System.out.println(loco);  // Usa o método toString() da classe Locomotive
+                }
             }
+        }
+    }
 
-            // Procurar no enum
-            Locomotive toBuy = null;
-            for (ListLocomotives locoEnum : ListLocomotives.values()) {
-               if (locoEnum.name().equalsIgnoreCase(locomotiveName)) {
-                  toBuy = locoEnum.toLocomotive();
-                  break;
-               }
+
+
+    public void buyLocomotive(String name, Scenario scenario) {
+        List<Locomotive> purchased = scenario.getLocomotivePurchased();
+
+        Locomotive loco = null;
+        for (ListLocomotives locoEnum : ListLocomotives.values()) {
+            if (locoEnum.getName().equalsIgnoreCase(name)) {
+                loco = locoEnum.toLocomotive();
+                break;
             }
+        }
 
-            if (toBuy == null) {
-            System.out.println("Erro: Locomotiva não encontrada.");
-            return false;
-         }
 
-         // Verificar orçamento
-         double budget = player.getBudget();
-         double cost = toBuy. getPurchasePrice() ;
+        // Verificar se já foi comprada
+        for (Locomotive l : purchased) {
+            if (l.getName().equalsIgnoreCase(loco.getName())) {
+                System.out.println("You have already purchased this locomotive.");
+                break;
+            }
+        }
 
-         if (budget < cost) {
-            System.out.println("Erro: Orçamento insuficiente.");
-            return false;
-         }
+        // Verificar orçamento
+        double price = loco.getPurchasePrice();
+        if (scenario.getBudget() < price) {
+            System.out.println("You can´t buy this locomotive because you don´t have enough budget in this scenario.");
+            return;
+        }
 
-         // Realizar compra
-         double newBudget= budget - cost;
-         player.setBudget(newBudget);
+        else{
+            double newBudgdet=scenario.getBudget()-price;
+            scenario.setBudget(newBudgdet);
 
-         locomotiveRepository.addPurchasedLocomotive(toBuy);
-         System.out.println("Compra realizada: " + toBuy.toString());
-         return true;
-      }
-   }
+            System.out.println("Purchase completed successfully!");
 
+        }
+
+
+    }
+}
 

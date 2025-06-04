@@ -20,13 +20,9 @@ public class Locomotive {
         this.type = LocomotiveType.fromString(fuelType);// converte String para enum
         this.purchasePrice = buildCost;
         this.maintenanceCostPerYear = maintenanceCost;
-
         this.power = topSpeed * 10; // suposição simples para potência com base na velocidade
         this.acceleration = convertAcceleration(accelerationRating);
-
         this.startYear = availableYear;
-
-
     }
 
     private double convertAcceleration(String rating) {
