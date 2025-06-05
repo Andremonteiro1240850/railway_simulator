@@ -9,7 +9,6 @@ import java.util.Objects;
  * House blocks are used to determine passenger and mail generation in cities.
  */
 public class HouseBlocks {
-    private final Map map;
     private final int x;
     private final int y;
     private final List<int[]> houseBlocks;
@@ -17,33 +16,20 @@ public class HouseBlocks {
     /**
      * Constructs a HouseBlocks object.
      *
-     * @param map         the map where the house blocks are located
      * @param x           the x-coordinate of the reference point
      * @param y           the y-coordinate of the reference point
      * @param houseBlocks list of [x,y] coordinates representing house blocks
      * @throws IllegalArgumentException if map is null or houseBlocks is null/empty
      */
-    public HouseBlocks(Map map, int x, int y, List<int[]> houseBlocks) {
-        if (map == null) {
-            throw new IllegalArgumentException("Map cannot be null");
-        }
+    public HouseBlocks(int x, int y, List<int[]> houseBlocks) {
         if (houseBlocks == null || houseBlocks.isEmpty()) {
             throw new IllegalArgumentException("House blocks cannot be empty");
         }
 
-        this.map = map;
+
         this.x = x;
         this.y = y;
         this.houseBlocks = houseBlocks;
-    }
-
-    /**
-     * Gets the map associated with these house blocks.
-     *
-     * @return the map
-     */
-    public Map getMap() {
-        return map;
     }
 
     /**
@@ -96,18 +82,17 @@ public class HouseBlocks {
         HouseBlocks that = (HouseBlocks) o;
         return x == that.x &&
                 y == that.y &&
-                map.equals(that.map) &&
                 houseBlocks.equals(that.houseBlocks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(map, x, y, houseBlocks);
+        return Objects.hash(x, y, houseBlocks);
     }
 
     @Override
     public String toString() {
-        return String.format("HouseBlocks{map=%s, x=%d, y=%d, blocks=%d}",
-                map.getName(), x, y, houseBlocks.size());
+        return String.format("HouseBlocks{x=%d, y=%d, blocks=%d}",
+                 x, y, houseBlocks.size());
     }
 }
