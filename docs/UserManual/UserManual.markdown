@@ -1,11 +1,14 @@
-# User Manual
+<h1 align="center" style="font-size:5em;">User Manual</h1>  
+
+![Imagem_Capa](/docs/UserManual/Imagem_UserManual.svg)
+
 ### Railway Network Simulation System
-Academic Year 2024/2025  
+**Academic Year 2024/2025**  
 **Institution:** Instituto Superior de Engenharia do Porto (ISEP)   
-**Departments:** Department of Computer Engineering, Department of Organization and Management  
+**Departments:** Department of Computer Engineering (DEI)  
 **Authors:** Hugo Azevedo Nº 1240835 / Edgar Couto Nº 1240868 / André Monteiro Nº 12408 / João Silva Nº 12408  
-**Supervisors:** Ana Barata, Sandra Luna, Joana Lima, Cidália Neves
-**Date:** May 17th, 2025
+**Supervisors:** Sandra Luna   
+**Date:** June 15th, 2025
 ---
 
 ### *Table of Contents*
