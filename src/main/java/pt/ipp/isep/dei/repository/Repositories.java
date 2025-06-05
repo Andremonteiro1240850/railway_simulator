@@ -9,6 +9,7 @@ package pt.ipp.isep.dei.repository;
 public class Repositories {
     private static Repositories instance;
     private final OrganizationRepository organizationRepository;
+    private final TaskCategoryRepository taskCategoryRepository;
     private final AuthenticationRepository authenticationRepository;
     private final CreateMapRepository mapRepository = new CreateMapRepository();
     private final CityRepository cityRepository = new CityRepository();
@@ -37,6 +38,7 @@ public class Repositories {
     public UpgradeBuildingsRepository getUpgradeBuildingsRepository() {
         return upgradeBuildingsRepository;
     }
+
     private final LocomotiveRepository locomotiveRepo = new LocomotiveRepository();
     private static CargoRepository cargoRepository = null;
 
@@ -47,6 +49,8 @@ public class Repositories {
         return cargoRepository;
     }
 
+
+
     public LocomotiveRepository getLocomotiveRepository() {
         return locomotiveRepo;
     }
@@ -54,11 +58,6 @@ public class Repositories {
     public ScenarioRepository getScenarioRepository() {
         return scenarioRepo;
     }
-    private final PlayerRepository playerRepository = new PlayerRepository();
-    public PlayerRepository getPlayerRepository() {
-        return playerRepository;
-    }
-
 
 
     /**
@@ -66,6 +65,7 @@ public class Repositories {
      */
     private Repositories() {
         organizationRepository = new OrganizationRepository();
+        taskCategoryRepository = new TaskCategoryRepository();
         authenticationRepository = new AuthenticationRepository();
     }
 
@@ -87,6 +87,9 @@ public class Repositories {
         return organizationRepository;
     }
 
+    public TaskCategoryRepository getTaskCategoryRepository() {
+        return taskCategoryRepository;
+    }
 
     public AuthenticationRepository getAuthenticationRepository() {
         return authenticationRepository;
