@@ -23,5 +23,15 @@ public class PointsOfRoute {
         this.cargoMode = cargoMode;
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "Station: %s | Cargo Mode: %s (%s)",
+                station.getName(), // ou station.toString() se tiveres um bom toString em Station
+                cargoMode.name(),
+                cargoMode.getDescription()
+        );
+    }
+
 
 }

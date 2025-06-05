@@ -1,13 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
-import pt.ipp.isep.dei.domain.enums.Carriage;
+import pt.ipp.isep.dei.domain.enums.CarriageList;
 
 public class Train {
 
     private Locomotive locomotive;
-    private Carriage carriage;
+    private CarriageList carriage;
 
-    public Train(Locomotive locomotive, Carriage carriage) {
+    public Train(Locomotive locomotive, CarriageList carriage) {
         this.locomotive = locomotive;
         this.carriage = carriage;
     }
@@ -16,9 +16,9 @@ public class Train {
 
     public void setLocomotive(Locomotive locomotive) {this.locomotive = locomotive;}
 
-    public Carriage getCarriage() {return carriage;}
+    public CarriageList getCarriage() {return carriage;}
 
-    public void setCarriage(Carriage carriage) {this.carriage = carriage;}
+    public void setCarriage(CarriageList carriage) {this.carriage = carriage;}
 }
 
 

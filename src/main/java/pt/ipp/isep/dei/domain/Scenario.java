@@ -2,7 +2,7 @@ package pt.ipp.isep.dei.domain;
 
 
 
-import pt.ipp.isep.dei.domain.enums.Carriage;
+import pt.ipp.isep.dei.domain.enums.CarriageList;
 import pt.ipp.isep.dei.domain.enums.Eventos;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class Scenario {
     private final String name;
-    private double budget = 150000;
+    private double budget = 700000;
     private int startYear;
     private int endYear;
     private int currentYear;
@@ -20,7 +20,7 @@ public class Scenario {
     private PortBehavior portBehavior;
     private List<HistoricalEvent> historicalEvents;
     private List<Locomotive> locomotivePurchased;
-    private List<Carriage> cariagePurchased;
+    private List<CarriageList> cariagePurchased;
     private List<Station> stationsPurchased;
 
     /**
@@ -100,7 +100,7 @@ public class Scenario {
     public double getBudget() { return budget; }
 
     public List<Locomotive> getLocomotivePurchased() {return locomotivePurchased;}
-    public List<Carriage> getCarriagePurchased() {return cariagePurchased;}
+    public List<CarriageList> getCarriagePurchased() {return cariagePurchased;}
     public List<Station> getStationsPurchased() {return stationsPurchased;}
 
     /**
@@ -124,7 +124,7 @@ public class Scenario {
     public void setBudget(double budget) { this.budget = budget; }
 
     public void addLomotivePurchased(Locomotive locomotive) {locomotivePurchased.add(locomotive);}
-    public void addCarriagePurchased(Carriage carriage) {cariagePurchased.add(carriage);}
+    public void addCarriagePurchased(CarriageList carriage) {cariagePurchased.add(carriage);}
     public void addStationPurchased(Station station) {stationsPurchased.add(station);}
 
     private void loadApplicableHistoricalEvents() {
@@ -161,7 +161,7 @@ public class Scenario {
 
         // Clonar carruagens
         clone.cariagePurchased = this.cariagePurchased.stream()
-                .map(Carriage::copy)
+                .map(CarriageList::copy)
                 .collect(Collectors.toList());
 
         return clone;
