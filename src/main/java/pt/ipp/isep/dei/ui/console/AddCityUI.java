@@ -36,7 +36,7 @@ public class AddCityUI implements Runnable {
         String name = requestCityName();
         List<int[]> houseBlocks = requestHouseBlocks();
 
-        Optional<City> city = controller.createCity(map, locationX, locationY, name, houseBlocks);
+        Optional<City> city = controller.createCity(map,name, locationX, locationY, houseBlocks);
 
         if (city.isPresent()) {
             System.out.println("\nCity successfully created!");

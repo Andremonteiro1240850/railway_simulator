@@ -13,33 +13,30 @@ import java.util.Scanner;
 public class AddIndustryUI implements Runnable {
     private final AddIndustryController controller;
     private final Scanner input;
-
-    // Variável para armazenar o funcionário logado
-    private Employee loggedInEmployee;
+    private final Employee loggedInEmployee;
 
     public AddIndustryUI(Employee loggedInEmployee) {
         controller = new AddIndustryController();
         input = new Scanner(System.in);
-        this.loggedInEmployee = loggedInEmployee;  // Armazena o funcionário logado
+        this.loggedInEmployee = loggedInEmployee;
     }
-
 
     public void run() {
         System.out.println("\n--- Add an Industry ---");
-        IndustryType type = selectIndustryType();  // Solicita o tipo de indústria
-        int x = requestCoordinate("X");  // Solicita coordenada X
-        int y = requestCoordinate("Y");  // Solicita coordenada Y
-        String mapName = requestMap();  // Solicita o nome do mapa
+        IndustryType type = selectIndustryType();
+        int x = requestCoordinate("X");
+        int y = requestCoordinate("Y");
+        String mapName = requestMap();
 
         Map map = getMapByName(mapName);
 
         if (map != null) {
             try {
-                // Chama o controlador passando o objeto Map
-                Optional<Industry> result = controller.createIndustry(type, x, y, map);
+                Industry tempIndustry = new Industry(type, map, x, y);
+                Optional<Industry> result = controller.createIndustry(type, x, y, map, tempIndustry);
                 result.ifPresentOrElse(
-                        industry -> showSuccess(industry),
-                        () -> showError("Failqed to create industry. Please check the details and try again.")
+                        this::showSuccess,
+                        () -> showError("Failed to create industry. Please check the details and try again.")
                 );
             } catch (IllegalArgumentException e) {
                 showError(e.getMessage());
@@ -50,7 +47,7 @@ public class AddIndustryUI implements Runnable {
     }
 
     private IndustryType selectIndustryType() {
-        System.out.println("\nTipos disponíveis:");
+        System.out.println("\nAvailable types:");
         System.out.println("1 - Primary (Mines/Farms)");
         System.out.println("2 - Transforming (Factories)");
         System.out.println("3 - Mixed (Ports)");
@@ -71,11 +68,14 @@ public class AddIndustryUI implements Runnable {
 
     private String requestMap() {
         System.out.print("Map name: ");
-        return input.next();  // Solicita o nome do mapa
+        return input.next();
     }
 
     private void showSuccess(Industry industry) {
-        System.out.printf("\n✅ Industry %s created in (%d,%d)\n", industry.getType(), industry.getPositionX(), industry.getPositionY());
+        System.out.printf("\n✅ Industry %s created in (%d,%d)\n",
+                industry.getType(),
+                industry.getPositionX(),
+                industry.getPositionY());
     }
 
     private void showError(String message) {
@@ -83,19 +83,15 @@ public class AddIndustryUI implements Runnable {
     }
 
     private Map getMapByName(String mapName) {
-        // Usa o método getOrganizationFromSession para buscar a organização associada ao funcionário logado
-        Optional<Organization> organization = getOrganizationFromSession();
-        if (organization.isPresent()) {
-            return organization.get().getMaps().stream()
-                    .filter(map -> map.getName().equals(mapName))
-                    .findFirst()
-                    .orElse(null);
-        }
-        return null;
+        return getOrganizationFromSession()
+                .flatMap(org -> org.getMaps().stream()
+                        .filter(map -> mapName.equals(map.getName()))
+                        .findFirst())
+                .orElse(null);
     }
 
     private Optional<Organization> getOrganizationFromSession() {
-        // Aqui, o loggedInEmployee já foi passado para a classe AddIndustryUI e está acessível.
-        return Optional.ofNullable(loggedInEmployee != null ? loggedInEmployee.getOrganization() : null);
+        return Optional.ofNullable(loggedInEmployee != null ?
+                loggedInEmployee.getOrganization() : null);
     }
 }

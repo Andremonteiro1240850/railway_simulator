@@ -37,7 +37,7 @@ public class AddCityController {
         return authenticationRepository;
     }
 
-    public Optional<City> createCity(Map map, String cityName, int x, int y, String name, List<int[]> houseBlocks) {
+    public Optional<City> createCity(Map map, String cityName, int x, int y, List<int[]> houseBlocks) {
         // Validate house blocks
         Optional<String> houseBlocksValidation = validateHouseBlocks(houseBlocks, map);
         if (houseBlocksValidation.isPresent()) {

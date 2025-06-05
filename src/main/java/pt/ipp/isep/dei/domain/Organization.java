@@ -84,12 +84,27 @@ public class Organization {
         return stationRepository;
     }
 
+    private final List<Map> maps = new ArrayList<>();
+
+    // Adicione estes métodos à classe Organization
+    public List<Map> getMaps() {
+        return Collections.unmodifiableList(maps);
+    }
+
+    public void addMap(Map map) {
+        if (map != null && !maps.contains(map)) {
+            maps.add(map);
+            mapRepository.save(map); // Se necessário persistir no repositório
+        }
+    }
+
     public void addEmployee(Employee employee) {
         if (employee == null) throw new IllegalArgumentException("Employee cannot be null");
         if (!employees.contains(employee)) {
             employees.add(employee);
         }
     }
+
 
     public List<Employee> getEmployees() {
         return Collections.unmodifiableList(employees);

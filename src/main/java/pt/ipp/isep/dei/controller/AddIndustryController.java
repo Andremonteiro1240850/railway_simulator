@@ -17,17 +17,20 @@ public class AddIndustryController {
     private AuthenticationRepository authenticationRepository;
     private CreateMapController createMapController;
 
-    // Repository instances are obtained from the Repositories class
+    // Inicialização dos repositórios
     public AddIndustryController() {
+        this.createMapController = new CreateMapController(); // Inicializando o controlador de mapa
         getOrganizationRepository();
         getAuthenticationRepository();
     }
 
-    // Allows receiving the repositories as parameters for testing purposes
+    // Permite receber os repositórios como parâmetros para fins de teste
     public AddIndustryController(OrganizationRepository organizationRepository,
-                                 AuthenticationRepository authenticationRepository) {
+                                 AuthenticationRepository authenticationRepository,
+                                 CreateMapController createMapController) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
+        this.createMapController = createMapController; // Atribuindo o CreateMapController
     }
 
     private OrganizationRepository getOrganizationRepository() {
@@ -54,7 +57,7 @@ public class AddIndustryController {
             }
 
             // Validação da posição no mapa
-            validatePosition(map, industry);
+            validatePosition(map, positionX, positionY, industry);
 
             // Obtém o funcionário atual da sessão
             Employee employee = getEmployeeFromSession();
@@ -65,12 +68,12 @@ public class AddIndustryController {
             // Cria a indústria e adiciona ao mapa
             return organization.flatMap(org -> {
                 // Cria a nova indústria
-                Industry industry = new Industry(type, map, positionX, positionY);
+                Industry newIndustry = new Industry(type, map, positionX, positionY);
 
                 // Adiciona a indústria ao mapa
-                map.addIndustry(industry);
+                map.addIndustry(newIndustry);
 
-                return Optional.of(industry);
+                return Optional.of(newIndustry);
             });
         } catch (IllegalArgumentException e) {
             System.err.println("[Error US02] " + e.getMessage());
@@ -79,10 +82,14 @@ public class AddIndustryController {
     }
 
     private void validatePosition(Map map, int x, int y, Industry industry) {
+        // Verificação se a posição está fora dos limites do mapa
         if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
             throw new IllegalArgumentException("Coordinates out of bounds");
         }
-        if (createMapController.addIndustryToMap(map,industry)) {
+
+        // Verificação se a posição já está ocupada por outra indústria
+        Optional<String> result = createMapController.addIndustryToMap(map, industry);
+        if (result.isPresent()) {
             throw new IllegalArgumentException("Position already occupied by another industry");
         }
     }
