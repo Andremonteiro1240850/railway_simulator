@@ -129,4 +129,16 @@ public class Organization {
     public String toString() {
         return String.format("Organization: %s (VAT: %s)", name, vatNumber);
     }
+
+    public boolean anyEmployeeHasEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be null or empty.");
+        }
+        for (Employee employee : employees) {
+            if (email.equalsIgnoreCase(employee.getEmail())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

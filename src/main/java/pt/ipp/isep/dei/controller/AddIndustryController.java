@@ -15,6 +15,7 @@ import pt.ipp.isep.dei.domain.enums.IndustryType;
 public class AddIndustryController {
     private OrganizationRepository organizationRepository;
     private AuthenticationRepository authenticationRepository;
+    private CreateMapController createMapController;
 
     // Repository instances are obtained from the Repositories class
     public AddIndustryController() {
@@ -45,7 +46,7 @@ public class AddIndustryController {
         return authenticationRepository;
     }
 
-    public Optional<Industry> createIndustry(IndustryType type, int positionX, int positionY, Map map) {
+    public Optional<Industry> createIndustry(IndustryType type, int positionX, int positionY, Map map, Industry industry) {
         try {
             // Verifica se o tipo de indústria é válido
             if (type == null) {
@@ -53,7 +54,7 @@ public class AddIndustryController {
             }
 
             // Validação da posição no mapa
-            validatePosition(map, positionX, positionY);
+            validatePosition(map, industry);
 
             // Obtém o funcionário atual da sessão
             Employee employee = getEmployeeFromSession();
@@ -77,11 +78,11 @@ public class AddIndustryController {
         }
     }
 
-    private void validatePosition(Map map, int x, int y) {
+    private void validatePosition(Map map, int x, int y, Industry industry) {
         if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
             throw new IllegalArgumentException("Coordinates out of bounds");
         }
-        if (map.hasIndustryAt(x, y)) {
+        if (createMapController.addIndustryToMap(map,industry)) {
             throw new IllegalArgumentException("Position already occupied by another industry");
         }
     }

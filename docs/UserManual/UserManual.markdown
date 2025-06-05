@@ -1,4 +1,4 @@
-# User Manual 
+# User Manual
 ### Railway Network Simulation System
 Academic Year 2024/2025  
 **Institution:** Instituto Superior de Engenharia do Porto (ISEP)   

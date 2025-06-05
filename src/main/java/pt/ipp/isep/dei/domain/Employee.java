@@ -7,7 +7,11 @@ public class Employee {
     private String name;
     private String position;
     private String phone;
-    private Organization organization;  // Campo para armazenar a organização associada
+    private Organization organization;
+
+    public String getEmail() { return email; }
+
+    // Campo para armazenar a organização associada
 
     public Employee(String email) {
         this.email = email;

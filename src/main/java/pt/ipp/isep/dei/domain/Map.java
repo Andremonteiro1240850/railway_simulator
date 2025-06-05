@@ -45,6 +45,8 @@ public class Map {
         return organization;
     }
 
+    public List<Industry> getIndustries() {return industries; }
+
     public List<City> getCities() {
         return Collections.unmodifiableList(cities);
     }

@@ -15,15 +15,12 @@ public class OrganizationRepository {
     }
 
     public Optional<Organization> getOrganizationByEmployee(Employee employee) {
-        Optional<Organization> returnOrganization = Optional.empty();
-
         for (Organization organization : organizations) {
-            if (organization.employs(employee)) {
-                returnOrganization = Optional.of(organization);
+            if (organization.getEmployees().contains(employee)) {
+                return Optional.of(organization);
             }
         }
-
-        return returnOrganization;
+        return Optional.empty();
     }
 
     public Optional<Organization> getOrganizationByEmployeeEmail(String email) {
@@ -43,7 +40,7 @@ public class OrganizationRepository {
         boolean operationSuccess = false;
 
         if (validateOrganization(organization)) {
-            newOrganization = Optional.of(organization.clone());
+            newOrganization = Optional.of(organization.copy());
             operationSuccess = organizations.add(newOrganization.get());
         }
 

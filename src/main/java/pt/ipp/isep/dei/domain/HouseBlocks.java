@@ -1,4 +1,4 @@
-// HouseBlocks.java
+
 package pt.ipp.isep.dei.domain;
 
 import java.util.List;
