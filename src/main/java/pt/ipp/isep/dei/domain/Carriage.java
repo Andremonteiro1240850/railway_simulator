@@ -12,19 +12,22 @@ public class Carriage {
         this.capacity = capacity;
     }
 
+    public String getName() { return name; }
+    public String getCargoType() { return cargoType; }
+    public double getCapacity() { return capacity; }
 
-    public String getName() {return name;}
-    public String getCargoType() {return cargoType;}
-    public double getCapacity() {return capacity;}
+    public void setCapacity(double capacity) { this.capacity = capacity; }
+    public void setName(String name) { this.name = name; }
+    public void setCargoType(String cargoType) { this.cargoType = cargoType; }
 
-    public void setCapacity(double capacity) {this.capacity = capacity;}
-    public void setName(String name) {this.name = name;}
-    public void setCargoType(String cargoType) {this.cargoType = cargoType;}
+    // Método copy adicionado
+    public Carriage copy() {
+        return new Carriage(this.name, this.cargoType, this.capacity);
+    }
 
     @Override
     public String toString() {
         return "Carriage [name=" + name + ", cargoType=" + cargoType + ", capacity=" + capacity + "]";
     }
-
-
 }
+

@@ -17,6 +17,7 @@ public class BuildStationController {
     private Station station;
     private Player player;
     private Regions region;
+    private Scenario scenario;
 
     //Repository instances are obtained from the Repositories class
     public BuildStationController() {
@@ -95,7 +96,7 @@ public class BuildStationController {
 
         // 3. Verificar orçamento do jogador
 
-        double budget = player.getBudget();
+        double budget = scenario.getBudget();
         double cost = stationType.getCost();
 
         //Valida orçamento
@@ -107,11 +108,12 @@ public class BuildStationController {
 
         // 4. Criar e adicionar estação
         Station newStation = new Station(name, stationType.getType(), regionType.getRegion(), stationType.getArea(), x, y);
+        scenario.addStationPurchased(newStation);
         Optional<Station> added = Repositories.getInstance().getStationRepository().add(newStation);
 
         if (added.isPresent()) {
             // 5. Descontar orçamento
-            player.setBudget(budget - cost);
+            scenario.setBudget(budget - cost);
             System.out.println("Estação criada com sucesso: " + newStation.getReference());
             return true;
         } else {

@@ -11,16 +11,26 @@ public class Locomotive {
     private final double maintenanceCostPerYear;
     private final double purchasePrice;
 
+    // Construtor principal para uso geral
+    public Locomotive(String reference, LocomotiveType type, double purchasePrice, double maintenanceCostPerYear,
+                      int power, double acceleration, int startYear) {
+        this.reference = reference;
+        this.type = type;
+        this.purchasePrice = purchasePrice;
+        this.maintenanceCostPerYear = maintenanceCostPerYear;
+        this.power = power;
+        this.acceleration = acceleration;
+        this.startYear = startYear;
+    }
 
-
-    // Novo construtor para integração com o enum ListLocomotives
-    public Locomotive(String name, String fuelType, int buildCost, int maintenanceCost, int fuelCost,
-                      int topSpeed, String accelerationRating, String reliability, int availableYear, int retiredYear) {
+    // Construtor usado para integração com enums ou ficheiros externos
+    public Locomotive(String name, String fuelType, int buildCost, int maintenanceCost,
+                      int topSpeed, String accelerationRating, int availableYear) {
         this.reference = name;
-        this.type = LocomotiveType.fromString(fuelType);// converte String para enum
+        this.type = LocomotiveType.fromString(fuelType);
         this.purchasePrice = buildCost;
         this.maintenanceCostPerYear = maintenanceCost;
-        this.power = topSpeed * 10; // suposição simples para potência com base na velocidade
+        this.power = topSpeed * 10;
         this.acceleration = convertAcceleration(accelerationRating);
         this.startYear = availableYear;
     }
@@ -44,19 +54,16 @@ public class Locomotive {
     public double getMaintenanceCostPerYear() { return maintenanceCostPerYear; }
     public double getPurchasePrice() { return purchasePrice; }
 
+    // Método copy atualizado
+    public Locomotive copy() {
+        return new Locomotive(reference, type, purchasePrice, maintenanceCostPerYear, power, acceleration, startYear);
+    }
+
     @Override
     public String toString() {
         return String.format(
                 "Locomotive [Reference: %s, Type: %s, Power: %d kW, Acceleration: %.2f m/s², Start Year: %d, Maintenance Cost/Year: %.2f €, Purchase Price: %.2f €]",
-                reference,
-                type,
-                power,
-                acceleration,
-                startYear,
-                maintenanceCostPerYear,
-                purchasePrice
+                reference, type, power, acceleration, startYear, maintenanceCostPerYear, purchasePrice
         );
     }
 }
-
-

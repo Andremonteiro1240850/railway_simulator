@@ -161,7 +161,7 @@ public class Scenario {
 
         // Clonar carruagens
         clone.cariagePurchased = this.cariagePurchased.stream()
-                .map(CarriageList::copy)
+                .map(Carriage::copy)
                 .collect(Collectors.toList());
 
         return clone;
