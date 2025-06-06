@@ -34,13 +34,15 @@ import pt.ipp.isep.dei.domain.Carriage;
                 this.capacity = capacity;
             }
 
-        public Carriage toCarriage() {
-            return new Carriage(name, cargoType, capacity);
-        }
-
-
-
-
+    public Carriage toCarriage() {
+        return new Carriage(name, cargoType, capacity);
     }
+
+
+
+
+
+
+}
 
 

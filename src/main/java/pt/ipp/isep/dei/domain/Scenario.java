@@ -4,6 +4,7 @@ package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.CarriageList;
 import pt.ipp.isep.dei.domain.enums.Eventos;
+import pt.ipp.isep.dei.domain.enums.ListLocomotives;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 
 import java.util.ArrayList;
@@ -20,8 +21,10 @@ public class Scenario {
     private PortBehavior portBehavior;
     private List<HistoricalEvent> historicalEvents;
     private List<Locomotive> locomotivePurchased;
-    private List<CarriageList> cariagePurchased;
+    private List<Carriage> cariagePurchased;
     private List<Station> stationsPurchased;
+    private List<Locomotive> locomotivesDisponiveis = new ArrayList<>();
+
 
     /**
      * Constructs a new Scenario with the given parameters.
@@ -100,7 +103,7 @@ public class Scenario {
     public double getBudget() { return budget; }
 
     public List<Locomotive> getLocomotivePurchased() {return locomotivePurchased;}
-    public List<CarriageList> getCarriagePurchased() {return cariagePurchased;}
+    public List<Carriage> getCarriagePurchased() {return cariagePurchased;}
     public List<Station> getStationsPurchased() {return stationsPurchased;}
 
     /**
@@ -124,7 +127,7 @@ public class Scenario {
     public void setBudget(double budget) { this.budget = budget; }
 
     public void addLomotivePurchased(Locomotive locomotive) {locomotivePurchased.add(locomotive);}
-    public void addCarriagePurchased(CarriageList carriage) {cariagePurchased.add(carriage);}
+    public void addCarriagePurchased(Carriage carriage) {cariagePurchased.add(carriage);}
     public void addStationPurchased(Station station) {stationsPurchased.add(station);}
 
     private void loadApplicableHistoricalEvents() {
@@ -199,5 +202,20 @@ public class Scenario {
 
         return sb.toString();
     }
+    public void atualizarLocomotivasDisponiveis(int anoAtual) {
+        for (ListLocomotives entry : ListLocomotives.values()) {
+            if (entry.getAvailableYear() <= anoAtual && entry.getRetiredYear() >= anoAtual) {
+                Locomotive loco = entry.toLocomotive();
+                if (!locomotivesDisponiveis.contains(loco)) {
+                    locomotivesDisponiveis.add(loco);
+                }
+            }
+        }
+    }
+    public List<Locomotive> getLocomotivesDisponiveis() {
+        return new ArrayList<>(locomotivesDisponiveis);
+    }
+
+
 }
 

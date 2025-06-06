@@ -22,7 +22,7 @@ public class Carriage {
 
     // Método copy adicionado
     public Carriage copy() {
-        return new Carriage(this.name, this.cargoType, this.capacity);
+        return new Carriage(name, cargoType, capacity);
     }
 
     @Override
