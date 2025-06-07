@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.stage.Stage?>
+<?import javafx.scene.Scene?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuController">
+   <children>
+      <Pane onMouseClicked="#BuyLocomotive" prefHeight="528.0" prefWidth="900.0">
+         <children>
+             <Button layoutX="365.0" layoutY="356.0" onAction="#handleListStations" prefHeight="45.0" prefWidth="170.0" text="List Stations" />
+             <Button layoutX="365.0" layoutY="266.0" onAction="#handleBuildStation" prefHeight="45.0" prefWidth="170.0" text="Build Station" />
+             <Button layoutX="365.0" layoutY="311.0" onAction="#handleUpgradeStation" prefHeight="45.0" prefWidth="170.0" text="Upgrade Station" />
+             <Button layoutX="365.0" layoutY="221.0" onAction="#BuyLocomotive" onMouseClicked="#BuyLocomotive" prefHeight="45.0" prefWidth="170.0" text="Buy Locomotive" />
+            <Text layoutX="204.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="------  Player Menu  ------" textAlignment="CENTER" wrappingWidth="491.6708984375">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Text>
+            <Button layoutX="365.0" layoutY="401.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="170.0" text="Assign Train To Route" />
+         </children>
+      </Pane>
+   </children>
+</VBox>

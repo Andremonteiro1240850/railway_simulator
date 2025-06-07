@@ -65,6 +65,7 @@
             <name>lei-soft</name>
             <url>https://repo.repsy.io/mvn/pmaio/lei-soft</url>
         </repository>
+
     </repositories>
 
     <build>
