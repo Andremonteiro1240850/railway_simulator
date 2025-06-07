@@ -106,7 +106,12 @@ public enum ListLocomotives {
     }
 
     public Locomotive toLocomotive() {
-        return new Locomotive(name, fuelType, buildCost, maintenanceCost, topSpeed, acceleration, availableYear);
+        return new Locomotive(this.name,
+        this.fuelType,
+        this.buildCost,
+        this.maintenanceCost ,
+        this.topSpeed,
+        this.acceleration ,
+        this.availableYear);
     }
-
 }

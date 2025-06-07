@@ -1,24 +1,22 @@
 package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.AddIndustryController;
-import pt.ipp.isep.dei.domain.Employee;
-import pt.ipp.isep.dei.domain.Industry;
-import pt.ipp.isep.dei.domain.Map;
-import pt.ipp.isep.dei.domain.Organization;
+import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.domain.enums.IndustryType;
+import pt.ipp.isep.dei.repository.CreateMapRepository;
+import pt.ipp.isep.dei.repository.Repositories;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class AddIndustryUI implements Runnable {
     private final AddIndustryController controller;
     private final Scanner input;
-    private final Employee loggedInEmployee;
 
-    public AddIndustryUI(Employee loggedInEmployee) {
+    public AddIndustryUI() {
         controller = new AddIndustryController();
         input = new Scanner(System.in);
-        this.loggedInEmployee = loggedInEmployee;
     }
 
     public void run() {
@@ -26,9 +24,8 @@ public class AddIndustryUI implements Runnable {
         IndustryType type = selectIndustryType();
         int x = requestCoordinate("X");
         int y = requestCoordinate("Y");
-        String mapName = requestMap();
 
-        Map map = getMapByName(mapName);
+        Map map = requestMap();
 
         if (map != null) {
             try {
@@ -42,7 +39,7 @@ public class AddIndustryUI implements Runnable {
                 showError(e.getMessage());
             }
         } else {
-            showError("Map not found. Please ensure the map name is correct.");
+            showError("Map not found or no map selected.");
         }
     }
 
@@ -52,23 +49,68 @@ public class AddIndustryUI implements Runnable {
         System.out.println("2 - Transforming (Factories)");
         System.out.println("3 - Mixed (Ports)");
 
-        int choice = input.nextInt();
-        return switch(choice) {
-            case 1 -> IndustryType.PRIMARY;
-            case 2 -> IndustryType.TRANSFORMING;
-            case 3 -> IndustryType.MIXED;
-            default -> throw new IllegalArgumentException("Invalid industry type selected. Please choose 1, 2, or 3.");
-        };
+        while (true) {
+            System.out.print("Select industry type (1-3): ");
+            if (input.hasNextInt()) {
+                int choice = input.nextInt();
+                input.nextLine(); // consumir quebra de linha
+                switch (choice) {
+                    case 1: return IndustryType.PRIMARY;
+                    case 2: return IndustryType.TRANSFORMING;
+                    case 3: return IndustryType.MIXED;
+                    default:
+                        System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                input.nextLine(); // limpar entrada inválida
+            }
+        }
     }
 
     private int requestCoordinate(String label) {
-        System.out.print(label + ": ");
-        return input.nextInt();
+        while (true) {
+            System.out.print(label + ": ");
+            if (input.hasNextInt()) {
+                int coord = input.nextInt();
+                input.nextLine(); // consumir quebra de linha
+                return coord;
+            } else {
+                System.out.println("Invalid number. Please enter an integer.");
+                input.nextLine(); // limpar entrada inválida
+            }
+        }
     }
 
-    private String requestMap() {
-        System.out.print("Map name: ");
-        return input.next();
+    private Map requestMap() {
+        CreateMapRepository repository = Repositories.getInstance().getMapRepository();
+        List<Map> availableMaps = repository.getAll();
+
+        if (availableMaps.isEmpty()) {
+            System.out.println("No maps available.");
+            return null;
+        }
+
+        System.out.println("Available Maps:");
+        for (int i = 0; i < availableMaps.size(); i++) {
+            System.out.println((i + 1) + " - " + availableMaps.get(i).getName());
+        }
+
+        while (true) {
+            System.out.print("Select a map by number (1 to " + availableMaps.size() + "): ");
+            if (input.hasNextInt()) {
+                int selectedIndex = input.nextInt();
+                input.nextLine(); // consumir quebra de linha
+                if (selectedIndex >= 1 && selectedIndex <= availableMaps.size()) {
+                    return availableMaps.get(selectedIndex - 1);
+                } else {
+                    System.out.println("Invalid number. Please select a number between 1 and " + availableMaps.size());
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a number.");
+                input.nextLine(); // limpar entrada inválida
+            }
+        }
     }
 
     private void showSuccess(Industry industry) {
@@ -80,18 +122,5 @@ public class AddIndustryUI implements Runnable {
 
     private void showError(String message) {
         System.out.println("\n❌ " + message);
-    }
-
-    private Map getMapByName(String mapName) {
-        return getOrganizationFromSession()
-                .flatMap(org -> org.getMaps().stream()
-                        .filter(map -> mapName.equals(map.getName()))
-                        .findFirst())
-                .orElse(null);
-    }
-
-    private Optional<Organization> getOrganizationFromSession() {
-        return Optional.ofNullable(loggedInEmployee != null ?
-                loggedInEmployee.getOrganization() : null);
     }
 }

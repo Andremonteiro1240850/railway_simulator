@@ -13,18 +13,18 @@ import java.util.List;
 
 public class EditorUI implements Runnable {
     private final Organization organization;
-    private final Employee loggedInEmployee;
 
-    public EditorUI(Organization organization, Employee loggedInEmployee) {
+
+    public EditorUI(Organization organization) {
         this.organization = organization;
-        this.loggedInEmployee = loggedInEmployee;
+
     }
 
     public void run() {
         List<MenuItem> options = new ArrayList<>();
         options.add(new MenuItem("Create a scenario", new CreateScenarioUI()));
         options.add(new MenuItem("Create a map", new CreateMapUI(organization)));
-        options.add(new MenuItem("Add an industry", new AddIndustryUI(loggedInEmployee))); // Passa o loggedInEmployee
+        options.add(new MenuItem("Add an industry", new AddIndustryUI())); // Passa o loggedInEmployee
         options.add(new MenuItem("Add city", new AddCityUI(organization)));
 
         int option = 0;

@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.controller;
 
+import pt.ipp.isep.dei.domain.Employee;
+import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.repository.AuthenticationRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.isep.lei.esoft.auth.mappers.dto.UserRoleDTO;
@@ -15,6 +17,7 @@ public class AuthenticationController {
 
     //private final ApplicationSession applicationSession;
     private final AuthenticationRepository authenticationRepository;
+    private String lastLoggedInEmail = null;
 
     public AuthenticationController() {
         this.authenticationRepository = Repositories.getInstance().getAuthenticationRepository();
@@ -22,7 +25,11 @@ public class AuthenticationController {
 
     public boolean doLogin(String email, String pwd) {
         try {
-            return authenticationRepository.doLogin(email, pwd);
+            boolean success = authenticationRepository.doLogin(email, pwd);
+            if (success) {
+                lastLoggedInEmail = email; // <-- guardamos o email
+            }
+            return success;
         } catch (IllegalArgumentException ex) {
             return false;
         }
@@ -35,7 +42,16 @@ public class AuthenticationController {
         return null;
     }
 
+
+
+
     public void doLogout() {
         authenticationRepository.doLogout();
     }
+
+    public Employee loggedInEmployee(Organization organization) {
+        if (lastLoggedInEmail == null) return null;
+        return organization.findEmployeeByEmail(lastLoggedInEmail);
+    }
+
 }
