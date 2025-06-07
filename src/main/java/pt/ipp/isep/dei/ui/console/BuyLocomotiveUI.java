@@ -16,12 +16,12 @@ import java.util.Scanner;
 
 public class BuyLocomotiveUI implements Runnable {
 
-    private final AssignRouteController controller;
+    private final BuyLocomotiveController controller;
     private final Scanner scanner = new Scanner(System.in);
     private final ScenarioRepository scenarioRepository;
 
     public BuyLocomotiveUI() {
-        this.controller = new AssignRouteController ();
+        this.controller = new BuyLocomotiveController ();
         this.scenarioRepository = Repositories.getInstance().getScenarioRepository();
     }
 
