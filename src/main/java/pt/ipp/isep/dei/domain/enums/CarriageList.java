@@ -2,47 +2,58 @@ package pt.ipp.isep.dei.domain.enums;
 
 import pt.ipp.isep.dei.domain.Carriage;
 
-/**
-     * Enum que representa os tipos de carruagens disponíveis em Railroad Tycoon II.
-     */
-    public enum CarriageList {
+public enum CarriageList {
 
+    // Passageiros e Correio
+    PASSENGER_CAR("Passenger Car", "PASSENGERS", 35),
+    MAIL_CAR("Mail Car", "MAIL", 25),
 
+    // Alimentares e produtos transformados
+    REFRIGERATED_CAR("Refrigerated Car", "FOOD", 40),
+    BOXCAR("Boxcar", "TEXTILES", 50),
+    AUTOMOBILE_CAR("Automobile Car", "CARS", 30),
+    BAKERY_SUPPLY_CAR("Bakery Supply Car", "FOOD", 35),
 
-            // Carruagens de passageiros
-            PASSENGER_CAR(" PASSENGER_CAR","Passageiros", 35),
-            DINING_CAR("DINING_CAR","Passageiros", 20),
+    // Minérios
+    COAL_HOPPER("Coal Hopper", "COAL", 60),
+    IRON_ORE_HOPPER("Iron Ore Hopper", "IRON_ORE", 60),
+    BAUXITE_HOPPER("Bauxite Hopper", "BAUXITE", 60),
+    NITRATE_TANKER("Nitrate Tanker", "NITRATE", 45),
 
-            // Carruagens de carga
-            MAIL_CAR("MAIL_CAR","Carga", 40),
-            COAL_CAR("COAL_CAR","Carga", 65),
-            OIL_TANKER("OIL_TANKER","Carga", 65),
-            CATTLE_CAR("CATTLE_CAR","Carga", 30),
-            REFRIGERATED_CAR("REFRIGERATED_CAR","Carga", 45),
-            FLATBED_CAR("FLATBED_CAR","Carga", 50),
-            HOPPER_CAR("HOPPER_CAR","Carga", 60),
-            BOXCAR("BOXCAr","Carga", 50),
-            CABOOSE("CABOOSE","Carga", 20); // geralmente usada no final dos comboios
+    // Agricultura
+    CATTLE_CAR("Cattle Car", "CATTLE", 30),
+    GRAIN_HOPPER("Grain Hopper", "CEREALS", 55),
+    VEGETABLE_CAR("Vegetable Car", "VEGETABLES", 45),
+    WOOL_CAR("Wool Car", "WOOL", 40),
+    COFFEE_CAR("Coffee Car", "COFFEE", 40),
+    RUBBER_CAR("Rubber Car", "RUBBER", 40),
 
-            private String name;
-            private final String cargoType;
-            private final int capacity;
+    // Indústria pesada
+    STEEL_CAR("Steel Car", "STEEL", 50); // <- ÚLTIMA linha termina com ponto e vírgula
 
-            CarriageList(String name, String cargoType, int capacity) {
-                this.name = name;
-                this.cargoType = cargoType;
-                this.capacity = capacity;
-            }
+    private final String name;
+    private final String cargoType;
+    private final int capacity;
+
+    CarriageList(String name, String cargoType, int capacity) {
+        this.name = name;
+        this.cargoType = cargoType;
+        this.capacity = capacity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCargoType() {
+        return cargoType;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
 
     public Carriage toCarriage() {
         return new Carriage(name, cargoType, capacity);
     }
-
-
-
-
-
-
 }
-
-

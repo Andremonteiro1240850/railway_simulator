@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.ui.console;
 
+import pt.ipp.isep.dei.controller.AssignRouteController;
 import pt.ipp.isep.dei.controller.BuyLocomotiveController;
 import pt.ipp.isep.dei.domain.Locomotive;
 import pt.ipp.isep.dei.domain.Scenario;
@@ -15,12 +16,12 @@ import java.util.Scanner;
 
 public class BuyLocomotiveUI implements Runnable {
 
-    private final BuyLocomotiveController controller;
+    private final AssignRouteController controller;
     private final Scanner scanner = new Scanner(System.in);
     private final ScenarioRepository scenarioRepository;
 
     public BuyLocomotiveUI() {
-        this.controller = new BuyLocomotiveController();
+        this.controller = new AssignRouteController ();
         this.scenarioRepository = Repositories.getInstance().getScenarioRepository();
     }
 

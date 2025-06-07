@@ -29,36 +29,5 @@ public class AssignRouteController {
         this.cargoRepository = cargoRepository;
     }
 
-    public List<Station> getAllStations() {
-        return stationRepository.getAll();
+
     }
-
-    public List<Locomotive> getAllLocomotives() {
-        return locomotiveRepository.getAll();
-    }
-
-    public List<String> getAllCargos() {
-        return cargoRepository.getAllCargos();
-    }
-
-    public Optional<Route> createRoute(List<Station> stations, Locomotive locomotive, List<String> cargosToTransport) {
-        if (stations == null || stations.size() < 2) {
-            return Optional.empty();
-        }
-
-        if (locomotive == null) {
-            return Optional.empty();
-        }
-
-        // Verifica se todas as cargas são válidas
-        for (String cargo : cargosToTransport) {
-            if (!cargoRepository.isValidCargo(cargo)) {
-                return Optional.empty();
-            }
-        }
-
-        // Cria a rota (implementação simplificada)
-        Route route = new Route(stations, locomotive, cargosToTransport);
-        return Optional.of(route);
-    }
-}

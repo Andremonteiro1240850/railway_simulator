@@ -195,4 +195,21 @@ public class Station {
         clone.upgrades = new ArrayList<>(this.upgrades);
         return clone;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Station [Name: %s, Type: %s, Region: %s, Ref: %s, Area: %d, Coordinates: (%d, %d), Upgrades: %d]",
+                name,
+                type,
+                region,
+                reference,
+                area,
+                x,
+                y,
+                upgrades != null ? upgrades.size() : 0
+        );
+    }
+
+
 }
