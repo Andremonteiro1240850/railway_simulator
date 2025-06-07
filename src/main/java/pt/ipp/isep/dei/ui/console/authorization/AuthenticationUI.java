@@ -28,29 +28,27 @@ public class AuthenticationUI implements Runnable {
         boolean success = doLogin();
 
         if (success) {
-            // Após login, obtemos o employee logado
-            Employee loggedInEmployee = ctrl.loggedInEmployee();
-            if (loggedInEmployee != null) {
-                // Passamos o Employee logado para o EditorUI
-                List<UserRoleDTO> roles = this.ctrl.getUserRoles();
-                if (roles != null && !roles.isEmpty()) {
-                    UserRoleDTO role = selectsRole(roles);
-                    if (role != null) {
-                        List<MenuItem> rolesUI = getMenuItemForRoles(loggedInEmployee);
-                        this.redirectToRoleUI(rolesUI, role);
-                    } else {
-                        System.out.println("No role selected.");
-                    }
+            List<UserRoleDTO> roles = this.ctrl.getUserRoles();
+            if ((roles == null) || (roles.isEmpty())) {
+                System.out.println("No role assigned to user.");
+            } else {
+                UserRoleDTO role = selectsRole(roles);
+                if (!Objects.isNull(role)) {
+                    List<MenuItem> rolesUI = getMenuItemForRoles();
+                    this.redirectToRoleUI(rolesUI, role);
+                } else {
+                    System.out.println("No role selected.");
                 }
             }
         }
         this.logout();
     }
 
-    private List<MenuItem> getMenuItemForRoles(Employee loggedInEmployee) {
+
+    private List<MenuItem> getMenuItemForRoles() {
         List<MenuItem> rolesUI = new ArrayList<>();
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_ADMIN, new AdminUI()));
-        rolesUI.add(new MenuItem(AuthenticationController.ROLE_EDITOR, new EditorUI(organization, loggedInEmployee))); // Passando o loggedInEmployee
+        rolesUI.add(new MenuItem(AuthenticationController.ROLE_EDITOR, new EditorUI(organization))); // Passando o loggedInEmployee
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_PLAYER, new PlayerUI()));
         return rolesUI;
     }
@@ -65,9 +63,9 @@ public class AuthenticationUI implements Runnable {
             String id = Utils.readLineFromConsole("Enter UserId/Email: ");
             String pwd = Utils.readLineFromConsole("Enter Password: ");
 
-            success = ctrl.doLogin(id, pwd);  // Tenta fazer o login
+            success = ctrl.doLogin(id, pwd);
             if (!success) {
-                System.out.println("Invalid UserId and/or Password. \n You have " + maxAttempts + " more attempt(s).");
+                System.out.println("Invalid UserId and/or Password. \n You have  " + maxAttempts + " more attempt(s).");
             }
 
         } while (!success && maxAttempts > 0);

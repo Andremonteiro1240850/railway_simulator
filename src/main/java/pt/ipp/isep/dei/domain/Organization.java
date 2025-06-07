@@ -156,4 +156,14 @@ public class Organization {
         }
         return false;
     }
+    public Employee findEmployeeByEmail(String email) {
+        for (Employee e : this.getEmployees()) { // <- CORRETO
+            if (e.getEmail().equalsIgnoreCase(email)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+
 }
