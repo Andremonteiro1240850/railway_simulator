@@ -3,6 +3,7 @@ package pt.ipp.isep.dei.controller;
 import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.domain.enums.ScaleUnit;
 import pt.ipp.isep.dei.repository.CreateMapRepository;
+import pt.ipp.isep.dei.repository.Repositories;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +12,10 @@ import java.util.Optional;
  * Controller responsible for creating new maps and placing entities.
  */
 public class CreateMapController {
-    private final CreateMapRepository repo = new CreateMapRepository();
+    private final CreateMapRepository repo;
+    public CreateMapController() {
+        this.repo = Repositories.getInstance().getMapRepository();
+    }
 
     /**
      * Creates a new map for the given organization.

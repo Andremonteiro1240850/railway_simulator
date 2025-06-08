@@ -56,6 +56,7 @@ public class CreateScenarioController {
     public boolean createScenario(String name, Map map, int startYear, int endYear,
                                   List<String> locomotiveTypes, PortBehavior portBehavior,
                                   double budget, List<HistoricalEvent> historicalEvents) {
+
         // 1. Verificar o funcionário e organização
         Employee employee = getEmployeeFromSession();
         Optional<Organization> org = orgRepo.getOrganizationByEmployee(employee);
@@ -64,6 +65,7 @@ public class CreateScenarioController {
             System.out.println("Erro: Funcionário não pertence a nenhuma organização.");
             return false;
         }
+
 
         // 2. Converter strings para LocomotiveType e validar
         List<LocomotiveType> availableLocomotiveTypes = new ArrayList<>();
@@ -98,7 +100,8 @@ public class CreateScenarioController {
         // Criar o cenário com os eventos carregados
         Scenario newScenario = new Scenario(name, startYear, endYear,
                 availableLocomotiveTypes, historicalEvents1,
-                portBehavior, budget);
+                portBehavior, budget,map); // <-- agora o mapa é usado
+
 
         // 6. Adicionar ao repositório e verificar resultado
         Optional<Scenario> added = scenarioRepo.add(newScenario);

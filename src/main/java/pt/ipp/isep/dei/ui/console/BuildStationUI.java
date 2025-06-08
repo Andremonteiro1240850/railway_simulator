@@ -2,8 +2,10 @@ package pt.ipp.isep.dei.ui.console;
 
 import pt.ipp.isep.dei.controller.BuildStationController;
 import pt.ipp.isep.dei.domain.Player;
+import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.enums.Regions;
 import pt.ipp.isep.dei.domain.enums.StationTypes;
+import pt.ipp.isep.dei.repository.ScenarioRepository;
 
 import java.util.List;
 import java.util.Scanner;
@@ -16,13 +18,20 @@ public class BuildStationUI implements Runnable {
     private int x;
     private int y;
     private Player player;
+    private ScenarioRepository scenarioRepository;
+    private Scenario selectedScenario;
 
     public BuildStationUI() {
         this.controller = new BuildStationController();
     }
 
+
     public void run() {
         System.out.println("\n\n--- Create Station ------------------------");
+
+        if (!requestScenario()) {
+            return; // Volta ao menu do jogador
+        }
 
         requestStationData();
         submitData();
@@ -42,13 +51,22 @@ public class BuildStationUI implements Runnable {
 
     private void requestStationData() {
         // Request basic station information
-        name = requestName();
+
         x = requestx();
         y = requesty();
         // Select station type and region if applicable
         selectType();
         selectRegion();
+        showNameSuggestion();
+        name = requestName();
 
+    }
+    private void showNameSuggestion() {
+        // Obtém a sugestão do controller
+        String suggestedName = controller.suggestStationName(x, y, StationTypes.valueOf(type.toUpperCase()));
+
+        System.out.println("\n💡 Suggested name: " + suggestedName);
+        System.out.println("(Press Enter to accept this name or type a new one)");
     }
     private int requestx() {
         Scanner input = new Scanner(System.in);
@@ -94,8 +112,32 @@ public class BuildStationUI implements Runnable {
     // Helper methods for input
     private String requestName() {
         Scanner input = new Scanner(System.in);
-        System.out.print("Name: ");
-        return input.nextLine();
+        System.out.print("Name [" + controller.suggestStationName(x, y, StationTypes.valueOf(type.toUpperCase())) + "]: ");
+        String name = input.nextLine();
+
+        // Se o usuário apenas pressionar Enter, usa o nome sugerido
+        if (name.trim().isEmpty()) {
+            return controller.suggestStationName(x, y, StationTypes.valueOf(type.toUpperCase()));
+        }
+        return name;
     }
+    private boolean requestScenario() {
+        ScenarioRepository repo = new ScenarioRepository(); // ou injete esta instância
+        List<Scenario> scenarios = repo.getAll();
+
+        if (scenarios.isEmpty()) {
+            System.out.println("❌ No scenarios available. Please create one first.");
+            return false; // Sinaliza que deve voltar ao menu
+        }
+
+        Scenario selected = selectFromList(scenarios, "Select Scenario");
+        this.selectedScenario = selected;
+
+        System.out.println("✅ Scenario '" + selected.getName() + "' selected.");
+        controller.setScenario(selected); // Garanta que este método existe
+
+        return true;
+    }
+
 
 }

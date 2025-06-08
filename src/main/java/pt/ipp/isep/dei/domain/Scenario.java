@@ -24,6 +24,7 @@ public class Scenario {
     private List<Carriage> cariagePurchased;
     private List<Station> stationsPurchased;
     private List<Locomotive> locomotivesDisponiveis = new ArrayList<>();
+    private Map map;
 
 
     /**
@@ -36,7 +37,7 @@ public class Scenario {
      */
 
     public Scenario(String name, int startYear, int endYear, List<LocomotiveType> availableLocomotiveTypes,
-                    List<HistoricalEvent> historicalEvents, PortBehavior portBehavior, double budget) {
+                    List<HistoricalEvent> historicalEvents, PortBehavior portBehavior, double budget,Map map) {
         this.name = name;
         this.startYear = startYear;
         this.currentYear = startYear;
@@ -44,11 +45,12 @@ public class Scenario {
         this.availableLocomotiveTypes = availableLocomotiveTypes;
         this.historicalEvents = (historicalEvents != null) ? new ArrayList<>(historicalEvents) : new ArrayList<>();
         this.portBehavior = portBehavior;
-        this.budget = budget;
+        this.budget = 700000;
         loadApplicableHistoricalEvents();
         this.locomotivePurchased = new ArrayList<>();
         this.cariagePurchased = new ArrayList<>();
         this.stationsPurchased = new ArrayList<>();
+        this.map = map;
 
     }
 
@@ -105,6 +107,9 @@ public class Scenario {
     public List<Locomotive> getLocomotivePurchased() {return locomotivePurchased;}
     public List<Carriage> getCarriagePurchased() {return cariagePurchased;}
     public List<Station> getStationsPurchased() {return stationsPurchased;}
+    public Map getMap() {
+        return map;
+    }
 
     /**
      * Sets the port behavior configuration.
@@ -146,7 +151,7 @@ public class Scenario {
 
     @Override
     public Scenario clone() {
-        Scenario clone = new Scenario(name, startYear, endYear, availableLocomotiveTypes, historicalEvents, portBehavior, budget);
+        Scenario clone = new Scenario(name, startYear, endYear, availableLocomotiveTypes, historicalEvents, portBehavior, budget,map);
         clone.availableLocomotiveTypes = new ArrayList<>(this.availableLocomotiveTypes);
         clone.portBehavior = this.portBehavior != null ? this.portBehavior.clone() : null;
         clone.historicalEvents = new ArrayList<>(this.historicalEvents);

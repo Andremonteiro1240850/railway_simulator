@@ -53,9 +53,70 @@ public class BuildStationController {
         }
         return authenticationRepository;
     }
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
+    }
+    public String suggestStationName(int x, int y, StationTypes stationType) {
+        if (scenario == null || scenario.getMap() == null) {
+            return stationType.getType() + " Nova"; // Fallback name
+        }
+
+        Map map = scenario.getMap();
+        List<City> cities = map.getCities();
+
+        if (cities.isEmpty()) {
+            return stationType.getType() + " Nova";
+        }
+
+        City nearestCity = findNearestCity(x, y, cities);
+        return String.format("%s de %s", stationType.getType(), nearestCity.getName());
+    }
+
+    /**
+     * Finds the nearest city to given coordinates
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param cities List of cities to search
+     * @return Nearest city
+     */
+    private City findNearestCity(int x, int y, List<City> cities) {
+        City nearest = cities.get(0);
+        double minDistance = calculateDistance(x, y, nearest.getX(), nearest.getY());
+
+        for (City city : cities) {
+            double distance = calculateDistance(x, y, city.getX(), city.getY());
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearest = city;
+            }
+        }
+        return nearest;
+    }
+
+    /**
+     * Calculates Euclidean distance between two points
+     * @param x1 X coordinate of point 1
+     * @param y1 Y coordinate of point 1
+     * @param x2 X coordinate of point 2
+     * @param y2 Y coordinate of point 2
+     * @return Distance between points
+     */
+    private double calculateDistance(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
 
 
     public boolean createStation(String typeName, String name, String region, int x, int y) {
+        if (scenario == null) {
+            System.out.println("Erro: Nenhum cenário definido.");
+            return false;
+        }
+
+        Map map = scenario.getMap();
+        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
+            System.out.println("Erro: Coordenadas fora dos limites do mapa.");
+            return false;
+        }
         // 1. Verificar se o tipo é válido
         StationTypes stationType = null;
         for (StationTypes st : StationTypes.values()) {
@@ -105,9 +166,14 @@ public class BuildStationController {
             System.out.println("Erro: Orçamento insuficiente para construir esta estação (necessário: " + cost + ").");
             return false;
         }
+        String stationName = name;
+        if (name == null || name.trim().isEmpty()) {
+            StationTypes stationType1 = StationTypes.valueOf(typeName.toUpperCase());
+            stationName = suggestStationName(x, y, stationType1);
+        }
 
         // 4. Criar e adicionar estação
-        Station newStation = new Station(name, stationType.getType(), regionType.getRegion(), stationType.getArea(), x, y);
+        Station newStation = new Station(stationName, stationType.getType(), regionType.getRegion(), stationType.getArea(), x, y);
         scenario.addStationPurchased(newStation);
         Optional<Station> added = Repositories.getInstance().getStationRepository().add(newStation);
 
