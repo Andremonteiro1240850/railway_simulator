@@ -49,6 +49,7 @@ public class AddCityUI implements Runnable {
         map = requestMap();
         locationX = requestCoordinate("X");
         locationY = requestCoordinate("Y");
+
     }
 
     private int requestCoordinate(String axis) {
@@ -105,6 +106,13 @@ public class AddCityUI implements Runnable {
             int x = requestCoordinate("X");
             int y = requestCoordinate("Y");
             blocks.add(new int[]{x, y});
+            if(map.getObjectsAt(x, y).stream().anyMatch(obj -> obj instanceof City)) {
+                System.out.println("❌ Block at (" + x + ", " + y + ") overlaps with an existing city. Please enter a different block.");
+                i--; // Decrement to retry this block
+            } else if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
+                System.out.println("❌ Coordinates out of bounds. Please enter valid coordinates.");
+                i--; // Decrement to retry this block
+            }
         }
         return blocks;
     }
