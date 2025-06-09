@@ -8,16 +8,17 @@ import pt.ipp.isep.dei.domain.Scenario;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 public class CreateScenarioUI implements Runnable {
     private final CreateScenarioController controller;
     private final Scanner scanner;
 
+
     public CreateScenarioUI() {
         this.controller = new CreateScenarioController();
         this.scanner = new Scanner(System.in);
+
     }
 
     public void run() {
@@ -43,16 +44,22 @@ public class CreateScenarioUI implements Runnable {
 
         // 4. Configurar comportamento dos portos
         PortBehavior portBehavior = configurePortBehavior();
-        double budget = controller.getScenario().getBudget();
-        List<HistoricalEvent> historicalEvents = controller.loadApplicableHistoricalEvents(startYear);
 
+        // 5. Carregar eventos históricos
+        List<HistoricalEvent> historicalEvents = controller.loadApplicableHistoricalEvents(startYear);
         showHistoricalEvents(startYear);
 
-        // 5. Criar cenário
-       boolean sucess = controller.createScenario(name,selectedMap,startYear,endYear,locomotiveTypes,portBehavior,budget,historicalEvents);
+        // Definir o orçamento inicial (ou pedir ao usuário)
+        double budget = 700000; // Valor padrão
 
-        if (sucess) {
+        // 6. Criar cenário
+        boolean success = controller.createScenario(name, selectedMap, startYear, endYear,
+                locomotiveTypes, portBehavior, budget, historicalEvents);
+
+        if (success) {
             System.out.println("\nScenario created successfully!");
+            Scenario scenario = controller.getScenario();
+            System.out.println("Initial budget: " + scenario.getBudget() + "€");
         } else {
             System.out.println("\nFailed to create scenario.");
         }
@@ -79,6 +86,7 @@ public class CreateScenarioUI implements Runnable {
 
         return maps.get(choice - 1);
     }
+
     private void showHistoricalEvents(int startYear) {
         List<HistoricalEvent> events = controller.loadApplicableHistoricalEvents(startYear);
 
@@ -124,28 +132,25 @@ public class CreateScenarioUI implements Runnable {
 
         return types;
     }
+
     private PortBehavior configurePortBehavior() {
         PortBehavior behavior = new PortBehavior();
         System.out.println("\n=== Configure Port Behavior ===");
 
-        // Lista de cargas possíveis baseada no domínio do problema (Railroad Tycoon)
         List<String> possibleCargos = List.of(
                 "coal", "iron", "bauxite", "nitrate", "vegetables", "cereals",
                 "wool", "coffee", "rubber", "cattle", "steel", "textiles",
                 "automobiles", "food", "passengers", "mail"
         );
 
-        // Configurar cargas de importação
         System.out.println("\nConfigure Import Cargos:");
         List<String> selectedImports = selectCargosFromList(possibleCargos, "import");
         selectedImports.forEach(behavior::addImportCargo);
 
-        // Configurar cargas de exportação
         System.out.println("\nConfigure Export Cargos:");
         List<String> selectedExports = selectCargosFromList(possibleCargos, "export");
         selectedExports.forEach(behavior::addExportCargo);
 
-        // Configurar cargas de transformação
         System.out.println("\nConfigure Transformation Cargos:");
         List<String> selectedTransforms = selectCargosFromList(possibleCargos, "transform");
         selectedTransforms.forEach(behavior::addTransformCargo);
@@ -160,7 +165,6 @@ public class CreateScenarioUI implements Runnable {
 
     private List<String> selectCargosFromList(List<String> possibleCargos, String cargoType) {
         List<String> selected = new ArrayList<>();
-        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Available cargos for " + cargoType + ":");
         for (int i = 0; i < possibleCargos.size(); i++) {
@@ -202,6 +206,4 @@ public class CreateScenarioUI implements Runnable {
 
         return selected;
     }
-
-
 }

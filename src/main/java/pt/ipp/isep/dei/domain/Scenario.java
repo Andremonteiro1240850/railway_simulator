@@ -45,7 +45,7 @@ public class Scenario {
         this.availableLocomotiveTypes = availableLocomotiveTypes;
         this.historicalEvents = (historicalEvents != null) ? new ArrayList<>(historicalEvents) : new ArrayList<>();
         this.portBehavior = portBehavior;
-        this.budget = 700000;
+        this.budget = budget;
         loadApplicableHistoricalEvents();
         this.locomotivePurchased = new ArrayList<>();
         this.cariagePurchased = new ArrayList<>();

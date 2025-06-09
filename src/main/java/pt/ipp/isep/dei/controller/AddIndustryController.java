@@ -49,31 +49,29 @@ public class AddIndustryController {
         return authenticationRepository;
     }
 
-    public Optional<Industry> createIndustry(IndustryType type, int positionX, int positionY, Map map, Industry industry) {
+    public Optional<Industry> createIndustry(IndustryType type, int positionX, int positionY, Map map) {
         try {
-            // Verifica se o tipo de indústria é válido
             if (type == null) {
                 throw new IllegalArgumentException("Industry type cannot be null");
             }
 
-            // Validação da posição no mapa
-            validatePosition(map, positionX, positionY, industry);
+            // Verifica se a posição está dentro dos limites do mapa
+            if (positionX < 0 || positionX >= map.getWidth() || positionY < 0 || positionY >= map.getHeight()) {
+                throw new IllegalArgumentException("Coordinates out of bounds");
+            }
 
-            // Obtém o funcionário atual da sessão
+            // Verifica se a posição está ocupada
+            if (map.isOccupied(positionX, positionY)) {
+                throw new IllegalArgumentException("Position already occupied");
+            }
+
             Employee employee = getEmployeeFromSession();
-
-            // Obtém a organização do funcionário
             Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
 
-            // Cria a indústria e adiciona ao mapa
-            return organization.flatMap(org -> {
-                // Cria a nova indústria
+            return organization.map(org -> {
                 Industry newIndustry = new Industry(type, map, positionX, positionY);
-
-                // Adiciona a indústria ao mapa
                 map.addIndustry(newIndustry);
-
-                return Optional.of(newIndustry);
+                return newIndustry;
             });
         } catch (IllegalArgumentException e) {
             System.err.println("[Error US02] " + e.getMessage());

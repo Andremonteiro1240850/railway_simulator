@@ -35,44 +35,47 @@ public class AddCityController {
     }
 
     public Optional<City> createCity(Map map, String cityName, int x, int y, List<int[]> houseBlocks) {
-        // Validar house blocks
-        Optional<String> houseBlocksValidation = validateHouseBlocks(houseBlocks, map);
-        if (houseBlocksValidation.isPresent()) {
-            throw new IllegalArgumentException(houseBlocksValidation.get());
-        }
-
-        // Validar indústrias
-        Optional<String> industryValidation = validateIndustries(map, x, y);
-        if (industryValidation.isPresent()) {
-            throw new IllegalArgumentException(industryValidation.get());
-        }
-
-        if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
-            throw new IllegalArgumentException("As coordenadas da cidade estão fora dos limites do mapa: (" + x + ", " + y + ")");
-        }
-
         try {
+            // 1. Validação básica dos parâmetros
+            if (map == null || cityName == null || cityName.trim().isEmpty()) {
+                throw new IllegalArgumentException("Invalid city parameters");
+            }
+
+            // 2. Valida posição central da cidade
+            Optional<String> cityCenterError = validateCityCenter(map, x, y);
+            if (cityCenterError.isPresent()) {
+                throw new IllegalArgumentException(cityCenterError.get());
+            }
+
+            // 3. Valida house blocks (só depois de confirmar que a posição central é válida)
+            Optional<String> houseBlocksError = validateHouseBlocks(houseBlocks, map);
+            if (houseBlocksError.isPresent()) {
+                throw new IllegalArgumentException(houseBlocksError.get());
+            }
+
+            // 4. Obtém o employee da sessão
             Employee employee = getEmployeeFromSession();
+
+            // 5. Tenta adicionar a cidade
             return map.addCity(cityName, x, y, houseBlocks, employee);
+
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("❌ Failed to create city: " + e.getMessage());
+            System.err.println("Error creating city: " + e.getMessage());
+            return Optional.empty();
         }
     }
 
-    private Optional <String> validateCityCenter(Map map, int x, int y) {
+    private Optional<String> validateCityCenter(Map map, int x, int y) {
+        // Verifica limites do mapa
         if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
-            return Optional.of("❌ City position out of map bounds: (" + x + ", " + y + ")");
+            return Optional.of("City position out of map bounds");
         }
 
+        // Verifica se está ocupado (qualquer tipo de objeto)
         if (map.isOccupied(x, y)) {
-            return Optional.of("❌ City position is already occupied");
+            return Optional.of("City center position is already occupied");
         }
 
-        for (City city : map.getCities()) {
-            if (city.getX() == x && city.getY() == y) {
-                return Optional.of("❌ City position conflicts with existing city at: (" + x + ", " + y + ")");
-            }
-        }
         return Optional.empty();
     }
 

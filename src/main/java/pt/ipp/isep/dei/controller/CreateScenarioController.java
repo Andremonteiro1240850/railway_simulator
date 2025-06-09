@@ -139,6 +139,9 @@ public class CreateScenarioController {
         scenario.setBudget(scenario.getBudget() + amount);
     }
     public Scenario getScenario() {
+        if (scenario == null) {
+            throw new IllegalStateException("No scenario has been created yet");
+        }
         return scenario;
     }
 

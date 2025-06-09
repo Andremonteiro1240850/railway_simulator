@@ -30,7 +30,7 @@ public class AddIndustryUI implements Runnable {
         if (map != null) {
             try {
                 Industry tempIndustry = new Industry(type, map, x, y);
-                Optional<Industry> result = controller.createIndustry(type, x, y, map, tempIndustry);
+                Optional<Industry> result = controller.createIndustry(type, x, y, map);
                 result.ifPresentOrElse(
                         this::showSuccess,
                         () -> showError("Failed to create industry. Please check the details and try again.")
