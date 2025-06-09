@@ -1,6 +1,5 @@
 package pt.ipp.isep.dei;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,12 +11,12 @@ import pt.ipp.isep.dei.ui.console.menu.MainMenuUI;
 import static javafx.application.Application.launch;
 
 
-public class Main extends Application {
+public class Main {
 
     public void start(Stage primaryStage) {
         try {
             // Carregar o FXML para a tela inicial (PlayerMenu)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pt/ipp/isep/dei/ui/gui/PlayerMenu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pt/ipp/isep/dii/ui/gui/PlayerMenu.fxml"));
             Parent root = loader.load();
 
             // Configurar a cena e o estágio (janela)
@@ -32,6 +31,20 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.run();
+
+        try {
+            CreateMapRepository mapRepository = Repositories.getInstance().getMapRepository();
+            CityRepository cityRepository = Repositories.getInstance().getCityRepository();
+            IndustryRepository industryRepository = Repositories.getInstance().getIndustryRepository();
+            StationRepository stationRepository = Repositories.getInstance().getStationRepository();
+            Organization organization = new Organization("This Company",mapRepository,cityRepository,industryRepository,stationRepository);
+            MainMenuUI menu = new MainMenuUI(organization);
+            menu.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
     }
 }
