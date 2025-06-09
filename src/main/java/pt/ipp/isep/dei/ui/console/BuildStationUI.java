@@ -5,6 +5,7 @@ import pt.ipp.isep.dei.domain.Player;
 import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.enums.Regions;
 import pt.ipp.isep.dei.domain.enums.StationTypes;
+import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.repository.ScenarioRepository;
 
 import java.util.List;
@@ -122,7 +123,7 @@ public class BuildStationUI implements Runnable {
         return name;
     }
     private boolean requestScenario() {
-        ScenarioRepository repo = new ScenarioRepository(); // ou injete esta instância
+        ScenarioRepository repo = Repositories.getInstance().getScenarioRepository(); // ou injete esta instância
         List<Scenario> scenarios = repo.getAll();
 
         if (scenarios.isEmpty()) {

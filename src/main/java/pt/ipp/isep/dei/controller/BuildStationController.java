@@ -28,7 +28,7 @@ public class BuildStationController {
 
     //Allows receiving the repositories as parameters for testing purposes
     public BuildStationController(OrganizationRepository organizationRepository,
-                                AuthenticationRepository authenticationRepository,StationRepository stationRepository) {
+                                  AuthenticationRepository authenticationRepository, StationRepository stationRepository) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
         this.stationRepository = stationRepository;
@@ -53,9 +53,11 @@ public class BuildStationController {
         }
         return authenticationRepository;
     }
+
     public void setScenario(Scenario scenario) {
         this.scenario = scenario;
     }
+
     public String suggestStationName(int x, int y, StationTypes stationType) {
         if (scenario == null || scenario.getMap() == null) {
             return stationType.getType() + " Nova"; // Fallback name
@@ -74,8 +76,9 @@ public class BuildStationController {
 
     /**
      * Finds the nearest city to given coordinates
-     * @param x X coordinate
-     * @param y Y coordinate
+     *
+     * @param x      X coordinate
+     * @param y      Y coordinate
      * @param cities List of cities to search
      * @return Nearest city
      */
@@ -95,6 +98,7 @@ public class BuildStationController {
 
     /**
      * Calculates Euclidean distance between two points
+     *
      * @param x1 X coordinate of point 1
      * @param y1 Y coordinate of point 1
      * @param x2 X coordinate of point 2
@@ -108,7 +112,7 @@ public class BuildStationController {
 
     public boolean createStation(String typeName, String name, String region, int x, int y) {
         if (scenario == null) {
-            System.out.println("Erro: Nenhum cenário definido.");
+            System.out.println("Erro: Nenhum cenário definido. Selecione um cenário primeiro.");
             return false;
         }
 
@@ -117,7 +121,7 @@ public class BuildStationController {
             System.out.println("Erro: Coordenadas fora dos limites do mapa.");
             return false;
         }
-        // 1. Verificar se o tipo é válido
+
         StationTypes stationType = null;
         for (StationTypes st : StationTypes.values()) {
             if (st.getType().equalsIgnoreCase(typeName)) {
@@ -131,22 +135,19 @@ public class BuildStationController {
             return false;
         }
 
-        //Valida região
-
         Regions regionType = null;
         for (Regions r : Regions.values()) {
-            if(r.getRegion().equalsIgnoreCase(region)) {
+            if (r.getRegion().equalsIgnoreCase(region)) {
                 regionType = r;
                 break;
             }
         }
+
         if (regionType == null) {
             System.out.println("Erro: Região inválida.");
             return false;
-
         }
 
-        // 2. Verificar se já existe uma estação com a mesma localização
         List<Station> existingStations = Repositories.getInstance().getStationRepository().getAll();
         for (Station s : existingStations) {
             if (s.getX() == x && s.getY() == y) {
@@ -155,30 +156,24 @@ public class BuildStationController {
             }
         }
 
-        // 3. Verificar orçamento do jogador
-
         double budget = scenario.getBudget();
         double cost = stationType.getCost();
-
-        //Valida orçamento
 
         if (budget < cost) {
             System.out.println("Erro: Orçamento insuficiente para construir esta estação (necessário: " + cost + ").");
             return false;
         }
+
         String stationName = name;
         if (name == null || name.trim().isEmpty()) {
-            StationTypes stationType1 = StationTypes.valueOf(typeName.toUpperCase());
-            stationName = suggestStationName(x, y, stationType1);
+            stationName = suggestStationName(x, y, stationType);
         }
 
-        // 4. Criar e adicionar estação
         Station newStation = new Station(stationName, stationType.getType(), regionType.getRegion(), stationType.getArea(), x, y);
         scenario.addStationPurchased(newStation);
         Optional<Station> added = Repositories.getInstance().getStationRepository().add(newStation);
 
         if (added.isPresent()) {
-            // 5. Descontar orçamento
             scenario.setBudget(budget - cost);
             System.out.println("Estação criada com sucesso: " + newStation.getReference());
             return true;
@@ -187,6 +182,9 @@ public class BuildStationController {
             return false;
         }
     }
-
-
 }
+
+
+
+
+
