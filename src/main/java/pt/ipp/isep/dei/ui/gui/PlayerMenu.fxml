@@ -1,23 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.text.*?>
-<?import javafx.scene.control.*?>
 <?import java.lang.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
 
-
-<Pane fx:controller="pt.ipp.isep.dei.ui.gui.ControllerBuyLocomotive" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="pt.ipp.isep.dei.ui.gui.PlayerController">
    <children>
-      <Button layoutX="227.0" layoutY="161.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="146.0" text="Build Station" />
-      <Button layoutX="227.0" layoutY="192.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="146.0" text="Upgrade Station" />
-      <Button layoutX="227.0" layoutY="223.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="146.0" text="List Stations" />
-      <Button layoutX="227.0" layoutY="254.0" mnemonicParsing="false" onMouseClicked="#handleBuyLocomotive" prefHeight="31.0" prefWidth="146.0" text="Buy Locomotive" />
-      <Button layoutX="227.0" layoutY="285.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="146.0" text="Assign Train to Route" />
-      <Button layoutX="227.0" layoutY="316.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="146.0" text="Cancel" />
-      <Text layoutX="48.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="--------- Player Menu ---------">
-         <font>
-            <Font size="38.0" />
-         </font>
-      </Text>
+   
+      <!-- Map View -->
+      <Pane fx:id="mapView" layoutY="50" prefHeight="600" prefWidth="800">
+      <children>
+            <ImageView fx:id="mapImage" fitHeight="600" fitWidth="800" />
+         
+            <!-- Train List -->
+            <TableView fx:id="trainList" layoutX="385.0" layoutY="94.0" prefHeight="400.0" prefWidth="415.0">
+               <columns>
+                  <TableColumn fx:id="trainNameColumn" text="Train Name" />
+                  <TableColumn fx:id="locomotiveColumn" text="Locomotive Type" />
+                  <TableColumn fx:id="cargoColumn" text="Current Cargo" />
+               </columns>
+            </TableView>
+            <!-- Menu Bar -->
+            <MenuBar layoutX="75.0" layoutY="94.0" prefHeight="35.0" prefWidth="237.0">
+               <menus>
+                  <!-- Menu Station -->
+                  <Menu text="Station">
+                     <items>
+                        <MenuItem fx:id="buildStationMenuItem" text="Build Station" />
+                        <MenuItem fx:id="upgradeStationMenuItem" text="Upgrade Station" />
+                        <MenuItem fx:id="listStationMenuItem" text="List Stations" />
+                     </items>
+                  </Menu>
+            
+                  <!-- Menu Train -->
+                  <Menu text="Train">
+               <items>
+                        <MenuItem fx:id="buyLocomotiveMenuItem" text="Buy Locomotive" />
+                        <MenuItem fx:id="assignTrainMenuItem" text="Assign Train to Route" />
+               </items>
+                  </Menu>
+            
+                  <!-- Menu Simulation -->
+                  <Menu text="Simulation">
+               <items>
+                        <MenuItem fx:id="startSimulationMenuItem" text="Start Simulation" />
+                        <MenuItem fx:id="pauseSimulationMenuItem" text="Pause Simulation" />
+               </items>
+                  </Menu>
+               </menus>
+            </MenuBar>
+            <Text layoutX="264.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Menu Player" textAlignment="CENTER" wrappingWidth="256.3828125">
+               <font>
+                  <Font size="40.0" />
+               </font>
+            </Text>
+      </children>
+      </Pane>
+   
+      <!-- Status Label -->
+      <Label fx:id="statusLabel" layoutX="20" layoutY="650" text="Status: Ready to play" />
    </children>
-</Pane>
+</AnchorPane>
