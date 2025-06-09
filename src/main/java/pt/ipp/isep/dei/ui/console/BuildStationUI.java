@@ -39,7 +39,7 @@ public class BuildStationUI implements Runnable {
     }
 
     private void submitData() {
-        boolean success = controller.createStation(name, type, region, x, y);
+        boolean success = controller.createStation(type, name, region, x, y);
 
         if (success) {
             System.out.println("\n✅ Station successfully created!");
