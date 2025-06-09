@@ -1,28 +1,28 @@
-// City.java
 package pt.ipp.isep.dei.domain;
 
 import java.util.List;
 import java.util.Objects;
 
 public class City {
-    private Map map;
-    private int x;
-    private int y;
-    private String name;
-    private Employee employee;
-    private List<int[]> houseBlocks; // List of [x,y] coordinates for house blocks
+    private final Map map;
+    private final int x;
+    private final int y;
+    private final String name;
+    private final Employee employee;
+    private final List<int[]> houseBlocks;
 
     public City(Map map, String name, int x, int y, List<int[]> houseBlocks, Employee employee) {
         if (map == null) throw new IllegalArgumentException("Map cannot be null");
-        if (name == null || name.isEmpty()) throw new IllegalArgumentException("City name cannot be empty");
-        if (!name.matches("^[a-zA-Z ]+$")) throw new IllegalArgumentException("City name cannot have special characters or digits");
+        if (name == null || name.trim().isEmpty()) throw new IllegalArgumentException("City name cannot be empty");
+        if (!name.matches("^[a-zA-Z ]+$")) throw new IllegalArgumentException("City name can only contain letters and spaces");
         if (houseBlocks == null || houseBlocks.isEmpty()) throw new IllegalArgumentException("House blocks cannot be empty");
+        if (employee == null) throw new IllegalArgumentException("Employee cannot be null");
 
         this.map = map;
-        this.name = name;
+        this.name = name.trim();
         this.x = x;
         this.y = y;
-        this.houseBlocks = houseBlocks;
+        this.houseBlocks = List.copyOf(houseBlocks); // Defensive copy
         this.employee = employee;
     }
 
@@ -39,7 +39,7 @@ public class City {
     }
 
     public List<int[]> getHouseBlocks() {
-        return houseBlocks;
+        return List.copyOf(houseBlocks); // Defensive copy
     }
 
     public boolean containsBlock(int blockX, int blockY) {

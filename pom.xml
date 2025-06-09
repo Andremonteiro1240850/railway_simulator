@@ -114,6 +114,7 @@
                 </configuration>
             </plugin>
 
+
             <!-- Required for running unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
