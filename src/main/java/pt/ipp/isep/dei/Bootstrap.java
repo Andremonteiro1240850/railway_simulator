@@ -6,7 +6,8 @@ import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.TaskCategory;
 import pt.ipp.isep.dei.repository.*;
 
-public class Bootstrap implements Runnable {
+public class
+Bootstrap implements Runnable {
 
     //Add some task categories to the repository as bootstrap
     public void run() {
@@ -35,7 +36,7 @@ public class Bootstrap implements Runnable {
     }
 
     private void addTaskCategories() {
-        //TODO: add bootstrap Task Categories here
+        //TODO: add bootstrap Task Categories here0
         //get task category repository
         TaskCategoryRepository taskCategoryRepository = Repositories.getInstance().getTaskCategoryRepository();
 
