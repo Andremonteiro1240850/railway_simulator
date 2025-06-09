@@ -28,6 +28,10 @@ public class AssignRouteUI implements Runnable {
 
 
         List<Scenario> scenarios = scenarioRepository.getAll();
+        if(scenarios.isEmpty()) {
+            System.out.println("No scenarios found");
+            return;
+        }
 
 
             int choice = -1;

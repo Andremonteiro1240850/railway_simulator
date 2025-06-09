@@ -49,7 +49,7 @@ public class AddCityController {
         if (industryValidation.isPresent()) {
             throw new IllegalArgumentException(industryValidation.get());
         }
-
+1
         // Validate and add city using CreateMapController
         Optional<String> cityValidation = createMapController.addCityToMap(map, cityName, x, y, houseBlocks, getEmployeeFromSession());
         if (cityValidation.isPresent()) {
