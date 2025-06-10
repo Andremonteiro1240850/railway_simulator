@@ -31,4 +31,11 @@ public class ScenarioRepository {
                 .findFirst()
                 .map(Scenario::clone);
     }
+    public Optional<Scenario> findByStationReference(String stationReference) {
+        return scenarios.stream()
+                .filter(s -> s.getStationsPurchased().stream() // Assumindo que Scenario tem getStations()
+                        .anyMatch(st -> st.getReference().equals(stationReference)))
+                .findFirst()
+                .map(Scenario::clone);
+    }
 }

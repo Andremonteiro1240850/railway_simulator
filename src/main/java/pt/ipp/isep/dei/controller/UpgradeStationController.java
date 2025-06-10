@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class UpgradeStationController {
-    private  OrganizationRepository organizationRepository;
+    private   OrganizationRepository organizationRepository;
     private  AuthenticationRepository authenticationRepository;
-    private  StationRepository stationRepository;
-    private  UpgradeBuildingsRepository upgradeBuildingsRepository;
+    private final  StationRepository stationRepository;
+    private final  UpgradeBuildingsRepository upgradeBuildingsRepository;
+    private  ScenarioRepository scenarioRepository;
     private Player player;
     private Scenario scenario;
 
@@ -20,17 +21,28 @@ public class UpgradeStationController {
         this(Repositories.getInstance().getOrganizationRepository(),
                 Repositories.getInstance().getAuthenticationRepository(),
                 Repositories.getInstance().getStationRepository(),
-                Repositories.getInstance().getUpgradeBuildingsRepository());
+                Repositories.getInstance().getUpgradeBuildingsRepository(),
+                Repositories.getInstance().getScenarioRepository());
+
     }
 
     public UpgradeStationController(OrganizationRepository organizationRepository,
                                     AuthenticationRepository authenticationRepository,
                                     StationRepository stationRepository,
-                                    UpgradeBuildingsRepository upgradeBuildingsRepository) {
+                                    UpgradeBuildingsRepository upgradeBuildingsRepository, ScenarioRepository scenarioRepository) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
         this.stationRepository = stationRepository;
         this.upgradeBuildingsRepository = upgradeBuildingsRepository;
+        this.scenarioRepository = scenarioRepository;
+
+    }
+    public void setScenario(Scenario scenario) {
+        this.scenario = scenario;
+    }
+
+    public Scenario getScenario() {
+        return scenario;
     }
 
     public List<Station> getAvailableStations() {
@@ -87,7 +99,7 @@ public class UpgradeStationController {
 
         Station station = stationOptional.get();
 
-        // ❗️ NOVO: Verificar se o upgrade já foi aplicado
+        //  Verificar se o upgrade já foi aplicado
         boolean upgradeExists = station.getUpgrades().stream()
                 .anyMatch(u -> u.getType().equalsIgnoreCase(type) &&
                         ((subType == null && u.getSubType() == null) ||
@@ -98,25 +110,33 @@ public class UpgradeStationController {
             return false;
         }
 
-        // 3. Verificar orçamento
+        // 3. Verificar cenário
+        if (scenario == null) {
+            System.out.println("Erro: Scenario não foi definido no controlador.");
+            return false;
+        }
+
+        // 4. Verificar orçamento
         double price = upgrade.getPrice();
         if (scenario.getBudget() < price) {
             System.out.printf("Erro: Orçamento insuficiente (necessário: €%.2f, disponível: €%.2f).\n", price, scenario.getBudget());
             return false;
         }
 
-        // 4. Aplicar upgrade
+        // 5. Aplicar upgrade
         StationUpgrade stationUpgrade = new StationUpgrade(type, subType);
         station.addUpgrade(stationUpgrade);
         stationRepository.addUpgradeToStation(station.getReference(), stationUpgrade);
 
-        // 5. Descontar orçamento
+        // 6. Descontar orçamento
         scenario.setBudget(scenario.getBudget() - price);
+
         System.out.printf("✅ Upgrade aplicado com sucesso: %s (%s) - Custo: €%.2f\n", type,
                 subType != null ? subType : "sem subtipo", price);
 
         return true;
     }
+
 
     private Employee getEmployeeFromSession() {
         Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();

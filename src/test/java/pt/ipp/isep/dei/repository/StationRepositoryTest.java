@@ -57,4 +57,5 @@ class StationRepositoryTest {
         assertFalse(upgrades.isEmpty());
         assertEquals("Telegraph", upgrades.get(0).getType());
     }
+
 }

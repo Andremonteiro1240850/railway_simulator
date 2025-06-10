@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.repository;
 
 import pt.ipp.isep.dei.controller.BuildStationController;
+import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.Station;
 import pt.ipp.isep.dei.domain.StationUpgrade;
 import pt.ipp.isep.dei.domain.enums.Buildings;
@@ -94,5 +95,12 @@ public class StationRepository {
             }
         }
         return sb.toString();
+    }
+
+    public Optional<Scenario> findScenarioByStation(String stationReference, ScenarioRepository scenarioRepo) {
+        return scenarioRepo.getAll().stream()
+                .filter(s -> s.getStationsPurchased().stream()
+                        .anyMatch(st -> st.getReference().equals(stationReference)))
+                .findFirst();
     }
 }
