@@ -1,0 +1,121 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+hide footbox
+
+actor "Editor" as ORG_EMPLOYEE
+
+participant ":CreateScenarioUI" as UI
+participant ":CreateScenarioController" as CTRL
+
+participant "mapRepo\n:CreateMapRepository" as MAP
+participant ":PortBehavior" as PORT
+participant ":LocomotiveType" as LOCO_TYPE
+participant "scenarioRepo\n:ScenarioRepository" as SCEN_REPO
+participant ":Scenario" as SCENARIO
+participant ":HistoricalEvent" as EVENT
+
+activate ORG_EMPLOYEE
+
+    ORG_EMPLOYEE -> UI : asks to create a new scenario (run())
+    autonumber 1
+
+    activate UI
+        UI -> CTRL : getAvailableMaps()
+        autonumber 2
+
+        activate CTRL
+            CTRL -> MAP : getAll()
+            autonumber 3
+            activate MAP
+                MAP --> CTRL : mapsList
+                autonumber 4
+            deactivate MAP
+            CTRL --> UI : availableMaps
+            autonumber 5
+        deactivate CTRL
+
+        UI --> ORG_EMPLOYEE : show maps and request selection
+        autonumber 6
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : selects a map
+    autonumber 7
+    activate UI
+        UI -> ORG_EMPLOYEE : requests scenario details (name, start/end year,\nlocomotive types, port behavior config)
+        autonumber 8
+    deactivate UI
+
+    ORG_EMPLOYEE -> UI : provides name, years, selects locomotive types,\nconfigures port behavior
+    autonumber 9
+    activate UI
+
+        loop for each selected locomotive type
+            UI -> LOCO_TYPE : fromString(type)
+            autonumber 10
+        end
+
+        UI -> PORT : configure PortBehavior\n(import, export, transform cargo)
+        autonumber 11
+
+        UI -> CTRL : loadApplicableHistoricalEvents(startYear)
+        autonumber 12
+        activate CTRL
+            CTRL -> EVENT : filter enum Eventos\nwhere year ∈ [startYear, endYear]
+            autonumber 13
+            EVENT --> CTRL : list of applicable events
+            autonumber 14
+        deactivate CTRL
+
+        CTRL --> UI : historicalEvents
+        autonumber 15
+
+        alt data is valid
+            UI -> CTRL : createScenario(name, map, years,\ntypes, behavior, budget, events)
+            autonumber 16
+
+            activate CTRL
+                CTRL -> SCENARIO : new(name, years, types,\nevents, behavior, budget, map)
+                autonumber 17
+
+                CTRL -> SCEN_REPO : add(newScenario)
+                autonumber 18
+                activate SCEN_REPO
+                    SCEN_REPO --> CTRL : optionalScenario
+                    autonumber 19
+                deactivate SCEN_REPO
+
+                CTRL --> UI : creation status
+                autonumber 20
+            deactivate CTRL
+
+            UI --> ORG_EMPLOYEE : show summary and request confirmation
+            autonumber 21
+        else data invalid
+            UI --> ORG_EMPLOYEE : show error message and request correction
+        end
+    deactivate UI
+
+    alt user confirms creation
+        ORG_EMPLOYEE -> UI : confirms creation
+        autonumber 22
+        activate UI
+            UI -> CTRL : getScenario()
+            autonumber 23
+            activate CTRL
+                CTRL --> UI : scenario details
+                autonumber 24
+            deactivate CTRL
+            UI --> ORG_EMPLOYEE : displays operation success with details
+            autonumber 25
+        deactivate UI
+    else user cancels creation
+        ORG_EMPLOYEE -> UI : cancels creation
+        UI --> ORG_EMPLOYEE : cancel operation message
+    end
+
+deactivate ORG_EMPLOYEE
+@enduml
