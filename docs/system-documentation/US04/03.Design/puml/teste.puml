@@ -92,7 +92,7 @@ activate ORG_EMPLOYEE
                 autonumber 20
             deactivate CTRL
 
-            UI --> ORG_EMPLOYEE : show summary and request confirmation
+            UI --> ORG_EMPLOYEE : show summary, and request confirmation
             autonumber 21
         else data invalid
             UI --> ORG_EMPLOYEE : show error message and request correction
