@@ -1,0 +1,136 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+
+hide footbox
+actor "Player" as PLAYER
+
+participant ":UpgradeStationUI" as UI
+participant ":UpgradeStationController" as CTRL
+participant ":StationRepository" as STATION_REPO
+participant ":Buildings" as BUILDING_REPO
+participant ":ScenarioRepository" as SCENARIO_REPO
+
+
+activate PLAYER
+
+    PLAYER -> UI : asks to upgrade a station
+    autonumber 1
+
+    activate UI
+        UI --> CTRL** : initialize()
+        autonumber 2
+        UI -> CTRL : getAvailableStations()
+        autonumber 3
+
+        activate CTRL
+            CTRL -> STATION_REPO : getAll()
+            activate STATION_REPO
+                STATION_REPO --> CTRL : stations
+            deactivate STATION_REPO
+
+            CTRL --> UI : stationsList
+        deactivate CTRL
+
+        UI --> PLAYER : show available stations
+        autonumber 4
+    deactivate UI
+
+    PLAYER -> UI : selects station
+    autonumber 5
+    activate UI
+        UI -> CTRL : getAvailableUpgradeTypes()
+        autonumber 6
+
+        activate CTRL
+            CTRL -> BUILDING_REPO : getAllUpgradeTypes()
+            activate BUILDING_REPO
+                BUILDING_REPO --> CTRL : upgradeTypes
+            deactivate BUILDING_REPO
+
+            CTRL --> UI : upgradeTypes
+        deactivate CTRL
+
+        UI --> PLAYER : requests upgrade type
+        autonumber 7
+    deactivate UI
+
+    PLAYER -> UI : selects upgrade type
+    autonumber 8
+    activate UI
+        UI -> CTRL : getAvailableSubTypes(type)
+        autonumber 9
+
+        activate CTRL
+            alt type accepts subtypes
+                CTRL -> BUILDING_REPO : getAllSubTypes()
+                activate BUILDING_REPO
+                    BUILDING_REPO --> CTRL : subTypes
+                deactivate BUILDING_REPO
+            else no subtypes
+                CTRL --> CTRL : empty list
+            end
+
+            CTRL --> UI : subTypes
+        deactivate CTRL
+
+        UI --> PLAYER : requests subtype (if applicable)
+        autonumber 10
+    deactivate UI
+
+    PLAYER -> UI : selects subtype (optional)
+    autonumber 11
+    activate UI
+        UI --> PLAYER : shows summary and requests confirmation
+        autonumber 12
+    deactivate UI
+
+    PLAYER -> UI : confirms upgrade
+    autonumber 13
+    activate UI
+        UI -> CTRL : upgradeStation(stationId, type, subType)
+        autonumber 14
+
+        activate CTRL
+            CTRL -> BUILDING_REPO : validates type and subType
+            activate BUILDING_REPO
+                BUILDING_REPO --> CTRL : valid upgrade?
+            deactivate BUILDING_REPO
+
+            CTRL -> STATION_REPO : findByReference(stationId)
+            activate STATION_REPO
+                STATION_REPO --> CTRL : station
+            deactivate STATION_REPO
+
+            CTRL -> STATION_REPO : findScenarioByStation(stationId)
+            activate STATION_REPO
+                STATION_REPO --> CTRL : scenario
+            deactivate STATION_REPO
+
+            CTRL -> SCENARIO_REPO : check budget vs upgrade cost
+            activate SCENARIO_REPO
+                SCENARIO_REPO --> CTRL : sufficient budget?
+            deactivate SCENARIO_REPO
+
+            CTRL -> STATION_REPO : addUpgradeToStation(stationId, upgrade)
+            activate STATION_REPO
+                STATION_REPO --> CTRL : success
+            deactivate STATION_REPO
+
+            CTRL -> SCENARIO_REPO : update budget
+            activate SCENARIO_REPO
+                SCENARIO_REPO --> CTRL : success
+            deactivate SCENARIO_REPO
+
+            CTRL --> UI : upgradeStatus
+        deactivate CTRL
+
+        UI --> PLAYER : displays upgrade result
+        autonumber 15
+    deactivate UI
+
+deactivate PLAYER
+@enduml
