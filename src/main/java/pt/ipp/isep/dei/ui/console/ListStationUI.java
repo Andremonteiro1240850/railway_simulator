@@ -1,37 +1,42 @@
 package pt.ipp.isep.dei.ui.console;
 
-import pt.ipp.isep.dei.repository.Repositories;
-import pt.ipp.isep.dei.repository.StationRepository;
-
+import pt.ipp.isep.dei.controller.ListStationController;
+import pt.ipp.isep.dei.domain.Station;
+import java.util.List;
 import java.util.Scanner;
 
 public class ListStationUI implements Runnable {
-    private final StationRepository stationRepository;
+    private final ListStationController controller;
     private final Scanner scanner;
 
     public ListStationUI() {
-        this.stationRepository = Repositories.getInstance().getStationRepository();
+        this.controller = new ListStationController();
         this.scanner = new Scanner(System.in);
     }
 
+    @Override
     public void run() {
         System.out.println("\n=== List Stations with Upgrades ===");
-        listAllStations();
+        displayAllStations();
         waitForUserInput();
     }
 
-    private void listAllStations() {
+    private void displayAllStations() {
+        List<Station> stations = controller.getAllStations();
+
         System.out.println("\nStations List:");
         System.out.println("----------------------------");
 
-        stationRepository.getAll().forEach(station -> {
+        if (stations.isEmpty()) {
+            System.out.println("No stations built");
+        }
+
+        stations.forEach(station -> {
             System.out.printf("Reference: %s\n", station.getReference());
+            System.out.printf("Scenario: %s\n", station.getScenario());
             System.out.printf("Name: %s\n", station.getName());
             System.out.printf("Type: %s\n", station.getType());
-
-            if (station.getType().equals("station")) {
-                System.out.printf("Region: %s\n", station.getRegion());
-            }
+            System.out.printf("Region: %S\n", station.getRegion());
 
             System.out.println("Upgrades:");
             if (station.getUpgrades().isEmpty()) {

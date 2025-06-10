@@ -15,6 +15,10 @@
 1. Glossary
 2. Introduction
 3. System Overview
+4. System Requirements
+5. Features
+6. Troubleshooting and Helpdesk
+7. Frequently Asked Questions (FAQs)
 
 ---
 
@@ -127,17 +131,124 @@ Whether for academic exploration, project development, or strategic experimentat
 ---
 
 ## 3. System Overview
-### Description
-The system is divided into two main tools:
-* **Map and Scenario Editor:** Allows the creation of rectangular maps, placing
-cities and industries, and defining simulation constraints.
-* **Simulator:** Allows players to manage railway networks, including stations,
-lines, trains, routes, and operational simulations.
+### Product Purpose and Functionality
+With the Railway Network Simulator, users can create and oversee stations, plan train routes, and model how a railway network would function. By simulating an actual railway system, users will be able to investigate how their choices affect station performance, network connectivity, and profitability.
 
-### Functionalities
-* City and industry placement
-* Map creation and scenario setup
-* Train acquisition and route configuration
-* Simulation of train operations and cargo deliveries
-* Maintenance and network analysis tools
-* Statistical analysis of station performance and KPIs
+### Key Features
+* **Map Editor:** Design maps with cities, industries, and other elements. 
+* **Scenario Editor:** Set restrictions for scenarios, such as technological advancements or historical events. 
+* **Station Management:** Build and upgrade stations and manage cargo flows. 
+* **Train Management:** Assign locomotives to trains and define their routes. 
+* **Simulation Mode:** Simulate the network's operation, monitor performance, and analyze results. 
+* **Statistical Tools:** Analyze data on cargo traffic, station performance, and financial outcomes.
+
+### System Architecture
+The Railway Network Simulation System is built using Java, leveraging object-oriented programming principles to create a modular and extensible architecture. Key components include:
+* **Map and Scenario Editors:** For creating maps and defining simulation parameters.
+* **Simulator:** A tool to run simulations, handle train operations, and track cargo.
+* **UI:** Built with JavaFX, providing an interactive platform for players to manage the system.
+---
+
+## 4. System Requirements
+### Hardware Requirements
+* **CPU:** Dual-core processor (Intel i3 or equivalent) or better.
+* **RAM:** Minimum 4 GB (8 GB recommended).
+* **Storage:** At least 500 MB of free disk space for installation and data.
+* **Graphics:** Integrated graphics card (or dedicated GPU for high-performance rendering).
+
+### Software Requirements
+* **Operating System:** Windows 10 or later, macOS 10.12 or later, or Linux(Ubuntu 18.04 or later).
+* **Java Runtime Environment (JRE):** Version 11 or later.
+* **Python:** Version 3.8 or later (for additional scripting capabilities).
+* **Libraries:** 
+  * **JavaFX:** For the graphical user interface.
+  * **JUnit 5:** For unit testing.
+  * **JaCoCo:** For code coverage analysis.
+  * **GraphStream or Graphviz:** For visualizing network topology.
+  * **Python Libraries:** Matplotlib, Pandas, NumPy for statistical analysis.
+
+### Installation Instructions
+1. Install the Java Development Kit (JDK) version 11 or later.
+2. Install JavaFX SDK and configure your IDE to use it.
+3. Clone the GitHub repository containing the Railway Network Simulation System source code.
+4. Open the project in your preferred Java IDE (e.g., IntelliJ IDEA, Eclipse).
+5. Run the project to start the Railway Network Simulation System.
+---
+
+## 5. Features
+### Map and Scenario Management
+* **Map Editor:** A tool that allows users to create maps with dimensions specified by the user and add static elements like cities and industries.
+* Features include:
+  * Create maps with specific dimensions. 
+  * Add cities at specific geographical locations (XY coordinates). 
+  * Define industry types (Primary, Transforming, Mixed). 
+  * Assign coordinates and locations for cities and industries.
+
+
+* **Scenario Editor:** A tool to define the operational conditions of the game, including historical, technological, and temporal aspects.
+* Features include: 
+  * Define time restrictions, such as historical periods or events. 
+  * Select available locomotive types and industries. 
+  * Set economic or historical changes (e.g., war increases steel demand). 
+
+### Station Management
+* **Station Construction:** Allows users to build stations with varying capacities: Depot, Station, and Terminal
+* Features: 
+    * Build stations anywhere on the map. 
+    * Automatically suggest a name for the station based on the nearest city. 
+    * Define station type (Depot, Station, or Terminal) with capacity and operational radius. 
+    * Example: "Build a Terminal station in Porto."
+  
+
+* **Station Upgrades:** Improve the functionality of an existing station by adding various buildings like cafes, telegraphs, and more.
+* Features: 
+    * Add buildings to existing stations (hotel, telegraph, warehouse, etc.). 
+    * Display available cargo and the types of cargo that need to be delivered
+    * Example: "Add a telegraph to Lisbon station to improve operations."
+
+
+### Train and Locomotive Management
+* **Locomotive Purchase and Management:** Allows the player to purchase locomotives based on availability and budget.
+* Features: 
+    * Choose locomotives from different types (steam, diesel, electric). 
+    * Assign locomotives to trains and define their routes.
+
+---
+## 6. Troubleshooting and Helpdesk
+### Common Issues and Solutions
+| **Issue #** | **Symptom**                                              | **Possible Cause**                                           | **Solution**                                                                                                                                                         |
+|-------------|----------------------------------------------------------|-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Issue 1** | Application won't start                                  | Missing JavaFX runtime components                           | Ensure that JavaFX is properly installed and configured on your system. You can refer to the installation guide for setup instructions.                             |
+| **Issue 2** | Train not moving                                          | Insufficient power or track connectivity                     | Check the locomotive's power rating and ensure that tracks are properly connected. Verify that the locomotive is compatible with the type of track (electrified or not). |
+| **Issue 3** | Map not saving                                            | Invalid map name                                            | Make sure the map name does not contain special characters or spaces. Use valid filenames.                                                                            |
+| **Issue 4** | Simulation freezing or lagging                           | System resources are insufficient or simulation complexity   | Close unnecessary applications to free up system resources. Consider reducing the number of active trains or stations in the simulation to improve performance.   |
+| **Issue 5** | Error when trying to load a saved game                   | File corruption or incompatible version                     | Check if the game was saved in the correct version. If the file is corrupted, try loading an earlier save or restart the simulator.                                  |
+| **Issue 6** | Unable to build a station                                | Invalid station location or overlapping elements             | Ensure the location is valid and that no other stations or structures are overlapping. You cannot build on occupied spaces.                                         |
+
+### Helpdesk Contact Information
+- **Email**: support@railwaysimulator.com
+- **Phone**: 123-456-7890
+- **Operating Hours**: Monday - Friday, 9:00h - 17:00h
+---
+
+## 7.Frequently Asked Questions (FAQs)
+### 1. **How do I start a new game in the Railway Network Simulation System?**
+- To start a new game, simply open the simulation tool, create a new map using the Map Editor, and set up a scenario with time, technological, and historical restrictions. Once the map and scenario are set, you can begin building stations, creating routes, and managing trains.
+
+### 2. **Can I modify the map after creating it?**
+- Yes, the Map Editor allows you to modify the map even after it has been created. You can add or remove cities, industries, and change the map's size, as long as it adheres to the defined map dimensions.
+
+### 3. **What types of stations can I build?**
+- You can build three types of stations: Depots (small capacity), Stations (medium capacity), and Terminals (large capacity). Each station type has a different operational radius and capacity for cargo handling.
+
+### 4. **How do I purchase and assign locomotives to trains?**
+- You can purchase locomotives from the available list based on the scenario. After purchasing, go to the Train Management section, select a locomotive, and assign it to a train. Define the route that the train will follow using the available stations.
+
+### 5. **How does the simulation work?**
+- The simulation runs in real-time or can be paused. Once started, the trains will begin their routes, loading and unloading cargo at each station. The simulator calculates train arrivals, cargo deliveries, and updates station demand and supply. The simulation can be started, paused, or reset.
+
+### 6. **What happens if a train doesn't have enough fuel or power?**
+- If a train runs out of fuel or power, it will not move until it is resupplied. Check the locomotive's fuel and power levels, and ensure the tracks are compatible with the locomotive (electrified or not).
+
+### 7. **Can I play with others?**
+- Currently, the system supports single-player mode, where you manage the railway network alone. Multiplayer capabilities may be added in future versions.

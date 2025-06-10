@@ -2,8 +2,8 @@
 
 **The rationale grounds on the SSD interactions and the identified input/output data.**
 
-| Interaction ID | Question: Which class is responsible for...              | Answer                  |
-|:---------------|:--------------------------------------------------------|:------------------------|
+| Interaction ID | Question: Which class is responsible for...              | Answer                  |Justification (with patterns)|             
+|:---------------|:--------------------------------------------------------|:------------------------|------------------------------|
 | Step 1         | ...interacting with the Player?                         | ListStationsUI          |
 | Step 2         | ...coordinating the use case flow?                      | ListStationsController  |
 | Step 3         | ...retrieving the list of all stations?                 | StationList             |

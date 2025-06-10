@@ -5,8 +5,8 @@ skinparam shadowing false
 autonumber
 
 actor "Player" as PLAYER
-participant ":ViewStationUI" as UI
-participant ":ViewStationController" as CTRL
+participant ":ListStationUI" as UI
+participant ":ListStationController" as CTRL
 participant "repositories" as REPOS
 participant "repositories\n:Repositories" as REPOS_SINGLE
 participant "stationRepository\n:StationRepository" as STATION_REPO

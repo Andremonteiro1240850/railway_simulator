@@ -170,10 +170,10 @@ public class BuildStationController {
         }
 
         Station newStation = new Station(stationName, stationType.getType(), regionType.getRegion(), stationType.getArea(), x, y);
+        scenario.addStationPurchased(newStation);
         Optional<Station> added = Repositories.getInstance().getStationRepository().add(newStation);
 
         if (added.isPresent()) {
-            scenario.addStationPurchased(added.get());
             scenario.setBudget(budget - cost);
             System.out.println("Estação criada com sucesso: " + newStation.getReference());
             return true;
