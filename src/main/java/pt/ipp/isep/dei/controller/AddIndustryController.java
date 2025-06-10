@@ -19,7 +19,7 @@ public class AddIndustryController {
 
     // Inicialização dos repositórios
     public AddIndustryController() {
-        this.createMapController = new CreateMapController(); // Inicializando o controlador de mapa
+        this.createMapController = new CreateMapController(); // Inicializa o controlador de mapa
         getOrganizationRepository();
         getAuthenticationRepository();
     }
@@ -30,7 +30,7 @@ public class AddIndustryController {
                                  CreateMapController createMapController) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
-        this.createMapController = createMapController; // Atribuindo o CreateMapController
+        this.createMapController = createMapController; // Atribui o CreateMapController
     }
 
     private OrganizationRepository getOrganizationRepository() {
