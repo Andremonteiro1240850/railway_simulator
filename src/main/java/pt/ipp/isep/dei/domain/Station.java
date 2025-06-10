@@ -17,6 +17,7 @@ public class Station {
     private String type;
     private String region;
     private String reference;
+    private String scenario;
     private int area;
     private int x;
     private int y;
@@ -26,16 +27,18 @@ public class Station {
      * Constructs a new Station with a specific reference.
      *
      * @param reference The unique identifier for the station.
+     * @param scenario  The scenario the station is located in.
      * @param name      The name of the station.
      * @param type      The type of the station (e.g., "depot", "terminal", or "station").
      * @param region    The region where the station is located.
      * @throws IllegalArgumentException If the station type or region is invalid.
      */
-    public Station(String reference, String name, String type, String region, int area,int x, int y) {
+    public Station(String reference, String name, String type, String region, String scenario, int area,int x, int y) {
         this.reference = reference;
         this.name = name;
         this.type = type;
         this.region = region;
+        this.scenario = scenario;
         this.area = area;
         this.x = x;
         this.y = y;
@@ -48,8 +51,8 @@ public class Station {
      * @param type   The type of the station (e.g., "depot", "terminal", or "station").
      * @param region The region where the station is located.
      */
-    public Station(String name, String type, String region,int area,int x, int y) {
-        this(generateDefaultReference(), name, type, region,area,x,y);
+    public Station(String name, String type, String region, String scenario, int area,int x, int y) {
+        this(generateDefaultReference(), name, type, region, scenario,area,x,y);
     }
 
     /**
@@ -95,6 +98,7 @@ public class Station {
     public String getRegion() {
         return region;
     }
+    public String getScenario() {return scenario;}
     public int getArea() {
         return area;
     }
@@ -105,7 +109,7 @@ public class Station {
         return y;
     }
     public Station copy() {
-        Station copy = new Station(this.reference, this.name, this.type, this.region, this.area, this.x, this.y);
+        Station copy = new Station(this.reference, this.name, this.type, this.region, this.scenario, this.area, this.x, this.y);
         copy.upgrades = new ArrayList<>(this.upgrades);  // Considera clonar upgrades também se necessário
         return copy;
     }
@@ -173,6 +177,7 @@ public class Station {
                 Objects.equals(type, station.type) &&
                 Objects.equals(region, station.region) &&
                 Objects.equals(reference, station.reference) &&
+                Objects.equals(scenario, station.scenario) &&
                 Objects.equals(x, station.x) &&
                 Objects.equals(y, station.y) &&
                 Objects.equals(upgrades, station.upgrades);
@@ -182,7 +187,7 @@ public class Station {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(reference,name,type,region,upgrades,x,y);
+        return Objects.hash(reference,name,type,region,scenario,upgrades,x,y);
     }
 
     /**
@@ -191,7 +196,7 @@ public class Station {
      * @return A clone of this station.
      */
     public Station clone() {
-        Station clone = new Station(this.reference, this.name, this.type, this.region,this.area,this.x,this.y);
+        Station clone = new Station(this.reference, this.name, this.type, this.region,this.scenario,this.area,this.x,this.y);
         clone.upgrades = new ArrayList<>(this.upgrades);
         return clone;
     }
@@ -199,17 +204,16 @@ public class Station {
     @Override
     public String toString() {
         return String.format(
-                "Station [Name: %s, Type: %s, Region: %s, Ref: %s, Area: %d, Coordinates: (%d, %d), Upgrades: %d]",
+                "Station [Name: %s, Type: %s, Region: %s, Ref: %s, Scenario: %s,Area: %d, Coordinates: (%d, %d), Upgrades: %d]",
                 name,
                 type,
                 region,
                 reference,
+                scenario,
                 area,
                 x,
                 y,
                 upgrades != null ? upgrades.size() : 0
         );
     }
-
-
 }

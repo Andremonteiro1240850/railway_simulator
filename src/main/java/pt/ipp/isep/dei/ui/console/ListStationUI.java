@@ -27,14 +27,16 @@ public class ListStationUI implements Runnable {
         System.out.println("\nStations List:");
         System.out.println("----------------------------");
 
+        if (stations.isEmpty()) {
+            System.out.println("No stations built");
+        }
+
         stations.forEach(station -> {
             System.out.printf("Reference: %s\n", station.getReference());
+            System.out.printf("Scenario: %s\n", station.getScenario());
             System.out.printf("Name: %s\n", station.getName());
             System.out.printf("Type: %s\n", station.getType());
-
-            if (station.getType().equals("station")) {
-                System.out.printf("Region: %s\n", station.getRegion());
-            }
+            System.out.printf("Region: %S\n", station.getRegion());
 
             System.out.println("Upgrades:");
             if (station.getUpgrades().isEmpty()) {
