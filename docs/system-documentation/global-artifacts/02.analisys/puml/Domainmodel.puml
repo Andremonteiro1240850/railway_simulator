@@ -2,225 +2,216 @@
 skinparam monochrome true
 skinparam packageStyle rectangle
 skinparam shadowing false
-
-'left to right direction
-
 skinparam classAttributeIconSize 0
-
 hide circle
 hide methods
 
-    class User {
-        type
-    }
+class Map {
+    name
 
-    class Editor {
-        email
-        password
-    }
+}
+class Dimension{
+    width
+    length
+}
+class Position{
+    positionX
+    positionY
+}
 
-    class Player {
+class Industry {
+    name
+    type
 
-        email
-        password
-    }
-    Player-->Scenario:"plays in"
-    Player --> Locomotives:"purchase"
+}
 
-    class ProductOwner {
-        name
-    }
+class City {
+    name
+}
 
-    User --> Editor: "can be"
-    User --> Player: "can be"
-    User --> ProductOwner: "can be"
+class HouseBlock {
+inhabitants
+}
 
+class Scenario {
+    description
+}
+class Date{
+startYear
+currentYear
+endYear
+}
 
-    class Map {
-        name
-        width
-        height
+class Station {
+    name
+    capacity
+    demand
+    supply
 
-    }
-
-    class City {
-        name
-        houseBlocks
-    }
-
-    class Industry {
-        type
-    }
-
-    class Position {
-        x
-        y
-        z
-    }
-
-    Map  -->  City : "have"
-    Map  -->  Industry : "have"
-    City --> Position: "have"
-    Industry --> Position: "have"
-    Editor --> Map : "create"
+}
+class StationType{
+radius
+price
+}
 
 
-    class Scenario {
-        name
-        timePeriod
-        availableLocomotives
-        generatingFactors
-    }
-    Scenario --> Map :"use"
+class Building{
+effect
+type
+price
+}
+class RailwayLine {
+    length
+    isElectrified
+    isDoubleTrack
 
-    class PortBehavior {
-        imports
-        exports
-        trasnsform
-    }
+}
 
-    Editor --> Scenario :"create"
-    Scenario  -->  PortBehavior: "have"
+class Locomotive {
+    name
+    power
+    acceleration
+    topSpeed
+    fuelCost
+    maintenanceCost
+    price
 
+}
 
-    class Station {
-        name
-        type
-        economicRadius
-        buildings
-        cargoDemand
-        cargoSuply
-    }
-    class StationType {
-    Depot
-    Station
-    Terminal
-    }
-    Station --> StationType: "have"
+class Carriage {
+    type
+    capacity
+}
 
-    class RailwayLine {
-        length
-        isElectrified
-        isDoubleTrack
-    }
+class Train {
+    name
+}
 
-    class Train {
-        id
-        locomotive
-        carriage
-        route
-    }
-
-    class Route {
-        stations
-        cargos
-    }
-
-    class Balance{
-    currentBalance
-    }
-    class Inventory{
-    ownedBuildings
-    ownedLocomotives
-    ownedCarriages
-    }
-    class Simulator{
-    run
-    date
-    }
-    class Cargo{
+class Cargo {
     type
     quantity
-    departure
-    arrival
-    }
-    class Locomotives {
-    type
+}
+
+class Route {
+
+}
+
+class Player{
+id
+}
+
+class Editor{
+id
+
+}
+
+class Budget{
+balance
+}
+
+class Inventory{
+}
+
+class Simulation{
+isRunning
+}
+
+
+
+' Relationships
+
+Player "1" -- "1" Inventory :  owns >
+Inventory "1" -- "*" Building :  stores >
+Inventory "1" -- "*" Locomotive :  stores >
+Inventory "1" -- "*" Industry :  stores >
+Map "1" -- "1" Dimension :  has >
+Map "1" -- "*" Industry : contains >
+Map "1" -- "*" City : contains >
+City "1" -- "1" Position :  located at >
+Industry "1" -- "1" Position :  located at >
+HouseBlock "1" -- "1" Position :  located at >
+Station "1" -- "1" Position :  located at >
+Building "*" -- "1" Simulation :  depends on >
+City "1" -- "*" HouseBlock : has >
+Scenario "1" -- "*" Map : applies to >
+Scenario "1" -- "*" Locomotive : restricts >
+Scenario "1" -- "*" Building : restricts >
+Scenario "1" -- "1" Date : has >
+Station "1" -- "*" Building : upgraded with >
+Station "1" -- "*" Cargo : handles >
+Station "1" -- "*" RailwayLine : connected by >
+Locomotive "1" -- "1" Date : has >
+Train "1" -- "1" Locomotive : powered by >
+Train "1" -- "*" Carriage : consists of >
+Train "1" -- "1" Route : follows >
+Train "1" -- "*" Cargo : transports >
+Route "1" -- "*" Cargo : handles >
+Route "1" -- "1" Station : starts at >
+Route "1" -- "1" Station : finish at >
+Route "1" -- "*" Station : passes by >
+Industry "1" -- "*" Cargo : produces >
+City "1" -- "*" Cargo : demands >
+Editor "1" -- "*" Map : creates >
+Editor "1" -- "*" Scenario : creates >
+Player "1" -- "*" Station : builds/views >
+Player "1" -- "*" RailwayLine : builds >
+Player "1" -- "*" Train : owns >
+Player "1" -- "1" Budget : has >
+Simulation "1" -- "*" Cargo : generates >
+Simulation "1" -- "*" Station : generates at >
+Simulation "1" -- "1" Date : has >
+
+class PrimaryIndustry {
+    resource
+    productionRate
     price
-    speed
-    name
-    maintenanceCost
-    yearStart
-    acelaration
-    }
-    class LocomotiveType{
-    Steam
-    Diesel
-    Electricity
-    }
-    Locomotives --> LocomotiveType: "have"
-    class Carriage{
-    type
+}
+
+class TransformingIndustry {
+    import
+    export
+    conversionRate
+    price
+}
+
+class MixedIndustry {
+    import
+    export
+    price
+}
+
+Industry <|-- PrimaryIndustry
+Industry <|-- TransformingIndustry
+Industry <|-- MixedIndustry
+
+Station <|-- StationType
+
+class PassengerCarriage {
+    seatCount
+}
+
+class FreightCarriage {
+    cargoType
     capacity
-    }
-    class PassengerCarriage{
-    capacity
-    }
-    class CargoCarriage{
-    capacity
-    }
-    class Building{
-    type
-    cost
-    }
-    class BuildingType{
-            Telegraph
-            Telephone
-            SmallHotel
-            GrandHotel
-            Silo
-            LiquidStorage
-            Cafe
-            PostOffice
+}
 
-    }
-    Building --> BuildingType:"have"
-   class IndustryType{
-   Primary
-   Transforming
-   Mixed
-   }
-   Industry --> IndustryType: "have"
+Carriage <|-- PassengerCarriage
+Carriage <|-- FreightCarriage
 
+class SteamLocomotive {
+    coalConsumption
+}
 
+class DieselLocomotive {
+    fuelConsumption
+}
 
+class ElectricLocomotive {
+    powerConsumption
+}
 
-
-
-
-
-
-
-
-
-    Player --> Station: "List"
-    Player --> Station: "own"
-    RailwayLine  -->  Station : "connect"
-    Train  -->  Route :"assign"
-    Player --> Train : "have"
-    Player --> Balance : "have"
-    Player --> Inventory : "have"
-    ProductOwner --> Simulator : "own"
-    Simulator --> Cargo : "have"
-    Train --> Locomotives : "have"
-    Train --> Carriage : "have"
-    Carriage --> CargoCarriage: "can be"
-    Carriage --> PassengerCarriage: "can be"
-    Station --> Building : "upgrade with"
-    City --> Station: "have"
-    Scenario --> Train: "create"
-    Scenario --> Inventory: "have"
-    Scenario --> Locomotives: "need"
-    Station --> Position: "have"
-    Train --> Cargo: "Picks"
-    Route --> Station: "have"
-    Simulator --> Station: "generate"
-    Train --> RailwayLine: "Travel for"
-    Station --> City: "Serve"
-    Station --> Industry: "Serve"
-
-
-
-
+Locomotive <|-- SteamLocomotive
+Locomotive <|-- DieselLocomotive
+Locomotive <|-- ElectricLocomotive
 
 @enduml

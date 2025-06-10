@@ -1,11 +1,15 @@
 package pt.ipp.isep.dei.ui.gui;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 
-public class PlayerController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class PlayerController implements Initializable {
 
     @FXML private MenuItem buildStationMenuItem;
     @FXML private Label statusLabel;
@@ -101,5 +105,16 @@ public class PlayerController {
 
         // Exibe o diálogo
         dialog.showAndWait();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Configuração inicial da tabela de trens
+        handleBuildStation();
+        showScenarioDialog();
+
+        // Configuração inicial do status
+        statusLabel.setText("Welcome to " + scenarioName + " | Budget: " + String.format("%.2f€", budget));
+
     }
 }

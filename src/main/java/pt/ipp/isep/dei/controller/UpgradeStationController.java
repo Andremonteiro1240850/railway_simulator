@@ -37,9 +37,7 @@ public class UpgradeStationController {
         this.scenarioRepository = scenarioRepository;
 
     }
-    public void setScenario(Scenario scenario) {
-        this.scenario = scenario;
-    }
+
 
     public Scenario getScenario() {
         return scenario;
@@ -111,10 +109,13 @@ public class UpgradeStationController {
         }
 
         // 3. Verificar cenário
-        if (scenario == null) {
+        Optional<Scenario> optionalScenario = stationRepository.findScenarioByStation(station.getReference());
+        if (optionalScenario.isEmpty()) {
             System.out.println("Erro: Scenario não foi definido no controlador.");
             return false;
         }
+
+        Scenario scenario = optionalScenario.get();
 
         // 4. Verificar orçamento
         double price = upgrade.getPrice();

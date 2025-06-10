@@ -1,0 +1,185 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+autonumber
+hide footbox
+
+actor "Player" as PLAYER
+
+participant ":BuildStationUI" as UI
+participant ":BuildStationController" as CTRL
+participant "stationRepo\n:StationRepository" as ST_REPO
+participant "mapRepo\n:CreateMapRepository" as MAP_REPO
+participant ":StationTypes" as ST_TYPES
+participant ":Scenario" as SCENARIO
+participant ":Map" as MAP
+participant ":City" as CITY
+participant ":Station" as STATION
+
+activate PLAYER
+
+    PLAYER -> UI : requests to build a station
+    autonumber 1
+
+    activate UI
+        UI --> CTRL** : create()
+        autonumber 2
+
+        UI -> CTRL : getStationTypes()
+        autonumber 3
+
+        activate CTRL
+            CTRL -> ST_TYPES : values()
+            autonumber 4
+            activate ST_TYPES
+                ST_TYPES --> CTRL : stationTypesList
+                autonumber 5
+            deactivate ST_TYPES
+
+            CTRL --> UI : stationTypesList
+            autonumber 6
+        deactivate CTRL
+
+        UI --> PLAYER : show station types
+        autonumber 7
+    deactivate UI
+
+    PLAYER -> UI : selects station type
+    autonumber 8
+
+    activate UI
+        UI -> PLAYER : requests location coordinates
+        autonumber 9
+    deactivate UI
+
+    PLAYER -> UI : provides coordinates (x,y)
+    autonumber 10
+
+    activate UI
+        UI -> CTRL : validateCoordinates(x,y)
+        autonumber 11
+
+        activate CTRL
+            CTRL -> SCENARIO : getMap()
+            autonumber 12
+            activate SCENARIO
+                SCENARIO --> CTRL : map
+                autonumber 13
+            deactivate SCENARIO
+
+            CTRL -> MAP : validateCoordinates(x,y)
+            autonumber 14
+            activate MAP
+                MAP --> CTRL : isValid
+                autonumber 15
+            deactivate MAP
+
+            CTRL --> UI : validationResult
+            autonumber 16
+        deactivate CTRL
+
+        alt coordinates valid
+            UI -> CTRL : suggestStationName(x,y,stationType)
+            autonumber 17
+
+            activate CTRL
+                CTRL -> SCENARIO : getMap()
+                autonumber 18
+                activate SCENARIO
+                    SCENARIO --> CTRL : map
+                    autonumber 19
+                deactivate SCENARIO
+
+                CTRL -> MAP : getCities()
+                autonumber 20
+                activate MAP
+                    MAP --> CTRL : citiesList
+                    autonumber 21
+                deactivate MAP
+
+                CTRL -> CITY : findNearestCity(x,y,citiesList)
+                autonumber 22
+                activate CITY
+                    CITY --> CTRL : nearestCity
+                    autonumber 23
+                deactivate CITY
+
+                CTRL -> STATION : generateName(nearestCity,stationType)
+                autonumber 24
+                activate STATION
+                    STATION --> CTRL : suggestedName
+                    autonumber 25
+                deactivate STATION
+
+                CTRL --> UI : suggestedName
+                autonumber 26
+            deactivate CTRL
+
+            UI -> PLAYER : show suggested name and request confirmation
+            autonumber 27
+        else coordinates invalid
+            UI --> PLAYER : show error message
+        end
+    deactivate UI
+
+    PLAYER -> UI : confirms station details
+    autonumber 28
+
+    activate UI
+        UI -> CTRL : createStation(stationType, x, y, name)
+        autonumber 29
+
+        activate CTRL
+            CTRL -> SCENARIO : getBudget()
+            autonumber 30
+            activate SCENARIO
+                SCENARIO --> CTRL : currentBudget
+                autonumber 31
+            deactivate SCENARIO
+
+            CTRL -> ST_TYPES : getCost()
+            autonumber 32
+            activate ST_TYPES
+                ST_TYPES --> CTRL : stationCost
+                autonumber 33
+            deactivate ST_TYPES
+
+            alt budget sufficient
+                CTRL -> STATION : new(name, stationType, x, y)
+                autonumber 34
+                activate STATION
+                    STATION --> CTRL : newStation
+                    autonumber 35
+                deactivate STATION
+
+                CTRL -> ST_REPO : add(newStation)
+                autonumber 36
+                activate ST_REPO
+                    ST_REPO --> CTRL : optionalStation
+                    autonumber 37
+                deactivate ST_REPO
+
+                CTRL -> SCENARIO : addStation(newStation)
+                autonumber 38
+                activate SCENARIO
+                    SCENARIO -> SCENARIO : updateBudget(stationCost)
+                    autonumber 39
+                    SCENARIO --> CTRL : success
+                    autonumber 40
+                deactivate SCENARIO
+
+                CTRL --> UI : creationResult
+                autonumber 41
+            else budget insufficient
+                CTRL --> UI : budgetError
+            end
+        deactivate CTRL
+
+        UI --> PLAYER : display operation result
+        autonumber 42
+    deactivate UI
+
+deactivate PLAYER
+@enduml

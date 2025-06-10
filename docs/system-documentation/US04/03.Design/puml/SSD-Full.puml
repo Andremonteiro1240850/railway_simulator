@@ -13,9 +13,11 @@ participant ":CreateScenarioController" as CTRL
 
 participant "map\n:CreateMapRepository" as MAP
 participant "PortBehaviour" as PORT
-participant "Locomotive" as TS
+participant ":LocomotiveType" as TS
 participant "industry\n:IndustryRepository" as IND
-participant "scenario\n:ScenarioManager" as SCEN
+participant "scenario\n:Scenario" as SCEN
+participant ":HistoricalEvent" as EVENT
+participant "scenarioRepo\n:ScenarioRepository" as SCEN_REPO
 
 activate ORG_EMPLOYEE
 
@@ -86,6 +88,19 @@ activate ORG_EMPLOYEE
             deactivate IND
             CTRL --> UI : industryFactors
             autonumber 20
+
+        UI -> CTRL : loadApplicableHistoricalEvents(startYear)
+        autonumber 12
+
+            CTRL -> EVENT : filter enum Eventos\nwhere year ∈ [startYear, endYear]
+            activate EVENT
+            autonumber 13
+            EVENT --> CTRL : list of applicable events
+            deactivate EVENT
+            autonumber 14
+
+
+        CTRL --> UI : historicalEvents
         deactivate CTRL
 
         UI --> ORG_EMPLOYEE : requests scenario details (port behavior, cargoes transform and import or export,\n locomotion types, frequency of generating industries )
@@ -118,7 +133,14 @@ activate ORG_EMPLOYEE
                 SCEN --> CTRL: newScenario
                 autonumber 30
             deactivate SCEN
+             CTRL -> SCEN_REPO : add(newScenario)
+                            autonumber 18
+                            activate SCEN_REPO
+                                SCEN_REPO --> CTRL : optionalScenario
+                                autonumber 19
+                            deactivate SCEN_REPO
             CTRL --> UI: createScenario
+
             autonumber 31
         deactivate CTRL
         UI --> ORG_EMPLOYEE: displays operation success

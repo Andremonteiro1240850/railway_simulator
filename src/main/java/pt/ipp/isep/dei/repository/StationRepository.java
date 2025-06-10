@@ -12,6 +12,7 @@ import java.util.Optional;
 
 public class StationRepository {
     private final List<Station> stations = new ArrayList<>();
+    private  ScenarioRepository scenarioRepo;
 
     public Optional<Station> add(Station station) {
         if (station == null) {
@@ -97,7 +98,7 @@ public class StationRepository {
         return sb.toString();
     }
 
-    public Optional<Scenario> findScenarioByStation(String stationReference, ScenarioRepository scenarioRepo) {
+    public Optional<Scenario> findScenarioByStation(String stationReference) {
         return scenarioRepo.getAll().stream()
                 .filter(s -> s.getStationsPurchased().stream()
                         .anyMatch(st -> st.getReference().equals(stationReference)))

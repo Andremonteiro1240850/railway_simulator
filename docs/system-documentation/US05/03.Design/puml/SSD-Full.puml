@@ -9,15 +9,14 @@ hide footbox
 actor "Player" as ORG_EMPLOYEE
 
 participant ":BuildStationUI" as UI
-participant ":CreateStationController" as CTRL
+participant ":BuildStationController" as CTRL
 participant "StationRepository" as REPOS
 participant "CreateMapRepository" as MAP
-participant "LocationValidator" as VALID
+
 participant "Station" as NAMING
 participant "City" as CITY
-participant "PositionValidator" as VALID
 participant "Map" as RAIL
-participant "StationTypeRepository" as REPOT
+participant "StationTypes" as REPOT
 
 activate ORG_EMPLOYEE
 

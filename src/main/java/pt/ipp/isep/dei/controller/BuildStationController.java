@@ -169,7 +169,7 @@ public class BuildStationController {
             stationName = suggestStationName(x, y, stationType);
         }
 
-        Station newStation = new Station(stationName, stationType.getType(), regionType.getRegion(), stationType.getArea(), x, y);
+        Station newStation = new Station(stationName, stationType.getType(), regionType.getRegion(),scenario.getName(), stationType.getArea(), x, y);
         scenario.addStationPurchased(newStation);
         Optional<Station> added = Repositories.getInstance().getStationRepository().add(newStation);
 
