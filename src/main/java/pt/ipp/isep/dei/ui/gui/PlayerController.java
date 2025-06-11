@@ -110,11 +110,8 @@ public class PlayerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Configuração inicial da tabela de trens
-        handleBuildStation();
-        showScenarioDialog();
 
         // Configuração inicial do status
         statusLabel.setText("Welcome to " + scenarioName + " | Budget: " + String.format("%.2f€", budget));
-
     }
 }

@@ -17,7 +17,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         try {
             // Carregar o FXML para a tela inicial (PlayerMenu)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pt/ipp/isep/dii/ui/gui/PlayerMenu.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pt/ipp/isep/dei/PlayerMenu.fxml"));
             Parent root = loader.load();
 
             // Configurar a cena e o estágio (janela)
