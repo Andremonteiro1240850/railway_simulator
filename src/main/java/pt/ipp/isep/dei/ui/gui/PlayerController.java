@@ -47,7 +47,6 @@ public class PlayerController implements Initializable {
     @FXML private TableColumn<Station, String> stationNameColumn;
     @FXML private TableColumn<Station, String> stationTypeColumn;
     @FXML private TableColumn<Station, String> stationCoordinatesColumn;
-    @FXML private TableColumn<Station, Integer> stationAreaColumn;
     private final CreateScenarioController controller;
     private final Scanner scanner;
     
@@ -173,8 +172,6 @@ public class PlayerController implements Initializable {
         stationTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
         stationCoordinatesColumn.setCellValueFactory(cellData -> 
             new SimpleStringProperty("(" + cellData.getValue().getX() + ", " + cellData.getValue().getY() + ")"));
-        stationAreaColumn.setCellValueFactory(cellData -> 
-            new SimpleIntegerProperty(cellData.getValue().getArea()).asObject());
     }
 
     private void updateStationList() {

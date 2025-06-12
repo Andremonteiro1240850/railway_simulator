@@ -25,40 +25,37 @@
             </TableView>
             
             <!-- Station List -->
-            <TableView fx:id="stationList" layoutX="800.0" layoutY="94.0" prefHeight="400.0" prefWidth="415.0">
+            <TableView fx:id="stationList" layoutX="820.0" layoutY="94.0" prefHeight="400.0" prefWidth="350.0">
                <columns>
                   <TableColumn fx:id="stationNameColumn" text="Station Name" />
                   <TableColumn fx:id="stationTypeColumn" text="Type" />
                   <TableColumn fx:id="stationCoordinatesColumn" text="Coordinates" />
-                  <TableColumn fx:id="stationAreaColumn" text="Area" />
                </columns>
             </TableView>
             <!-- Menu Bar -->
-            <MenuBar layoutX="75.0" layoutY="94.0" prefHeight="35.0" prefWidth="237.0">
+            <MenuBar layoutX="75.0" layoutY="30.0" prefHeight="40.0" prefWidth="700.0" style="-fx-background-color: #2c3e50; -fx-border-radius: 8; -fx-background-radius: 8;">
                <menus>
                   <!-- Menu Station -->
-                  <Menu text="Station">
+                  <Menu text="Station" style="-fx-text-fill: #ecf0f1; -fx-font-size: 16px;">
                      <items>
                         <MenuItem fx:id="buildStationMenuItem" text="Build Station" onAction="#handleBuildStation" />
                         <MenuItem fx:id="upgradeStationMenuItem" text="Upgrade Station" />
                         <MenuItem fx:id="listStationMenuItem" text="List Stations" />
                      </items>
                   </Menu>
-            
                   <!-- Menu Train -->
-                  <Menu text="Train">
-               <items>
+                  <Menu text="Train" style="-fx-text-fill: #ecf0f1; -fx-font-size: 16px;">
+                     <items>
                         <MenuItem fx:id="buyLocomotiveMenuItem" text="Buy Locomotive" />
                         <MenuItem fx:id="assignTrainMenuItem" text="Assign Train to Route" />
-               </items>
+                     </items>
                   </Menu>
-            
                   <!-- Menu Simulation -->
-                  <Menu text="Simulation">
-               <items>
+                  <Menu text="Simulation" style="-fx-text-fill: #ecf0f1; -fx-font-size: 16px;">
+                     <items>
                         <MenuItem fx:id="startSimulationMenuItem" text="Start Simulation" onAction="#onStartSimulation" />
                         <MenuItem fx:id="pauseSimulationMenuItem" text="Pause Simulation" onAction="#onPauseSimulation" />
-               </items>
+                     </items>
                   </Menu>
                </menus>
             </MenuBar>
