@@ -11,9 +11,7 @@ import pt.ipp.isep.dei.ui.console.menu.MainMenuUI;
 
 import static javafx.application.Application.launch;
 
-
 public class Main extends Application {
-
     public void start(Stage primaryStage) {
         try {
             // Carregar o FXML para a tela inicial (PlayerMenu)
@@ -30,10 +28,8 @@ public class Main extends Application {
         }
     }
 
-
     public static void main(String[] args) {
-        launch(args);
-        /*Bootstrap bootstrap = new Bootstrap();
+        Bootstrap bootstrap = new Bootstrap();
         bootstrap.run();
 
         try {
@@ -46,7 +42,6 @@ public class Main extends Application {
             menu.run();
         } catch (Exception e) {
             e.printStackTrace();
-
-        }*/
+        }
     }
 }

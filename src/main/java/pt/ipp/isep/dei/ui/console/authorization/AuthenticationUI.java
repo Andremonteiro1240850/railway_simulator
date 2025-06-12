@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.ui.console.authorization;
 
+import javafx.application.Platform;
 import pt.ipp.isep.dei.controller.AuthenticationController;
 import pt.ipp.isep.dei.domain.Employee;
 import pt.ipp.isep.dei.domain.Organization;
@@ -44,7 +45,6 @@ public class AuthenticationUI implements Runnable {
         this.logout();
     }
 
-
     private List<MenuItem> getMenuItemForRoles() {
         List<MenuItem> rolesUI = new ArrayList<>();
         rolesUI.add(new MenuItem(AuthenticationController.ROLE_ADMIN, new AdminUI()));
@@ -53,7 +53,7 @@ public class AuthenticationUI implements Runnable {
         return rolesUI;
     }
 
-    private boolean doLogin() {
+    public boolean doLogin() {
         System.out.println("\n\n--- LOGIN UI ---------------------------");
 
         int maxAttempts = 3;
@@ -80,7 +80,19 @@ public class AuthenticationUI implements Runnable {
         boolean found = false;
         for (MenuItem item : rolesUI) {
             if (item.hasDescription(role.getDescription())) {
-                item.run();
+                if (role.getDescription().equals(AuthenticationController.ROLE_PLAYER)) {
+                    // Launch JavaFX for players
+                    new Thread(() -> {
+                        try {
+                            pt.ipp.isep.dei.Main.launch(pt.ipp.isep.dei.Main.class);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }).start();
+                } else {
+                    // Run console UI for other roles
+                    item.run();
+                }
                 found = true;
                 break;
             }
