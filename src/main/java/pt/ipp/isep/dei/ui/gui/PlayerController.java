@@ -43,6 +43,7 @@ public class PlayerController implements Initializable {
     @FXML private MenuItem pauseSimulationMenuItem;
     @FXML private Label statusLabel;
     @FXML private Label yearLabel;
+    @FXML private Label budgetLabel;
     @FXML private TableView<Station> stationList;
     @FXML private TableColumn<Station, String> stationNameColumn;
     @FXML private TableColumn<Station, String> stationTypeColumn;
@@ -228,6 +229,9 @@ public class PlayerController implements Initializable {
     private void updateLabels(String status, Integer year) {
         if (statusLabel != null) statusLabel.setText(status);
         if (yearLabel != null) yearLabel.setText("Ano atual: " + (year != null ? year : "-"));
+        if (budgetLabel != null && simulation != null && simulation.getScenario() != null) {
+            budgetLabel.setText("Budget: " + String.format("%.2f€", simulation.getScenario().getBudget()));
+        }
     }
 
     // Método chamado quando o jogador clica em "Build Station"
