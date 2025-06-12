@@ -31,6 +31,10 @@ import pt.ipp.isep.dei.repository.ScenarioRepository;
 import pt.ipp.isep.dei.domain.Simulation;
 import pt.ipp.isep.dei.domain.Player;
 import pt.ipp.isep.dei.domain.Station;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 
 public class PlayerController implements Initializable {
     private ScenarioRepository scenarioRepo;
@@ -39,6 +43,11 @@ public class PlayerController implements Initializable {
     @FXML private MenuItem pauseSimulationMenuItem;
     @FXML private Label statusLabel;
     @FXML private Label yearLabel;
+    @FXML private TableView<Station> stationList;
+    @FXML private TableColumn<Station, String> stationNameColumn;
+    @FXML private TableColumn<Station, String> stationTypeColumn;
+    @FXML private TableColumn<Station, String> stationCoordinatesColumn;
+    @FXML private TableColumn<Station, Integer> stationAreaColumn;
     private final CreateScenarioController controller;
     private final Scanner scanner;
     
@@ -153,6 +162,77 @@ public class PlayerController implements Initializable {
         });
     }
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        setupStationTable();
+        chooseScenario();
+    }
+
+    private void setupStationTable() {
+        stationNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        stationTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
+        stationCoordinatesColumn.setCellValueFactory(cellData -> 
+            new SimpleStringProperty("(" + cellData.getValue().getX() + ", " + cellData.getValue().getY() + ")"));
+        stationAreaColumn.setCellValueFactory(cellData -> 
+            new SimpleIntegerProperty(cellData.getValue().getArea()).asObject());
+    }
+
+    private void updateStationList() {
+        if (simulation != null && simulation.getScenario() != null) {
+            stationList.getItems().clear();
+            stationList.getItems().addAll(simulation.getScenario().getStationsPurchased());
+        }
+    }
+
+    private void startSimulationWithScenario(Scenario selectedScenario) {
+        if (player == null) {
+            player = new Player("player@email.com");
+        }
+        simulation = new Simulation(selectedScenario, player);
+        updateLabels("Cenário selecionado: " + selectedScenario.getName(), selectedScenario.getStartYear());
+        updateStationList();
+    }
+
+    @FXML
+    private void onStartSimulation() {
+        if (simulation == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Simulação não inicializada");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, selecione um cenário antes de iniciar a simulação.");
+            alert.showAndWait();
+            return;
+        }
+        if (simulationTimeline != null && simulationTimeline.getStatus() == Timeline.Status.RUNNING) {
+            statusLabel.setText("Simulação já em curso");
+            return;
+        }
+        simulationTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            simulation.advanceYear();
+            updateLabels("Simulação em curso", simulation.getCurrentYear());
+            if (simulation.getCurrentYear() >= simulation.getEndYear()) {
+                simulationTimeline.stop();
+                updateLabels("Simulação terminada", simulation.getCurrentYear());
+            }
+        }));
+        simulationTimeline.setCycleCount(Timeline.INDEFINITE);
+        simulationTimeline.play();
+        updateLabels("Simulação em curso", simulation.getCurrentYear());
+    }
+
+    @FXML
+    private void onPauseSimulation() {
+        if (simulationTimeline != null) {
+            simulationTimeline.stop();
+            updateLabels("Simulação pausada", simulation != null ? simulation.getCurrentYear() : null);
+        }
+    }
+
+    private void updateLabels(String status, Integer year) {
+        if (statusLabel != null) statusLabel.setText(status);
+        if (yearLabel != null) yearLabel.setText("Ano atual: " + (year != null ? year : "-"));
+    }
+
     // Método chamado quando o jogador clica em "Build Station"
     @FXML
     private void handleBuildStation() {
@@ -254,63 +334,11 @@ public class PlayerController implements Initializable {
                 Repositories.getInstance().getStationRepository().add(station);
                 statusLabel.setText("Estação criada: " + name + " (" + type + ") em (" + x + ", " + y + ")");
                 updateLabels(statusLabel.getText(), simulation.getCurrentYear());
+                updateStationList();
                 return null;
             }
             return null;
         });
         dialog.showAndWait();
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        chooseScenario();
-    }
-
-    private void startSimulationWithScenario(Scenario selectedScenario) {
-        if (player == null) {
-            player = new Player("player@email.com");
-        }
-        simulation = new Simulation(selectedScenario, player);
-        updateLabels("Cenário selecionado: " + selectedScenario.getName(), selectedScenario.getStartYear());
-    }
-
-    @FXML
-    private void onStartSimulation() {
-        if (simulation == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Simulação não inicializada");
-            alert.setHeaderText(null);
-            alert.setContentText("Por favor, selecione um cenário antes de iniciar a simulação.");
-            alert.showAndWait();
-            return;
-        }
-        if (simulationTimeline != null && simulationTimeline.getStatus() == Timeline.Status.RUNNING) {
-            statusLabel.setText("Simulação já em curso");
-            return;
-        }
-        simulationTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            simulation.advanceYear();
-            updateLabels("Simulação em curso", simulation.getCurrentYear());
-            if (simulation.getCurrentYear() >= simulation.getEndYear()) {
-                simulationTimeline.stop();
-                updateLabels("Simulação terminada", simulation.getCurrentYear());
-            }
-        }));
-        simulationTimeline.setCycleCount(Timeline.INDEFINITE);
-        simulationTimeline.play();
-        updateLabels("Simulação em curso", simulation.getCurrentYear());
-    }
-
-    @FXML
-    private void onPauseSimulation() {
-        if (simulationTimeline != null) {
-            simulationTimeline.stop();
-            updateLabels("Simulação pausada", simulation != null ? simulation.getCurrentYear() : null);
-        }
-    }
-
-    private void updateLabels(String status, Integer year) {
-        if (statusLabel != null) statusLabel.setText(status);
-        if (yearLabel != null) yearLabel.setText("Ano atual: " + (year != null ? year : "-"));
     }
 }
