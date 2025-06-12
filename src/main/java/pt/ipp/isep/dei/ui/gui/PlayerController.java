@@ -18,6 +18,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import pt.ipp.isep.dei.controller.CreateScenarioController;
 import pt.ipp.isep.dei.domain.HistoricalEvent;
 import pt.ipp.isep.dei.domain.PortBehavior;
@@ -25,11 +28,17 @@ import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.repository.ScenarioRepository;
+import pt.ipp.isep.dei.domain.Simulation;
+import pt.ipp.isep.dei.domain.Player;
+import pt.ipp.isep.dei.domain.Station;
 
 public class PlayerController implements Initializable {
     private ScenarioRepository scenarioRepo;
     @FXML private MenuItem buildStationMenuItem;
+    @FXML private MenuItem startSimulationMenuItem;
+    @FXML private MenuItem pauseSimulationMenuItem;
     @FXML private Label statusLabel;
+    @FXML private Label yearLabel;
     private final CreateScenarioController controller;
     private final Scanner scanner;
     
@@ -40,6 +49,9 @@ public class PlayerController implements Initializable {
     private List<LocomotiveType> availableLocomotiveTypes;
     private PortBehavior portBehavior;
     private List<HistoricalEvent> historicalEvents;
+    private Simulation simulation;
+    private Timeline simulationTimeline;
+    private Player player;
 
     public PlayerController() {
         this.controller = new CreateScenarioController();
@@ -135,9 +147,8 @@ public class PlayerController implements Initializable {
                 this.availableLocomotiveTypes = selectedScenario.getAvailableLocomotiveTypes();
                 this.portBehavior = selectedScenario.getPortBehavior();
                 this.historicalEvents = selectedScenario.getHistoricalEvents();
-                
-                // Update the status label
-                statusLabel.setText("Welcome to " + scenarioName + " | Budget: " + String.format("%.2f€", budget));
+                startSimulationWithScenario(selectedScenario);
+                updateLabels("Cenário selecionado: " + selectedScenario.getName(), selectedScenario.getStartYear());
             }
         });
     }
@@ -145,93 +156,161 @@ public class PlayerController implements Initializable {
     // Método chamado quando o jogador clica em "Build Station"
     @FXML
     private void handleBuildStation() {
-        // Exibe a janela de diálogo para comprar estação com detalhes do cenário
-        showScenarioDialog();
-    }
+        Scenario scenario = simulation != null ? simulation.getScenario() : null;
+        if (scenario == null) {
+            statusLabel.setText("Erro: selecione um cenário antes de construir uma estação.");
+            return;
+        }
 
-    // Função para exibir o diálogo de cenário e compra de estação
-    private void showScenarioDialog() {
-        // Criação de uma nova janela de diálogo
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Select Scenario Options");
+        dialog.setTitle("Build Station");
+        dialog.setHeaderText("Construir nova estação");
 
-        // Definindo o botão padrão para fechar o diálogo
-        ButtonType buyButtonType = new ButtonType("Build Station", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(buyButtonType, ButtonType.CANCEL);
+        VBox content = new VBox(10);
+        content.setPadding(new javafx.geometry.Insets(10));
 
-        // Criando o conteúdo do diálogo com as informações do cenário
-        VBox content = new VBox();
+        // Tipo de estação
+        Label typeLabel = new Label("Tipo de estação:");
+        ComboBox<String> typeComboBox = new ComboBox<>();
+        typeComboBox.getItems().addAll("Depot", "Station", "Terminal");
+        Label costLabel = new Label("Custo: -");
+        Label radiusLabel = new Label("Raio: -");
+        typeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            switch (newVal) {
+                case "Depot":
+                    costLabel.setText("Custo: 50000");
+                    radiusLabel.setText("Raio: 3x3");
+                    break;
+                case "Station":
+                    costLabel.setText("Custo: 100000");
+                    radiusLabel.setText("Raio: 4x4");
+                    break;
+                case "Terminal":
+                    costLabel.setText("Custo: 200000");
+                    radiusLabel.setText("Raio: 5x5");
+                    break;
+                default:
+                    costLabel.setText("Custo: -");
+                    radiusLabel.setText("Raio: -");
+            }
+        });
 
-        // Exibindo informações do cenário
-        Label scenarioLabel = new Label("=== Scenario: " + scenarioName + " ===");
-        Label budgetLabel = new Label("Budget: " + String.format("%.2f", budget) + "€");
-        Label timePeriodLabel = new Label("Time Period: " + startYear + " - " + endYear);
+        // Coordenadas
+        Label coordLabel = new Label("Coordenadas (X, Y):");
+        TextField xField = new TextField();
+        xField.setPromptText("X");
+        TextField yField = new TextField();
+        yField.setPromptText("Y");
 
-        // Exibindo os tipos de locomotivas disponíveis
-        Label locomotivesLabel = new Label("Available Locomotive Types:");
-        ListView<LocomotiveType> locomotivesList = new ListView<>();
-        locomotivesList.getItems().addAll(availableLocomotiveTypes);
+        // Nome
+        Label nameLabel = new Label("Nome da estação:");
+        TextField nameField = new TextField();
+        nameField.setPromptText("Nome");
 
-        // Exibindo o comportamento do porto
-        Label portBehaviorLabel = new Label("Port Behavior:\n" + portBehavior.toString());
-
-        // Exibindo os eventos históricos
-        Label historicalEventsLabel = new Label("Historical Events:");
-        ListView<HistoricalEvent> historicalEventsList = new ListView<>();
-        historicalEventsList.getItems().addAll(historicalEvents);
-
-        // Adicionando as novas opções
-        Label stationTypeLabel = new Label("Choose Station Type:");
-        ComboBox<String> stationTypeComboBox = new ComboBox<>();
-        stationTypeComboBox.getItems().addAll("Depot", "Station", "Terminal");
-
-        Label locationLabel = new Label("Choose Location:");
-        ComboBox<String> locationComboBox = new ComboBox<>();
-        locationComboBox.getItems().addAll("NW", "SW", "NE", "SE");
-
-        Label nameLabel = new Label("Enter Station Name:");
-        TextField nameTextField = new TextField();
-
-        // Adicionando os componentes ao conteúdo
-        content.getChildren().addAll(
-                scenarioLabel, budgetLabel, timePeriodLabel,
-                locomotivesLabel, locomotivesList,
-                portBehaviorLabel, historicalEventsLabel, historicalEventsList,
-                stationTypeLabel, stationTypeComboBox,
-                locationLabel, locationComboBox,
-                nameLabel, nameTextField
-        );
-
-        // Configurando o conteúdo do diálogo
+        content.getChildren().addAll(typeLabel, typeComboBox, costLabel, radiusLabel, coordLabel, xField, yField, nameLabel, nameField);
         dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        // Esperando o jogador escolher o cenário e tomar a decisão de construir a estação
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == buyButtonType) {
-                // Lógica para construir a estação
-                String selectedStationType = stationTypeComboBox.getValue();
-                String selectedLocation = locationComboBox.getValue();
-                String stationName = nameTextField.getText();
-
-                // Aqui você pode adicionar a lógica para construir a estação no mapa
-                // Exemplo: Mostrar status de construção da estação
-                statusLabel.setText("Station built: " + selectedStationType + " at " + selectedLocation + " with name: " + stationName);
-
-                // Aqui, você pode também verificar a validade do nome e das opções
-                if (stationName.isEmpty()) {
-                    statusLabel.setText("Please enter a valid station name.");
+            if (dialogButton == ButtonType.OK) {
+                String type = typeComboBox.getValue();
+                String xStr = xField.getText();
+                String yStr = yField.getText();
+                String name = nameField.getText();
+                if (type == null || xStr.isEmpty() || yStr.isEmpty() || name.isEmpty()) {
+                    statusLabel.setText("Preencha todos os campos.");
+                    return null;
                 }
+                int x, y, cost, area;
+                String typeLower = type.toLowerCase();
+                switch (type) {
+                    case "Depot": cost = 50000; area = 9; break;
+                    case "Station": cost = 100000; area = 16; break;
+                    case "Terminal": cost = 200000; area = 25; break;
+                    default: cost = 0; area = 0;
+                }
+                try {
+                    x = Integer.parseInt(xStr);
+                    y = Integer.parseInt(yStr);
+                } catch (NumberFormatException e) {
+                    statusLabel.setText("Coordenadas inválidas.");
+                    return null;
+                }
+                // Verificar orçamento
+                if (scenario.getBudget() < cost) {
+                    statusLabel.setText("Orçamento insuficiente para construir esta estação.");
+                    return null;
+                }
+                // Verificar se já existe estação nessas coordenadas
+                boolean exists = scenario.getStationsPurchased().stream().anyMatch(s -> s.getX() == x && s.getY() == y);
+                if (exists) {
+                    statusLabel.setText("Já existe uma estação nessas coordenadas.");
+                    return null;
+                }
+                // Criar estação
+                Station station = new Station(name, typeLower, "-", scenario.getName(), area, x, y);
+                scenario.addStationPurchased(station);
+                scenario.setBudget(scenario.getBudget() - cost);
+                Repositories.getInstance().getStationRepository().add(station);
+                statusLabel.setText("Estação criada: " + name + " (" + type + ") em (" + x + ", " + y + ")");
+                updateLabels(statusLabel.getText(), simulation.getCurrentYear());
+                return null;
             }
             return null;
         });
-
-        // Exibe o diálogo
         dialog.showAndWait();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Show scenario selection dialog when the application starts
         chooseScenario();
+    }
+
+    private void startSimulationWithScenario(Scenario selectedScenario) {
+        if (player == null) {
+            player = new Player("player@email.com");
+        }
+        simulation = new Simulation(selectedScenario, player);
+        updateLabels("Cenário selecionado: " + selectedScenario.getName(), selectedScenario.getStartYear());
+    }
+
+    @FXML
+    private void onStartSimulation() {
+        if (simulation == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Simulação não inicializada");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, selecione um cenário antes de iniciar a simulação.");
+            alert.showAndWait();
+            return;
+        }
+        if (simulationTimeline != null && simulationTimeline.getStatus() == Timeline.Status.RUNNING) {
+            statusLabel.setText("Simulação já em curso");
+            return;
+        }
+        simulationTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            simulation.advanceYear();
+            updateLabels("Simulação em curso", simulation.getCurrentYear());
+            if (simulation.getCurrentYear() >= simulation.getEndYear()) {
+                simulationTimeline.stop();
+                updateLabels("Simulação terminada", simulation.getCurrentYear());
+            }
+        }));
+        simulationTimeline.setCycleCount(Timeline.INDEFINITE);
+        simulationTimeline.play();
+        updateLabels("Simulação em curso", simulation.getCurrentYear());
+    }
+
+    @FXML
+    private void onPauseSimulation() {
+        if (simulationTimeline != null) {
+            simulationTimeline.stop();
+            updateLabels("Simulação pausada", simulation != null ? simulation.getCurrentYear() : null);
+        }
+    }
+
+    private void updateLabels(String status, Integer year) {
+        if (statusLabel != null) statusLabel.setText(status);
+        if (yearLabel != null) yearLabel.setText("Ano atual: " + (year != null ? year : "-"));
     }
 }

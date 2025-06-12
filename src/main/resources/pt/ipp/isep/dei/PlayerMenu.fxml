@@ -46,8 +46,8 @@
                   <!-- Menu Simulation -->
                   <Menu text="Simulation">
                <items>
-                        <MenuItem fx:id="startSimulationMenuItem" text="Start Simulation" />
-                        <MenuItem fx:id="pauseSimulationMenuItem" text="Pause Simulation" />
+                        <MenuItem fx:id="startSimulationMenuItem" text="Start Simulation" onAction="#onStartSimulation" />
+                        <MenuItem fx:id="pauseSimulationMenuItem" text="Pause Simulation" onAction="#onPauseSimulation" />
                </items>
                   </Menu>
                </menus>
@@ -62,5 +62,7 @@
    
       <!-- Status Label -->
       <Label fx:id="statusLabel" layoutX="20" layoutY="650" text="Status: Ready to play" />
+      <!-- Ano Atual Label -->
+      <Label fx:id="yearLabel" layoutX="20" layoutY="680" text="Ano atual: -" />
    </children>
 </AnchorPane>

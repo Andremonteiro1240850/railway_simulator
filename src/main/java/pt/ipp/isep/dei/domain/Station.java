@@ -161,6 +161,14 @@ public class Station {
                 .collect(Collectors.toList());
     }
 
+    public int getMaintenanceCost() {
+        switch (type.toLowerCase()) {
+            case "depot": return 5000;
+            case "station": return 10000;
+            case "terminal": return 20000;
+            default: return 0;
+        }
+    }
 
     /**
      * Checks equality based on the station reference.
