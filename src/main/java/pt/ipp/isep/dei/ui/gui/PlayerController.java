@@ -1,10 +1,15 @@
 package pt.ipp.isep.dei.ui.gui;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -16,25 +21,23 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.util.Duration;
 import pt.ipp.isep.dei.controller.CreateScenarioController;
 import pt.ipp.isep.dei.domain.HistoricalEvent;
+import pt.ipp.isep.dei.domain.Player;
 import pt.ipp.isep.dei.domain.PortBehavior;
 import pt.ipp.isep.dei.domain.Scenario;
+import pt.ipp.isep.dei.domain.Simulation;
+import pt.ipp.isep.dei.domain.Station;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
+import pt.ipp.isep.dei.domain.enums.StationUpgrade;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.repository.ScenarioRepository;
-import pt.ipp.isep.dei.domain.Simulation;
-import pt.ipp.isep.dei.domain.Player;
-import pt.ipp.isep.dei.domain.Station;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 
 public class PlayerController implements Initializable {
     private ScenarioRepository scenarioRepo;
@@ -157,7 +160,7 @@ public class PlayerController implements Initializable {
                 this.portBehavior = selectedScenario.getPortBehavior();
                 this.historicalEvents = selectedScenario.getHistoricalEvents();
                 startSimulationWithScenario(selectedScenario);
-                updateLabels("Cenário selecionado: " + selectedScenario.getName(), selectedScenario.getStartYear());
+                updateLabels("Selected scenario: " + selectedScenario.getName(), selectedScenario.getStartYear());
             }
         });
     }
@@ -169,17 +172,35 @@ public class PlayerController implements Initializable {
     }
 
     private void setupStationTable() {
-        stationNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        stationTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
-        stationCoordinatesColumn.setCellValueFactory(cellData -> 
-            new SimpleStringProperty("(" + cellData.getValue().getX() + ", " + cellData.getValue().getY() + ")"));
+        // Configure the station name column
+        stationNameColumn.setCellValueFactory(cellData -> {
+            Station station = cellData.getValue();
+            return new SimpleStringProperty(station != null ? station.getName() : "");
+        });
+
+        // Configure the station type column
+        stationTypeColumn.setCellValueFactory(cellData -> {
+            Station station = cellData.getValue();
+            return new SimpleStringProperty(station != null ? station.getType() : "");
+        });
+
+        // Configure the coordinates column
+        stationCoordinatesColumn.setCellValueFactory(cellData -> {
+            Station station = cellData.getValue();
+            if (station != null) {
+                return new SimpleStringProperty(String.format("(%d, %d)", station.getX(), station.getY()));
+            }
+            return new SimpleStringProperty("");
+        });
+
+        // Make sure the table is visible
+        stationList.setVisible(true);
     }
 
     private void updateStationList() {
-        if (simulation != null && simulation.getScenario() != null) {
-            stationList.getItems().clear();
-            stationList.getItems().addAll(simulation.getScenario().getStationsPurchased());
-        }
+        List<Station> allStations = Repositories.getInstance().getStationRepository().getAll();
+        stationList.getItems().clear();
+        stationList.getItems().addAll(allStations);
     }
 
     private void startSimulationWithScenario(Scenario selectedScenario) {
@@ -187,7 +208,7 @@ public class PlayerController implements Initializable {
             player = new Player("player@email.com");
         }
         simulation = new Simulation(selectedScenario, player);
-        updateLabels("Cenário selecionado: " + selectedScenario.getName(), selectedScenario.getStartYear());
+        updateLabels("Selected scenario: " + selectedScenario.getName(), selectedScenario.getStartYear());
         updateStationList();
     }
 
@@ -195,40 +216,40 @@ public class PlayerController implements Initializable {
     private void onStartSimulation() {
         if (simulation == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Simulação não inicializada");
+            alert.setTitle("Simulation Error");
             alert.setHeaderText(null);
-            alert.setContentText("Por favor, selecione um cenário antes de iniciar a simulação.");
+            alert.setContentText("Please select a scenario before starting the simulation.");
             alert.showAndWait();
             return;
         }
         if (simulationTimeline != null && simulationTimeline.getStatus() == Timeline.Status.RUNNING) {
-            statusLabel.setText("Simulação já em curso");
+            statusLabel.setText("Simulação already in progress");
             return;
         }
         simulationTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
             simulation.advanceYear();
-            updateLabels("Simulação em curso", simulation.getCurrentYear());
+            updateLabels("Simulation in progress", simulation.getCurrentYear());
             if (simulation.getCurrentYear() >= simulation.getEndYear()) {
                 simulationTimeline.stop();
-                updateLabels("Simulação terminada", simulation.getCurrentYear());
+                updateLabels("Simulation finished", simulation.getCurrentYear());
             }
         }));
         simulationTimeline.setCycleCount(Timeline.INDEFINITE);
         simulationTimeline.play();
-        updateLabels("Simulação em curso", simulation.getCurrentYear());
+        updateLabels("Simulation in progress", simulation.getCurrentYear());
     }
 
     @FXML
     private void onPauseSimulation() {
         if (simulationTimeline != null) {
             simulationTimeline.stop();
-            updateLabels("Simulação pausada", simulation != null ? simulation.getCurrentYear() : null);
+            updateLabels("Simulation paused", simulation != null ? simulation.getCurrentYear() : null);
         }
     }
 
     private void updateLabels(String status, Integer year) {
         if (statusLabel != null) statusLabel.setText(status);
-        if (yearLabel != null) yearLabel.setText("Ano atual: " + (year != null ? year : "-"));
+        if (yearLabel != null) yearLabel.setText("Current year: " + (year != null ? year : "-"));
         if (budgetLabel != null && simulation != null && simulation.getScenario() != null) {
             budgetLabel.setText("Budget: " + String.format("%.2f€", simulation.getScenario().getBudget()));
         }
@@ -239,54 +260,54 @@ public class PlayerController implements Initializable {
     private void handleBuildStation() {
         Scenario scenario = simulation != null ? simulation.getScenario() : null;
         if (scenario == null) {
-            statusLabel.setText("Erro: selecione um cenário antes de construir uma estação.");
+            statusLabel.setText("Error: please select a scenario before building a station.");
             return;
         }
 
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Build Station");
-        dialog.setHeaderText("Construir nova estação");
+        dialog.setHeaderText("Build a new station in the scenario: " + scenario.getName());
 
         VBox content = new VBox(10);
         content.setPadding(new javafx.geometry.Insets(10));
 
         // Tipo de estação
-        Label typeLabel = new Label("Tipo de estação:");
+        Label typeLabel = new Label("Station type:");
         ComboBox<String> typeComboBox = new ComboBox<>();
         typeComboBox.getItems().addAll("Depot", "Station", "Terminal");
-        Label costLabel = new Label("Custo: -");
-        Label radiusLabel = new Label("Raio: -");
+        Label costLabel = new Label("Cost: -");
+        Label radiusLabel = new Label("Radius: -");
         typeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             switch (newVal) {
                 case "Depot":
-                    costLabel.setText("Custo: 50000");
-                    radiusLabel.setText("Raio: 3x3");
+                    costLabel.setText("Cost: 50000");
+                    radiusLabel.setText("Radius: 3x3");
                     break;
                 case "Station":
-                    costLabel.setText("Custo: 100000");
-                    radiusLabel.setText("Raio: 4x4");
+                    costLabel.setText("Cost: 100000");
+                    radiusLabel.setText("Radius: 4x4");
                     break;
                 case "Terminal":
-                    costLabel.setText("Custo: 200000");
-                    radiusLabel.setText("Raio: 5x5");
+                    costLabel.setText("Cost: 200000");
+                    radiusLabel.setText("Radius: 5x5");
                     break;
                 default:
-                    costLabel.setText("Custo: -");
-                    radiusLabel.setText("Raio: -");
+                    costLabel.setText("Cost: -");
+                    radiusLabel.setText("Radius: -");
             }
         });
 
         // Coordenadas
-        Label coordLabel = new Label("Coordenadas (X, Y):");
+        Label coordLabel = new Label("Coordinates (X, Y):");
         TextField xField = new TextField();
         xField.setPromptText("X");
         TextField yField = new TextField();
         yField.setPromptText("Y");
 
         // Nome
-        Label nameLabel = new Label("Nome da estação:");
+        Label nameLabel = new Label("Station name:");
         TextField nameField = new TextField();
-        nameField.setPromptText("Nome");
+        nameField.setPromptText("Name");
 
         content.getChildren().addAll(typeLabel, typeComboBox, costLabel, radiusLabel, coordLabel, xField, yField, nameLabel, nameField);
         dialog.getDialogPane().setContent(content);
@@ -299,7 +320,7 @@ public class PlayerController implements Initializable {
                 String yStr = yField.getText();
                 String name = nameField.getText();
                 if (type == null || xStr.isEmpty() || yStr.isEmpty() || name.isEmpty()) {
-                    statusLabel.setText("Preencha todos os campos.");
+                    statusLabel.setText("Fill in all the fields.");
                     return null;
                 }
                 int x, y, cost, area;
@@ -314,18 +335,18 @@ public class PlayerController implements Initializable {
                     x = Integer.parseInt(xStr);
                     y = Integer.parseInt(yStr);
                 } catch (NumberFormatException e) {
-                    statusLabel.setText("Coordenadas inválidas.");
+                    statusLabel.setText("Invalid coordinates.");
                     return null;
                 }
                 // Verificar orçamento
                 if (scenario.getBudget() < cost) {
-                    statusLabel.setText("Orçamento insuficiente para construir esta estação.");
+                    statusLabel.setText("Not enough budget.");
                     return null;
                 }
                 // Verificar se já existe estação nessas coordenadas
                 boolean exists = scenario.getStationsPurchased().stream().anyMatch(s -> s.getX() == x && s.getY() == y);
                 if (exists) {
-                    statusLabel.setText("Já existe uma estação nessas coordenadas.");
+                    statusLabel.setText("This position is already ocuppied.");
                     return null;
                 }
                 // Criar estação
@@ -333,7 +354,8 @@ public class PlayerController implements Initializable {
                 scenario.addStationPurchased(station);
                 scenario.setBudget(scenario.getBudget() - cost);
                 Repositories.getInstance().getStationRepository().add(station);
-                statusLabel.setText("Estação criada: " + name + " (" + type + ") em (" + x + ", " + y + ")");
+                simulation.addStation(station); // Add to player's inventory
+                statusLabel.setText("Station Created: " + name + " (" + type + ") in (" + x + ", " + y + ")");
                 updateLabels(statusLabel.getText(), simulation.getCurrentYear());
                 updateStationList();
                 return null;
@@ -341,5 +363,169 @@ public class PlayerController implements Initializable {
             return null;
         });
         dialog.showAndWait();
+    }
+
+    @FXML
+    private void handleListStations() {
+        // Get all stations from the repository
+        List<Station> allStations = Repositories.getInstance().getStationRepository().getAll();
+
+        // Build the string with station info
+        StringBuilder sb = new StringBuilder();
+        if (allStations.isEmpty()) {
+            sb.append("No stations built.");
+        } else {
+            for (Station station : allStations) {
+                sb.append("Name: ").append(station.getName())
+                  .append(" | Type: ").append(station.getType())
+                  .append(" | Coordinates: (").append(station.getX()).append(", ").append(station.getY()).append(")\n");
+            }
+        }
+
+        // Show in an Alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("EBuilt Sytation");
+        alert.setHeaderText("List of all built Stations:");
+        alert.setContentText(sb.toString());
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE); // To show all content
+        alert.showAndWait();
+
+        // Update the table as usual
+        stationList.getItems().clear();
+        stationList.getItems().addAll(allStations);
+        statusLabel.setText("Built Stations list updated - There is " + allStations.size() + " stations built.");
+    }
+
+    @FXML
+    public void handleUpgradeStation() {
+        // 1. Selecionar estação
+        List<Station> allStations = Repositories.getInstance().getStationRepository().getAll();
+        if (allStations.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Stations");
+            alert.setHeaderText(null);
+            alert.setContentText("You have no stations to upgrade.");
+            alert.showAndWait();
+            return;
+        }
+        // Custom dialog with ListView
+        Dialog<Station> dialog = new Dialog<>();
+        dialog.setTitle("Choose Station");
+        dialog.setHeaderText("Select a station to upgrade:");
+        ListView<Station> stationListView = new ListView<>();
+        stationListView.getItems().addAll(allStations);
+        stationListView.setCellFactory(lv -> new ListCell<Station>() {
+            @Override
+            protected void updateItem(Station station, boolean empty) {
+                super.updateItem(station, empty);
+                if (empty || station == null) {
+                    setText(null);
+                } else {
+                    setText(station.getName() + " (" + station.getX() + ", " + station.getY() + ")");
+                }
+            }
+        });
+        VBox content = new VBox(10, stationListView);
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return stationListView.getSelectionModel().getSelectedItem();
+            }
+            return null;
+        });
+        Optional<Station> selectedStationOpt = dialog.showAndWait();
+        if (!selectedStationOpt.isPresent() || selectedStationOpt.get() == null) return;
+        Station selectedStation = selectedStationOpt.get();
+
+        // Buscar a estação da simulação para garantir upgrades corretos
+        Station stationInSimulation = simulation.getStations().stream()
+            .filter(s -> s.getReference().equals(selectedStation.getReference()))
+            .findFirst()
+            .orElse(selectedStation);
+
+        // 2. Filtrar upgrades possíveis
+        int currentYear = simulation != null ? simulation.getCurrentYear() : 0;
+        List<StationUpgrade> installed = stationInSimulation.getUpgrades();
+        List<StationUpgrade> possibleUpgrades = new ArrayList<>();
+        for (StationUpgrade upgrade : StationUpgrade.values()) {
+            // Só upgrades do ano atual ou anterior
+            if (upgrade.getYear() > currentYear) continue;
+            // Não mostrar upgrades já instalados
+            if (installed.contains(upgrade)) continue;
+            // Exclusividade: não pode instalar se já tem um exclusivo
+            boolean exclusive = false;
+            for (StationUpgrade inst : installed) {
+                if (upgrade.getExclusiveWith() != null && upgrade.getExclusiveWith().equals(inst.name())) exclusive = true;
+                if (inst.getExclusiveWith() != null && inst.getExclusiveWith().equals(upgrade.name())) exclusive = true;
+            }
+            if (exclusive) continue;
+            possibleUpgrades.add(upgrade);
+        }
+
+        if (possibleUpgrades.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Upgrades Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No upgrades available for this station at the current year.");
+            alert.showAndWait();
+            return;
+        }
+
+        // 3. Mostrar upgrades possíveis para escolha
+        Dialog<StationUpgrade> upgradeDialog = new Dialog<>();
+        upgradeDialog.setTitle("Choose Upgrade");
+        upgradeDialog.setHeaderText("Available upgrades for: " + selectedStation.getName());
+        ListView<StationUpgrade> upgradeListView = new ListView<>();
+        upgradeListView.getItems().addAll(possibleUpgrades);
+        upgradeListView.setCellFactory(lv -> new ListCell<StationUpgrade>() {
+            @Override
+            protected void updateItem(StationUpgrade upg, boolean empty) {
+                super.updateItem(upg, empty);
+                if (empty || upg == null) {
+                    setText(null);
+                } else {
+                    setText(upg.getDisplayName() + " (Ano: " + upg.getYear() + ", Custo: $" + upg.getCost() + ")");
+                }
+            }
+        });
+        VBox upgContent = new VBox(10, upgradeListView);
+        upgradeDialog.getDialogPane().setContent(upgContent);
+        upgradeDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        upgradeDialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return upgradeListView.getSelectionModel().getSelectedItem();
+            }
+            return null;
+        });
+        Optional<StationUpgrade> chosenUpgradeOpt = upgradeDialog.showAndWait();
+        if (!chosenUpgradeOpt.isPresent() || chosenUpgradeOpt.get() == null) return;
+        StationUpgrade chosenUpgrade = chosenUpgradeOpt.get();
+
+        // 4. Verificar orçamento antes de aplicar upgrade
+        Scenario scenario = simulation != null ? simulation.getScenario() : null;
+        if (scenario == null) {
+            Alert error = new Alert(Alert.AlertType.ERROR, "No scenario loaded.");
+            error.showAndWait();
+            return;
+        }
+        if (scenario.getBudget() < chosenUpgrade.getCost()) {
+            Alert error = new Alert(Alert.AlertType.ERROR, "Not enough budget for this upgrade.");
+            error.showAndWait();
+            return;
+        }
+
+        // 5. Aplicar upgrade e descontar do orçamento
+        if (stationInSimulation != null) {
+            stationInSimulation.addUpgrade(chosenUpgrade);
+        } else {
+            selectedStation.addUpgrade(chosenUpgrade);
+        }
+        scenario.setBudget(scenario.getBudget() - chosenUpgrade.getCost());
+        Alert done = new Alert(Alert.AlertType.INFORMATION);
+        done.setTitle("Upgrade Applied");
+        done.setHeaderText(null);
+        done.setContentText("Upgrade '" + chosenUpgrade.getDisplayName() + "' applied to station '" + selectedStation.getName() + "'.\nCost: $" + chosenUpgrade.getCost());
+        done.showAndWait();
     }
 }

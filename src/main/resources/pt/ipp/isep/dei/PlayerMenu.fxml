@@ -40,8 +40,8 @@
                   <Menu text="Station" style="-fx-text-fill: #ecf0f1; -fx-font-size: 16px;">
                      <items>
                         <MenuItem fx:id="buildStationMenuItem" text="Build Station" onAction="#handleBuildStation" />
-                        <MenuItem fx:id="upgradeStationMenuItem" text="Upgrade Station" />
-                        <MenuItem fx:id="listStationMenuItem" text="List Stations" />
+                        <MenuItem fx:id="upgradeStationMenuItem" text="Upgrade Station" onAction="#handleUpgradeStation" />
+                        <MenuItem fx:id="listStationMenuItem" text="List Stations" onAction="#handleListStations" />
                      </items>
                   </Menu>
                   <!-- Menu Train -->
@@ -74,7 +74,7 @@
       <Label fx:id="statusLabel" layoutX="20" layoutY="650" text="Status: Ready to play" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;" />
 
       <!-- Ano Atual Label -->
-      <Label fx:id="yearLabel" layoutX="20" layoutY="680" text="Ano atual: -" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;" />
+      <Label fx:id="yearLabel" layoutX="20" layoutY="680" text="Current Year: -" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;" />
 
       <!-- Budget Label -->
       <Label fx:id="budgetLabel" layoutX="250" layoutY="680" text="Budget: -" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;" />

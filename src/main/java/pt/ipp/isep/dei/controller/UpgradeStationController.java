@@ -1,12 +1,20 @@
 package pt.ipp.isep.dei.controller;
 
-import pt.ipp.isep.dei.domain.*;
-import pt.ipp.isep.dei.domain.enums.Buildings;
-import pt.ipp.isep.dei.repository.*;
-import pt.isep.lei.esoft.auth.domain.model.Email;
-
 import java.util.List;
 import java.util.Optional;
+
+import pt.ipp.isep.dei.domain.Employee;
+import pt.ipp.isep.dei.domain.Player;
+import pt.ipp.isep.dei.domain.Scenario;
+import pt.ipp.isep.dei.domain.Station;
+import pt.ipp.isep.dei.domain.enums.StationUpgrade;
+import pt.ipp.isep.dei.repository.AuthenticationRepository;
+import pt.ipp.isep.dei.repository.OrganizationRepository;
+import pt.ipp.isep.dei.repository.Repositories;
+import pt.ipp.isep.dei.repository.ScenarioRepository;
+import pt.ipp.isep.dei.repository.StationRepository;
+import pt.ipp.isep.dei.repository.UpgradeBuildingsRepository;
+import pt.isep.lei.esoft.auth.domain.model.Email;
 
 public class UpgradeStationController {
     private   OrganizationRepository organizationRepository;
@@ -81,60 +89,33 @@ public class UpgradeStationController {
 
 
     public boolean upgradeStation(String stationId, String type, String subType) {
-        // 1. Validar tipo e subtipo
-        Buildings upgrade = Buildings.from(type, subType);
-        if (upgrade == null) {
-            System.out.println("Erro: Tipo ou subtipo de upgrade inválido.");
-            return false;
-        }
-
-        // 2. Procurar estação
         Optional<Station> stationOptional = stationRepository.findByReference(stationId);
-        if (stationOptional.isEmpty()) {
-            System.out.println("Erro: Estação não encontrada com ID " + stationId);
-            return false;
-        }
-
+        if (stationOptional.isEmpty()) return false;
         Station station = stationOptional.get();
 
-        //  Verificar se o upgrade já foi aplicado
+        // Verificar se o upgrade já foi aplicado
         boolean upgradeExists = station.getUpgrades().stream()
-                .anyMatch(u -> u.getType().equalsIgnoreCase(type) &&
-                        ((subType == null && u.getSubType() == null) ||
-                                (subType != null && subType.equalsIgnoreCase(u.getSubType()))));
-
+            .anyMatch(u -> u.getDisplayName().equalsIgnoreCase(type));
         if (upgradeExists) {
             System.out.println("Erro: Este upgrade já foi aplicado a esta estação.");
             return false;
         }
 
-        // 3. Verificar cenário
-        Optional<Scenario> optionalScenario = stationRepository.findScenarioByStation(station.getReference());
-        if (optionalScenario.isEmpty()) {
-            System.out.println("Erro: Scenario não foi definido no controlador.");
+        // Encontrar o upgrade correspondente na enum
+        StationUpgrade upgradeToAdd = null;
+        for (StationUpgrade upg : StationUpgrade.values()) {
+            if (upg.getDisplayName().equalsIgnoreCase(type)) {
+                upgradeToAdd = upg;
+                break;
+            }
+        }
+        if (upgradeToAdd == null) {
+            System.out.println("Erro: Upgrade não encontrado.");
             return false;
         }
 
-        Scenario scenario = optionalScenario.get();
-
-        // 4. Verificar orçamento
-        double price = upgrade.getPrice();
-        if (scenario.getBudget() < price) {
-            System.out.printf("Erro: Orçamento insuficiente (necessário: €%.2f, disponível: €%.2f).\n", price, scenario.getBudget());
-            return false;
-        }
-
-        // 5. Aplicar upgrade
-        StationUpgrade stationUpgrade = new StationUpgrade(type, subType);
-        station.addUpgrade(stationUpgrade);
-        stationRepository.addUpgradeToStation(station.getReference(), stationUpgrade);
-
-        // 6. Descontar orçamento
-        scenario.setBudget(scenario.getBudget() - price);
-
-        System.out.printf("✅ Upgrade aplicado com sucesso: %s (%s) - Custo: €%.2f\n", type,
-                subType != null ? subType : "sem subtipo", price);
-
+        station.addUpgrade(upgradeToAdd);
+        stationRepository.addUpgradeToStation(stationId, upgradeToAdd);
         return true;
     }
 

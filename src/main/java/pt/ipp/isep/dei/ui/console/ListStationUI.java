@@ -1,9 +1,10 @@
 package pt.ipp.isep.dei.ui.console;
 
-import pt.ipp.isep.dei.controller.ListStationController;
-import pt.ipp.isep.dei.domain.Station;
 import java.util.List;
 import java.util.Scanner;
+
+import pt.ipp.isep.dei.controller.ListStationController;
+import pt.ipp.isep.dei.domain.Station;
 
 public class ListStationUI implements Runnable {
     private final ListStationController controller;
@@ -43,11 +44,7 @@ public class ListStationUI implements Runnable {
                 System.out.println("  No upgrades installed");
             } else {
                 station.getUpgrades().forEach(upgrade -> {
-                    System.out.printf("  - %s", upgrade.getType());
-                    if (upgrade.getSubType() != null) {
-                        System.out.printf(" (%s)", upgrade.getSubType());
-                    }
-                    System.out.println();
+                    System.out.printf("  - %s", upgrade.getDisplayName());
                 });
             }
             System.out.println("----------------------------");
