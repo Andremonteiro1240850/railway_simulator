@@ -29,7 +29,7 @@
                   <!-- Menu Station -->
                   <Menu text="Station">
                      <items>
-                        <MenuItem fx:id="buildStationMenuItem" text="Build Station" />
+                        <MenuItem fx:id="buildStationMenuItem" text="Build Station" onAction="#handleBuildStation" />
                         <MenuItem fx:id="upgradeStationMenuItem" text="Upgrade Station" />
                         <MenuItem fx:id="listStationMenuItem" text="List Stations" />
                      </items>
