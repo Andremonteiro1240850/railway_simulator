@@ -19,14 +19,14 @@ public class BuyLocomotiveController {
     public void showAvailableLocomotives(Scenario scenario) {
 
         List<LocomotiveType> allowedTypes = scenario.getAvailableLocomotiveTypes();
-        int startYear = scenario.getStartYear();
-        int endYear = scenario.getEndYear();
+        int currentYear = scenario.getCurrentYear();
+
 
         System.out.println("\nAvailable locomotives for scenario '" + scenario.getName() + "':\n");
 
         for (ListLocomotives locoEnum : ListLocomotives.values()) {
             if (allowedTypes.contains(locoEnum.getLocomotiveType())) {
-                if (locoEnum.getAvailableYear() >= startYear && locoEnum.getRetiredYear() <= endYear) {
+                if (locoEnum.getAvailableYear() >= currentYear && locoEnum.getRetiredYear() <= currentYear) {
                     Locomotive loco = locoEnum.toLocomotive();
                     System.out.println(loco);  // Usa o método toString() da classe Locomotive
                 }

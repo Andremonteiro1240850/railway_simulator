@@ -26,164 +26,101 @@ public class AssignRouteUI implements Runnable {
 
     public void run() {
 
-
-        List<Scenario> scenarios = scenarioRepository.getAll();
-        if(scenarios.isEmpty()) {
+        List<Scenario> scenarios = controller.getAvailableScenarios();
+        if (scenarios.isEmpty()) {
             System.out.println("No scenarios found");
             return;
         }
 
+        System.out.println("Available scenarios:");
+        for (int i = 0; i < scenarios.size(); i++) {
+            System.out.printf("[%d] %s%n", i + 1, scenarios.get(i).getSummary());
+        }
 
-            int choice = -1;
-            do {
-                System.out.print("Enter the number of the scenario you want to use: ");
-                try {
-                    choice = Integer.parseInt(scanner.nextLine());
-                    if (choice < 1 || choice > scenarios.size()) {
-                        System.out.println("Invalid number. Please try again.");
-                        choice = -1;
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid input. Please enter a number.");
-                }
-            } while (choice == -1);
+        Scenario selectedScenario = scenarios.get(readIndex("Enter the number of the scenario you want to use:", scenarios.size()));
 
-            Scenario selectedScenario = scenarios.get(choice - 1);
+        List<Station> stations = selectedScenario.getStationsPurchased();
+        if (stations.isEmpty()) {
+            System.out.println("This scenario has no stations.");
+            return;
+        }
 
-            List<Station> purchasedStations = selectedScenario.getStationsPurchased();
-
-            if (purchasedStations.isEmpty()) {
-                System.out.println("This scenario has no stations.");
-            } else {
-                System.out.println("\n:: Purchased Stations in this Scenario:");
-                for (Station station : purchasedStations) {
-                    System.out.println(" - " + station);
-                }
+        List<PointsOfRoute> routePoints = new ArrayList<>();
+        boolean addMore;
+        do {
+            System.out.println("\nSelect a station to add to the route:");
+            for (int i = 0; i < stations.size(); i++) {
+                System.out.printf("[%d] %s%n", i + 1, stations.get(i).getName());
             }
 
-            // lista onde vamos guardar os PointsOfRoute selecionados pelo utilizador
-            List<PointsOfRoute> routePoints = new ArrayList<>();
+            Station chosenStation = stations.get(readIndex("Enter the number of the station:", stations.size()));
 
-            if (!purchasedStations.isEmpty()) {
-                boolean addMorePoints;
-                do {
-                    // 1) Mostrar estações numeradas
-                    System.out.println("\nSelect a station to add to the route:");
-                    for (int i = 0; i < purchasedStations.size(); i++) {
-                        System.out.printf(" [%d] %s%n", i + 1, purchasedStations.get(i).getName());
-                    }
-
-                    int stationIndex = -1;
-                    do {
-                        System.out.print("Enter the number of the station: ");
-                        try {
-                            stationIndex = Integer.parseInt(scanner.nextLine()) - 1;
-                            if (stationIndex < 0 || stationIndex >= purchasedStations.size()) {
-                                System.out.println("Invalid number. Please try again.");
-                                stationIndex = -1;
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid input. Please enter a number.");
-                        }
-                    } while (stationIndex == -1);
-
-                    Station chosenStation = purchasedStations.get(stationIndex);
-
-                    // 2) Mostrar valores de CargoMode numerados
-                    System.out.println("\nSelect a Cargo Mode for this station:");
-                    CargoMode[] modes = CargoMode.values();
-                    for (int i = 0; i < modes.length; i++) {
-                        System.out.printf(" [%d] %s%n", i + 1, modes[i].name());
-                    }
-
-                    int modeIndex = -1;
-                    do {
-                        System.out.print("Enter the number of the Cargo Mode: ");
-                        try {
-                            modeIndex = Integer.parseInt(scanner.nextLine()) - 1;
-                            if (modeIndex < 0 || modeIndex >= modes.length) {
-                                System.out.println("Invalid number. Please try again.");
-                                modeIndex = -1;
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid input. Please enter a number.");
-                        }
-                    } while (modeIndex == -1);
-
-                    CargoMode chosenMode = modes[modeIndex];
-
-                    // 3) Criar PointsOfRoute e adicionar à lista
-                    PointsOfRoute point = new PointsOfRoute(chosenStation, chosenMode);
-                    routePoints.add(point);
-                    System.out.println("Added to route: " + point);
-
-                    // 4) Perguntar se quer adicionar mais pontos
-                    System.out.print("Do you want to add another station to the route? (yes/no): ");
-                    String answer = scanner.nextLine().trim().toLowerCase();
-                    addMorePoints = answer.equals("yes") || answer.equals("y");
-                } while (addMorePoints);
+            CargoMode[] modes = CargoMode.values();
+            System.out.println("\nSelect a Cargo Mode for this station:");
+            for (int i = 0; i < modes.length; i++) {
+                System.out.printf("[%d] %s%n", i + 1, modes[i].name());
             }
 
-                List<Locomotive> purchasedLocos = selectedScenario.getLocomotivePurchased();
+            CargoMode chosenMode = modes[readIndex("Enter the number of the Cargo Mode:", modes.length)];
 
-                if (purchasedLocos.isEmpty()) {
-                    System.out.println("No locomotives purchased in this scenario, you need to buy one first.");
-                    return;
-                }
+            routePoints.add(controller.createPointOfRoute(chosenStation, chosenMode));
 
-                System.out.println("\n:: Select a locomotive:");
-                for (int i = 0; i < purchasedLocos.size(); i++) {
-                    System.out.println("[" + (i + 1) + "] " + purchasedLocos.get(i));
-                }
+            System.out.print("Do you want to add another station to the route? (yes/no): ");
+            addMore = scanner.nextLine().trim().equalsIgnoreCase("yes");
+        } while (addMore);
 
-                int locoIndex;
-                while (true) {
-                    System.out.print("Enter the number of the locomotive: ");
-                    try {
-                        locoIndex = Integer.parseInt(scanner.nextLine());
-                        if (locoIndex >= 1 && locoIndex <= purchasedLocos.size()) break;
-                        System.out.println("Invalid selection.");
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input.");
-                    }
-                }
-                Locomotive selectedLocomotive = purchasedLocos.get(locoIndex - 1);
+        List<Locomotive> locomotives = selectedScenario.getLocomotivePurchased();
+        if (locomotives.isEmpty()) {
+            System.out.println("No locomotives purchased in this scenario.");
+            return;
+        }
 
-                // Add carriages
-                List<Carriage> carriages = new ArrayList<>();
-                boolean addMore;
-                do {
-                    System.out.println("\n:: Select a carriage to add:");
-                    CarriageList[] values = CarriageList.values();
-                    for (int i = 0; i < values.length; i++) {
-                        System.out.println("[" + (i + 1) + "] " + values[i]);
-                    }
+        System.out.println("\nSelect a locomotive:");
+        for (int i = 0; i < locomotives.size(); i++) {
+            System.out.printf("[%d] %s%n", i + 1, locomotives.get(i));
+        }
+        Locomotive selectedLoco = locomotives.get(readIndex("Enter the number of the locomotive:", locomotives.size()));
 
-                    int carriageChoice;
-                    while (true) {
-                        System.out.print("Enter your choice: ");
-                        try {
-                            carriageChoice = Integer.parseInt(scanner.nextLine());
-                            if (carriageChoice >= 1 && carriageChoice <= values.length) break;
-                            System.out.println("Invalid choice.");
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid input.");
-                        }
-                    }
-
-                    Carriage selected = values[carriageChoice - 1].toCarriage();
-                    carriages.add(selected);
-
-                    System.out.print("Do you want to add another carriage? (yes/no): ");
-                    addMore = scanner.nextLine().trim().equalsIgnoreCase("yes");
-                } while (addMore);
-
-                // Create train and assign route
-                Train train = new Train(selectedLocomotive, carriages);
-                Route route= new Route(train,routePoints);
-
+        List<Carriage> carriages = new ArrayList<>();
+        do {
+            System.out.println("\nSelect a carriage to add:");
+            CarriageList[] options = CarriageList.values();
+            for (int i = 0; i < options.length; i++) {
+                System.out.printf("[%d] %s%n", i + 1, options[i]);
             }
+
+            Carriage selectedCarriage = options[readIndex("Enter your choice:", options.length)].toCarriage();
+            carriages.add(selectedCarriage);
+
+            System.out.print("Do you want to add another carriage? (yes/no): ");
+        } while (scanner.nextLine().trim().equalsIgnoreCase("yes"));
+
+        controller.assignRouteToTrain(selectedLoco, carriages, routePoints,selectedScenario);
+
+        System.out.println("Route assigned successfully.");
+
+
+
     }
+
+    private int readIndex(String prompt, int max) {
+        int index = -1;
+        do {
+            System.out.print(prompt + " ");
+            try {
+                index = Integer.parseInt(scanner.nextLine()) - 1;
+                if (index < 0 || index >= max) {
+                    System.out.println("Invalid number. Try again.");
+                    index = -1;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Enter a number.");
+            }
+        } while (index == -1);
+        return index;
+    }
+}
+
 
 
 

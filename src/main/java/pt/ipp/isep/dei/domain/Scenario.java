@@ -25,7 +25,7 @@ public class Scenario {
     private List<Station> stationsPurchased;
     private List<Locomotive> locomotivesDisponiveis = new ArrayList<>();
     private Map map;
-
+    private List<Route> routes;
 
     /**
      * Constructs a new Scenario with the given parameters.
@@ -51,6 +51,7 @@ public class Scenario {
         this.cariagePurchased = new ArrayList<>();
         this.stationsPurchased = new ArrayList<>();
         this.map = map;
+        this.routes = new ArrayList<>();
 
     }
 
@@ -217,10 +218,23 @@ public class Scenario {
             }
         }
     }
+
+    public String getSummary() {
+        return String.format("%s (%d–%d) – Budget: %.2f€", name, startYear, endYear, budget);
+    }
+
+
     public List<Locomotive> getLocomotivesDisponiveis() {
         return new ArrayList<>(locomotivesDisponiveis);
     }
 
+    public void addRoute(Route route) {
+        routes.add(route);
+    }
 
+
+    public List<Route> getRoutes() {
+        return new ArrayList<>(routes); // proteção contra modificações externas
+    }
 }
 
