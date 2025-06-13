@@ -54,6 +54,6 @@ public enum CarriageList {
     }
 
     public Carriage toCarriage() {
-        return new Carriage(name, cargoType, capacity);
+        return new Carriage(name, cargoType, (double) capacity, 1000.0);
     }
 }

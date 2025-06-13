@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -26,17 +27,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import pt.ipp.isep.dei.controller.CreateScenarioController;
-import pt.ipp.isep.dei.domain.HistoricalEvent;
-import pt.ipp.isep.dei.domain.Locomotive;
-import pt.ipp.isep.dei.domain.Player;
-import pt.ipp.isep.dei.domain.PortBehavior;
-import pt.ipp.isep.dei.domain.Scenario;
-import pt.ipp.isep.dei.domain.Simulation;
-import pt.ipp.isep.dei.domain.Station;
-import pt.ipp.isep.dei.domain.Industry;
-import pt.ipp.isep.dei.domain.City;
+import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.domain.enums.ListLocomotives;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
@@ -68,6 +62,7 @@ public class PlayerController implements Initializable {
     @FXML private TableColumn<City, String> cityNameColumn;
     @FXML private TableColumn<City, String> cityBlocksColumn;
     @FXML private TableColumn<City, String> cityCoordinatesColumn;
+    @FXML private Pane mapView;
     private final CreateScenarioController controller;
     private final Scanner scanner;
     
@@ -450,6 +445,7 @@ public class PlayerController implements Initializable {
                 statusLabel.setText("Station Created: " + name + " (" + type + ") in (" + x + ", " + y + ")");
                 updateLabels(statusLabel.getText(), simulation.getCurrentYear());
                 updateStationList();
+                drawMapAndAnimateRoute(null);
                 return null;
             }
             return null;
@@ -716,5 +712,430 @@ public class PlayerController implements Initializable {
                 success.showAndWait();
             }
         });
+    }
+
+    @FXML
+    public void handleAssignTrainToRoute() {
+        if (simulation == null || simulation.getScenario() == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Scenario Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a scenario first.");
+            alert.showAndWait();
+            return;
+        }
+        Scenario scenario = simulation.getScenario();
+        List<Locomotive> availableLocos = scenario.getLocomotivePurchased();
+        if (availableLocos.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Locomotives");
+            alert.setHeaderText(null);
+            alert.setContentText("You have no locomotives to assign.");
+            alert.showAndWait();
+            return;
+        }
+
+        // 1. Select Locomotive
+        Dialog<Locomotive> locoDialog = new Dialog<>();
+        locoDialog.setTitle("Select Locomotive");
+        locoDialog.setHeaderText("Choose a locomotive to assign to a route:");
+        ListView<Locomotive> locoListView = new ListView<>();
+        locoListView.getItems().addAll(availableLocos);
+        locoListView.setCellFactory(lv -> new ListCell<Locomotive>() {
+            @Override
+            protected void updateItem(Locomotive loco, boolean empty) {
+                super.updateItem(loco, empty);
+                if (empty || loco == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%s (Power: %d, Type: %s, Cost: %.2f)", 
+                        loco.getReference(), 
+                        loco.getPower(),
+                        loco.getType(),
+                        loco.getCost()));
+                }
+            }
+        });
+        VBox locoContent = new VBox(10, locoListView);
+        locoDialog.getDialogPane().setContent(locoContent);
+        locoDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        locoDialog.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? locoListView.getSelectionModel().getSelectedItem() : null);
+        Optional<Locomotive> selectedLocoOpt = locoDialog.showAndWait();
+        if (!selectedLocoOpt.isPresent() || selectedLocoOpt.get() == null) return;
+        Locomotive selectedLoco = selectedLocoOpt.get();
+
+        // 2. Select Carriages
+        List<Carriage> carriages = new ArrayList<>();
+        boolean addMoreCarriages = true;
+        int totalCarriageCapacity = 0;
+        double totalCost = selectedLoco.getCost();
+        
+        while (addMoreCarriages) {
+            Dialog<Carriage> carriageDialog = new Dialog<>();
+            carriageDialog.setTitle("Add Carriage");
+            carriageDialog.setHeaderText(String.format("Select a carriage to add to the train (Current Power: %d, Used: %d, Total Cost: %.2f)", 
+                selectedLoco.getPower(), totalCarriageCapacity, totalCost));
+            
+            ListView<Carriage> carriageListView = new ListView<>();
+            for (pt.ipp.isep.dei.domain.enums.CarriageList c : pt.ipp.isep.dei.domain.enums.CarriageList.values()) {
+                Carriage carriage = c.toCarriage();
+                // Only show carriages that won't exceed locomotive power and budget
+                if (totalCarriageCapacity + carriage.getCapacity() <= selectedLoco.getPower() &&
+                    totalCost + carriage.getCost() <= scenario.getBudget()) {
+                    carriageListView.getItems().add(carriage);
+                }
+            }
+            
+            if (carriageListView.getItems().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Limit Reached");
+                alert.setHeaderText(null);
+                if (totalCarriageCapacity >= selectedLoco.getPower()) {
+                    alert.setContentText("Cannot add more carriages: locomotive power limit reached.");
+                } else {
+                    alert.setContentText("Cannot add more carriages: budget limit reached.");
+                }
+                alert.showAndWait();
+                break;
+            }
+
+            carriageListView.setCellFactory(lv -> new ListCell<Carriage>() {
+                @Override
+                protected void updateItem(Carriage c, boolean empty) {
+                    super.updateItem(c, empty);
+                    if (empty || c == null) {
+                        setText(null);
+                    } else {
+                        setText(String.format("%s (Capacity: %.1f, Type: %s, Cost: %.2f)", 
+                            c.getName(), 
+                            c.getCapacity(),
+                            c.getCargoType(),
+                            c.getCost()));
+                    }
+                }
+            });
+            
+            VBox carriageContent = new VBox(10, carriageListView);
+            carriageDialog.getDialogPane().setContent(carriageContent);
+            carriageDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            carriageDialog.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? carriageListView.getSelectionModel().getSelectedItem() : null);
+            Optional<Carriage> selectedCarriageOpt = carriageDialog.showAndWait();
+            
+            if (selectedCarriageOpt.isPresent() && selectedCarriageOpt.get() != null) {
+                Carriage selectedCarriage = selectedCarriageOpt.get();
+                carriages.add(selectedCarriage);
+                totalCarriageCapacity += selectedCarriage.getCapacity();
+                totalCost += selectedCarriage.getCost();
+                
+                Alert more = new Alert(Alert.AlertType.CONFIRMATION, 
+                    String.format("Add another carriage? (Current Power: %d, Used: %d, Total Cost: %.2f, Budget: %.2f)", 
+                        selectedLoco.getPower(), totalCarriageCapacity, totalCost, scenario.getBudget()), 
+                    ButtonType.YES, ButtonType.NO);
+                more.setHeaderText(null);
+                more.setTitle("Add More Carriages");
+                Optional<ButtonType> moreResult = more.showAndWait();
+                addMoreCarriages = moreResult.isPresent() && moreResult.get() == ButtonType.YES;
+            } else {
+                addMoreCarriages = false;
+            }
+        }
+        
+        if (carriages.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You must add at least one carriage.");
+            alert.showAndWait();
+            return;
+        }
+
+        // 3. Escolha da rota: início, intermediárias, fim
+        List<Station> availableStations = scenario.getStationsPurchased();
+        if (availableStations.size() < 2) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You need at least two stations to create a route.");
+            alert.showAndWait();
+            return;
+        }
+        List<Station> routeStations = new ArrayList<>();
+        // Escolher estação inicial (obrigatoriamente depot)
+        List<Station> startCandidates = availableStations.stream()
+            .filter(s -> s.getType().equalsIgnoreCase("depot"))
+            .collect(Collectors.toList());
+        Station startStation = showStationSelectionDialog("Select Start Station", "Choose the starting station (must be a depot):", startCandidates, null);
+        if (startStation == null) return;
+        routeStations.add(startStation);
+        // Escolher estação final (station ou terminal, nunca depot)
+        List<Station> endCandidates = availableStations.stream()
+            .filter(s -> (s.getType().equalsIgnoreCase("terminal") || s.getType().equalsIgnoreCase("station")) && !s.equals(startStation))
+            .collect(Collectors.toList());
+        Station endStation = showStationSelectionDialog("Select End Station", "Choose the ending station (station or terminal):", endCandidates, "terminal");
+        if (endStation == null) return;
+        // Escolher intermediárias (qualquer tipo, não repetidas)
+        List<Station> middleCandidates = availableStations.stream()
+            .filter(s -> !s.equals(startStation) && !s.equals(endStation))
+            .collect(Collectors.toList());
+        List<Station> middleStations = showMultiStationSelectionDialog("Select Intermediate Stations", "Choose intermediate stations (optional, order matters):", middleCandidates);
+        if (middleStations != null) {
+            routeStations.addAll(middleStations);
+        }
+        routeStations.add(endStation);
+        // Validação: não repetir estações
+        if (routeStations.stream().distinct().count() != routeStations.size()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Stations cannot be repeated in the route.");
+            alert.showAndWait();
+            return;
+        }
+        // Resumo visual da rota
+        StringBuilder routeSummary = new StringBuilder("Route order:\n");
+        for (int i = 0; i < routeStations.size(); i++) {
+            routeSummary.append((i+1)).append(". ").append(routeStations.get(i).getName()).append(" (").append(routeStations.get(i).getType()).append(")\n");
+        }
+        Alert summaryAlert = new Alert(Alert.AlertType.CONFIRMATION, routeSummary.toString(), ButtonType.OK, ButtonType.CANCEL);
+        summaryAlert.setTitle("Confirm Route Order");
+        summaryAlert.setHeaderText("Review the order of stations:");
+        Optional<ButtonType> summaryResult = summaryAlert.showAndWait();
+        if (!summaryResult.isPresent() || summaryResult.get() != ButtonType.OK) return;
+        // 4. Para cada ponto, escolher modo de carga
+        List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints = new ArrayList<>();
+        for (Station station : routeStations) {
+            Dialog<pt.ipp.isep.dei.domain.enums.CargoMode> modeDialog = new Dialog<>();
+            modeDialog.setTitle("Select Cargo Mode");
+            modeDialog.setHeaderText("Choose cargo mode for station: " + station.getName());
+            ListView<pt.ipp.isep.dei.domain.enums.CargoMode> modeListView = new ListView<>();
+            for (pt.ipp.isep.dei.domain.enums.CargoMode mode : pt.ipp.isep.dei.domain.enums.CargoMode.values()) {
+                modeListView.getItems().add(mode);
+            }
+            modeListView.setCellFactory(lv -> new ListCell<pt.ipp.isep.dei.domain.enums.CargoMode>() {
+                @Override
+                protected void updateItem(pt.ipp.isep.dei.domain.enums.CargoMode mode, boolean empty) {
+                    super.updateItem(mode, empty);
+                    if (empty || mode == null) {
+                        setText(null);
+                    } else {
+                        setText(String.format("%s - %s (Type: %s)", 
+                            mode.name(), 
+                            mode.getDescription(),
+                            mode.getCargoType()));
+                    }
+                }
+            });
+            VBox modeContent = new VBox(10, modeListView);
+            modeDialog.getDialogPane().setContent(modeContent);
+            modeDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            modeDialog.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? modeListView.getSelectionModel().getSelectedItem() : null);
+            Optional<pt.ipp.isep.dei.domain.enums.CargoMode> selectedModeOpt = modeDialog.showAndWait();
+            if (!selectedModeOpt.isPresent() || selectedModeOpt.get() == null) return;
+            pt.ipp.isep.dei.domain.enums.CargoMode selectedMode = selectedModeOpt.get();
+            routePoints.add(new pt.ipp.isep.dei.domain.PointsOfRoute(station, selectedMode));
+        }
+        // 5. Confirmar e atribuir rota
+        pt.ipp.isep.dei.controller.AssignRouteController assignController = new pt.ipp.isep.dei.controller.AssignRouteController();
+        assignController.assignRouteToTrain(selectedLoco, carriages, routePoints, scenario);
+        drawMapAndAnimateRoute(routePoints);
+        Alert done = new Alert(Alert.AlertType.INFORMATION);
+        done.setTitle("Route Assigned");
+        done.setHeaderText(null);
+        done.setContentText("Route assigned to train successfully!");
+        done.showAndWait();
+    }
+
+    private Station showStationSelectionDialog(String title, String header, List<Station> candidates, String preferredType) {
+        Dialog<Station> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        ListView<Station> listView = new ListView<>();
+        if (preferredType != null) {
+            // Preferir mostrar primeiro as estações do tipo preferido
+            List<Station> preferred = candidates.stream().filter(s -> s.getType().equalsIgnoreCase(preferredType)).collect(Collectors.toList());
+            List<Station> others = candidates.stream().filter(s -> !s.getType().equalsIgnoreCase(preferredType)).collect(Collectors.toList());
+            listView.getItems().addAll(preferred);
+            listView.getItems().addAll(others);
+        } else {
+            listView.getItems().addAll(candidates);
+        }
+        listView.setCellFactory(lv -> new ListCell<Station>() {
+            @Override
+            protected void updateItem(Station s, boolean empty) {
+                super.updateItem(s, empty);
+                if (empty || s == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%s (%s) at (%d, %d)", s.getName(), s.getType(), s.getX(), s.getY()));
+                }
+            }
+        });
+        VBox content = new VBox(10, listView);
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialog.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? listView.getSelectionModel().getSelectedItem() : null);
+        Optional<Station> result = dialog.showAndWait();
+        return result.isPresent() ? result.get() : null;
+    }
+
+    private List<Station> showMultiStationSelectionDialog(String title, String header, List<Station> candidates) {
+        Dialog<List<Station>> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        ListView<Station> listView = new ListView<>();
+        listView.getItems().addAll(candidates);
+        listView.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
+        listView.setCellFactory(lv -> new ListCell<Station>() {
+            @Override
+            protected void updateItem(Station s, boolean empty) {
+                super.updateItem(s, empty);
+                if (empty || s == null) {
+                    setText(null);
+                } else {
+                    setText(String.format("%s (%s) at (%d, %d)", s.getName(), s.getType(), s.getX(), s.getY()));
+                }
+            }
+        });
+        VBox content = new VBox(10, listView);
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new ArrayList<>(listView.getSelectionModel().getSelectedItems());
+            }
+            return null;
+        });
+        Optional<List<Station>> result = dialog.showAndWait();
+        return result.isPresent() ? result.get() : null;
+    }
+
+    private double calculateDistance(Station s1, Station s2) {
+        return Math.sqrt(Math.pow(s2.getX() - s1.getX(), 2) + Math.pow(s2.getY() - s1.getY(), 2));
+    }
+
+    private void drawMapAndAnimateRoute(List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints) {
+        mapView.getChildren().clear();
+        // 1. Desenhar cidades (centro e house blocks)
+        if (simulation != null && simulation.getScenario() != null) {
+            List<City> cities = simulation.getScenario().getMap().getCities();
+            for (City city : cities) {
+                // House blocks (quadrados cinza claro)
+                for (int[] block : city.getHouseBlocks()) {
+                    javafx.scene.shape.Rectangle blockRect = new javafx.scene.shape.Rectangle(block[0] - 6, block[1] - 6, 12, 12);
+                    blockRect.setFill(javafx.scene.paint.Color.LIGHTGRAY);
+                    mapView.getChildren().add(blockRect);
+                }
+                // Centro da cidade (círculo preto pequeno)
+                javafx.scene.shape.Circle cityCenter = new javafx.scene.shape.Circle(city.getX(), city.getY(), 7);
+                cityCenter.setFill(javafx.scene.paint.Color.BLACK);
+                mapView.getChildren().add(cityCenter);
+                javafx.scene.text.Text text = new javafx.scene.text.Text(city.getX() + 10, city.getY(), city.getName());
+                text.setFill(javafx.scene.paint.Color.BLACK);
+                mapView.getChildren().add(text);
+            }
+        }
+        // 2. Desenhar indústrias (triângulo verde)
+        if (simulation != null && simulation.getScenario() != null) {
+            List<Industry> industries = simulation.getScenario().getMap().getIndustries();
+            for (Industry ind : industries) {
+                javafx.scene.shape.Polygon triangle = new javafx.scene.shape.Polygon(
+                    ind.getPositionX(), ind.getPositionY() - 12,
+                    ind.getPositionX() - 12, ind.getPositionY() + 12,
+                    ind.getPositionX() + 12, ind.getPositionY() + 12
+                );
+                triangle.setFill(javafx.scene.paint.Color.FORESTGREEN);
+                mapView.getChildren().add(triangle);
+                javafx.scene.text.Text text = new javafx.scene.text.Text(ind.getPositionX() + 14, ind.getPositionY(), ind.getType().toString());
+                text.setFill(javafx.scene.paint.Color.FORESTGREEN);
+                mapView.getChildren().add(text);
+            }
+        }
+        // 3. Desenhar estações (círculo colorido por tipo)
+        if (simulation != null && simulation.getScenario() != null) {
+            List<Station> stations = simulation.getScenario().getStationsPurchased();
+            for (Station s : stations) {
+                javafx.scene.paint.Color color;
+                switch (s.getType().toLowerCase()) {
+                    case "depot": color = javafx.scene.paint.Color.DODGERBLUE; break;
+                    case "station": color = javafx.scene.paint.Color.RED; break;
+                    case "terminal": color = javafx.scene.paint.Color.PURPLE; break;
+                    default: color = javafx.scene.paint.Color.GRAY;
+                }
+                javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(s.getX(), s.getY(), 12);
+                circle.setFill(color);
+                mapView.getChildren().add(circle);
+                javafx.scene.text.Text text = new javafx.scene.text.Text(s.getX() + 14, s.getY(), s.getName());
+                text.setFill(color);
+                mapView.getChildren().add(text);
+            }
+        }
+        // 4. Desenhar rota (linhas)
+        if (routePoints != null && routePoints.size() > 1) {
+            for (int i = 0; i < routePoints.size() - 1; i++) {
+                Station s1 = routePoints.get(i).getStations();
+                Station s2 = routePoints.get(i + 1).getStations();
+                javafx.scene.shape.Line line = new javafx.scene.shape.Line(s1.getX(), s1.getY(), s2.getX(), s2.getY());
+                line.setStroke(javafx.scene.paint.Color.BLACK);
+                line.setStrokeWidth(4);
+                mapView.getChildren().add(line);
+            }
+            // 5. Animar comboio
+            animateTrainOnRoute(routePoints);
+        }
+    }
+
+    private void animateTrainOnRoute(List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints) {
+        if (routePoints == null || routePoints.size() < 2) return;
+        // Debug visual: círculo verde fixo
+        javafx.scene.shape.Circle debug = new javafx.scene.shape.Circle(100, 100, 10, javafx.scene.paint.Color.GREENYELLOW);
+        mapView.getChildren().add(debug);
+        // Lista de pontos (x, y) da rota
+        List<javafx.geometry.Point2D> points = new ArrayList<>();
+        for (pt.ipp.isep.dei.domain.PointsOfRoute p : routePoints) {
+            javafx.geometry.Point2D pt = new javafx.geometry.Point2D(p.getStations().getX(), p.getStations().getY());
+            points.add(pt);
+            System.out.println("Ponto da rota: " + pt);
+        }
+        System.out.println("Animando comboio de " + points.get(0) + " para " + points.get(points.size()-1));
+        javafx.scene.shape.Circle train = new javafx.scene.shape.Circle(8, javafx.scene.paint.Color.DARKORANGE);
+        mapView.getChildren().add(train);
+        // Guardar as linhas da rota para remoção posterior
+        List<javafx.scene.shape.Line> routeLines = new ArrayList<>();
+        for (int i = 0; i < points.size() - 1; i++) {
+            javafx.scene.shape.Line line = new javafx.scene.shape.Line(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
+            line.setStroke(javafx.scene.paint.Color.BLACK);
+            line.setStrokeWidth(4);
+            mapView.getChildren().add(line);
+            routeLines.add(line);
+        }
+        final int[] segment = {0};
+        final double[] progress = {0.0};
+        final double speed = 2.0; // pixels por frame
+        train.setCenterX(points.get(0).getX());
+        train.setCenterY(points.get(0).getY());
+        Timeline timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(20), e -> {
+            if (segment[0] >= points.size() - 1) {
+                timeline.stop();
+                // Remover as linhas da rota, manter o comboio
+                mapView.getChildren().removeAll(routeLines);
+                return;
+            }
+            javafx.geometry.Point2D from = points.get(segment[0]);
+            javafx.geometry.Point2D to = points.get(segment[0] + 1);
+            double dx = to.getX() - from.getX();
+            double dy = to.getY() - from.getY();
+            double dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist == 0) {
+                segment[0]++;
+                progress[0] = 0.0;
+                return;
+            }
+            progress[0] += speed / dist;
+            if (progress[0] >= 1.0) {
+                progress[0] = 0.0;
+                segment[0]++;
+                train.setCenterX(to.getX());
+                train.setCenterY(to.getY());
+            } else {
+                double nextX = from.getX() + progress[0] * dx;
+                double nextY = from.getY() + progress[0] * dy;
+                train.setCenterX(nextX);
+                train.setCenterY(nextY);
+            }
+        }));
+        timeline.play();
     }
 }

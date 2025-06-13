@@ -10,17 +10,27 @@ public enum CargoMode {
         /**
          * The train only departs when fully loaded.
          */
-        FULL,
+        FULL(Cargo.COAL),
 
         /**
          * The train departs as soon as it has half of the carriages loaded.
          */
-        HALF,
+        HALF(Cargo.PASSENGERS),
 
         /**
          * The train departs with whatever cargo is available at the station.
          */
-        AVAILABLE;
+        AVAILABLE(Cargo.MAIL);
+
+        private final Cargo cargoType;
+
+        CargoMode(Cargo cargoType) {
+            this.cargoType = cargoType;
+        }
+
+        public Cargo getCargoType() {
+            return cargoType;
+        }
 
         /**
          * Gets a user-friendly description of the cargo mode.

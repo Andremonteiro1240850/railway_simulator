@@ -81,6 +81,10 @@ public class Locomotive {
         return fuelCost;
     }
 
+    public double getCost() {
+        return getPurchasePrice();
+    }
+
     // Método copy atualizado
     public Locomotive copy() {
         return new Locomotive(reference, type, purchasePrice, maintenanceCostPerYear, power, acceleration, startYear, fuelCost);
