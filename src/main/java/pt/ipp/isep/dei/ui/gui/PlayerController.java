@@ -35,6 +35,8 @@ import pt.ipp.isep.dei.domain.PortBehavior;
 import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.Simulation;
 import pt.ipp.isep.dei.domain.Station;
+import pt.ipp.isep.dei.domain.Industry;
+import pt.ipp.isep.dei.domain.City;
 import pt.ipp.isep.dei.domain.enums.ListLocomotives;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
@@ -58,6 +60,14 @@ public class PlayerController implements Initializable {
     @FXML private TableColumn<Locomotive, String> locomotiveNameColumn;
     @FXML private TableColumn<Locomotive, String> locomotiveTypeColumn;
     @FXML private TableColumn<Locomotive, String> locomotivePowerColumn;
+    @FXML private TableView<Industry> industriesList;
+    @FXML private TableColumn<Industry, String> industryNameColumn;
+    @FXML private TableColumn<Industry, String> industryTypeColumn;
+    @FXML private TableColumn<Industry, String> industryCoordinatesColumn;
+    @FXML private TableView<City> citiesList;
+    @FXML private TableColumn<City, String> cityNameColumn;
+    @FXML private TableColumn<City, String> cityBlocksColumn;
+    @FXML private TableColumn<City, String> cityCoordinatesColumn;
     private final CreateScenarioController controller;
     private final Scanner scanner;
     
@@ -176,6 +186,8 @@ public class PlayerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupStationTable();
         setupLocomotiveInventoryTable();
+        setupIndustriesTable();
+        setupCitiesTable();
         chooseScenario();
     }
 
@@ -214,6 +226,46 @@ public class PlayerController implements Initializable {
             locomotivePowerColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getPower())));
     }
 
+    private void setupIndustriesTable() {
+        industryNameColumn.setCellValueFactory(cellData -> {
+            Industry industry = cellData.getValue();
+            return new SimpleStringProperty(industry != null ? industry.getType().toString() : "");
+        });
+
+        industryTypeColumn.setCellValueFactory(cellData -> {
+            Industry industry = cellData.getValue();
+            return new SimpleStringProperty(industry != null ? industry.getType().toString() : "");
+        });
+
+        industryCoordinatesColumn.setCellValueFactory(cellData -> {
+            Industry industry = cellData.getValue();
+            if (industry != null) {
+                return new SimpleStringProperty(String.format("(%d, %d)", industry.getPositionX(), industry.getPositionY()));
+            }
+            return new SimpleStringProperty("");
+        });
+    }
+
+    private void setupCitiesTable() {
+        cityNameColumn.setCellValueFactory(cellData -> {
+            City city = cellData.getValue();
+            return new SimpleStringProperty(city != null ? city.getName() : "");
+        });
+
+        cityBlocksColumn.setCellValueFactory(cellData -> {
+            City city = cellData.getValue();
+            return new SimpleStringProperty(city != null ? String.valueOf(city.getHouseBlocks().size()) : "");
+        });
+
+        cityCoordinatesColumn.setCellValueFactory(cellData -> {
+            City city = cellData.getValue();
+            if (city != null) {
+                return new SimpleStringProperty(String.format("(%d, %d)", city.getX(), city.getY()));
+            }
+            return new SimpleStringProperty("");
+        });
+    }
+
     private void updateStationList() {
         List<Station> allStations = Repositories.getInstance().getStationRepository().getAll();
         stationList.getItems().clear();
@@ -226,6 +278,20 @@ public class PlayerController implements Initializable {
         }
     }
 
+    private void updateIndustriesList() {
+        if (simulation != null && industriesList != null) {
+            List<Industry> industries = simulation.getScenario().getMap().getIndustries();
+            industriesList.getItems().setAll(industries);
+        }
+    }
+
+    private void updateCitiesList() {
+        if (simulation != null && citiesList != null) {
+            List<City> cities = simulation.getScenario().getMap().getCities();
+            citiesList.getItems().setAll(cities);
+        }
+    }
+
     private void startSimulationWithScenario(Scenario selectedScenario) {
         if (player == null) {
             player = new Player("player@email.com");
@@ -234,6 +300,8 @@ public class PlayerController implements Initializable {
         updateLabels("Selected scenario: " + selectedScenario.getName(), selectedScenario.getStartYear());
         updateStationList();
         updateLocomotiveInventory();
+        updateIndustriesList();
+        updateCitiesList();
     }
 
     @FXML
