@@ -2,6 +2,16 @@ package pt.ipp.isep.dei.domain.enums;
 
 import pt.ipp.isep.dei.domain.Locomotive;
 
+
+/**
+ * Enumeration representing a predefined list of locomotives available in the simulation.
+ * Each entry includes metadata such as name, type of fuel, cost, speed, acceleration,
+ * reliability, availability period, and associated locomotive type.
+ *
+ * <p>This enum is primarily used to initialize available locomotives in scenarios
+ * and allows for the creation of {@link Locomotive} objects through the {@code toLocomotive()} method.</p>
+ */
+
 public enum ListLocomotives {
     // Steam Locomotives
     AMERICAN_C("American_c","Steam", 46000, 5000, 12606, 42, "Poor", "Above Average", 1848, 1885),
@@ -48,6 +58,22 @@ public enum ListLocomotives {
     private final int availableYear;
     private final int retiredYear;
 
+    /**
+     * Constructs a locomotive enumeration entry.
+     *
+     * @param name            the name identifier
+     * @param fuelType        the fuel type (Steam, Diesel, Electric)
+     * @param buildCost       the cost to build the locomotive
+     * @param maintenanceCost the yearly maintenance cost
+     * @param fuelCost        the cost per usage of fuel
+     * @param topSpeed        the top speed of the locomotive
+     * @param acceleration    qualitative acceleration rating
+     * @param reliability     qualitative reliability rating
+     * @param availableYear   the year this locomotive becomes available
+     * @param retiredYear     the year this locomotive is retired
+     */
+
+
     ListLocomotives(String name, String fuelType, int buildCost, int maintenanceCost, int fuelCost,
                     int topSpeed, String acceleration, String reliability,
                     int availableYear, int retiredYear) {
@@ -64,54 +90,53 @@ public enum ListLocomotives {
         this.retiredYear = retiredYear;
     }
 
-    public String getName() {return name;}
-    public String getFuelType() {
-        return fuelType;
-    }
+    /** @return The name of the locomotive. */
+    public String getName() { return name; }
 
-    public LocomotiveType getLocomotiveType() {
-        return locomotiveType;
-    }
+    /** @return The string representation of the fuel type. */
+    public String getFuelType() { return fuelType; }
 
-    public int getBuildCost() {
-        return buildCost;
-    }
+    /** @return The enum {@link LocomotiveType} corresponding to the fuel type. */
+    public LocomotiveType getLocomotiveType() { return locomotiveType; }
 
-    public int getMaintenanceCost() {
-        return maintenanceCost;
-    }
+    /** @return The build cost of the locomotive. */
+    public int getBuildCost() { return buildCost; }
 
-    public int getFuelCost() {
-        return fuelCost;
-    }
+    /** @return The yearly maintenance cost. */
+    public int getMaintenanceCost() { return maintenanceCost; }
 
-    public int getTopSpeed() {
-        return topSpeed;
-    }
+    /** @return The cost per fuel unit. */
+    public int getFuelCost() { return fuelCost; }
 
-    public String getAcceleration() {
-        return acceleration;
-    }
+    /** @return The top speed in km/h or equivalent units. */
+    public int getTopSpeed() { return topSpeed; }
 
-    public String getReliability() {
-        return reliability;
-    }
+    /** @return The qualitative acceleration level. */
+    public String getAcceleration() { return acceleration; }
 
-    public int getAvailableYear() {
-        return availableYear;
-    }
+    /** @return The qualitative reliability level. */
+    public String getReliability() { return reliability; }
 
-    public int getRetiredYear() {
-        return retiredYear;
-    }
+    /** @return The first year the locomotive is available. */
+    public int getAvailableYear() { return availableYear; }
 
+    /** @return The last year the locomotive can be used (inclusive). */
+    public int getRetiredYear() { return retiredYear; }
+
+    /**
+     * Converts the enum data into a {@link Locomotive} instance.
+     *
+     * @return a new {@link Locomotive} with the attributes from this enum entry
+     */
     public Locomotive toLocomotive() {
-        return new Locomotive(this.name,
-        this.fuelType,
-        this.buildCost,
-        this.maintenanceCost ,
-        this.topSpeed,
-        this.acceleration ,
-        this.availableYear);
+        return new Locomotive(
+                this.name,
+                this.fuelType,
+                this.buildCost,
+                this.maintenanceCost,
+                this.topSpeed,
+                this.acceleration,
+                this.availableYear
+        );
     }
 }

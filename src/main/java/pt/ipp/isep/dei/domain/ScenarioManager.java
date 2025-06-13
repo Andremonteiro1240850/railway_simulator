@@ -34,6 +34,7 @@ public class ScenarioManager {
         scenario.ifPresent(s -> this.currentScenario = s);
         return scenario.isPresent();
     }
+
     /**
      * Gets the current scenario if one is set.
      *

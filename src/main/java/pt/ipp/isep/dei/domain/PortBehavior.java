@@ -54,7 +54,7 @@ public class PortBehavior {
      * @param importCargo The new list of import cargo items
      */
 
-    // Setters
+
     public void setImportCargo(List<String> importCargo) {
         this.importCargo = new ArrayList<>(importCargo);
     }
@@ -82,7 +82,7 @@ public class PortBehavior {
      * @param cargo The cargo item to add
      */
 
-    // Métodos para adicionar/remover itens
+
     public void addImportCargo(String cargo) {
         if (!importCargo.contains(cargo)) {
             importCargo.add(cargo);

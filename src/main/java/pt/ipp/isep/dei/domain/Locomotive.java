@@ -2,6 +2,10 @@ package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 
+/**
+ * Represents a locomotive with technical and economic attributes,
+ * such as type, power, acceleration, start year, and costs.
+ */
 public class Locomotive {
     private final String reference;
     private final LocomotiveType type;
@@ -12,7 +16,18 @@ public class Locomotive {
     private final double purchasePrice;
     private final double fuelCost;
 
-    // Construtor principal para uso geral
+    /**
+     * Constructs a Locomotive with full detailed attributes.
+     *
+     * @param reference              unique reference or name of the locomotive
+     * @param type                   type of the locomotive (e.g., steam, diesel, electric)
+     * @param purchasePrice          cost to purchase the locomotive
+     * @param maintenanceCostPerYear yearly maintenance cost
+     * @param power                  locomotive power (e.g., max speed * 10)
+     * @param acceleration           acceleration value (e.g., between 1.5 and 3.5)
+     * @param startYear              year the locomotive becomes available
+     * @param fuelCost               cost of fuel per usage/km
+     */
     public Locomotive(String reference, LocomotiveType type, double purchasePrice, double maintenanceCostPerYear,
                       int power, double acceleration, int startYear, double fuelCost) {
         this.reference = reference;
@@ -25,7 +40,17 @@ public class Locomotive {
         this.fuelCost = fuelCost;
     }
 
-    // Construtor usado para integração com enums ou ficheiros externos
+    /**
+     * Constructs a Locomotive from simplified raw data (e.g., from CSV or enum integration).
+     *
+     * @param name              the name or reference of the locomotive
+     * @param fuelType          string representing the fuel type
+     * @param buildCost         the purchase price of the locomotive
+     * @param maintenanceCost   the yearly maintenance cost
+     * @param topSpeed          the top speed of the locomotive
+     * @param accelerationRating a textual description of acceleration performance
+     * @param availableYear     the year when the locomotive becomes available
+     */
     public Locomotive(String name, String fuelType, int buildCost, int maintenanceCost,
                       int topSpeed, String accelerationRating, int availableYear) {
         this.reference = name;
@@ -38,6 +63,12 @@ public class Locomotive {
         this.fuelCost = 0.0; // Assuming no fuel cost for the new constructor
     }
 
+    /**
+     * Converts a textual acceleration rating into a numerical value.
+     *
+     * @param rating the acceleration rating (e.g., "very fast", "average")
+     * @return numerical acceleration value
+     */
     private double convertAcceleration(String rating) {
         return switch (rating.toLowerCase()) {
             case "very fast" -> 3.5;
@@ -49,47 +80,101 @@ public class Locomotive {
         };
     }
 
+    /**
+     * Returns the reference (name or ID) of the locomotive.
+     *
+     * @return the locomotive reference
+     */
     public String getReference() {
         return reference;
     }
 
+    /**
+     * Returns the type of the locomotive (e.g., steam, diesel).
+     *
+     * @return the locomotive type
+     */
     public LocomotiveType getType() {
         return type;
     }
 
+    /**
+     * Returns the power value of the locomotive.
+     *
+     * @return the power
+     */
     public int getPower() {
         return power;
     }
 
+    /**
+     * Returns the acceleration value of the locomotive.
+     *
+     * @return the acceleration
+     */
     public double getAcceleration() {
         return acceleration;
     }
 
+    /**
+     * Returns the year the locomotive becomes available.
+     *
+     * @return the start year
+     */
     public int getStartYear() {
         return startYear;
     }
 
+    /**
+     * Returns the annual maintenance cost.
+     *
+     * @return the maintenance cost per year
+     */
     public double getMaintenanceCostPerYear() {
         return maintenanceCostPerYear;
     }
 
+    /**
+     * Returns the purchase price of the locomotive.
+     *
+     * @return the purchase price
+     */
     public double getPurchasePrice() {
         return purchasePrice;
     }
 
+    /**
+     * Returns the cost of fuel for this locomotive.
+     *
+     * @return the fuel cost
+     */
     public double getFuelCost() {
         return fuelCost;
     }
 
+    /**
+     * Returns the main cost of the locomotive, which is the purchase price.
+     *
+     * @return the cost
+     */
     public double getCost() {
         return getPurchasePrice();
     }
 
-    // Método copy atualizado
+    /**
+     * Creates and returns a copy of this Locomotive instance.
+     *
+     * @return a cloned locomotive with identical attributes
+     */
     public Locomotive copy() {
         return new Locomotive(reference, type, purchasePrice, maintenanceCostPerYear, power, acceleration, startYear, fuelCost);
     }
 
+    /**
+     * Returns a string representation of the locomotive, including reference, type, power, and year.
+     *
+     * @return a string describing the locomotive
+     */
     @Override
     public String toString() {
         return reference + " - Type: " + type + ", Power: " + power + ", Year: " + startYear;

@@ -1,4 +1,3 @@
-
 package pt.ipp.isep.dei.domain;
 
 import java.util.List;
@@ -9,9 +8,9 @@ import java.util.Objects;
  * House blocks are used to determine passenger and mail generation in cities.
  */
 public class HouseBlocks {
-    private final int x;
-    private final int y;
-    private final List<int[]> houseBlocks;
+    private int x;
+    private int y;
+    private List<int[]> houseBlocks;
 
     /**
      * Constructs a HouseBlocks object.
@@ -19,13 +18,12 @@ public class HouseBlocks {
      * @param x           the x-coordinate of the reference point
      * @param y           the y-coordinate of the reference point
      * @param houseBlocks list of [x,y] coordinates representing house blocks
-     * @throws IllegalArgumentException if map is null or houseBlocks is null/empty
+     * @throws IllegalArgumentException if houseBlocks is null or empty
      */
     public HouseBlocks(int x, int y, List<int[]> houseBlocks) {
         if (houseBlocks == null || houseBlocks.isEmpty()) {
             throw new IllegalArgumentException("House blocks cannot be empty");
         }
-
 
         this.x = x;
         this.y = y;
@@ -42,6 +40,15 @@ public class HouseBlocks {
     }
 
     /**
+     * Sets the x-coordinate of the reference point.
+     *
+     * @param x the new x-coordinate
+     */
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    /**
      * Gets the y-coordinate of the reference point.
      *
      * @return the y-coordinate
@@ -51,12 +58,34 @@ public class HouseBlocks {
     }
 
     /**
+     * Sets the y-coordinate of the reference point.
+     *
+     * @param y the new y-coordinate
+     */
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    /**
      * Gets the list of house block coordinates.
      *
      * @return an unmodifiable list of house block coordinates
      */
     public List<int[]> getHouseBlocks() {
         return List.copyOf(houseBlocks);
+    }
+
+    /**
+     * Sets a new list of house block coordinates.
+     *
+     * @param houseBlocks the new list of house blocks
+     * @throws IllegalArgumentException if the list is null or empty
+     */
+    public void setHouseBlocks(List<int[]> houseBlocks) {
+        if (houseBlocks == null || houseBlocks.isEmpty()) {
+            throw new IllegalArgumentException("House blocks cannot be empty");
+        }
+        this.houseBlocks = houseBlocks;
     }
 
     /**
@@ -75,6 +104,12 @@ public class HouseBlocks {
         return false;
     }
 
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * @param o the reference object with which to compare
+     * @return true if this object is the same as the obj argument
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,14 +120,24 @@ public class HouseBlocks {
                 houseBlocks.equals(that.houseBlocks);
     }
 
+    /**
+     * Returns a hash code value for the object.
+     *
+     * @return a hash code value
+     */
     @Override
     public int hashCode() {
         return Objects.hash(x, y, houseBlocks);
     }
 
+    /**
+     * Returns a string representation of the object.
+     *
+     * @return a string representing this HouseBlocks instance
+     */
     @Override
     public String toString() {
         return String.format("HouseBlocks{x=%d, y=%d, blocks=%d}",
-                 x, y, houseBlocks.size());
+                x, y, houseBlocks.size());
     }
 }

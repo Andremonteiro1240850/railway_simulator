@@ -2,31 +2,66 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.List;
 
+/**
+ * Represents a route assigned to a train, composed of a list of route points (stations and cargo modes).
+ */
 public class Route {
-    List<PointsOfRoute> route;
-    Train train;
 
+    private List<PointsOfRoute> route;
+    private Train train;
+
+    /**
+     * Constructs a new Route for a given train with an initial list of route points.
+     *
+     * @param train the train assigned to this route
+     * @param route the list of points that define the route
+     */
     public Route(Train train, List<PointsOfRoute> route) {
         this.train = train;
         this.route = route;
     }
 
+    /**
+     * Returns the list of route points.
+     *
+     * @return the route as a list of {@link PointsOfRoute}
+     */
     public List<PointsOfRoute> getRoute() {
         return route;
     }
 
+    /**
+     * Adds a new point to the route.
+     *
+     * @param route the point of route to add
+     */
     public void AddRoute(PointsOfRoute route) {
         this.route.add(route);
     }
 
+    /**
+     * Returns the train associated with this route.
+     *
+     * @return the train
+     */
     public Train getTrain() {
         return train;
     }
 
+    /**
+     * Sets the train associated with this route.
+     *
+     * @param train the train to assign
+     */
     public void setTrain(Train train) {
         this.train = train;
     }
 
+    /**
+     * Returns a string representation of the route, including the train and all route points.
+     *
+     * @return a formatted string describing the route
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -38,3 +73,4 @@ public class Route {
         return sb.toString();
     }
 }
+
