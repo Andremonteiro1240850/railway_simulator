@@ -1,6 +1,10 @@
 package pt.ipp.isep.dei.ui.console.authorization;
 
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import pt.ipp.isep.dei.controller.AuthenticationController;
 import pt.ipp.isep.dei.domain.Employee;
 import pt.ipp.isep.dei.domain.Organization;
@@ -11,6 +15,7 @@ import pt.ipp.isep.dei.ui.console.menu.PlayerUI;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 import pt.isep.lei.esoft.auth.mappers.dto.UserRoleDTO;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -81,14 +86,24 @@ public class AuthenticationUI implements Runnable {
         for (MenuItem item : rolesUI) {
             if (item.hasDescription(role.getDescription())) {
                 if (role.getDescription().equals(AuthenticationController.ROLE_PLAYER)) {
-                    // Launch JavaFX for players
-                    new Thread(() -> {
+                    // Iniciar a interface JavaFX
+                    Platform.runLater(() -> {
                         try {
-                            pt.ipp.isep.dei.Main.launch(pt.ipp.isep.dei.Main.class);
-                        } catch (Exception e) {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pt/ipp/isep/dei/PlayerMenu.fxml"));
+                            Parent root = loader.load();
+                            Scene scene = new Scene(root, 1200, 800); // Tamanho inicial razoável
+                            Stage stage = new Stage();
+                            stage.setScene(scene);
+                            stage.setTitle("Menu do Player");
+                            stage.setMinWidth(900);
+                            stage.setMinHeight(600);
+                            stage.setMaximized(true); // Abre em tela cheia
+                            stage.show();
+                            stage.toFront(); // Trazer a janela para frente
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }).start();
+                    });
                 } else {
                     // Run console UI for other roles
                     item.run();
