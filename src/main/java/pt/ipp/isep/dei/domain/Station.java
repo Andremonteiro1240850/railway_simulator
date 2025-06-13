@@ -22,6 +22,8 @@ public class Station {
     private int x;
     private int y;
     private List<StationUpgrade> upgrades = new ArrayList<>();
+    private transient StationType stationTypeHandler;
+
 
     /**
      * Constructs a new Station with a specific reference.
@@ -42,6 +44,8 @@ public class Station {
         this.area = area;
         this.x = x;
         this.y = y;
+        initializeTypeHandler();
+
     }
 
     /**
@@ -115,6 +119,22 @@ public class Station {
     }
 
 
+    private void initializeTypeHandler() {
+        switch (type.toLowerCase()) {
+            case "depot":
+                stationTypeHandler = new DepotStationType(); break;
+            case "terminal":
+                stationTypeHandler = new TerminalStationType(); break;
+            case "station":
+                stationTypeHandler = new RegularStationType(); break;
+            default:
+                stationTypeHandler = null;
+        }
+    }
+
+
+
+
     /**
      * Adds a building upgrade to the station if not already present.
      *
@@ -162,13 +182,9 @@ public class Station {
     }
 
     public int getMaintenanceCost() {
-        switch (type.toLowerCase()) {
-            case "depot": return 5000;
-            case "station": return 10000;
-            case "terminal": return 20000;
-            default: return 0;
-        }
+        return stationTypeHandler != null ? stationTypeHandler.getMaintenanceCost() : 0;
     }
+
 
     /**
      * Checks equality based on the station reference.
