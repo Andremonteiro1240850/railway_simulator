@@ -566,7 +566,10 @@ public class PlayerController implements Initializable {
 
         Scenario scenario = simulation.getScenario();
         List<LocomotiveType> allowedTypes = scenario.getAvailableLocomotiveTypes();
-        int currentYear = scenario.getCurrentYear();
+        int currentYear = simulation.getCurrentYear();
+
+        System.out.println("Current Year: " + currentYear);
+        System.out.println("Allowed Types: " + allowedTypes);
 
         // Substituir ListView por TableView para mostrar todas as locomotivas disponíveis
         TableView<Locomotive> tableView = new TableView<>();
@@ -580,11 +583,26 @@ public class PlayerController implements Initializable {
 
         // Adicione as locomotivas filtradas
         for (ListLocomotives locoEnum : ListLocomotives.values()) {
+            System.out.println("Checking locomotive: " + locoEnum.name() + 
+                             " | Available Year: " + locoEnum.getAvailableYear() + 
+                             " | Retired Year: " + locoEnum.getRetiredYear() + 
+                             " | Type: " + locoEnum.getLocomotiveType());
+            
             if (allowedTypes.contains(locoEnum.getLocomotiveType())) {
                 if (locoEnum.getAvailableYear() <= currentYear && locoEnum.getRetiredYear() >= currentYear) {
+                    System.out.println("Adding locomotive to list: " + locoEnum.name());
                     tableView.getItems().add(locoEnum.toLocomotive());
                 }
             }
+        }
+
+        if (tableView.getItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Locomotives Available");
+            alert.setHeaderText(null);
+            alert.setContentText("No locomotives are available for purchase at the current year (" + currentYear + ").");
+            alert.showAndWait();
+            return;
         }
 
         // Dialog
