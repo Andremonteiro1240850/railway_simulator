@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.Buildings;
+import pt.ipp.isep.dei.domain.enums.StationUpgrade;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,24 +161,18 @@ public class Station {
      */
     public int getTotalUpgradeCost() {
         return upgrades.stream()
-                .mapToInt(upgrade -> {
-                    Buildings building = Buildings.from(upgrade.getType(), upgrade.getSubType());
-                    return building != null ? building.getPrice() : 0;
-                })
+                .mapToInt(StationUpgrade::getCost)
                 .sum();
     }
 
     /**
      * Retrieves the list of all bonuses from applied upgrades.
      *
-     * @return A list of bonus descriptions.
+     * @return A list of bonus descriptions (apenas nomes dos upgrades).
      */
     public List<String> getAllBonuses() {
         return upgrades.stream()
-                .map(upgrade -> {
-                    Buildings building = Buildings.from(upgrade.getType(), upgrade.getSubType());
-                    return building != null ? building.getBonus() : "❌ Bónus desconhecido";
-                })
+                .map(StationUpgrade::getDisplayName)
                 .collect(Collectors.toList());
     }
 

@@ -53,7 +53,7 @@ public class Train {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append("Train with Locomotive: ").append(locomotive.getName()).append("\n");
+            sb.append("Train with Locomotive: ").append(locomotive.getReference()).append("\n");
             sb.append("Carriages:\n");
             if (carriageList.isEmpty()) {
                 sb.append(" - None\n");

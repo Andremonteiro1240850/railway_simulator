@@ -49,14 +49,37 @@ public class Locomotive {
         };
     }
 
-    public String getName() { return reference; }
-    public LocomotiveType getType() { return type; }
-    public int getPower() { return power; }
-    public double getAcceleration() { return acceleration; }
-    public int getStartYear() { return startYear; }
-    public double getMaintenanceCostPerYear() { return maintenanceCostPerYear; }
-    public double getPurchasePrice() { return purchasePrice; }
-    public double getFuelCost() { return fuelCost; }
+    public String getReference() {
+        return reference;
+    }
+
+    public LocomotiveType getType() {
+        return type;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public double getAcceleration() {
+        return acceleration;
+    }
+
+    public int getStartYear() {
+        return startYear;
+    }
+
+    public double getMaintenanceCostPerYear() {
+        return maintenanceCostPerYear;
+    }
+
+    public double getPurchasePrice() {
+        return purchasePrice;
+    }
+
+    public double getFuelCost() {
+        return fuelCost;
+    }
 
     // Método copy atualizado
     public Locomotive copy() {
@@ -65,9 +88,6 @@ public class Locomotive {
 
     @Override
     public String toString() {
-        return String.format(
-                "Locomotive [Reference: %s, Type: %s, Power: %d kW, Acceleration: %.2f m/s², Start Year: %d, Maintenance Cost/Year: %.2f €, Purchase Price: %.2f €]",
-                reference, type, power, acceleration, startYear, maintenanceCostPerYear, purchasePrice
-        );
+        return reference + " - Type: " + type + ", Power: " + power + ", Year: " + startYear;
     }
 }

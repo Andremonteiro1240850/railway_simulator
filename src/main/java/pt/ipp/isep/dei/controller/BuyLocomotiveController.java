@@ -1,11 +1,12 @@
 package pt.ipp.isep.dei.controller;
 
-import pt.ipp.isep.dei.domain.*;
+import java.util.List;
+
+import pt.ipp.isep.dei.domain.Locomotive;
+import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.enums.ListLocomotives;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
-import pt.ipp.isep.dei.repository.*;
-
-import java.util.List;
+import pt.ipp.isep.dei.repository.LocomotiveRepository;
 
 public class BuyLocomotiveController {
 
@@ -50,7 +51,7 @@ public class BuyLocomotiveController {
 
         // Verificar se já foi comprada
         for (Locomotive l : purchased) {
-            if (l.getName().equalsIgnoreCase(loco.getName())) {
+            if (l.getReference().equalsIgnoreCase(loco.getReference())) {
                 System.out.println("You have already purchased this locomotive.");
                 break;
             }

@@ -1,14 +1,12 @@
 package pt.ipp.isep.dei.repository;
 
-import pt.ipp.isep.dei.controller.BuildStationController;
-import pt.ipp.isep.dei.domain.Scenario;
-import pt.ipp.isep.dei.domain.Station;
-import pt.ipp.isep.dei.domain.StationUpgrade;
-import pt.ipp.isep.dei.domain.enums.Buildings;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import pt.ipp.isep.dei.domain.Scenario;
+import pt.ipp.isep.dei.domain.Station;
+import pt.ipp.isep.dei.domain.enums.StationUpgrade;
 
 public class StationRepository {
     private final List<Station> stations = new ArrayList<>();
@@ -57,14 +55,12 @@ public class StationRepository {
         if (stationOpt.isPresent()) {
             Station station = stationOpt.get();
             station.addUpgrade(upgrade);
-
             stations.removeIf(s -> s.getReference().equals(stationReference));
             stations.add(station);
             return true;
         }
         return false;
     }
-
 
     public List<StationUpgrade> getUpgradesForStation(String stationReference) {
         return findByReference(stationReference)
@@ -84,11 +80,7 @@ public class StationRepository {
             } else {
                 sb.append("Upgrades: ");
                 for (StationUpgrade upgrade : station.getUpgrades()) {
-                    sb.append(upgrade.getType());
-                    if (upgrade.getSubType() != null) {
-                        sb.append(" (").append(upgrade.getSubType()).append(")");
-                    }
-                    sb.append(", ");
+                    sb.append(upgrade.getDisplayName()).append(", ");
                 }
                 // Remove a última vírgula e espaço
                 sb.setLength(sb.length() - 2);

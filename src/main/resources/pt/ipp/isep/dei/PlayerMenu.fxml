@@ -11,43 +11,73 @@
    <children>
 
       <!-- Map View -->
-      <Pane fx:id="mapView" layoutY="50" prefHeight="600" prefWidth="800" style="-fx-background-color: #ecf0f1; -fx-border-radius: 8; -fx-background-radius: 8;">
+      <Pane fx:id="mapView" layoutY="50" prefHeight="600" prefWidth="1200" style="-fx-background-color: #ecf0f1; -fx-border-radius: 8; -fx-background-radius: 8;">
          <children>
-            <ImageView fx:id="mapImage" fitHeight="600" fitWidth="800" />
+            <ImageView fx:id="mapImage" fitHeight="600" fitWidth="1200" />
 
             <!-- Train List -->
-            <TableView fx:id="trainList" layoutX="20.0" layoutY="150.0" prefHeight="300.0" prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #7f8c8d, 10, 0.5, 0, 0);">
+            <TableView fx:id="trainList" layoutX="20.0" layoutY="150.0" prefHeight="200.0" prefWidth="380.0" style="-fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #7f8c8d, 10, 0.5, 0, 0);">
                <columns>
-                  <TableColumn fx:id="trainNameColumn" text="Train Name" prefWidth="115" />
-                  <TableColumn fx:id="locomotiveColumn" text="Locomotive Type" prefWidth="115" />
-                  <TableColumn fx:id="cargoColumn" text="Current Cargo" prefWidth="115" />
+                  <TableColumn fx:id="trainNameColumn" text="Train Name" prefWidth="120" />
+                  <TableColumn fx:id="locomotiveColumn" text="Locomotive Type" prefWidth="130" />
+                  <TableColumn fx:id="cargoColumn" text="Current Cargo" prefWidth="130" />
                </columns>
             </TableView>
 
             <!-- Station List -->
-            <TableView fx:id="stationList" layoutX="385.0" layoutY="150.0" prefHeight="300.0" prefWidth="350.0" style="-fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #7f8c8d, 10, 0.5, 0, 0);">
+            <TableView fx:id="stationList" layoutX="410.0" layoutY="150.0" prefHeight="200.0" prefWidth="380.0" style="-fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #7f8c8d, 10, 0.5, 0, 0);">
                <columns>
-                  <TableColumn fx:id="stationNameColumn" text="Station Name" prefWidth="115" />
-                  <TableColumn fx:id="stationTypeColumn" text="Type" prefWidth="115" />
-                  <TableColumn fx:id="stationCoordinatesColumn" text="Coordinates" prefWidth="115" />
+                  <TableColumn fx:id="stationNameColumn" text="Station Name" prefWidth="120" />
+                  <TableColumn fx:id="stationTypeColumn" text="Type" prefWidth="130" />
+                  <TableColumn fx:id="stationCoordinatesColumn" text="Coordinates" prefWidth="130" />
                </columns>
             </TableView>
 
+            <!-- Cities List -->
+            <TableView fx:id="citiesList" layoutX="800.0" layoutY="150.0" prefHeight="200.0" prefWidth="380.0"
+                       style="-fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #7f8c8d, 10, 0.5, 0, 0);">
+                <columns>
+                    <TableColumn fx:id="cityNameColumn" text="Name" prefWidth="120" />
+                    <TableColumn fx:id="cityBlocksColumn" text="House Blocks" prefWidth="130" />
+                    <TableColumn fx:id="cityCoordinatesColumn" text="Coordinates" prefWidth="130" />
+                </columns>
+            </TableView>
+
+            <!-- Locomotive Inventory -->
+            <TableView fx:id="locomotiveInventory" layoutX="20.0" layoutY="360.0" prefHeight="150.0" prefWidth="380.0"
+                       style="-fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #7f8c8d, 10, 0.5, 0, 0);">
+                <columns>
+                    <TableColumn fx:id="locomotiveNameColumn" text="Name" prefWidth="120" />
+                    <TableColumn fx:id="locomotiveTypeColumn" text="Type" prefWidth="130" />
+                    <TableColumn fx:id="locomotivePowerColumn" text="Power" prefWidth="130" />
+                </columns>
+            </TableView>
+
+            <!-- Industries List -->
+            <TableView fx:id="industriesList" layoutX="410.0" layoutY="360.0" prefHeight="150.0" prefWidth="380.0"
+                       style="-fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #7f8c8d, 10, 0.5, 0, 0);">
+                <columns>
+                    <TableColumn fx:id="industryNameColumn" text="Name" prefWidth="120" />
+                    <TableColumn fx:id="industryTypeColumn" text="Type" prefWidth="130" />
+                    <TableColumn fx:id="industryCoordinatesColumn" text="Coordinates" prefWidth="130" />
+                </columns>
+            </TableView>
+
             <!-- Menu Bar -->
-            <MenuBar layoutX="75.0" layoutY="30.0" prefHeight="40.0" prefWidth="700.0" style="-fx-background-color: #34495e; -fx-border-radius: 8; -fx-background-radius: 8;">
+            <MenuBar layoutX="75.0" layoutY="30.0" prefHeight="40.0" prefWidth="1050.0" style="-fx-background-color: #34495e; -fx-border-radius: 8; -fx-background-radius: 8;">
                <menus>
                   <!-- Menu Station -->
                   <Menu text="Station" style="-fx-text-fill: #ecf0f1; -fx-font-size: 16px;">
                      <items>
                         <MenuItem fx:id="buildStationMenuItem" text="Build Station" onAction="#handleBuildStation" />
-                        <MenuItem fx:id="upgradeStationMenuItem" text="Upgrade Station" />
-                        <MenuItem fx:id="listStationMenuItem" text="List Stations" />
+                        <MenuItem fx:id="upgradeStationMenuItem" text="Upgrade Station" onAction="#handleUpgradeStation" />
+                        <MenuItem fx:id="listStationMenuItem" text="List Stations" onAction="#handleListStations" />
                      </items>
                   </Menu>
                   <!-- Menu Train -->
                   <Menu text="Train" style="-fx-text-fill: #ecf0f1; -fx-font-size: 16px;">
                      <items>
-                        <MenuItem fx:id="buyLocomotiveMenuItem" text="Buy Locomotive" />
+                        <MenuItem fx:id="buyLocomotiveMenuItem" text="Buy Locomotive" onAction="#handleBuyLocomotive" />
                         <MenuItem fx:id="assignTrainMenuItem" text="Assign Train to Route" />
                      </items>
                   </Menu>
@@ -62,7 +92,7 @@
             </MenuBar>
 
             <!-- Player Title -->
-            <Text layoutX="264.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Menu Player" textAlignment="CENTER" wrappingWidth="256.3828125" style="-fx-font-family: 'Arial'; -fx-font-weight: bold;">
+            <Text layoutX="450.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Player Menu" textAlignment="CENTER" wrappingWidth="300.0" style="-fx-font-family: 'Arial'; -fx-font-weight: bold;">
                <font>
                   <Font size="40.0" />
                </font>
@@ -74,7 +104,7 @@
       <Label fx:id="statusLabel" layoutX="20" layoutY="650" text="Status: Ready to play" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;" />
 
       <!-- Ano Atual Label -->
-      <Label fx:id="yearLabel" layoutX="20" layoutY="680" text="Ano atual: -" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;" />
+      <Label fx:id="yearLabel" layoutX="20" layoutY="680" text="Current Year: -" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;" />
 
       <!-- Budget Label -->
       <Label fx:id="budgetLabel" layoutX="250" layoutY="680" text="Budget: -" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;" />
