@@ -33,6 +33,16 @@
                </columns>
             </TableView>
 
+            <!-- Locomotive Inventory -->
+            <TableView fx:id="locomotiveInventory" layoutX="20.0" layoutY="470.0" prefHeight="150.0" prefWidth="350.0"
+                       style="-fx-background-color: #ffffff; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, #7f8c8d, 10, 0.5, 0, 0);">
+                <columns>
+                    <TableColumn fx:id="locomotiveNameColumn" text="Name" prefWidth="115" />
+                    <TableColumn fx:id="locomotiveTypeColumn" text="Type" prefWidth="115" />
+                    <TableColumn fx:id="locomotivePowerColumn" text="Power" prefWidth="115" />
+                </columns>
+            </TableView>
+
             <!-- Menu Bar -->
             <MenuBar layoutX="75.0" layoutY="30.0" prefHeight="40.0" prefWidth="700.0" style="-fx-background-color: #34495e; -fx-border-radius: 8; -fx-background-radius: 8;">
                <menus>
@@ -47,7 +57,7 @@
                   <!-- Menu Train -->
                   <Menu text="Train" style="-fx-text-fill: #ecf0f1; -fx-font-size: 16px;">
                      <items>
-                        <MenuItem fx:id="buyLocomotiveMenuItem" text="Buy Locomotive" />
+                        <MenuItem fx:id="buyLocomotiveMenuItem" text="Buy Locomotive" onAction="#handleBuyLocomotive" />
                         <MenuItem fx:id="assignTrainMenuItem" text="Assign Train to Route" />
                      </items>
                   </Menu>

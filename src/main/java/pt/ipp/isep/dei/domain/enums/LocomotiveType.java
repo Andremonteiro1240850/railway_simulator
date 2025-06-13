@@ -4,11 +4,12 @@ public enum LocomotiveType {
     STEAM, DIESEL, ELECTRIC;
 
     public static LocomotiveType fromString(String type) {
-        return switch (type.toLowerCase()) {
-            case "steam" -> STEAM;
-            case "diesel" -> DIESEL;
-            case "electric" -> ELECTRIC;
-            default -> throw new IllegalArgumentException("Unknown type: " + type);
-        };
+        if (type == null) throw new IllegalArgumentException("Type cannot be null");
+        switch (type.trim().toLowerCase()) {
+            case "steam": return STEAM;
+            case "diesel": return DIESEL;
+            case "electric": return ELECTRIC;
+            default: throw new IllegalArgumentException("Unknown type: " + type);
+        }
     }
 }

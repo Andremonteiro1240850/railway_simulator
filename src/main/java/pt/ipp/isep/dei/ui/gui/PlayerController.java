@@ -29,11 +29,13 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import pt.ipp.isep.dei.controller.CreateScenarioController;
 import pt.ipp.isep.dei.domain.HistoricalEvent;
+import pt.ipp.isep.dei.domain.Locomotive;
 import pt.ipp.isep.dei.domain.Player;
 import pt.ipp.isep.dei.domain.PortBehavior;
 import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.Simulation;
 import pt.ipp.isep.dei.domain.Station;
+import pt.ipp.isep.dei.domain.enums.ListLocomotives;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
 import pt.ipp.isep.dei.repository.Repositories;
@@ -44,6 +46,7 @@ public class PlayerController implements Initializable {
     @FXML private MenuItem buildStationMenuItem;
     @FXML private MenuItem startSimulationMenuItem;
     @FXML private MenuItem pauseSimulationMenuItem;
+    @FXML private MenuItem buyLocomotiveMenuItem;
     @FXML private Label statusLabel;
     @FXML private Label yearLabel;
     @FXML private Label budgetLabel;
@@ -51,6 +54,10 @@ public class PlayerController implements Initializable {
     @FXML private TableColumn<Station, String> stationNameColumn;
     @FXML private TableColumn<Station, String> stationTypeColumn;
     @FXML private TableColumn<Station, String> stationCoordinatesColumn;
+    @FXML private TableView<Locomotive> locomotiveInventory;
+    @FXML private TableColumn<Locomotive, String> locomotiveNameColumn;
+    @FXML private TableColumn<Locomotive, String> locomotiveTypeColumn;
+    @FXML private TableColumn<Locomotive, String> locomotivePowerColumn;
     private final CreateScenarioController controller;
     private final Scanner scanner;
     
@@ -168,6 +175,7 @@ public class PlayerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setupStationTable();
+        setupLocomotiveInventoryTable();
         chooseScenario();
     }
 
@@ -197,10 +205,25 @@ public class PlayerController implements Initializable {
         stationList.setVisible(true);
     }
 
+    private void setupLocomotiveInventoryTable() {
+        if (locomotiveNameColumn != null)
+            locomotiveNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
+        if (locomotiveTypeColumn != null)
+            locomotiveTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().toString()));
+        if (locomotivePowerColumn != null)
+            locomotivePowerColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getPower())));
+    }
+
     private void updateStationList() {
         List<Station> allStations = Repositories.getInstance().getStationRepository().getAll();
         stationList.getItems().clear();
         stationList.getItems().addAll(allStations);
+    }
+
+    private void updateLocomotiveInventory() {
+        if (simulation != null && locomotiveInventory != null) {
+            locomotiveInventory.getItems().setAll(simulation.getLocomotives());
+        }
     }
 
     private void startSimulationWithScenario(Scenario selectedScenario) {
@@ -210,6 +233,7 @@ public class PlayerController implements Initializable {
         simulation = new Simulation(selectedScenario, player);
         updateLabels("Selected scenario: " + selectedScenario.getName(), selectedScenario.getStartYear());
         updateStationList();
+        updateLocomotiveInventory();
     }
 
     @FXML
@@ -527,5 +551,84 @@ public class PlayerController implements Initializable {
         done.setHeaderText(null);
         done.setContentText("Upgrade '" + chosenUpgrade.getDisplayName() + "' applied to station '" + selectedStation.getName() + "'.\nCost: $" + chosenUpgrade.getCost());
         done.showAndWait();
+    }
+
+    @FXML
+    public void handleBuyLocomotive() {
+        if (simulation == null || simulation.getScenario() == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Scenario Selected");
+            alert.setHeaderText(null);
+            alert.setContentText("Please select a scenario first.");
+            alert.showAndWait();
+            return;
+        }
+
+        Scenario scenario = simulation.getScenario();
+        List<LocomotiveType> allowedTypes = scenario.getAvailableLocomotiveTypes();
+        int currentYear = scenario.getCurrentYear();
+
+        // Substituir ListView por TableView para mostrar todas as locomotivas disponíveis
+        TableView<Locomotive> tableView = new TableView<>();
+        TableColumn<Locomotive, String> nameCol = new TableColumn<>("Name");
+        nameCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
+        TableColumn<Locomotive, String> typeCol = new TableColumn<>("Type");
+        typeCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().toString()));
+        TableColumn<Locomotive, String> powerCol = new TableColumn<>("Power");
+        powerCol.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getPower())));
+        tableView.getColumns().addAll(nameCol, typeCol, powerCol);
+
+        // Adicione as locomotivas filtradas
+        for (ListLocomotives locoEnum : ListLocomotives.values()) {
+            if (allowedTypes.contains(locoEnum.getLocomotiveType())) {
+                if (locoEnum.getAvailableYear() <= currentYear && locoEnum.getRetiredYear() >= currentYear) {
+                    tableView.getItems().add(locoEnum.toLocomotive());
+                }
+            }
+        }
+
+        // Dialog
+        Dialog<Locomotive> dialog = new Dialog<>();
+        dialog.setTitle("Buy Locomotive");
+        dialog.setHeaderText("Select a locomotive to purchase:");
+        dialog.getDialogPane().setContent(tableView);
+        ButtonType buyButtonType = new ButtonType("Buy", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(buyButtonType, ButtonType.CANCEL);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == buyButtonType) {
+                return tableView.getSelectionModel().getSelectedItem();
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(selectedLocomotive -> {
+            if (selectedLocomotive != null) {
+                // Check if player has enough budget
+                if (scenario.getBudget() < selectedLocomotive.getPurchasePrice()) {
+                    Alert error = new Alert(Alert.AlertType.ERROR);
+                    error.setTitle("Insufficient Funds");
+                    error.setHeaderText(null);
+                    error.setContentText("You don't have enough budget to purchase this locomotive.");
+                    error.showAndWait();
+                    return;
+                }
+
+                // Update budget and add locomotive
+                scenario.setBudget(scenario.getBudget() - selectedLocomotive.getPurchasePrice());
+                scenario.addLocomotivePurchased(selectedLocomotive);
+                simulation.addLocomotive(selectedLocomotive);
+
+                // Update UI
+                updateLabels("Locomotive purchased: " + selectedLocomotive.getReference(), simulation.getCurrentYear());
+                updateLocomotiveInventory();
+                
+                Alert success = new Alert(Alert.AlertType.INFORMATION);
+                success.setTitle("Purchase Successful");
+                success.setHeaderText(null);
+                success.setContentText("Locomotive purchased successfully!");
+                success.showAndWait();
+            }
+        });
     }
 }

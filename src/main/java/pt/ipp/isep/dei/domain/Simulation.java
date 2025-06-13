@@ -160,4 +160,12 @@ public class Simulation {
             stations.add(station);
         }
     }
+
+    public void addLocomotive(Locomotive locomotive) {
+        this.locomotives.add(locomotive);
+    }
+
+    public List<Locomotive> getLocomotives() {
+        return new ArrayList<>(locomotives);
+    }
 } 

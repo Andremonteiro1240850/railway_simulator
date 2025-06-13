@@ -2,14 +2,13 @@ package pt.ipp.isep.dei.domain;
 
 
 
-import pt.ipp.isep.dei.domain.enums.CarriageList;
-import pt.ipp.isep.dei.domain.enums.Eventos;
-import pt.ipp.isep.dei.domain.enums.ListLocomotives;
-import pt.ipp.isep.dei.domain.enums.LocomotiveType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import pt.ipp.isep.dei.domain.enums.Eventos;
+import pt.ipp.isep.dei.domain.enums.ListLocomotives;
+import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 
 public class Scenario {
     private final String name;
@@ -235,6 +234,10 @@ public class Scenario {
 
     public List<Route> getRoutes() {
         return new ArrayList<>(routes); // proteção contra modificações externas
+    }
+
+    public void addLocomotivePurchased(Locomotive locomotive) {
+        this.locomotivePurchased.add(locomotive);
     }
 }
 
