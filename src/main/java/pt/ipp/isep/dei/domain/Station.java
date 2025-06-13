@@ -23,6 +23,7 @@ public class Station {
     private int x;
     private int y;
     private List<StationUpgrade> upgrades = new ArrayList<>();
+    private List<String> cargoTypes;
 
     /**
      * Constructs a new Station with a specific reference.
@@ -218,5 +219,9 @@ public class Station {
                 y,
                 upgrades != null ? upgrades.size() : 0
         );
+    }
+
+    public List<String> getCargoTypes() {
+        return cargoTypes;
     }
 }
