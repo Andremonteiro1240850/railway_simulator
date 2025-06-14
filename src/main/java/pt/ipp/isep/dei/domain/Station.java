@@ -13,13 +13,15 @@ import java.util.Random;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
+import java.io.Serializable;
 
 /**
  * Represents a train station that can be upgraded and managed with employees.
  * A station has a type (depot, terminal, or station), a name, a region,
  * and may have multiple building upgrades that provide various bonuses.
  */
-public class Station {
+public class Station implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String reference;
     private String name;
     private String type;

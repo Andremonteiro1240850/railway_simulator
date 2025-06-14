@@ -3,12 +3,14 @@ package pt.ipp.isep.dei.domain;
 import java.util.List;
 import java.util.Objects;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 /**
  * Represents a city on a map with a name, coordinates, a list of house blocks,
  * and an assigned employee responsible for managing the city.
  */
-public class City {
+public class City implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final Map map;
     private int x;
     private int y;

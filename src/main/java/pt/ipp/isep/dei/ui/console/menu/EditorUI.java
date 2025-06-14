@@ -6,6 +6,7 @@ import pt.ipp.isep.dei.ui.console.AddIndustryUI;
 import pt.ipp.isep.dei.ui.console.AddCityUI;
 import pt.ipp.isep.dei.ui.console.CreateMapUI;
 import pt.ipp.isep.dei.ui.console.CreateScenarioUI;
+import pt.ipp.isep.dei.ui.console.SaveLoadUI;
 import pt.ipp.isep.dei.ui.console.utils.Utils;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class EditorUI implements Runnable {
         options.add(new MenuItem("Create a map", new CreateMapUI(organization)));
         options.add(new MenuItem("Add an industry", new AddIndustryUI())); // Passa o loggedInEmployee
         options.add(new MenuItem("Add city", new AddCityUI(organization)));
+        options.add(new MenuItem("Save/Load maps and scenarios", new SaveLoadUI()));
 
         int option = 0;
         do {

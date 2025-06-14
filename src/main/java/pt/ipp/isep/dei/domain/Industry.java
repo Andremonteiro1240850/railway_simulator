@@ -2,12 +2,14 @@ package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.IndustryType;
 import java.util.Objects;
+import java.io.Serializable;
 
 /**
  * Represents an industry on the map, with a specific type and coordinates.
  * Industries can be of various types and are located at a specific position on a given map.
  */
-public class Industry {
+public class Industry implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final IndustryType type;
     private final int positionX;
     private final int positionY;

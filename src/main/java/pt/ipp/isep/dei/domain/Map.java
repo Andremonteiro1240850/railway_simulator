@@ -2,12 +2,15 @@ package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.ScaleUnit;
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * Represents a map with a defined width, height, scale, and associated organization.
  * It includes cities, industries, stations, and a grid to manage placement of elements.
  */
-public class Map {
+public class Map implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private String name;
     private int width;
     private int height;
@@ -19,6 +22,11 @@ public class Map {
     private final List<Station> stations = new ArrayList<>();
 
     private final Object[][] grid;
+
+    // Adicionar campos transient se existirem repositórios
+    // Exemplo:
+    // private transient CityRepository cityRepository;
+    // private transient IndustryRepository industryRepository;
 
     /**
      * Constructs a new Map instance with given parameters.

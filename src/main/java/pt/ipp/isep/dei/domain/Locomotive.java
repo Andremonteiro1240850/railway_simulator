@@ -1,12 +1,14 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 
 /**
  * Represents a locomotive with technical and economic attributes,
  * such as type, power, acceleration, start year, and costs.
  */
-public class Locomotive {
+public class Locomotive implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final String reference;
     private final LocomotiveType type;
     private final int power;

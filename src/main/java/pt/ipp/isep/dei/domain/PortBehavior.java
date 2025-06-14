@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,7 +10,9 @@ import java.util.Objects;
  * This class provides methods to manage and query these cargo operations.
  */
 
-public class PortBehavior {
+public class PortBehavior implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private List<String> importCargo;
     private List<String> exportCargo;
     private List<String> transformCargo;

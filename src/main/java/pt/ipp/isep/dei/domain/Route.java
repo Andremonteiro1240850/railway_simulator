@@ -1,13 +1,15 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * Represents a route assigned to a train, composed of a list of route points (stations and cargo modes).
  */
-public class Route {
+public class Route implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     private List<PointsOfRoute> route;
     private Train train;
 

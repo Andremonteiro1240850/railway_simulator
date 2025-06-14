@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +14,9 @@ import pt.ipp.isep.dei.domain.enums.LocomotiveType;
  * A scenario defines a time window, available locomotive types,
  * historical events, budget, map, and behavior of ports.
  */
-public class Scenario {
+public class Scenario implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
     private final String name;
     private double budget = 700000;
     private int startYear;

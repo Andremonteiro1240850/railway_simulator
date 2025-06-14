@@ -1,10 +1,14 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
+
 /**
  * Represents a train carriage used to transport a specific type of cargo.
  * Each carriage has a name, cargo type, capacity, and cost.
  */
-public class Carriage {
+public class Carriage implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String name;
     private String cargoType;

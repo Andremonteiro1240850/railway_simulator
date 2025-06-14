@@ -1,12 +1,15 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import pt.ipp.isep.dei.domain.enums.Eventos;
 import java.util.Objects;
 
 /**
  * Represents a historical event defined by a fixed set of scenarios (enum).
  */
-public class HistoricalEvent {
+public class HistoricalEvent implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Eventos evento;
 

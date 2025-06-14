@@ -1,5 +1,6 @@
 package pt.ipp.isep.dei.domain;
 
+import java.io.Serializable;
 import pt.ipp.isep.dei.repository.*;
 import pt.ipp.isep.dei.repository.CityRepository;
 import pt.ipp.isep.dei.repository.CreateMapRepository;
@@ -11,16 +12,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class Organization {
+public class Organization implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String vatNumber;
     private String name;
     private String website;
     private String phone;
 
-    private final CreateMapRepository mapRepository;
-    private final CityRepository cityRepository;
-    private final IndustryRepository industryRepository;
-    private final StationRepository stationRepository;
+    private final transient CreateMapRepository mapRepository;
+    private final transient CityRepository cityRepository;
+    private final transient IndustryRepository industryRepository;
+    private final transient StationRepository stationRepository;
 
     private final List<Employee> employees = new ArrayList<>();
 
