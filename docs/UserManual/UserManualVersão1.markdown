@@ -17,8 +17,8 @@
 3. System Overview
 4. System Requirements
 5. Features
-6. Troubleshooting and Helpdesk
-7. Frequently Asked Questions (FAQs)
+6. Troubleshooting and Helpdesk.
+7. Frequently Asked Questions (FAQs).
 
 ---
 
