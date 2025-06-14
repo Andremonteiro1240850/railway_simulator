@@ -9,15 +9,27 @@ import java.util.Scanner;
 
 /**
  * UI for map creation.
+ * Handles user interaction to collect map details and delegates creation to the controller.
  */
 public class CreateMapUI implements Runnable {
     private final CreateMapController controller = new CreateMapController();
     private final Organization organization;
 
+    /**
+     * Constructs the CreateMapUI with a given organization context.
+     *
+     * @param organization the organization associated with the new map
+     */
     public CreateMapUI(Organization organization) {
         this.organization = organization;
     }
 
+    /**
+     * Runs the UI flow for creating a map:
+     * - Requests name, dimensions, and scale unit
+     * - Submits data to the controller
+     * - Prints the result message
+     */
     public void run() {
         System.out.println("\n--- Create Map ---");
 
@@ -31,11 +43,24 @@ public class CreateMapUI implements Runnable {
         message.ifPresent(System.out::println);
     }
 
+    /**
+     * Prompts the user to enter the map name.
+     *
+     * @param input the Scanner for reading user input
+     * @return the trimmed map name
+     */
     private String requestName(Scanner input) {
         System.out.print("Map Name: ");
         return input.nextLine().trim();
     }
 
+    /**
+     * Prompts the user to enter a dimension (width or height) for the map.
+     *
+     * @param input the Scanner for reading user input
+     * @param label the label to display (e.g., "Width (X)" or "Height (Y)")
+     * @return the validated positive integer dimension
+     */
     private int requestDimension(Scanner input, String label) {
         while (true) {
             try {
@@ -49,6 +74,13 @@ public class CreateMapUI implements Runnable {
         }
     }
 
+    /**
+     * Prompts the user to enter a scale unit (KM, MILES, METERS).
+     * If input is invalid, defaults to KM.
+     *
+     * @param input the Scanner for reading user input
+     * @return the selected ScaleUnit
+     */
     private ScaleUnit requestScale(Scanner input) {
         System.out.print("Scale (KM/MILES/METERS): ");
         try {
@@ -59,3 +91,4 @@ public class CreateMapUI implements Runnable {
         }
     }
 }
+

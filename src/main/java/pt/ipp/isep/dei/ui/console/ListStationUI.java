@@ -6,15 +6,27 @@ import java.util.Scanner;
 import pt.ipp.isep.dei.controller.ListStationController;
 import pt.ipp.isep.dei.domain.Station;
 
+/**
+ * UI class for listing all built stations along with their upgrades.
+ * It retrieves the station data via the controller and presents it to the user.
+ */
 public class ListStationUI implements Runnable {
     private final ListStationController controller;
     private final Scanner scanner;
 
+    /**
+     * Constructs a new ListStationUI and initializes the controller and input scanner.
+     */
     public ListStationUI() {
         this.controller = new ListStationController();
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Runs the listing process:
+     * - Displays all stations with their upgrades
+     * - Waits for user input to return to the main menu
+     */
     @Override
     public void run() {
         System.out.println("\n=== List Stations with Upgrades ===");
@@ -22,6 +34,10 @@ public class ListStationUI implements Runnable {
         waitForUserInput();
     }
 
+    /**
+     * Displays a list of all stations and their respective upgrades.
+     * If no stations are found, notifies the user.
+     */
     private void displayAllStations() {
         List<Station> stations = controller.getAllStations();
 
@@ -51,6 +67,9 @@ public class ListStationUI implements Runnable {
         });
     }
 
+    /**
+     * Waits for the user to press Enter to return to the previous menu.
+     */
     private void waitForUserInput() {
         System.out.println("\nPress Enter to return to the main menu...");
         scanner.nextLine();

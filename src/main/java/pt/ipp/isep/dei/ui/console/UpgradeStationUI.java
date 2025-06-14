@@ -7,15 +7,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * UI class for applying upgrades to existing stations.
+ * Guides the user through selecting a station, upgrade type, and optionally a subtype.
+ */
 public class UpgradeStationUI implements Runnable {
     private final UpgradeStationController controller;
     private final Scanner scanner;
 
+    /**
+     * Constructs the UpgradeStationUI, initializing its controller and input scanner.
+     */
     public UpgradeStationUI() {
         this.controller = new UpgradeStationController();
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Runs the station upgrade process:
+     * - Lists available stations
+     * - Prompts the user to select a station
+     * - Prompts the user to select an upgrade type (and subtype if applicable)
+     * - Applies the selected upgrade
+     */
     public void run() {
         System.out.println("\n--- Station Upgrade ---");
 
@@ -29,7 +43,7 @@ public class UpgradeStationUI implements Runnable {
         System.out.println("\nAvailable Stations:");
         for (int i = 0; i < stations.size(); i++) {
             System.out.printf("%d. %s (Type: %s)%n",
-                    i+1,
+                    i + 1,
                     stations.get(i).getReference(),
                     stations.get(i).getType());
         }
@@ -48,7 +62,7 @@ public class UpgradeStationUI implements Runnable {
         List<String> upgradeTypes = controller.getAvailableUpgradeTypes();
         System.out.println("\nAvailable Upgrade Types:");
         for (int i = 0; i < upgradeTypes.size(); i++) {
-            System.out.printf("%d. %s%n", i+1, upgradeTypes.get(i));
+            System.out.printf("%d. %s%n", i + 1, upgradeTypes.get(i));
         }
 
         System.out.print("Select upgrade type: ");
@@ -63,7 +77,7 @@ public class UpgradeStationUI implements Runnable {
             List<String> subTypes = controller.getAvailableSubTypes(upgradeType);
             System.out.println("\nAvailable Subtypes:");
             for (int i = 0; i < subTypes.size(); i++) {
-                System.out.printf("%d. %s%n", i+1, subTypes.get(i));
+                System.out.printf("%d. %s%n", i + 1, subTypes.get(i));
             }
 
             System.out.print("Select subtype: ");

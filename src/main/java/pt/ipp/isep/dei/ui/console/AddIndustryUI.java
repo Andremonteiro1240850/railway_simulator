@@ -10,15 +10,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * UI class for adding a new Industry to a selected Map.
+ */
 public class AddIndustryUI implements Runnable {
     private final AddIndustryController controller;
     private final Scanner input;
 
+    /**
+     * Constructs a new AddIndustryUI with its controller and input scanner.
+     */
     public AddIndustryUI() {
         controller = new AddIndustryController();
         input = new Scanner(System.in);
     }
 
+    /**
+     * Runs the UI flow to create an Industry, requesting type, coordinates, and map selection.
+     */
     public void run() {
         System.out.println("\n--- Add an Industry ---");
         IndustryType type = selectIndustryType();
@@ -43,6 +52,11 @@ public class AddIndustryUI implements Runnable {
         }
     }
 
+    /**
+     * Prompts the user to select an IndustryType.
+     *
+     * @return the selected IndustryType.
+     */
     private IndustryType selectIndustryType() {
         System.out.println("\nAvailable types:");
         System.out.println("1 - Primary (Mines/Farms)");
@@ -53,7 +67,7 @@ public class AddIndustryUI implements Runnable {
             System.out.print("Select industry type (1-3): ");
             if (input.hasNextInt()) {
                 int choice = input.nextInt();
-                input.nextLine(); // consumir quebra de linha
+                input.nextLine(); // consume newline
                 switch (choice) {
                     case 1: return IndustryType.PRIMARY;
                     case 2: return IndustryType.TRANSFORMING;
@@ -63,25 +77,36 @@ public class AddIndustryUI implements Runnable {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                input.nextLine(); // limpar entrada inválida
+                input.nextLine(); // clear invalid input
             }
         }
     }
 
+    /**
+     * Requests a coordinate from the user.
+     *
+     * @param label the label to show to the user (e.g., "X" or "Y")
+     * @return the integer coordinate value entered by the user.
+     */
     private int requestCoordinate(String label) {
         while (true) {
             System.out.print(label + ": ");
             if (input.hasNextInt()) {
                 int coord = input.nextInt();
-                input.nextLine(); // consumir quebra de linha
+                input.nextLine(); // consume newline
                 return coord;
             } else {
                 System.out.println("Invalid number. Please enter an integer.");
-                input.nextLine(); // limpar entrada inválida
+                input.nextLine(); // clear invalid input
             }
         }
     }
 
+    /**
+     * Displays all available maps and prompts the user to select one.
+     *
+     * @return the selected Map or null if none are available.
+     */
     private Map requestMap() {
         CreateMapRepository repository = Repositories.getInstance().getMapRepository();
         List<Map> availableMaps = repository.getAll();
@@ -100,7 +125,7 @@ public class AddIndustryUI implements Runnable {
             System.out.print("Select a map by number (1 to " + availableMaps.size() + "): ");
             if (input.hasNextInt()) {
                 int selectedIndex = input.nextInt();
-                input.nextLine(); // consumir quebra de linha
+                input.nextLine(); // consume newline
                 if (selectedIndex >= 1 && selectedIndex <= availableMaps.size()) {
                     return availableMaps.get(selectedIndex - 1);
                 } else {
@@ -108,11 +133,16 @@ public class AddIndustryUI implements Runnable {
                 }
             } else {
                 System.out.println("Invalid input. Please enter a number.");
-                input.nextLine(); // limpar entrada inválida
+                input.nextLine(); // clear invalid input
             }
         }
     }
 
+    /**
+     * Displays a success message after creating the industry.
+     *
+     * @param industry the successfully created Industry.
+     */
     private void showSuccess(Industry industry) {
         System.out.printf("\n✅ Industry %s created in (%d,%d)\n",
                 industry.getType(),
@@ -120,7 +150,13 @@ public class AddIndustryUI implements Runnable {
                 industry.getPositionY());
     }
 
+    /**
+     * Displays an error message to the user.
+     *
+     * @param message the error message to show.
+     */
     private void showError(String message) {
         System.out.println("\n❌ " + message);
     }
 }
+
