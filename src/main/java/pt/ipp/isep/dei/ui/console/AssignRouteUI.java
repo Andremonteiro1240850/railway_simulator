@@ -13,17 +13,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+/**
+ * UI class for assigning a route to a train in a given scenario.
+ */
 public class AssignRouteUI implements Runnable {
     private final AssignRouteController controller;
     private final Scanner scanner;
     private final ScenarioRepository scenarioRepository;
 
+    /**
+     * Constructs a new AssignRouteUI instance, initializing the controller,
+     * scanner for input, and scenario repository.
+     */
     public AssignRouteUI() {
         this.controller = new AssignRouteController();
         this.scanner = new Scanner(System.in);
         this.scenarioRepository = Repositories.getInstance().getScenarioRepository();
     }
 
+    /**
+     * Runs the UI for assigning a route to a train. It walks the user through:
+     * selecting a scenario, creating a route (station + cargo mode), selecting
+     * a locomotive, choosing carriages, and finally assigning the route.
+     */
     public void run() {
 
         List<Scenario> scenarios = controller.getAvailableScenarios();
@@ -95,14 +107,18 @@ public class AssignRouteUI implements Runnable {
             System.out.print("Do you want to add another carriage? (yes/no): ");
         } while (scanner.nextLine().trim().equalsIgnoreCase("yes"));
 
-        controller.assignRouteToTrain(selectedLoco, carriages, routePoints,selectedScenario);
+        controller.assignRouteToTrain(selectedLoco, carriages, routePoints, selectedScenario);
 
         System.out.println("Route assigned successfully.");
-
-
-
     }
 
+    /**
+     * Reads and validates a user-selected index from a list of options.
+     *
+     * @param prompt the prompt message to display.
+     * @param max    the maximum valid index (list size).
+     * @return the selected index (0-based).
+     */
     private int readIndex(String prompt, int max) {
         int index = -1;
         do {
@@ -120,6 +136,7 @@ public class AssignRouteUI implements Runnable {
         return index;
     }
 }
+
 
 
 

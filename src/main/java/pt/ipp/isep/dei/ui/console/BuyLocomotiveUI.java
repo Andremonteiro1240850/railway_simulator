@@ -11,20 +11,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
-import java.util.List;
-import java.util.Scanner;
-
+/**
+ * UI class for buying locomotives within a selected scenario.
+ * Allows user interaction through the console to perform locomotive purchases.
+ */
 public class BuyLocomotiveUI implements Runnable {
 
     private final BuyLocomotiveController controller;
     private final Scanner scanner = new Scanner(System.in);
     private final ScenarioRepository scenarioRepository;
 
+    /**
+     * Constructs a new BuyLocomotiveUI, initializing the controller and scenario repository.
+     */
     public BuyLocomotiveUI() {
-        this.controller = new BuyLocomotiveController ();
+        this.controller = new BuyLocomotiveController();
         this.scenarioRepository = Repositories.getInstance().getScenarioRepository();
     }
 
+    /**
+     * Runs the UI loop for selecting a scenario and buying one or more locomotives.
+     * The user is prompted for scenario selection, locomotive selection, and
+     * whether to repeat the process.
+     */
     @Override
     public void run() {
         List<Scenario> scenarios = scenarioRepository.getAll();
@@ -71,7 +80,5 @@ public class BuyLocomotiveUI implements Runnable {
             keepBuying = response.equals("yes") || response.equals("y");
 
         } while (keepBuying);
-
-
     }
 }

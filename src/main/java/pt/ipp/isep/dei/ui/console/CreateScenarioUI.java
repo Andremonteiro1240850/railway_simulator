@@ -10,25 +10,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * UI class responsible for creating new scenarios.
+ * Guides the user through selecting a map, inputting scenario details,
+ * choosing locomotive types, configuring port behavior, and assigning historical events.
+ */
 public class CreateScenarioUI implements Runnable {
     private final CreateScenarioController controller;
     private final Scanner scanner;
 
-
+    /**
+     * Constructs the CreateScenarioUI, initializing controller and scanner.
+     */
     public CreateScenarioUI() {
         this.controller = new CreateScenarioController();
         this.scanner = new Scanner(System.in);
-
     }
 
+    /**
+     * Runs the scenario creation flow:
+     * - Selects map
+     * - Requests scenario name, start/end years
+     * - Selects locomotive types
+     * - Configures port behavior
+     * - Loads historical events
+     * - Creates and confirms the scenario
+     */
     public void run() {
         System.out.println("\n=== Create New Scenario ===");
 
-        // 1. Selecionar mapa
         Map selectedMap = selectMap();
         if (selectedMap == null) return;
 
-        // 2. Obter detalhes do cenário
         System.out.print("\nEnter scenario name: ");
         String name = scanner.nextLine();
 
@@ -39,20 +52,14 @@ public class CreateScenarioUI implements Runnable {
         int endYear = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
-        // 3. Selecionar tipos de locomotivas
         List<String> locomotiveTypes = selectLocomotiveTypes();
-
-        // 4. Configurar comportamento dos portos
         PortBehavior portBehavior = configurePortBehavior();
 
-        // 5. Carregar eventos históricos
         List<HistoricalEvent> historicalEvents = controller.loadApplicableHistoricalEvents(startYear);
         showHistoricalEvents(startYear);
 
-        // Definir o orçamento inicial (ou pedir ao usuário)
-        double budget = 700000; // Valor padrão
+        double budget = 700000;
 
-        // 6. Criar cenário
         boolean success = controller.createScenario(name, selectedMap, startYear, endYear,
                 locomotiveTypes, portBehavior, budget, historicalEvents);
 
@@ -65,6 +72,11 @@ public class CreateScenarioUI implements Runnable {
         }
     }
 
+    /**
+     * Displays a list of available maps and allows the user to select one.
+     *
+     * @return the selected Map or null if canceled
+     */
     private Map selectMap() {
         List<Map> maps = controller.getAvailableMaps();
 
@@ -75,7 +87,7 @@ public class CreateScenarioUI implements Runnable {
 
         System.out.println("\nAvailable Maps:");
         for (int i = 0; i < maps.size(); i++) {
-            System.out.printf("%d. %s%n", i+1, maps.get(i).getName());
+            System.out.printf("%d. %s%n", i + 1, maps.get(i).getName());
         }
 
         System.out.print("Select a map (0 to cancel): ");
@@ -87,6 +99,11 @@ public class CreateScenarioUI implements Runnable {
         return maps.get(choice - 1);
     }
 
+    /**
+     * Displays historical events applicable to the scenario's start year.
+     *
+     * @param startYear the year from which to filter historical events
+     */
     private void showHistoricalEvents(int startYear) {
         List<HistoricalEvent> events = controller.loadApplicableHistoricalEvents(startYear);
 
@@ -105,13 +122,18 @@ public class CreateScenarioUI implements Runnable {
         }
     }
 
+    /**
+     * Lets the user select multiple locomotive types from predefined options.
+     *
+     * @return list of selected locomotive type names
+     */
     private List<String> selectLocomotiveTypes() {
         List<String> types = new ArrayList<>();
         String[] options = {"Steam", "Diesel", "Electric"};
 
         System.out.println("\nSelect available locomotive types:");
         for (int i = 0; i < options.length; i++) {
-            System.out.printf("%d. %s%n", i+1, options[i]);
+            System.out.printf("%d. %s%n", i + 1, options[i]);
         }
         System.out.println("0. Done selecting");
 
@@ -133,6 +155,11 @@ public class CreateScenarioUI implements Runnable {
         return types;
     }
 
+    /**
+     * Guides the user to configure the import, export, and transformation cargos of a port.
+     *
+     * @return a configured PortBehavior object
+     */
     private PortBehavior configurePortBehavior() {
         PortBehavior behavior = new PortBehavior();
         System.out.println("\n=== Configure Port Behavior ===");
@@ -163,12 +190,19 @@ public class CreateScenarioUI implements Runnable {
         return behavior;
     }
 
+    /**
+     * Allows the user to select cargo types for import, export, or transformation.
+     *
+     * @param possibleCargos list of all cargo options
+     * @param cargoType      type of cargo selection (e.g., "import", "export", "transform")
+     * @return list of selected cargos
+     */
     private List<String> selectCargosFromList(List<String> possibleCargos, String cargoType) {
         List<String> selected = new ArrayList<>();
 
         System.out.println("Available cargos for " + cargoType + ":");
         for (int i = 0; i < possibleCargos.size(); i++) {
-            System.out.printf("%2d. %s%n", i+1, possibleCargos.get(i));
+            System.out.printf("%2d. %s%n", i + 1, possibleCargos.get(i));
         }
 
         System.out.println("\nEnter the numbers of cargos to " + cargoType + " (comma separated, 0 to finish):");
