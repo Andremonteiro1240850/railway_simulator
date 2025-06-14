@@ -42,11 +42,20 @@ public class CreateScenarioController {
     }
     public List<HistoricalEvent> loadApplicableHistoricalEvents(int startYear) {
         List<HistoricalEvent> applicableEvents = new ArrayList<>();
-
-        for (Eventos eventoEnum : Eventos.values()) {
-            if (eventoEnum.getDataInicio() <= startYear && startYear <= eventoEnum.getDataFim()) {
-                applicableEvents.add(new HistoricalEvent(eventoEnum));
+        try {
+            Class<?> eventosClass = Class.forName("pt.ipp.isep.dei.domain.enums.Eventos");
+            if (eventosClass.isEnum()) {
+                Object[] enumConstants = eventosClass.getEnumConstants();
+                for (Object enumConstant : enumConstants) {
+                    Eventos eventoEnum = (Eventos) enumConstant;
+                    if (eventoEnum.getDataInicio() <= startYear && startYear <= eventoEnum.getDataFim()) {
+                        applicableEvents.add(new HistoricalEvent(eventoEnum));
+                    }
+                }
             }
+        } catch (ClassNotFoundException e) {
+            System.err.println("Error: Eventos enum class not found: " + e.getMessage());
+            throw new RuntimeException("Failed to load historical events: Eventos enum not found", e);
         }
 
         this.historicalEvents = applicableEvents;

@@ -63,6 +63,7 @@ public class PlayerController implements Initializable {
     @FXML private TableColumn<City, String> cityBlocksColumn;
     @FXML private TableColumn<City, String> cityCoordinatesColumn;
     @FXML private Pane mapView;
+    @FXML private Label mapTitleLabel;
     private final CreateScenarioController controller;
     private final Scanner scanner;
     
@@ -339,6 +340,10 @@ public class PlayerController implements Initializable {
         if (yearLabel != null) yearLabel.setText("Current year: " + (year != null ? year : "-"));
         if (budgetLabel != null && simulation != null && simulation.getScenario() != null) {
             budgetLabel.setText("Budget: " + String.format("%.2f€", simulation.getScenario().getBudget()));
+        }
+        // Atualizar o título do mapa
+        if (mapTitleLabel != null && simulation != null && simulation.getScenario() != null && simulation.getScenario().getMap() != null) {
+            mapTitleLabel.setText(simulation.getScenario().getMap().getName());
         }
     }
 
@@ -1077,9 +1082,6 @@ public class PlayerController implements Initializable {
 
     private void animateTrainOnRoute(List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints) {
         if (routePoints == null || routePoints.size() < 2) return;
-        // Debug visual: círculo verde fixo
-        javafx.scene.shape.Circle debug = new javafx.scene.shape.Circle(100, 100, 10, javafx.scene.paint.Color.GREENYELLOW);
-        mapView.getChildren().add(debug);
         // Lista de pontos (x, y) da rota
         List<javafx.geometry.Point2D> points = new ArrayList<>();
         for (pt.ipp.isep.dei.domain.PointsOfRoute p : routePoints) {
