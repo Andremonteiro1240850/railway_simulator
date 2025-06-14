@@ -1,61 +1,108 @@
 package pt.ipp.isep.dei.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pt.ipp.isep.dei.domain.Employee;
-import pt.ipp.isep.dei.domain.Industry;
-import pt.ipp.isep.dei.domain.Map;
-import pt.ipp.isep.dei.repository.IndustryRepository;
+import pt.ipp.isep.dei.domain.*;
+import pt.ipp.isep.dei.domain.enums.IndustryType;
+import pt.ipp.isep.dei.domain.enums.ScaleUnit;
+
+import java.util.List;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IndustryRepositoryTest {
+class IndustryRepositoryTest {
+
+    private IndustryRepository repository;
+    private Industry testIndustry;
+    private Map testMap;
+    private Organization testOrganization;
+    private CreateMapRepository createMapRepository;
+    private CityRepository cityRepository;
+    private IndustryRepository industryRepository;
+    private StationRepository stationRepository;
+
+    @BeforeEach
+    void setUp() {
+        repository = new IndustryRepository();
+        
+        // Initialize repositories
+        createMapRepository = new CreateMapRepository();
+        cityRepository = new CityRepository();
+        industryRepository = new IndustryRepository();
+        stationRepository = new StationRepository();
+
+        // Create organization with repositories
+        testOrganization = new Organization("123456789", createMapRepository, cityRepository, industryRepository, stationRepository);
+        
+        // Create map with organization
+        testMap = new Map("Test Map", 10, 10, ScaleUnit.KM, testOrganization);
+
+        // Create test industry
+        testIndustry = new Industry(IndustryType.PRIMARY, testMap, 5, 5);
+    }
 
     @Test
-    public void testAddIndustry() {
-        IndustryRepository repository = new IndustryRepository();
-        Employee employee = new Employee("test@email.com");
-        Map map = new Map("Test Map", 10, 10, employee);
-        Industry industry = new Industry(map, 5, 5, employee);
+    void add_ValidIndustry_ShouldAddAndReturnIndustry() {
+        // Act
+        Optional<Industry> result = repository.add(testIndustry);
 
-        Optional<Industry> result = repository.add(industry);
-
+        // Assert
         assertTrue(result.isPresent());
-        assertEquals(industry, result.get());
-        assertEquals(1, repository.getAll().size());
+        assertEquals(testIndustry.getType(), result.get().getType());
+        assertEquals(testIndustry.getPositionX(), result.get().getPositionX());
+        assertEquals(testIndustry.getPositionY(), result.get().getPositionY());
+        assertEquals(testIndustry.getMap(), result.get().getMap());
     }
 
     @Test
-    public void testAddDuplicateIndustry() {
-        IndustryRepository repository = new IndustryRepository();
-        Employee employee = new Employee("test@email.com");
-        Map map = new Map("Test Map", 10, 10, employee);
-        Industry industry = new Industry(map, 5, 5, employee);
-
-        repository.add(industry);
-        Optional<Industry> duplicateResult = repository.add(industry);
-
-        assertFalse(duplicateResult.isPresent());
-        assertEquals(1, repository.getAll().size());
-    }
-
-    @Test
-    public void testAddNullIndustry() {
-        IndustryRepository repository = new IndustryRepository();
+    void add_NullIndustry_ShouldReturnEmpty() {
+        // Act
         Optional<Industry> result = repository.add(null);
 
-        assertFalse(result.isPresent());
-        assertTrue(repository.getAll().isEmpty());
+        // Assert
+        assertTrue(result.isEmpty());
     }
 
     @Test
-    public void testContainsIndustry() {
-        IndustryRepository repository = new IndustryRepository();
-        Employee employee = new Employee("test@email.com");
-        Map map = new Map("Test Map", 10, 10, employee);
-        Industry industry = new Industry(map, 5, 5, employee);
+    void add_DuplicateIndustry_ShouldReturnEmpty() {
+        // Arrange
+        repository.add(testIndustry);
 
-        repository.add(industry);
+        // Act
+        Optional<Industry> result = repository.add(testIndustry);
 
-        assertTrue(repository.contains(industry));
+        // Assert
+        assertTrue(result.isEmpty());
     }
-}
+
+    @Test
+    void getAll_ShouldReturnDefensiveCopy() {
+        // Arrange
+        repository.add(testIndustry);
+        List<Industry> industries = repository.getAll();
+
+        // Act
+        industries.clear();
+
+        // Assert
+        assertFalse(repository.getAll().isEmpty());
+    }
+
+    @Test
+    void getAll_WithMultipleIndustries_ShouldReturnAllIndustries() {
+        // Arrange
+        Industry industry1 = new Industry(IndustryType.PRIMARY, testMap, 5, 5);
+        Industry industry2 = new Industry(IndustryType.TRANSFORMING, testMap, 6, 6);
+        repository.add(industry1);
+        repository.add(industry2);
+
+        // Act
+        List<Industry> result = repository.getAll();
+
+        // Assert
+        assertEquals(2, result.size());
+        assertTrue(result.stream().anyMatch(i -> i.getType() == IndustryType.PRIMARY));
+        assertTrue(result.stream().anyMatch(i -> i.getType() == IndustryType.TRANSFORMING));
+    }
+} 

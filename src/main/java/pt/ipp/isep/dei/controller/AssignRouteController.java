@@ -20,14 +20,32 @@ import java.util.Optional;
         }
 
         public PointsOfRoute createPointOfRoute(Station station, CargoMode mode) {
+            if (station == null) {
+                throw new NullPointerException("Station cannot be null");
+            }
+            if (mode == null) {
+                throw new NullPointerException("Cargo mode cannot be null");
+            }
             return new PointsOfRoute(station, mode);
         }
 
-        public void assignRouteToTrain(Locomotive locomotive, List<Carriage> carriages, List<PointsOfRoute> points,Scenario scenario) {
+        public void assignRouteToTrain(Locomotive locomotive, List<Carriage> carriages, List<PointsOfRoute> points, Scenario scenario) {
+            if (locomotive == null) {
+                throw new NullPointerException("Locomotive cannot be null");
+            }
+            if (carriages == null) {
+                throw new NullPointerException("Carriages list cannot be null");
+            }
+            if (points == null) {
+                throw new NullPointerException("Route points list cannot be null");
+            }
+            if (scenario == null) {
+                throw new NullPointerException("Scenario cannot be null");
+            }
+            
             Train train = new Train(locomotive, carriages);
             Route route = new Route(train, points);
             scenario.addRoute(route);
-
         }
 
 

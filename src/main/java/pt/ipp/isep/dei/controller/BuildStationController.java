@@ -148,7 +148,7 @@ public class BuildStationController {
             return false;
         }
 
-        List<Station> existingStations = Repositories.getInstance().getStationRepository().getAll();
+        List<Station> existingStations = stationRepository.getAll();
         for (Station s : existingStations) {
             if (s.getX() == x && s.getY() == y) {
                 System.out.println("Erro: Já existe uma estação nessa localização (" + x + ", " + y + ").");
@@ -169,9 +169,9 @@ public class BuildStationController {
             stationName = suggestStationName(x, y, stationType);
         }
 
-        Station newStation = new Station(stationName, stationType.getType(), regionType.getRegion(),scenario.getName(), stationType.getArea(), x, y);
+        Station newStation = new Station("ST-" + System.currentTimeMillis(), stationName, stationType.getType(), regionType.getRegion(), scenario.getName(), stationType.getArea(), x, y);
         scenario.addStationPurchased(newStation);
-        Optional<Station> added = Repositories.getInstance().getStationRepository().add(newStation);
+        Optional<Station> added = stationRepository.add(newStation);
 
         if (added.isPresent()) {
             scenario.setBudget(budget - cost);

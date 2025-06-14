@@ -23,6 +23,11 @@ public class AuthenticationController {
         this.authenticationRepository = Repositories.getInstance().getAuthenticationRepository();
     }
 
+    // Constructor for testing purposes
+    public AuthenticationController(AuthenticationRepository authenticationRepository) {
+        this.authenticationRepository = authenticationRepository;
+    }
+
     public boolean doLogin(String email, String pwd) {
         try {
             boolean success = authenticationRepository.doLogin(email, pwd);
@@ -42,11 +47,9 @@ public class AuthenticationController {
         return null;
     }
 
-
-
-
     public void doLogout() {
         authenticationRepository.doLogout();
+        lastLoggedInEmail = null;
     }
 
     public Employee loggedInEmployee(Organization organization) {

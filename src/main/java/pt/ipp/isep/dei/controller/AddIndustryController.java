@@ -52,29 +52,34 @@ public class AddIndustryController {
     public Optional<Industry> createIndustry(IndustryType type, int positionX, int positionY, Map map) {
         try {
             if (type == null) {
-                throw new IllegalArgumentException("Industry type cannot be null");
+                return Optional.empty();
+            }
+            if (map == null) {
+                return Optional.empty();
             }
 
-            // Verifica se a posição está dentro dos limites do mapa
+            // Validate position is within map bounds
             if (positionX < 0 || positionX >= map.getWidth() || positionY < 0 || positionY >= map.getHeight()) {
-                throw new IllegalArgumentException("Coordinates out of bounds");
+                return Optional.empty();
             }
 
-            // Verifica se a posição está ocupada
+            // Check if position is occupied
             if (map.isOccupied(positionX, positionY)) {
-                throw new IllegalArgumentException("Position already occupied");
+                return Optional.empty();
             }
 
             Employee employee = getEmployeeFromSession();
             Optional<Organization> organization = getOrganizationRepository().getOrganizationByEmployee(employee);
 
-            return organization.map(org -> {
+            if (organization.isPresent()) {
                 Industry newIndustry = new Industry(type, map, positionX, positionY);
-                map.addIndustry(newIndustry);
-                return newIndustry;
-            });
-        } catch (IllegalArgumentException e) {
-            System.err.println("[Error US02] " + e.getMessage());
+                Optional<String> result = createMapController.addIndustryToMap(map, newIndustry);
+                if (result.isPresent() && result.get().startsWith("✅")) {
+                    return Optional.of(newIndustry);
+                }
+            }
+            return Optional.empty();
+        } catch (Exception e) {
             return Optional.empty();
         }
     }

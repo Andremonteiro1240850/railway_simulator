@@ -1,228 +1,100 @@
-/**package pt.ipp.isep.dei.domain;
+package pt.ipp.isep.dei.domain;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pt.ipp.isep.dei.repository.*;
-import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
+import pt.ipp.isep.dei.repository.*;
+
 class OrganizationTest {
-    private CreateMapRepository mapRepository = new CreateMapRepository();
-    private CityRepository cityRepository = new CityRepository();
-    private IndustryRepository industryRepository = new IndustryRepository();
-    private StationRepository stationRepository = new StationRepository();
+    private Organization organization;
+    private CreateMapRepository mapRepository;
+    private CityRepository cityRepository;
+    private IndustryRepository industryRepository;
+    private StationRepository stationRepository;
 
-    @Test
-    void testEqualsSameObject() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertEquals(organization, organization);
+    @BeforeEach
+    void setUp() {
+        mapRepository = Repositories.getInstance().getMapRepository();
+        cityRepository = Repositories.getInstance().getCityRepository();
+        industryRepository = Repositories.getInstance().getIndustryRepository();
+        stationRepository = Repositories.getInstance().getStationRepository();
+        organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
     }
 
     @Test
-    void testEqualsDifferentClass() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertNotEquals("", organization);
+    void testConstructorWithValidParameters() {
+        assertNotNull(organization);
+        assertEquals("123456789", organization.getVatNumber());
     }
 
     @Test
-    void testEqualsNull() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertNotEquals(null, organization);
+    void testConstructorWithNullVatNumber() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Organization(null, mapRepository, cityRepository, industryRepository, stationRepository)
+        );
     }
 
     @Test
-    void testEqualsDifferentObject() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Organization organization1 = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertEquals(organization, organization1);
+    void testConstructorWithEmptyVatNumber() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Organization("", mapRepository, cityRepository, industryRepository, stationRepository)
+        );
     }
 
     @Test
-    void testHashCodeSameObject() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertEquals(organization.hashCode(), organization.hashCode());
+    void testSetName() {
+        organization.setName("Test Organization");
+        assertEquals("Test Organization", organization.getName());
     }
 
     @Test
-    void testHashCodeDifferentObject() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Organization organization1 = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertEquals(organization.hashCode(), organization1.hashCode());
+    void testSetWebsite() {
+        organization.setWebsite("www.test.com");
+        assertEquals("www.test.com", organization.getWebsite());
     }
 
     @Test
-    void testHashCodeSameObjectSameVATNumber() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Organization organization1 = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertEquals(organization.hashCode(), organization1.hashCode());
+    void testSetPhone() {
+        organization.setPhone("123456789");
+        assertEquals("123456789", organization.getPhone());
     }
 
     @Test
-    void ensureHashCodeFailsForDifferentVatNumbers() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Organization organization1 = new Organization("123456788", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertNotEquals(organization.hashCode(), organization1.hashCode());
+    void testGetVatNumber() {
+        assertEquals("123456789", organization.getVatNumber());
     }
 
     @Test
-    void ensureEqualsFailsForDifferentObjectType() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Organization organization1 = new Organization("123456788", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertNotEquals(organization, organization1);
+    void testGetName() {
+        organization.setName("Test Organization");
+        assertEquals("Test Organization", organization.getName());
     }
 
     @Test
-    void ensureEqualsFailsWhenComparingNull() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertNotEquals(organization, null);
+    void testGetWebsite() {
+        organization.setWebsite("www.test.com");
+        assertEquals("www.test.com", organization.getWebsite());
     }
 
     @Test
-    void ensureEqualsSuccessWhenComparingSameObject() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        assertEquals(organization, organization);
+    void testGetPhone() {
+        organization.setPhone("123456789");
+        assertEquals("123456789", organization.getPhone());
     }
 
     @Test
-    void testThatCreateTaskWorks() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        TaskCategory taskCategory = new TaskCategory("Task Category Description");
-
-        Task expected = new Task("Task Description", "Task Category Description", "informal description",
-                "technical description", 1, 1d, taskCategory, employee);
-
-        Optional<Task> task = organization.createTask("Task Description", "Task Category Description",
-                "informal description", "technical description", 1, 1d, taskCategory, employee);
-
-        assertNotNull(task);
-        assertTrue(task.isPresent());
-        assertEquals(expected, task.get());
+    void testEquals() {
+        Organization sameOrg = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
+        Organization differentOrg = new Organization("987654321", mapRepository, cityRepository, industryRepository, stationRepository);
+        
+        assertEquals(organization, sameOrg);
+        assertNotEquals(organization, differentOrg);
     }
 
     @Test
-    void ensureAddingDuplicateTaskFails() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        TaskCategory taskCategory = new TaskCategory("Task Category Description");
-
-        organization.createTask("Task Description", "Task Category Description", "informal description",
-                "technical description", 1, 1d, taskCategory, employee);
-
-        Optional<Task> duplicateTask = organization.createTask("Task Description", "Task Category Description",
-                "informal description", "technical description", 1, 1d, taskCategory, employee);
-
-        assertTrue(duplicateTask.isEmpty());
+    void testHashCode() {
+        Organization sameOrg = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
+        assertEquals(organization.hashCode(), sameOrg.hashCode());
     }
-
-    @Test
-    void testCreateStationSuccess() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-
-        Optional<Station> station = organization.createStation("ST-001", "Main Station", "NE", "station", employee);
-
-        assertTrue(station.isPresent());
-        assertEquals("ST-001", station.get().getReference());
-    }
-
-    @Test
-    void testCreateIndustrySuccess() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        Map map = new Map("Test Map", 10, 10, employee);
-
-        Optional<Industry> industry = organization.createIndustry(5, 5, map, employee);
-
-        assertTrue(industry.isPresent());
-    }
-
-    @Test
-    void testCreateMapSuccess() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-
-        Optional<Map> map = organization.createMap("Test Map", 10, 10, employee);
-
-        assertTrue(map.isPresent());
-        assertEquals("Test Map", map.get().getName());
-    }
-
-    @Test
-    void testCreateCitySuccess() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        Map map = new Map("Test Map", 10, 10, employee);
-
-        Optional<City> city = organization.createCity(map, 5, 5, employee);
-
-        assertTrue(city.isPresent());
-    }
-
-    @Test
-    void ensureEmploysFails() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        assertFalse(organization.employs(employee));
-    }
-
-    @Test
-    void ensureEmploysSuccess() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        organization.addEmployee(employee);
-        assertTrue(organization.employs(employee));
-    }
-
-    @Test
-    void ensureAnyEmployeeHasEmailFails() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        organization.addEmployee(employee);
-        assertFalse(organization.anyEmployeeHasEmail("jane.doe@this.company.com"));
-    }
-
-    @Test
-    void ensureAnyEmployeeHasEmailWorks() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        organization.addEmployee(employee);
-        assertTrue(organization.anyEmployeeHasEmail("john.doe@this.company.com"));
-    }
-
-    @Test
-    void ensureAddDuplicateEmployeeFails() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        assertTrue(organization.addEmployee(employee));
-        assertFalse(organization.addEmployee(employee));
-    }
-
-    @Test
-    void ensureAddEmployeeWorks() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        assertTrue(organization.addEmployee(employee));
-    }
-
-    @Test
-    void ensureCloneWorks() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        organization.addEmployee(employee);
-        organization.createTask("Task Description", "Task Category Description", "informal description",
-                "technical description", 1, 1d, new TaskCategory("Task Category Description"), employee);
-
-        Organization clone = organization.clone();
-        assertEquals(organization, clone);
-    }
-
-    @Test
-    void testGetMaps() {
-        Organization organization = new Organization("123456789", mapRepository, cityRepository, industryRepository, stationRepository);
-        Employee employee = new Employee("john.doe@this.company.com");
-        organization.createMap("Map1", 10, 10, employee);
-        organization.createMap("Map2", 20, 20, employee);
-
-        assertEquals(2, organization.getMaps().size());
-    }
-}**/
+} 

@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.ArrayList;
 
 /**
  * Represents a city on a map with a name, coordinates, a list of house blocks,
@@ -37,8 +38,22 @@ public class City {
         this.name = name.trim();
         this.x = x;
         this.y = y;
-        this.houseBlocks = List.copyOf(houseBlocks); // Defensive copy
+        this.houseBlocks = createDeepCopy(houseBlocks);
         this.employee = employee;
+    }
+
+    /**
+     * Creates a deep copy of a list of house blocks.
+     *
+     * @param blocks the list of house blocks to copy
+     * @return a new list containing deep copies of the house blocks
+     */
+    private List<int[]> createDeepCopy(List<int[]> blocks) {
+        List<int[]> copy = new ArrayList<>();
+        for (int[] block : blocks) {
+            copy.add(new int[]{block[0], block[1]});
+        }
+        return copy;
     }
 
     /**
@@ -87,12 +102,12 @@ public class City {
     }
 
     /**
-     * Returns a copy of the list of house blocks in the city.
+     * Returns a deep copy of the list of house blocks in the city.
      *
-     * @return the list of house blocks
+     * @return a new list containing deep copies of the house blocks
      */
     public List<int[]> getHouseBlocks() {
-        return List.copyOf(houseBlocks);
+        return createDeepCopy(houseBlocks);
     }
 
     /**
@@ -104,7 +119,7 @@ public class City {
     public void setHouseBlocks(List<int[]> houseBlocks) {
         if (houseBlocks == null || houseBlocks.isEmpty())
             throw new IllegalArgumentException("House blocks cannot be empty");
-        this.houseBlocks = List.copyOf(houseBlocks);
+        this.houseBlocks = createDeepCopy(houseBlocks);
     }
 
     /**

@@ -14,8 +14,12 @@ public class HistoricalEvent {
      * Constructs a new HistoricalEvent from an Eventos enum.
      *
      * @param evento The event enum representing this historical event.
+     * @throws IllegalArgumentException if evento is null
      */
     public HistoricalEvent(Eventos evento) {
+        if (evento == null) {
+            throw new IllegalArgumentException("Event cannot be null");
+        }
         this.evento = evento;
     }
 
@@ -68,8 +72,12 @@ public class HistoricalEvent {
      * Sets a new Eventos enum for this historical event.
      *
      * @param evento the new event to assign.
+     * @throws IllegalArgumentException if evento is null
      */
     public void setEvento(Eventos evento) {
+        if (evento == null) {
+            throw new IllegalArgumentException("Event cannot be null");
+        }
         this.evento = evento;
     }
 
@@ -104,9 +112,7 @@ public class HistoricalEvent {
      */
     @Override
     public String toString() {
-        return "HistoricalEvent{" +
-                "evento=" + evento +
-                '}';
+        return "HistoricalEvent{evento=" + evento.name() + "}";
     }
 
     /**

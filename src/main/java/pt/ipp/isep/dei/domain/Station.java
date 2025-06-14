@@ -2,12 +2,17 @@ package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.Buildings;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
-import pt.ipp.isep.dei.domain.Map;
+import pt.ipp.isep.dei.domain.enums.StationTypes;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.UUID;
+import java.util.Random;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Arrays;
 
 /**
  * Represents a train station that can be upgraded and managed with employees.
@@ -15,10 +20,10 @@ import java.util.stream.Collectors;
  * and may have multiple building upgrades that provide various bonuses.
  */
 public class Station {
+    private String reference;
     private String name;
     private String type;
     private String region;
-    private String reference;
     private String scenario;
     private int area;
     private int x;
@@ -26,20 +31,12 @@ public class Station {
     private List<StationUpgrade> upgrades = new ArrayList<>();
     private transient StationType stationTypeHandler;
     private List<String> availableCargos = new ArrayList<>();
-    private final java.util.Map<String, Integer> demandaPorCarga = new java.util.HashMap<>();
+    private Map<String, Integer> demandas = new HashMap<>();
 
     /**
-     * Constructs a new Station with a specific reference.
-     *
-     * @param reference The unique identifier for the station.
-     * @param scenario  The scenario the station is located in.
-     * @param name      The name of the station.
-     * @param type      The type of the station (e.g., "depot", "terminal", or "station").
-     * @param region    The region where the station is located.
-     * @throws IllegalArgumentException If the station type or region is invalid.
+     * Constructs a new Station with auto-generated reference.
      */
-    public Station(String reference, String name, String type, String region, String scenario, int area,int x, int y) {
-        this.reference = reference;
+    public Station(String name, String type, String region, String scenario, int area, int x, int y) {
         this.name = name;
         this.type = type;
         this.region = region;
@@ -47,80 +44,24 @@ public class Station {
         this.area = area;
         this.x = x;
         this.y = y;
+        this.upgrades = new ArrayList<>();
+        this.reference = generateReference();
         initializeTypeHandler();
         initializeAvailableCargos();
+        initializeDefaultDemandas();
     }
 
     /**
-     * Constructs a new Station with a generated reference.
-     *
-     * @param name   The name of the station.
-     * @param type   The type of the station (e.g., "depot", "terminal", or "station").
-     * @param region The region where the station is located.
+     * Constructs a new Station with specified reference.
      */
-    public Station(String name, String type, String region, String scenario, int area,int x, int y) {
-        this(generateDefaultReference(), name, type, region, scenario,area,x,y);
+    public Station(String reference, String name, String type, String region, String scenario, int area, int x, int y) {
+        this(name, type, region, scenario, area, x, y);
+        this.reference = reference;
     }
 
-    /**
-     * Generates a unique default reference using the current system time.
-     *
-     * @return A unique reference string.
-     */
-    private static String generateDefaultReference() {
-        return "ST-" + System.currentTimeMillis();
+    private String generateReference() {
+        return "ST-" + UUID.randomUUID().toString().substring(0, 8);
     }
-
-    /**
-     * Validates the station type and region.
-     *
-     * @param type   The station type.
-     * @param region The station region.
-     * @throws IllegalArgumentException If the type is invalid or the region is empty.
-     */
-    /**
-     * @return The unique reference of the station.
-     */
-    public String getReference() {
-        return reference;
-    }
-
-    /**
-     * @return The name of the station.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return The type of the station.
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * @return The region where the station is located.
-     */
-    public String getRegion() {
-        return region;
-    }
-    public String getScenario() {return scenario;}
-    public int getArea() {
-        return area;
-    }
-    public int getX() {
-        return x;
-    }
-    public int getY() {
-        return y;
-    }
-    public Station copy() {
-        Station copy = new Station(this.reference, this.name, this.type, this.region, this.scenario, this.area, this.x, this.y);
-        copy.upgrades = new ArrayList<>(this.upgrades);  // Considera clonar upgrades também se necessário
-        return copy;
-    }
-
 
     private void initializeTypeHandler() {
         switch (type.toLowerCase()) {
@@ -148,6 +89,62 @@ public class Station {
                 availableCargos.addAll(List.of("passengers", "mail", "food", "textiles", "coal", "iron"));
                 break;
         }
+    }
+
+    private void initializeDefaultDemandas() {
+        for (String cargo : getAvailableCargos()) {
+            demandas.put(cargo, 5); // Default value
+        }
+    }
+
+    /**
+     * @return The unique reference of the station.
+     */
+    public String getReference() {
+        return reference;
+    }
+
+    /**
+     * @return The name of the station.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return The type of the station.
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @return The region where the station is located.
+     */
+    public String getRegion() {
+        return region;
+    }
+
+    public String getScenario() {
+        return scenario;
+    }
+
+    public int getArea() {
+        return area;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Station copy() {
+        Station copy = new Station(this.reference, this.name, this.type, this.region, this.scenario, this.area, this.x, this.y);
+        copy.upgrades = new ArrayList<>(this.upgrades);  // Considera clonar upgrades também se necessário
+        return copy;
     }
 
     public List<String> getAvailableCargos() {
@@ -202,40 +199,6 @@ public class Station {
         return stationTypeHandler != null ? stationTypeHandler.getMaintenanceCost() : 0;
     }
 
-
-    /**
-     * Checks equality based on the station reference.
-     *
-     * @param o The object to compare.
-     * @return True if the stations have the same reference.
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Station station = (Station) o;
-        return Objects.equals(name, station.name) &&
-                Objects.equals(type, station.type) &&
-                Objects.equals(region, station.region) &&
-                Objects.equals(reference, station.reference) &&
-                Objects.equals(scenario, station.scenario) &&
-                Objects.equals(x, station.x) &&
-                Objects.equals(y, station.y) &&
-                Objects.equals(upgrades, station.upgrades);
-    }
-    /**
-     * @return A hash code based on the reference.
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(reference,name,type,region,scenario,upgrades,x,y);
-    }
-
-    /**
-     * Creates a deep copy of the station, including upgrades and assigned employee.
-     *
-     * @return A clone of this station.
-     */
     public Station clone() {
         Station clone = new Station(this.reference, this.name, this.type, this.region,this.scenario,this.area,this.x,this.y);
         clone.upgrades = new ArrayList<>(this.upgrades);
@@ -267,7 +230,7 @@ public class Station {
         }
     }
 
-    public List<City> getNearbyCities(Map map) {
+    public List<City> getNearbyCities(pt.ipp.isep.dei.domain.Map map) {
         int radius = getProximityRadius();
         List<City> nearbyCities = new ArrayList<>();
         for (City city : map.getCities()) {
@@ -281,7 +244,7 @@ public class Station {
         return nearbyCities;
     }
 
-    public List<Industry> getNearbyIndustries(Map map) {
+    public List<Industry> getNearbyIndustries(pt.ipp.isep.dei.domain.Map map) {
         int radius = getProximityRadius();
         List<Industry> nearbyIndustries = new ArrayList<>();
         for (Industry industry : map.getIndustries()) {
@@ -295,7 +258,7 @@ public class Station {
         return nearbyIndustries;
     }
 
-    public int getPassengerLoadRate(Map map) {
+    public int getPassengerLoadRate(pt.ipp.isep.dei.domain.Map map) {
         int rate = 0;
         for (City city : getNearbyCities(map)) {
             rate += city.getHouseBlocks().size() * 2; // 2 passageiros por house block
@@ -303,7 +266,7 @@ public class Station {
         return rate;
     }
 
-    public int getCargoLoadRate(Map map, String cargoType) {
+    public int getCargoLoadRate(pt.ipp.isep.dei.domain.Map map, String cargoType) {
         int rate = 0;
         for (Industry industry : getNearbyIndustries(map)) {
             if (industry.getType().name().equalsIgnoreCase(cargoType)) {
@@ -314,20 +277,41 @@ public class Station {
     }
 
     public int getDemanda(String tipoCarga) {
-        return demandaPorCarga.getOrDefault(tipoCarga.toLowerCase(), 5); // valor médio padrão
+        return demandas.getOrDefault(tipoCarga.toLowerCase(), 5); // valor médio padrão
     }
 
     public void setDemanda(String tipoCarga, int valor) {
         if (valor < 1) valor = 1;
         if (valor > 10) valor = 10;
-        demandaPorCarga.put(tipoCarga.toLowerCase(), valor);
+        demandas.put(tipoCarga.toLowerCase(), valor);
     }
 
     public void atualizarDemandaAleatoria() {
-        for (String carga : availableCargos) {
+        Random random = new Random();
+        for (String carga : demandas.keySet()) {
             int atual = getDemanda(carga);
-            int variacao = (int) (Math.random() * 3) - 1; // -1, 0 ou +1
+            int variacao = random.nextInt(3) - 1; // -1, 0 ou +1
             setDemanda(carga, atual + variacao);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Station station = (Station) o;
+        return Objects.equals(name, station.name) &&
+                Objects.equals(type, station.type) &&
+                Objects.equals(region, station.region) &&
+                Objects.equals(reference, station.reference) &&
+                Objects.equals(scenario, station.scenario) &&
+                Objects.equals(x, station.x) &&
+                Objects.equals(y, station.y) &&
+                Objects.equals(upgrades, station.upgrades);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reference,name,type,region,scenario,upgrades,x,y);
     }
 }

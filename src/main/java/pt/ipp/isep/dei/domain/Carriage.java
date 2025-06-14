@@ -18,8 +18,21 @@ public class Carriage {
      * @param cargoType the type of cargo the carriage is designed to carry
      * @param capacity  the maximum cargo capacity of the carriage
      * @param cost      the cost associated with the carriage
+     * @throws IllegalArgumentException if name or cargoType is null or empty, or if capacity or cost is negative
      */
     public Carriage(String name, String cargoType, double capacity, double cost) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
+        if (cargoType == null || cargoType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Cargo type cannot be null or empty");
+        }
+        if (capacity < 0) {
+            throw new IllegalArgumentException("Capacity cannot be negative");
+        }
+        if (cost < 0) {
+            throw new IllegalArgumentException("Cost cannot be negative");
+        }
         this.name = name;
         this.cargoType = cargoType;
         this.capacity = capacity;
@@ -66,8 +79,12 @@ public class Carriage {
      * Sets the cargo capacity of the carriage.
      *
      * @param capacity the new capacity value
+     * @throws IllegalArgumentException if capacity is negative
      */
     public void setCapacity(double capacity) {
+        if (capacity < 0) {
+            throw new IllegalArgumentException("Capacity cannot be negative");
+        }
         this.capacity = capacity;
     }
 
@@ -75,8 +92,12 @@ public class Carriage {
      * Sets the name of the carriage.
      *
      * @param name the new name value
+     * @throws IllegalArgumentException if name is null or empty
      */
     public void setName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be null or empty");
+        }
         this.name = name;
     }
 
@@ -84,8 +105,12 @@ public class Carriage {
      * Sets the cargo type of the carriage.
      *
      * @param cargoType the new cargo type
+     * @throws IllegalArgumentException if cargoType is null or empty
      */
     public void setCargoType(String cargoType) {
+        if (cargoType == null || cargoType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Cargo type cannot be null or empty");
+        }
         this.cargoType = cargoType;
     }
 
@@ -99,13 +124,13 @@ public class Carriage {
     }
 
     /**
-     * Returns a string representation of the carriage, including name, cargo type, and capacity.
+     * Returns a string representation of the carriage, including name, cargo type, capacity and cost.
      *
      * @return a string describing the carriage
      */
     @Override
     public String toString() {
-        return "Carriage [name=" + name + ", cargoType=" + cargoType + ", capacity=" + capacity + "]";
+        return "Carriage [name=" + name + ", cargoType=" + cargoType + ", capacity=" + capacity + ", cost=" + cost + "]";
     }
 }
 

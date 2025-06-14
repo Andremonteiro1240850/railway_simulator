@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.CargoMode;
+import java.util.Objects;
 
 /**
  * Represents a point in a train's route, containing a station and the cargo mode used at that station.
@@ -17,6 +18,12 @@ public class PointsOfRoute {
      * @param cargoMode the cargo loading mode at this station
      */
     public PointsOfRoute(Station station, CargoMode cargoMode) {
+        if (station == null) {
+            throw new NullPointerException("Station cannot be null");
+        }
+        if (cargoMode == null) {
+            throw new NullPointerException("Cargo mode cannot be null");
+        }
         this.station = station;
         this.cargoMode = cargoMode;
     }
@@ -70,5 +77,19 @@ public class PointsOfRoute {
                 cargoMode.name(),
                 cargoMode.getDescription()
         );
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PointsOfRoute)) return false;
+        PointsOfRoute that = (PointsOfRoute) o;
+        return Objects.equals(station, that.station) &&
+               Objects.equals(cargoMode, that.cargoMode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(station, cargoMode);
     }
 }

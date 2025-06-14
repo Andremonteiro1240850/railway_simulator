@@ -1,6 +1,7 @@
 package pt.ipp.isep.dei.domain;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a route assigned to a train, composed of a list of route points (stations and cargo modes).
@@ -15,8 +16,15 @@ public class Route {
      *
      * @param train the train assigned to this route
      * @param route the list of points that define the route
+     * @throws NullPointerException if train or route is null
      */
     public Route(Train train, List<PointsOfRoute> route) {
+        if (train == null) {
+            throw new NullPointerException("Train cannot be null");
+        }
+        if (route == null) {
+            throw new NullPointerException("Route points list cannot be null");
+        }
         this.train = train;
         this.route = route;
     }
@@ -34,8 +42,12 @@ public class Route {
      * Adds a new point to the route.
      *
      * @param route the point of route to add
+     * @throws NullPointerException if route point is null
      */
     public void AddRoute(PointsOfRoute route) {
+        if (route == null) {
+            throw new NullPointerException("Route point cannot be null");
+        }
         this.route.add(route);
     }
 
@@ -52,8 +64,12 @@ public class Route {
      * Sets the train associated with this route.
      *
      * @param train the train to assign
+     * @throws NullPointerException if train is null
      */
     public void setTrain(Train train) {
+        if (train == null) {
+            throw new NullPointerException("Train cannot be null");
+        }
         this.train = train;
     }
 
@@ -71,6 +87,20 @@ public class Route {
             sb.append(" - ").append(point).append("\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Route)) return false;
+        Route route1 = (Route) o;
+        return Objects.equals(route, route1.route) &&
+               Objects.equals(train, route1.train);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(route, train);
     }
 }
 

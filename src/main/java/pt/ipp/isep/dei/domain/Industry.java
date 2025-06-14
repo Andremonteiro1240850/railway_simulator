@@ -22,6 +22,12 @@ public class Industry {
      * @param y    the y-coordinate of the industry's position
      */
     public Industry(IndustryType type, Map map, int x, int y) {
+        if (type == null) {
+            throw new IllegalArgumentException("Industry type cannot be null");
+        }
+        if (map == null) {
+            throw new IllegalArgumentException("Map cannot be null");
+        }
         // Assumes validation is already handled inside Map
         this.type = type;
         this.map = map;

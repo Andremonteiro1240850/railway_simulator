@@ -16,9 +16,8 @@ public class CreateScenarioController {
     private final CreateMapRepository mapRepo;
     private final ScenarioRepository scenarioRepo;
     private Scenario scenario;
-    private int startYear; // Adicionar este campo
+    private int startYear;
     private List<HistoricalEvent> historicalEvents;
-
 
     public CreateScenarioController() {
         this(Repositories.getInstance().getOrganizationRepository(),
@@ -40,33 +39,28 @@ public class CreateScenarioController {
     public List<Map> getAvailableMaps() {
         return mapRepo.getAll();
     }
-    public List<HistoricalEvent> loadApplicableHistoricalEvents(int startYear) {
-        List<HistoricalEvent> applicableEvents = new ArrayList<>();
-        try {
-            Class<?> eventosClass = Class.forName("pt.ipp.isep.dei.domain.enums.Eventos");
-            if (eventosClass.isEnum()) {
-                Object[] enumConstants = eventosClass.getEnumConstants();
-                for (Object enumConstant : enumConstants) {
-                    Eventos eventoEnum = (Eventos) enumConstant;
-                    if (eventoEnum.getDataInicio() <= startYear && startYear <= eventoEnum.getDataFim()) {
-                        applicableEvents.add(new HistoricalEvent(eventoEnum));
-                    }
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            System.err.println("Error: Eventos enum class not found: " + e.getMessage());
-            throw new RuntimeException("Failed to load historical events: Eventos enum not found", e);
-        }
 
-        this.historicalEvents = applicableEvents;
-        return applicableEvents;
+    public List<HistoricalEvent> loadApplicableHistoricalEvents(int startYear) {
+        List<HistoricalEvent> events = new ArrayList<>();
+        for (Eventos evento : Eventos.values()) {
+            if (evento.getDataInicio() >= startYear) {
+                events.add(new HistoricalEvent(evento));
+            }
+        }
+        return events;
     }
 
     public boolean createScenario(String name, Map map, int startYear, int endYear,
                                   List<String> locomotiveTypes, PortBehavior portBehavior,
                                   double budget, List<HistoricalEvent> historicalEvents) {
 
-        // 1. Verificar o funcionário e organização
+        // 1. Verificar se o usuário está logado
+        if (!authRepo.getCurrentUserSession().isLoggedIn()) {
+            System.out.println("Erro: Usuário não está logado.");
+            return false;
+        }
+
+        // 2. Verificar o funcionário e organização
         Employee employee = getEmployeeFromSession();
         Optional<Organization> org = orgRepo.getOrganizationByEmployee(employee);
 
@@ -75,8 +69,7 @@ public class CreateScenarioController {
             return false;
         }
 
-
-        // 2. Converter strings para LocomotiveType e validar
+        // 3. Converter strings para LocomotiveType e validar
         List<LocomotiveType> availableLocomotiveTypes = new ArrayList<>();
         for (String typeStr : locomotiveTypes) {
             try {
@@ -88,44 +81,38 @@ public class CreateScenarioController {
             }
         }
 
-        // 3. Validar anos (startYear < endYear)
+        // 4. Validar anos (startYear < endYear)
         if (startYear >= endYear) {
             System.out.println("Erro: Ano de início deve ser anterior ao ano de fim.");
             return false;
         }
 
-        // 4. Validar orçamento (deve ser positivo)
+        // 5. Validar orçamento (deve ser positivo)
         if (budget <= 0) {
             System.out.println("Erro: Orçamento deve ser positivo.");
             return false;
         }
 
-        // Definir o startYear no controller para uso no loadApplicableHistoricalEvents
-        this.startYear = startYear;
-
-        // Carregar eventos históricos aplicáveis
-        List<HistoricalEvent> historicalEvents1 = loadApplicableHistoricalEvents(startYear);
-
-        // Criar o cenário com os eventos carregados
+        // 6. Criar o cenário
         Scenario newScenario = new Scenario(name, startYear, endYear,
-                availableLocomotiveTypes, historicalEvents1,
-                portBehavior, budget,map); // <-- agora o mapa é usado
+                availableLocomotiveTypes, historicalEvents,
+                portBehavior, budget, map);
 
-
-        // 6. Adicionar ao repositório e verificar resultado
+        // 7. Adicionar ao repositório
         Optional<Scenario> added = scenarioRepo.add(newScenario);
 
         if (added.isPresent()) {
-            this.scenario = added.get(); // Armazenar o cenário criado
-            System.out.println("Cenário criado com sucesso: " + name);
+            this.scenario = added.get();
             return true;
-        } else {
-            System.out.println("Erro: Cenário não foi criado (possível duplicado ou erro interno).");
-            return false;
         }
+
+        return false;
     }
 
     public void spendBudget(double amount) {
+        if (scenario == null) {
+            throw new IllegalStateException("No scenario has been created yet");
+        }
         if (amount < 0) {
             throw new IllegalArgumentException("Valor a gastar não pode ser negativo.");
         }
@@ -135,18 +122,16 @@ public class CreateScenarioController {
         scenario.setBudget(scenario.getBudget() - amount);
     }
 
-    /**
-     * Increases the budget by uma certa quantia (ex: ao entregar carga na estação).
-     *
-     * @param amount O valor a adicionar ao orçamento.
-     * @throws IllegalArgumentException se o amount for negativo.
-     */
     public void receiveBudget(double amount) {
+        if (scenario == null) {
+            throw new IllegalStateException("No scenario has been created yet");
+        }
         if (amount < 0) {
             throw new IllegalArgumentException("Amount to receive cannot be negative.");
         }
         scenario.setBudget(scenario.getBudget() + amount);
     }
+
     public Scenario getScenario() {
         if (scenario == null) {
             throw new IllegalStateException("No scenario has been created yet");
@@ -154,8 +139,10 @@ public class CreateScenarioController {
         return scenario;
     }
 
-
     private Employee getEmployeeFromSession() {
+        if (!authRepo.getCurrentUserSession().isLoggedIn()) {
+            throw new IllegalStateException("User is not logged in");
+        }
         Email email = authRepo.getCurrentUserSession().getUserId();
         return new Employee(email.getEmail());
     }

@@ -178,20 +178,30 @@ public class Map {
      */
     public Optional<City> addCity(String name, int x, int y, List<int[]> houseBlocks, Employee employee) {
         try {
+            // Check if city center is occupied
             if (isOccupied(x, y)) {
                 return Optional.empty();
             }
 
+            // Check if any house block position is occupied
+            for (int[] block : houseBlocks) {
+                int blockX = block[0];
+                int blockY = block[1];
+                if (isOccupied(blockX, blockY)) {
+                    return Optional.empty();
+                }
+            }
+
+            // Create and add the city
             City city = new City(this, name, x, y, houseBlocks, employee);
             cities.add(city);
             grid[y][x] = city;
 
+            // Add house blocks to the grid
             for (int[] block : houseBlocks) {
                 int blockX = block[0];
                 int blockY = block[1];
-                if (!isOccupied(blockX, blockY)) {
-                    grid[blockY][blockX] = city;
-                }
+                grid[blockY][blockX] = city;
             }
 
             return Optional.of(city);

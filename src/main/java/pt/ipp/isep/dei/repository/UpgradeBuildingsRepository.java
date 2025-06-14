@@ -1,5 +1,7 @@
 package pt.ipp.isep.dei.repository;
 
+import pt.ipp.isep.dei.domain.enums.StationUpgrade;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +17,9 @@ public class UpgradeBuildingsRepository {
     }
 
     private void initializeUpgradeTypes() {
-        upgradeTypes.add("telegraph");
-        upgradeTypes.add("telephone");
-        upgradeTypes.add("cafe");
-        upgradeTypes.add("customs");
-        upgradeTypes.add("post office");
-        upgradeTypes.add("hotel");
-        upgradeTypes.add("silo");
-        upgradeTypes.add("liquid storage");
+        for (StationUpgrade upgrade : StationUpgrade.values()) {
+            upgradeTypes.add(upgrade.getDisplayName());
+        }
     }
 
     private void initializeSubTypes() {
@@ -41,17 +38,22 @@ public class UpgradeBuildingsRepository {
 
     // Verifica se um tipo de upgrade é válido
     public boolean isValidUpgradeType(String type) {
-        return upgradeTypes.contains(type.toLowerCase());
+        return type != null && upgradeTypes.contains(type);
     }
 
     // Verifica se um subtipo é válido (apenas para upgrades que têm variações)
     public boolean isValidSubType(String subType) {
-        return subTypes.contains(subType.toLowerCase());
+        return subType != null && subTypes.contains(subType.toLowerCase());
     }
 
     // Método para verificar quais upgrades aceitam subtipos
     public boolean acceptsSubTypes(String upgradeType) {
-        return upgradeType.equalsIgnoreCase("cafe") ||
-                upgradeType.equalsIgnoreCase("hotel");
+        if (upgradeType == null) {
+            return false;
+        }
+        return upgradeType.equals(StationUpgrade.RESTAURANT_SMALL.getDisplayName()) ||
+               upgradeType.equals(StationUpgrade.RESTAURANT_LARGE.getDisplayName()) ||
+               upgradeType.equals(StationUpgrade.HOTEL_SMALL.getDisplayName()) ||
+               upgradeType.equals(StationUpgrade.HOTEL_LARGE.getDisplayName());
     }
 }

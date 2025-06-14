@@ -4,18 +4,40 @@ import pt.ipp.isep.dei.domain.Locomotive;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+/**
+ * Repository class for managing locomotives in the system.
+ */
 public class LocomotiveRepository {
+    private final List<Locomotive> purchasedLocomotives;
 
-        private final List<Locomotive> purchasedLocomotives = new ArrayList<>();
-
-        public void addPurchasedLocomotive(Locomotive loco) {
-            purchasedLocomotives.add(loco);
-        }
-
-        public List<Locomotive> getPurchasedLocomotives() {
-            return purchasedLocomotives;
-        }
+    /**
+     * Constructs a new LocomotiveRepository.
+     */
+    public LocomotiveRepository() {
+        this.purchasedLocomotives = new ArrayList<>();
     }
+
+    /**
+     * Adds a purchased locomotive to the repository.
+     *
+     * @param locomotive the locomotive to add
+     * @throws NullPointerException if locomotive is null
+     */
+    public void addPurchasedLocomotive(Locomotive locomotive) {
+        if (locomotive == null) {
+            throw new NullPointerException("Locomotive cannot be null");
+        }
+        purchasedLocomotives.add(locomotive);
+    }
+
+    /**
+     * Returns a list of all purchased locomotives.
+     *
+     * @return a list of purchased locomotives
+     */
+    public List<Locomotive> getPurchasedLocomotives() {
+        return new ArrayList<>(purchasedLocomotives);
+    }
+}
 

@@ -30,6 +30,34 @@ public class Locomotive {
      */
     public Locomotive(String reference, LocomotiveType type, double purchasePrice, double maintenanceCostPerYear,
                       int power, double acceleration, int startYear, double fuelCost) {
+        if (reference == null) {
+            throw new IllegalArgumentException("Reference cannot be null");
+        }
+        if (reference.trim().isEmpty()) {
+            throw new IllegalArgumentException("Reference cannot be empty");
+        }
+        if (type == null) {
+            throw new IllegalArgumentException("Type cannot be null");
+        }
+        if (purchasePrice < 0) {
+            throw new IllegalArgumentException("Purchase price cannot be negative");
+        }
+        if (maintenanceCostPerYear < 0) {
+            throw new IllegalArgumentException("Maintenance cost cannot be negative");
+        }
+        if (power < 0) {
+            throw new IllegalArgumentException("Power cannot be negative");
+        }
+        if (acceleration < 0) {
+            throw new IllegalArgumentException("Acceleration cannot be negative");
+        }
+        if (startYear < 0) {
+            throw new IllegalArgumentException("Start year cannot be negative");
+        }
+        if (fuelCost < 0) {
+            throw new IllegalArgumentException("Fuel cost cannot be negative");
+        }
+        
         this.reference = reference;
         this.type = type;
         this.purchasePrice = purchasePrice;

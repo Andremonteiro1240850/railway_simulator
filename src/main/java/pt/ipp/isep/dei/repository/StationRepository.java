@@ -8,58 +8,78 @@ import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.Station;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
 
+/**
+ * Repository class for managing stations in the system.
+ */
 public class StationRepository {
-    private final List<Station> stations = new ArrayList<>();
+    private final List<Station> stations;
     private  ScenarioRepository scenarioRepo;
 
+    /**
+     * Constructs a new StationRepository.
+     */
+    public StationRepository() {
+        this.stations = new ArrayList<>();
+    }
+
+    /**
+     * Adds a station to the repository.
+     *
+     * @param station the station to add
+     * @return Optional containing the added station if successful, empty otherwise
+     */
     public Optional<Station> add(Station station) {
         if (station == null) {
             return Optional.empty();
         }
-
-        if (!contains(station)) {
-            try {
-                Station clonedStation = station.clone();
-                stations.add(clonedStation);
-                return Optional.of(clonedStation);
-            } catch (Exception e) {
-                System.err.println("Error cloning station: " + e.getMessage());
-                return Optional.empty();
-            }
-        }
-        return Optional.empty();
+        stations.add(station);
+        return Optional.of(station);
     }
 
-    public boolean contains(Station station) {
-        return stations.stream().anyMatch(s -> s.getReference().equals(station.getReference()));
-    }
-
-    public Optional<Station> findByReference(String reference) {
-        return stations.stream()
-                .filter(s -> s.getReference().equals(reference))
-                .findFirst()
-                .map(Station::clone);
-    }
-
+    /**
+     * Returns a defensive copy of all stations in the repository.
+     *
+     * @return a list of all stations
+     */
     public List<Station> getAll() {
-        // Retorna cópia defensiva com clones para evitar modificações externas
-        List<Station> clonedStations = new ArrayList<>();
-        for (Station station : stations) {
-            clonedStations.add(station.clone());
-        }
-        return clonedStations;
+        return new ArrayList<>(stations);
     }
 
-    public boolean addUpgradeToStation(String stationReference, StationUpgrade upgrade) {
-        Optional<Station> stationOpt = findByReference(stationReference);
-        if (stationOpt.isPresent()) {
-            Station station = stationOpt.get();
-            station.addUpgrade(upgrade);
-            stations.removeIf(s -> s.getReference().equals(stationReference));
-            stations.add(station);
-            return true;
+    /**
+     * Finds a station by its reference.
+     *
+     * @param reference the reference to search for
+     * @return Optional containing the found station if it exists, empty otherwise
+     */
+    public Optional<Station> findByReference(String reference) {
+        if (reference == null) {
+            return Optional.empty();
         }
-        return false;
+        return stations.stream()
+                .filter(station -> station.getReference().equals(reference))
+                .findFirst();
+    }
+
+    /**
+     * Adds an upgrade to a station.
+     *
+     * @param reference the reference of the station
+     * @param upgrade the upgrade to add
+     * @return true if the upgrade was added successfully, false otherwise
+     */
+    public boolean addUpgradeToStation(String reference, StationUpgrade upgrade) {
+        if (reference == null || upgrade == null) {
+            return false;
+        }
+
+        Optional<Station> stationOpt = findByReference(reference);
+        if (stationOpt.isEmpty()) {
+            return false;
+        }
+
+        Station station = stationOpt.get();
+        station.addUpgrade(upgrade);
+        return true;
     }
 
     public List<StationUpgrade> getUpgradesForStation(String stationReference) {

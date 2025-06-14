@@ -40,8 +40,8 @@ public class OrganizationRepository {
         boolean operationSuccess = false;
 
         if (validateOrganization(organization)) {
-            newOrganization = Optional.of(organization.copy());
-            operationSuccess = organizations.add(newOrganization.get());
+            newOrganization = Optional.of(organization);
+            operationSuccess = organizations.add(organization);
         }
 
         if (!operationSuccess) {
@@ -49,7 +49,6 @@ public class OrganizationRepository {
         }
 
         return newOrganization;
-
     }
 
     private boolean validateOrganization(Organization organization) {
