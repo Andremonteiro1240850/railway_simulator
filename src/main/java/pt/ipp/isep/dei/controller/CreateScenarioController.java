@@ -10,16 +10,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller responsible for creating a new game scenario, including validation
+ * of locomotive types, budget, time period, and historical events.
+ */
 public class CreateScenarioController {
     private final OrganizationRepository orgRepo;
     private final AuthenticationRepository authRepo;
     private final CreateMapRepository mapRepo;
     private final ScenarioRepository scenarioRepo;
     private Scenario scenario;
-    private int startYear; // Adicionar este campo
+    private int startYear;
     private List<HistoricalEvent> historicalEvents;
 
-
+    /**
+     * Default constructor. Initializes all repositories from the shared Repositories instance.
+     */
     public CreateScenarioController() {
         this(Repositories.getInstance().getOrganizationRepository(),
                 Repositories.getInstance().getAuthenticationRepository(),
@@ -27,6 +33,14 @@ public class CreateScenarioController {
                 Repositories.getInstance().getScenarioRepository());
     }
 
+    /**
+     * Constructor with repository injection, useful for testing purposes.
+     *
+     * @param orgRepo      the organization repository
+     * @param authRepo     the authentication repository
+     * @param mapRepo      the map repository
+     * @param scenarioRepo the scenario repository
+     */
     public CreateScenarioController(OrganizationRepository orgRepo,
                                     AuthenticationRepository authRepo,
                                     CreateMapRepository mapRepo,
@@ -37,27 +51,50 @@ public class CreateScenarioController {
         this.scenarioRepo = scenarioRepo;
     }
 
+    /**
+     * Returns a list of available maps that can be used for scenario creation.
+     *
+     * @return list of available maps
+     */
     public List<Map> getAvailableMaps() {
         return mapRepo.getAll();
     }
+
+    /**
+     * Loads historical events that are applicable for the specified starting year.
+     *
+     * @param startYear the year from which events will be considered
+     * @return list of applicable historical events
+     */
     public List<HistoricalEvent> loadApplicableHistoricalEvents(int startYear) {
         List<HistoricalEvent> applicableEvents = new ArrayList<>();
-
         for (Eventos eventoEnum : Eventos.values()) {
             if (eventoEnum.getDataInicio() <= startYear && startYear <= eventoEnum.getDataFim()) {
                 applicableEvents.add(new HistoricalEvent(eventoEnum));
             }
         }
-
         this.historicalEvents = applicableEvents;
         return applicableEvents;
     }
 
+    /**
+     * Attempts to create a new scenario with the given data.
+     * Validates the employee, organization, locomotive types, years, and budget.
+     *
+     * @param name              scenario name
+     * @param map               map associated with the scenario
+     * @param startYear         starting year of the scenario
+     * @param endYear           ending year of the scenario
+     * @param locomotiveTypes   list of locomotive type names (as strings)
+     * @param portBehavior      port behavior configuration
+     * @param budget            scenario starting budget
+     * @param historicalEvents  optional historical events (currently overridden)
+     * @return true if the scenario was successfully created, false otherwise
+     */
     public boolean createScenario(String name, Map map, int startYear, int endYear,
                                   List<String> locomotiveTypes, PortBehavior portBehavior,
                                   double budget, List<HistoricalEvent> historicalEvents) {
 
-        // 1. Verificar o funcionário e organização
         Employee employee = getEmployeeFromSession();
         Optional<Organization> org = orgRepo.getOrganizationByEmployee(employee);
 
@@ -66,8 +103,6 @@ public class CreateScenarioController {
             return false;
         }
 
-
-        // 2. Converter strings para LocomotiveType e validar
         List<LocomotiveType> availableLocomotiveTypes = new ArrayList<>();
         for (String typeStr : locomotiveTypes) {
             try {
@@ -79,35 +114,27 @@ public class CreateScenarioController {
             }
         }
 
-        // 3. Validar anos (startYear < endYear)
         if (startYear >= endYear) {
             System.out.println("Erro: Ano de início deve ser anterior ao ano de fim.");
             return false;
         }
 
-        // 4. Validar orçamento (deve ser positivo)
         if (budget <= 0) {
             System.out.println("Erro: Orçamento deve ser positivo.");
             return false;
         }
 
-        // Definir o startYear no controller para uso no loadApplicableHistoricalEvents
         this.startYear = startYear;
-
-        // Carregar eventos históricos aplicáveis
         List<HistoricalEvent> historicalEvents1 = loadApplicableHistoricalEvents(startYear);
 
-        // Criar o cenário com os eventos carregados
         Scenario newScenario = new Scenario(name, startYear, endYear,
                 availableLocomotiveTypes, historicalEvents1,
-                portBehavior, budget,map); // <-- agora o mapa é usado
+                portBehavior, budget, map);
 
-
-        // 6. Adicionar ao repositório e verificar resultado
         Optional<Scenario> added = scenarioRepo.add(newScenario);
 
         if (added.isPresent()) {
-            this.scenario = added.get(); // Armazenar o cenário criado
+            this.scenario = added.get();
             System.out.println("Cenário criado com sucesso: " + name);
             return true;
         } else {
@@ -116,6 +143,12 @@ public class CreateScenarioController {
         }
     }
 
+    /**
+     * Deducts a given amount from the scenario's budget.
+     *
+     * @param amount the amount to be spent
+     * @throws IllegalArgumentException if the amount is negative or exceeds the current budget
+     */
     public void spendBudget(double amount) {
         if (amount < 0) {
             throw new IllegalArgumentException("Valor a gastar não pode ser negativo.");
@@ -127,10 +160,10 @@ public class CreateScenarioController {
     }
 
     /**
-     * Increases the budget by uma certa quantia (ex: ao entregar carga na estação).
+     * Adds a given amount to the scenario's budget.
      *
-     * @param amount O valor a adicionar ao orçamento.
-     * @throws IllegalArgumentException se o amount for negativo.
+     * @param amount the amount to add
+     * @throws IllegalArgumentException if the amount is negative
      */
     public void receiveBudget(double amount) {
         if (amount < 0) {
@@ -138,6 +171,13 @@ public class CreateScenarioController {
         }
         scenario.setBudget(scenario.getBudget() + amount);
     }
+
+    /**
+     * Retrieves the currently created scenario.
+     *
+     * @return the created scenario
+     * @throws IllegalStateException if no scenario has been created yet
+     */
     public Scenario getScenario() {
         if (scenario == null) {
             throw new IllegalStateException("No scenario has been created yet");
@@ -145,7 +185,11 @@ public class CreateScenarioController {
         return scenario;
     }
 
-
+    /**
+     * Gets the employee associated with the current user session.
+     *
+     * @return the logged-in employee
+     */
     private Employee getEmployeeFromSession() {
         Email email = authRepo.getCurrentUserSession().getUserId();
         return new Employee(email.getEmail());

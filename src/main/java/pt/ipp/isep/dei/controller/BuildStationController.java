@@ -9,6 +9,9 @@ import pt.isep.lei.esoft.auth.domain.model.Email;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller responsible for creating and managing stations within a scenario.
+ */
 public class BuildStationController {
     private OrganizationRepository organizationRepository;
     private AuthenticationRepository authenticationRepository;
@@ -19,45 +22,73 @@ public class BuildStationController {
     private Regions region;
     private Scenario scenario;
 
-    //Repository instances are obtained from the Repositories class
+    /**
+     * Default constructor. Initializes the repositories from the shared Repositories instance.
+     */
     public BuildStationController() {
         getOrganizationRepository();
         getAuthenticationRepository();
         Repositories.getInstance().getStationRepository();
     }
 
-    //Allows receiving the repositories as parameters for testing purposes
+    /**
+     * Constructor with dependency injection. Used mainly for testing purposes.
+     *
+     * @param organizationRepository      the organization repository
+     * @param authenticationRepository    the authentication repository
+     * @param stationRepository           the station repository
+     */
     public BuildStationController(OrganizationRepository organizationRepository,
-                                  AuthenticationRepository authenticationRepository, StationRepository stationRepository) {
+                                  AuthenticationRepository authenticationRepository,
+                                  StationRepository stationRepository) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
         this.stationRepository = stationRepository;
     }
 
-
+    /**
+     * Retrieves the organization repository, initializing it if necessary.
+     *
+     * @return the organization repository
+     */
     private OrganizationRepository getOrganizationRepository() {
         if (organizationRepository == null) {
             Repositories repositories = Repositories.getInstance();
             organizationRepository = repositories.getOrganizationRepository();
         }
         return organizationRepository;
-
     }
 
+    /**
+     * Retrieves the authentication repository, initializing it if necessary.
+     *
+     * @return the authentication repository
+     */
     private AuthenticationRepository getAuthenticationRepository() {
         if (authenticationRepository == null) {
             Repositories repositories = Repositories.getInstance();
-
-            //Get the AuthenticationRepository
             authenticationRepository = repositories.getAuthenticationRepository();
         }
         return authenticationRepository;
     }
 
+    /**
+     * Sets the current scenario to be used for building stations.
+     *
+     * @param scenario the scenario to set
+     */
     public void setScenario(Scenario scenario) {
         this.scenario = scenario;
     }
 
+    /**
+     * Suggests a name for the station based on the station type and nearest city.
+     *
+     * @param x           the x-coordinate of the station
+     * @param y           the y-coordinate of the station
+     * @param stationType the type of the station
+     * @return a suggested name
+     */
     public String suggestStationName(int x, int y, StationTypes stationType) {
         if (scenario == null || scenario.getMap() == null) {
             return stationType.getType() + " Nova"; // Fallback name
@@ -75,12 +106,12 @@ public class BuildStationController {
     }
 
     /**
-     * Finds the nearest city to given coordinates
+     * Finds the nearest city to the specified coordinates.
      *
-     * @param x      X coordinate
-     * @param y      Y coordinate
-     * @param cities List of cities to search
-     * @return Nearest city
+     * @param x      the x-coordinate
+     * @param y      the y-coordinate
+     * @param cities the list of cities to compare
+     * @return the closest city
      */
     private City findNearestCity(int x, int y, List<City> cities) {
         City nearest = cities.get(0);
@@ -97,19 +128,29 @@ public class BuildStationController {
     }
 
     /**
-     * Calculates Euclidean distance between two points
+     * Calculates the Euclidean distance between two coordinate points.
      *
-     * @param x1 X coordinate of point 1
-     * @param y1 Y coordinate of point 1
-     * @param x2 X coordinate of point 2
-     * @param y2 Y coordinate of point 2
-     * @return Distance between points
+     * @param x1 first x-coordinate
+     * @param y1 first y-coordinate
+     * @param x2 second x-coordinate
+     * @param y2 second y-coordinate
+     * @return the distance between the points
      */
     private double calculateDistance(int x1, int y1, int x2, int y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-
+    /**
+     * Creates a new station on the map if valid.
+     * Validates coordinates, station type, region, available budget, and existing stations.
+     *
+     * @param typeName the name of the station type
+     * @param name     the name of the station (can be null for auto-suggestion)
+     * @param region   the region of the station
+     * @param x        the x-coordinate of the station
+     * @param y        the y-coordinate of the station
+     * @return true if the station was successfully created, false otherwise
+     */
     public boolean createStation(String typeName, String name, String region, int x, int y) {
         if (scenario == null) {
             System.out.println("Erro: Nenhum cenário definido. Selecione um cenário primeiro.");
@@ -169,7 +210,7 @@ public class BuildStationController {
             stationName = suggestStationName(x, y, stationType);
         }
 
-        Station newStation = new Station(stationName, stationType.getType(), regionType.getRegion(),scenario.getName(), stationType.getArea(), x, y);
+        Station newStation = new Station(stationName, stationType.getType(), regionType.getRegion(), scenario.getName(), stationType.getArea(), x, y);
         scenario.addStationPurchased(newStation);
         Optional<Station> added = Repositories.getInstance().getStationRepository().add(newStation);
 
@@ -183,7 +224,6 @@ public class BuildStationController {
         }
     }
 }
-
 
 
 
