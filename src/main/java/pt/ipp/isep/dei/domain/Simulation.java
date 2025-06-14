@@ -9,6 +9,7 @@ public class Simulation {
     private final Scenario scenario;
     private final Player player;
     private int currentYear;
+    private int currentMonth; // 1-12 representing January to December
     private final List<Route> activeRoutes;
     private final List<Station> stations;
     private final List<Locomotive> locomotives;
@@ -17,24 +18,21 @@ public class Simulation {
         this.scenario = scenario;
         this.player = player;
         this.currentYear = scenario.getStartYear();
+        this.currentMonth = 1; // Start in January
         this.activeRoutes = new ArrayList<>();
         this.stations = new ArrayList<>();
         this.locomotives = new ArrayList<>();
     }
 
-    public void advanceYear() {
-        currentYear++;
-        
-        // Calculate expenses
-        calculateExpenses();
-        
-        // Calculate revenue from routes
+    public void advanceMonth() {
+        currentMonth++;
+        if (currentMonth > 12) {
+            currentMonth = 1;
+            currentYear++;
+            calculateExpenses();
+        }
         calculateRevenue();
-        
-        // Update cargo demands and supplies
         updateCargoStatus();
-        
-        // Check for new available technologies
         checkNewTechnologies();
     }
 
@@ -74,8 +72,15 @@ public class Simulation {
     private double calculateCargoRevenue(Station from, Station to, CargoMode cargoMode) {
         // Base revenue calculation based on distance and cargo type
         double distance = calculateDistance(from, to);
+        String cargoType = cargoMode.name().toLowerCase();
         double baseRate = getCargoBaseRate(cargoMode);
-        return distance * baseRate;
+        int demanda = to.getDemanda(cargoType);
+        double ajusteDemanda = 1.0;
+        if (demanda >= 8) ajusteDemanda = 1.6;
+        else if (demanda <= 2) ajusteDemanda = 0.6;
+        // Aqui poderias usar a quantidade real transportada, para já assumo 1 unidade
+        double quantidade = 1.0;
+        return distance * baseRate * ajusteDemanda * quantidade;
     }
 
     private double calculateDistance(Station from, Station to) {
@@ -137,6 +142,10 @@ public class Simulation {
 
     public int getCurrentYear() {
         return currentYear;
+    }
+
+    public int getCurrentMonth() {
+        return currentMonth;
     }
 
     public List<Route> getActiveRoutes() {

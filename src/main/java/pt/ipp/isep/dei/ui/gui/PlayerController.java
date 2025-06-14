@@ -2,10 +2,12 @@ package pt.ipp.isep.dei.ui.gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.animation.KeyFrame;
@@ -36,6 +38,7 @@ import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.repository.ScenarioRepository;
+import javafx.scene.control.ChoiceDialog;
 
 public class PlayerController implements Initializable {
     private ScenarioRepository scenarioRepo;
@@ -173,7 +176,7 @@ public class PlayerController implements Initializable {
                 this.portBehavior = selectedScenario.getPortBehavior();
                 this.historicalEvents = selectedScenario.getHistoricalEvents();
                 startSimulationWithScenario(selectedScenario);
-                updateLabels("Selected scenario: " + selectedScenario.getName(), selectedScenario.getStartYear());
+                updateLabels("Selected scenario: " + selectedScenario.getName(), selectedScenario.getStartYear(), selectedScenario.getStartMonth());
             }
         });
     }
@@ -293,7 +296,7 @@ public class PlayerController implements Initializable {
             player = new Player("player@email.com");
         }
         simulation = new Simulation(selectedScenario, player);
-        updateLabels("Selected scenario: " + selectedScenario.getName(), selectedScenario.getStartYear());
+        updateLabels("Selected scenario: " + selectedScenario.getName(), selectedScenario.getStartYear(), selectedScenario.getStartMonth());
         updateStationList();
         updateLocomotiveInventory();
         updateIndustriesList();
@@ -315,29 +318,32 @@ public class PlayerController implements Initializable {
             return;
         }
         simulationTimeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
-            simulation.advanceYear();
-            updateLabels("Simulation in progress", simulation.getCurrentYear());
+            simulation.advanceMonth();
+            updateLabels("Simulation in progress", simulation.getCurrentYear(), simulation.getCurrentMonth());
             if (simulation.getCurrentYear() >= simulation.getEndYear()) {
                 simulationTimeline.stop();
-                updateLabels("Simulation finished", simulation.getCurrentYear());
+                updateLabels("Simulation finished", simulation.getCurrentYear(), simulation.getCurrentMonth());
             }
         }));
         simulationTimeline.setCycleCount(Timeline.INDEFINITE);
         simulationTimeline.play();
-        updateLabels("Simulation in progress", simulation.getCurrentYear());
+        updateLabels("Simulation in progress", simulation.getCurrentYear(), simulation.getCurrentMonth());
     }
 
     @FXML
     private void onPauseSimulation() {
         if (simulationTimeline != null) {
             simulationTimeline.stop();
-            updateLabels("Simulation paused", simulation != null ? simulation.getCurrentYear() : null);
+            updateLabels("Simulation paused", simulation != null ? simulation.getCurrentYear() : null, simulation != null ? simulation.getCurrentMonth() : null);
         }
     }
 
-    private void updateLabels(String status, Integer year) {
+    private void updateLabels(String status, Integer year, Integer month) {
         if (statusLabel != null) statusLabel.setText(status);
-        if (yearLabel != null) yearLabel.setText("Current year: " + (year != null ? year : "-"));
+        if (yearLabel != null) {
+            String monthName = getMonthName(month);
+            yearLabel.setText(String.format("Current date: %s %d", monthName, year));
+        }
         if (budgetLabel != null && simulation != null && simulation.getScenario() != null) {
             budgetLabel.setText("Budget: " + String.format("%.2f€", simulation.getScenario().getBudget()));
         }
@@ -345,6 +351,25 @@ public class PlayerController implements Initializable {
         if (mapTitleLabel != null && simulation != null && simulation.getScenario() != null && simulation.getScenario().getMap() != null) {
             mapTitleLabel.setText(simulation.getScenario().getMap().getName());
         }
+    }
+
+    private String getMonthName(Integer month) {
+        if (month == null) return "-";
+        return switch (month) {
+            case 1 -> "January";
+            case 2 -> "February";
+            case 3 -> "March";
+            case 4 -> "April";
+            case 5 -> "May";
+            case 6 -> "June";
+            case 7 -> "July";
+            case 8 -> "August";
+            case 9 -> "September";
+            case 10 -> "October";
+            case 11 -> "November";
+            case 12 -> "December";
+            default -> "-";
+        };
     }
 
     // Método chamado quando o jogador clica em "Build Station"
@@ -448,7 +473,7 @@ public class PlayerController implements Initializable {
                 Repositories.getInstance().getStationRepository().add(station);
                 simulation.addStation(station); // Add to player's inventory
                 statusLabel.setText("Station Created: " + name + " (" + type + ") in (" + x + ", " + y + ")");
-                updateLabels(statusLabel.getText(), simulation.getCurrentYear());
+                updateLabels(statusLabel.getText(), simulation.getCurrentYear(), simulation.getCurrentMonth());
                 updateStationList();
                 drawMapAndAnimateRoute(null);
                 return null;
@@ -539,11 +564,13 @@ public class PlayerController implements Initializable {
 
         // 2. Filtrar upgrades possíveis
         int currentYear = simulation != null ? simulation.getCurrentYear() : 0;
+        int currentMonth = simulation != null ? simulation.getCurrentMonth() : 0;
         List<StationUpgrade> installed = stationInSimulation.getUpgrades();
         List<StationUpgrade> possibleUpgrades = new ArrayList<>();
         for (StationUpgrade upgrade : StationUpgrade.values()) {
             // Só upgrades do ano atual ou anterior
             if (upgrade.getYear() > currentYear) continue;
+            if (upgrade.getYear() == currentYear && upgrade.getMonth() > currentMonth) continue;
             // Não mostrar upgrades já instalados
             if (installed.contains(upgrade)) continue;
             // Exclusividade: não pode instalar se já tem um exclusivo
@@ -636,9 +663,16 @@ public class PlayerController implements Initializable {
         Scenario scenario = simulation.getScenario();
         List<LocomotiveType> allowedTypes = scenario.getAvailableLocomotiveTypes();
         int currentYear = simulation.getCurrentYear();
+        int currentMonth = simulation.getCurrentMonth();
 
         System.out.println("Current Year: " + currentYear);
+        System.out.println("Current Month: " + currentMonth);
         System.out.println("Allowed Types: " + allowedTypes);
+
+        // Mostrar tipos permitidos
+        String allowedTypesStr = allowedTypes.stream().map(Enum::name).reduce((a, b) -> a + ", " + b).orElse("-");
+        Label allowedTypesLabel = new Label("Available types: " + allowedTypesStr);
+        allowedTypesLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-padding: 0 0 8 0;");
 
         // Substituir ListView por TableView para mostrar todas as locomotivas disponíveis
         TableView<Locomotive> tableView = new TableView<>();
@@ -652,14 +686,8 @@ public class PlayerController implements Initializable {
 
         // Adicione as locomotivas filtradas
         for (ListLocomotives locoEnum : ListLocomotives.values()) {
-            System.out.println("Checking locomotive: " + locoEnum.name() + 
-                             " | Available Year: " + locoEnum.getAvailableYear() + 
-                             " | Retired Year: " + locoEnum.getRetiredYear() + 
-                             " | Type: " + locoEnum.getLocomotiveType());
-            
             if (allowedTypes.contains(locoEnum.getLocomotiveType())) {
                 if (locoEnum.getAvailableYear() <= currentYear && locoEnum.getRetiredYear() >= currentYear) {
-                    System.out.println("Adding locomotive to list: " + locoEnum.name());
                     tableView.getItems().add(locoEnum.toLocomotive());
                 }
             }
@@ -677,8 +705,9 @@ public class PlayerController implements Initializable {
         // Dialog
         Dialog<Locomotive> dialog = new Dialog<>();
         dialog.setTitle("Buy Locomotive");
+        VBox dialogContent = new VBox(allowedTypesLabel, tableView);
         dialog.setHeaderText("Select a locomotive to purchase:");
-        dialog.getDialogPane().setContent(tableView);
+        dialog.getDialogPane().setContent(dialogContent);
         ButtonType buyButtonType = new ButtonType("Buy", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(buyButtonType, ButtonType.CANCEL);
 
@@ -707,7 +736,7 @@ public class PlayerController implements Initializable {
                 simulation.addLocomotive(selectedLocomotive);
 
                 // Update UI
-                updateLabels("Locomotive purchased: " + selectedLocomotive.getReference(), simulation.getCurrentYear());
+                updateLabels("Locomotive purchased: " + selectedLocomotive.getReference(), simulation.getCurrentYear(), simulation.getCurrentMonth());
                 updateLocomotiveInventory();
                 
                 Alert success = new Alert(Alert.AlertType.INFORMATION);
@@ -769,88 +798,6 @@ public class PlayerController implements Initializable {
         if (!selectedLocoOpt.isPresent() || selectedLocoOpt.get() == null) return;
         Locomotive selectedLoco = selectedLocoOpt.get();
 
-        // 2. Select Carriages
-        List<Carriage> carriages = new ArrayList<>();
-        boolean addMoreCarriages = true;
-        int totalCarriageCapacity = 0;
-        double totalCost = selectedLoco.getCost();
-        
-        while (addMoreCarriages) {
-            Dialog<Carriage> carriageDialog = new Dialog<>();
-            carriageDialog.setTitle("Add Carriage");
-            carriageDialog.setHeaderText(String.format("Select a carriage to add to the train (Current Power: %d, Used: %d, Total Cost: %.2f)", 
-                selectedLoco.getPower(), totalCarriageCapacity, totalCost));
-            
-            ListView<Carriage> carriageListView = new ListView<>();
-            for (pt.ipp.isep.dei.domain.enums.CarriageList c : pt.ipp.isep.dei.domain.enums.CarriageList.values()) {
-                Carriage carriage = c.toCarriage();
-                // Only show carriages that won't exceed locomotive power and budget
-                if (totalCarriageCapacity + carriage.getCapacity() <= selectedLoco.getPower() &&
-                    totalCost + carriage.getCost() <= scenario.getBudget()) {
-                    carriageListView.getItems().add(carriage);
-                }
-            }
-            
-            if (carriageListView.getItems().isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Limit Reached");
-                alert.setHeaderText(null);
-                if (totalCarriageCapacity >= selectedLoco.getPower()) {
-                    alert.setContentText("Cannot add more carriages: locomotive power limit reached.");
-                } else {
-                    alert.setContentText("Cannot add more carriages: budget limit reached.");
-                }
-                alert.showAndWait();
-                break;
-            }
-
-            carriageListView.setCellFactory(lv -> new ListCell<Carriage>() {
-                @Override
-                protected void updateItem(Carriage c, boolean empty) {
-                    super.updateItem(c, empty);
-                    if (empty || c == null) {
-                        setText(null);
-                    } else {
-                        setText(String.format("%s (Capacity: %.1f, Type: %s, Cost: %.2f)", 
-                            c.getName(), 
-                            c.getCapacity(),
-                            c.getCargoType(),
-                            c.getCost()));
-                    }
-                }
-            });
-            
-            VBox carriageContent = new VBox(10, carriageListView);
-            carriageDialog.getDialogPane().setContent(carriageContent);
-            carriageDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-            carriageDialog.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? carriageListView.getSelectionModel().getSelectedItem() : null);
-            Optional<Carriage> selectedCarriageOpt = carriageDialog.showAndWait();
-            
-            if (selectedCarriageOpt.isPresent() && selectedCarriageOpt.get() != null) {
-                Carriage selectedCarriage = selectedCarriageOpt.get();
-                carriages.add(selectedCarriage);
-                totalCarriageCapacity += selectedCarriage.getCapacity();
-                totalCost += selectedCarriage.getCost();
-                
-                Alert more = new Alert(Alert.AlertType.CONFIRMATION, 
-                    String.format("Add another carriage? (Current Power: %d, Used: %d, Total Cost: %.2f, Budget: %.2f)", 
-                        selectedLoco.getPower(), totalCarriageCapacity, totalCost, scenario.getBudget()), 
-                    ButtonType.YES, ButtonType.NO);
-                more.setHeaderText(null);
-                more.setTitle("Add More Carriages");
-                Optional<ButtonType> moreResult = more.showAndWait();
-                addMoreCarriages = moreResult.isPresent() && moreResult.get() == ButtonType.YES;
-            } else {
-                addMoreCarriages = false;
-            }
-        }
-        
-        if (carriages.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING, "You must add at least one carriage.");
-            alert.showAndWait();
-            return;
-        }
-
         // 3. Escolha da rota: início, intermediárias, fim
         List<Station> availableStations = scenario.getStationsPurchased();
         if (availableStations.size() < 2) {
@@ -897,38 +844,115 @@ public class PlayerController implements Initializable {
         summaryAlert.setHeaderText("Review the order of stations:");
         Optional<ButtonType> summaryResult = summaryAlert.showAndWait();
         if (!summaryResult.isPresent() || summaryResult.get() != ButtonType.OK) return;
-        // 4. Para cada ponto, escolher modo de carga
-        List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints = new ArrayList<>();
-        for (Station station : routeStations) {
-            Dialog<pt.ipp.isep.dei.domain.enums.CargoMode> modeDialog = new Dialog<>();
-            modeDialog.setTitle("Select Cargo Mode");
-            modeDialog.setHeaderText("Choose cargo mode for station: " + station.getName());
-            ListView<pt.ipp.isep.dei.domain.enums.CargoMode> modeListView = new ListView<>();
-            for (pt.ipp.isep.dei.domain.enums.CargoMode mode : pt.ipp.isep.dei.domain.enums.CargoMode.values()) {
-                modeListView.getItems().add(mode);
+
+        // 2. Select Carriages (depois de escolher startStation)
+        List<Carriage> carriages = new ArrayList<>();
+        boolean addMoreCarriages = true;
+        int totalCarriageCapacity = 0;
+        double totalCost = selectedLoco.getCost();
+        while (addMoreCarriages) {
+            Dialog<Carriage> carriageDialog = new Dialog<>();
+            carriageDialog.setTitle("Add Carriage");
+            carriageDialog.setHeaderText(String.format("Select a carriage to add to the train (Current Power: %d, Used: %d, Total Cost: %.2f)", 
+                selectedLoco.getPower(), totalCarriageCapacity, totalCost));
+            
+            ListView<Carriage> carriageListView = new ListView<>();
+            // Filtrar cargas permitidas pelo PortBehavior do cenário
+            Set<String> allowedCargos = new HashSet<>();
+            if (portBehavior != null) {
+                allowedCargos.addAll(portBehavior.getImportCargo());
+                allowedCargos.addAll(portBehavior.getExportCargo());
+                allowedCargos.addAll(portBehavior.getTransformCargo());
             }
-            modeListView.setCellFactory(lv -> new ListCell<pt.ipp.isep.dei.domain.enums.CargoMode>() {
+            // Filtrar ainda mais pelo que existe próximo da estação de origem
+            Set<String> finalAllowedCargos = new HashSet<>();
+            for (String cargo : allowedCargos) {
+                if (cargo.equalsIgnoreCase("passengers")) {
+                    if (!startStation.getNearbyCities(scenario.getMap()).isEmpty()) {
+                        finalAllowedCargos.add(cargo);
+                    }
+                } else {
+                    boolean hasIndustry = startStation.getNearbyIndustries(scenario.getMap()).stream()
+                        .anyMatch(ind -> ind.getType().name().equalsIgnoreCase(cargo));
+                    if (hasIndustry) {
+                        finalAllowedCargos.add(cargo);
+                    }
+                }
+            }
+            for (pt.ipp.isep.dei.domain.enums.CarriageList c : pt.ipp.isep.dei.domain.enums.CarriageList.values()) {
+                Carriage carriage = c.toCarriage();
+                if (finalAllowedCargos.contains(carriage.getCargoType().toLowerCase())) {
+                    if (totalCarriageCapacity + carriage.getCapacity() <= selectedLoco.getPower() &&
+                        totalCost + carriage.getCost() <= scenario.getBudget()) {
+                        carriageListView.getItems().add(carriage);
+                    }
+                }
+            }
+            if (carriageListView.getItems().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Limit Reached");
+                alert.setHeaderText(null);
+                if (totalCarriageCapacity >= selectedLoco.getPower()) {
+                    alert.setContentText("Cannot add more carriages: locomotive power limit reached.");
+                } else {
+                    alert.setContentText("Cannot add more carriages: budget limit reached.");
+                }
+                alert.showAndWait();
+                break;
+            }
+            carriageListView.setCellFactory(lv -> new ListCell<Carriage>() {
                 @Override
-                protected void updateItem(pt.ipp.isep.dei.domain.enums.CargoMode mode, boolean empty) {
-                    super.updateItem(mode, empty);
-                    if (empty || mode == null) {
+                protected void updateItem(Carriage c, boolean empty) {
+                    super.updateItem(c, empty);
+                    if (empty || c == null) {
                         setText(null);
                     } else {
-                        setText(String.format("%s - %s (Type: %s)", 
-                            mode.name(), 
-                            mode.getDescription(),
-                            mode.getCargoType()));
+                        setText(String.format("%s (Capacity: %.1f, Type: %s, Cost: %.2f)", 
+                            c.getName(), 
+                            c.getCapacity(),
+                            c.getCargoType(),
+                            c.getCost()));
                     }
                 }
             });
-            VBox modeContent = new VBox(10, modeListView);
-            modeDialog.getDialogPane().setContent(modeContent);
-            modeDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-            modeDialog.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? modeListView.getSelectionModel().getSelectedItem() : null);
-            Optional<pt.ipp.isep.dei.domain.enums.CargoMode> selectedModeOpt = modeDialog.showAndWait();
-            if (!selectedModeOpt.isPresent() || selectedModeOpt.get() == null) return;
-            pt.ipp.isep.dei.domain.enums.CargoMode selectedMode = selectedModeOpt.get();
-            routePoints.add(new pt.ipp.isep.dei.domain.PointsOfRoute(station, selectedMode));
+            VBox carriageContent = new VBox(10, carriageListView);
+            carriageDialog.getDialogPane().setContent(carriageContent);
+            carriageDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            carriageDialog.setResultConverter(dialogButton -> dialogButton == ButtonType.OK ? carriageListView.getSelectionModel().getSelectedItem() : null);
+            Optional<Carriage> selectedCarriageOpt = carriageDialog.showAndWait();
+            if (selectedCarriageOpt.isPresent() && selectedCarriageOpt.get() != null) {
+                Carriage selectedCarriage = selectedCarriageOpt.get();
+                carriages.add(selectedCarriage);
+                totalCarriageCapacity += selectedCarriage.getCapacity();
+                totalCost += selectedCarriage.getCost();
+                Alert more = new Alert(Alert.AlertType.CONFIRMATION, 
+                    String.format("Add another carriage? (Current Power: %d, Used: %d, Total Cost: %.2f, Budget: %.2f)", 
+                        selectedLoco.getPower(), totalCarriageCapacity, totalCost, scenario.getBudget()), 
+                    ButtonType.YES, ButtonType.NO);
+                more.setHeaderText(null);
+                more.setTitle("Add More Carriages");
+                Optional<ButtonType> moreResult = more.showAndWait();
+                addMoreCarriages = moreResult.isPresent() && moreResult.get() == ButtonType.YES;
+            } else {
+                addMoreCarriages = false;
+            }
+        }
+        if (carriages.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You must add at least one carriage.");
+            alert.showAndWait();
+            return;
+        }
+        // 4. Para cada ponto, escolher modo de carga
+        List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints = new ArrayList<>();
+        // Obter cargas permitidas pelo cenário
+        Set<String> allowedCargos = new HashSet<>();
+        if (portBehavior != null) {
+            allowedCargos.addAll(portBehavior.getImportCargo());
+            allowedCargos.addAll(portBehavior.getExportCargo());
+            allowedCargos.addAll(portBehavior.getTransformCargo());
+        }
+        for (Station station : routeStations) {
+            handleCargoModeSelection(station);
         }
         // 5. Confirmar e atribuir rota
         pt.ipp.isep.dei.controller.AssignRouteController assignController = new pt.ipp.isep.dei.controller.AssignRouteController();
@@ -1009,23 +1033,41 @@ public class PlayerController implements Initializable {
         return Math.sqrt(Math.pow(s2.getX() - s1.getX(), 2) + Math.pow(s2.getY() - s1.getY(), 2));
     }
 
+    private double scaleX(int logicalX, int mapWidth, double paneWidth) {
+        return logicalX * (paneWidth / mapWidth);
+    }
+    private double scaleY(int logicalY, int mapHeight, double paneHeight) {
+        return logicalY * (paneHeight / mapHeight);
+    }
+
     private void drawMapAndAnimateRoute(List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints) {
         mapView.getChildren().clear();
+        double paneWidth = mapView.getPrefWidth();
+        double paneHeight = mapView.getPrefHeight();
+        int mapWidth = 1000, mapHeight = 1000;
+        if (simulation != null && simulation.getScenario() != null && simulation.getScenario().getMap() != null) {
+            mapWidth = simulation.getScenario().getMap().getWidth();
+            mapHeight = simulation.getScenario().getMap().getHeight();
+        }
         // 1. Desenhar cidades (centro e house blocks)
         if (simulation != null && simulation.getScenario() != null) {
             List<City> cities = simulation.getScenario().getMap().getCities();
             for (City city : cities) {
                 // House blocks (quadrados cinza claro)
                 for (int[] block : city.getHouseBlocks()) {
-                    javafx.scene.shape.Rectangle blockRect = new javafx.scene.shape.Rectangle(block[0] - 6, block[1] - 6, 12, 12);
+                    double bx = scaleX(block[0], mapWidth, paneWidth);
+                    double by = scaleY(block[1], mapHeight, paneHeight);
+                    javafx.scene.shape.Rectangle blockRect = new javafx.scene.shape.Rectangle(bx - 6, by - 6, 12, 12);
                     blockRect.setFill(javafx.scene.paint.Color.LIGHTGRAY);
                     mapView.getChildren().add(blockRect);
                 }
                 // Centro da cidade (círculo preto pequeno)
-                javafx.scene.shape.Circle cityCenter = new javafx.scene.shape.Circle(city.getX(), city.getY(), 7);
+                double cx = scaleX(city.getX(), mapWidth, paneWidth);
+                double cy = scaleY(city.getY(), mapHeight, paneHeight);
+                javafx.scene.shape.Circle cityCenter = new javafx.scene.shape.Circle(cx, cy, 5);
                 cityCenter.setFill(javafx.scene.paint.Color.BLACK);
                 mapView.getChildren().add(cityCenter);
-                javafx.scene.text.Text text = new javafx.scene.text.Text(city.getX() + 10, city.getY(), city.getName());
+                javafx.scene.text.Text text = new javafx.scene.text.Text(cx + 10, cy, city.getName());
                 text.setFill(javafx.scene.paint.Color.BLACK);
                 mapView.getChildren().add(text);
             }
@@ -1034,14 +1076,16 @@ public class PlayerController implements Initializable {
         if (simulation != null && simulation.getScenario() != null) {
             List<Industry> industries = simulation.getScenario().getMap().getIndustries();
             for (Industry ind : industries) {
+                double ix = scaleX(ind.getPositionX(), mapWidth, paneWidth);
+                double iy = scaleY(ind.getPositionY(), mapHeight, paneHeight);
                 javafx.scene.shape.Polygon triangle = new javafx.scene.shape.Polygon(
-                    ind.getPositionX(), ind.getPositionY() - 12,
-                    ind.getPositionX() - 12, ind.getPositionY() + 12,
-                    ind.getPositionX() + 12, ind.getPositionY() + 12
+                    ix, iy - 8,
+                    ix - 8, iy + 8,
+                    ix + 8, iy + 8
                 );
                 triangle.setFill(javafx.scene.paint.Color.FORESTGREEN);
                 mapView.getChildren().add(triangle);
-                javafx.scene.text.Text text = new javafx.scene.text.Text(ind.getPositionX() + 14, ind.getPositionY(), ind.getType().toString());
+                javafx.scene.text.Text text = new javafx.scene.text.Text(ix + 14, iy, ind.getType().toString());
                 text.setFill(javafx.scene.paint.Color.FORESTGREEN);
                 mapView.getChildren().add(text);
             }
@@ -1057,10 +1101,12 @@ public class PlayerController implements Initializable {
                     case "terminal": color = javafx.scene.paint.Color.PURPLE; break;
                     default: color = javafx.scene.paint.Color.GRAY;
                 }
-                javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(s.getX(), s.getY(), 12);
+                double sx = scaleX(s.getX(), mapWidth, paneWidth);
+                double sy = scaleY(s.getY(), mapHeight, paneHeight);
+                javafx.scene.shape.Circle circle = new javafx.scene.shape.Circle(sx, sy, 8);
                 circle.setFill(color);
                 mapView.getChildren().add(circle);
-                javafx.scene.text.Text text = new javafx.scene.text.Text(s.getX() + 14, s.getY(), s.getName());
+                javafx.scene.text.Text text = new javafx.scene.text.Text(sx + 14, sy, s.getName());
                 text.setFill(color);
                 mapView.getChildren().add(text);
             }
@@ -1070,29 +1116,32 @@ public class PlayerController implements Initializable {
             for (int i = 0; i < routePoints.size() - 1; i++) {
                 Station s1 = routePoints.get(i).getStations();
                 Station s2 = routePoints.get(i + 1).getStations();
-                javafx.scene.shape.Line line = new javafx.scene.shape.Line(s1.getX(), s1.getY(), s2.getX(), s2.getY());
+                double x1 = scaleX(s1.getX(), mapWidth, paneWidth);
+                double y1 = scaleY(s1.getY(), mapHeight, paneHeight);
+                double x2 = scaleX(s2.getX(), mapWidth, paneWidth);
+                double y2 = scaleY(s2.getY(), mapHeight, paneHeight);
+                javafx.scene.shape.Line line = new javafx.scene.shape.Line(x1, y1, x2, y2);
                 line.setStroke(javafx.scene.paint.Color.BLACK);
                 line.setStrokeWidth(4);
                 mapView.getChildren().add(line);
             }
             // 5. Animar comboio
-            animateTrainOnRoute(routePoints);
+            animateTrainOnRoute(routePoints, mapWidth, mapHeight, paneWidth, paneHeight);
         }
     }
 
-    private void animateTrainOnRoute(List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints) {
+    private void animateTrainOnRoute(List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints, int mapWidth, int mapHeight, double paneWidth, double paneHeight) {
         if (routePoints == null || routePoints.size() < 2) return;
         // Lista de pontos (x, y) da rota
         List<javafx.geometry.Point2D> points = new ArrayList<>();
         for (pt.ipp.isep.dei.domain.PointsOfRoute p : routePoints) {
-            javafx.geometry.Point2D pt = new javafx.geometry.Point2D(p.getStations().getX(), p.getStations().getY());
+            double px = scaleX(p.getStations().getX(), mapWidth, paneWidth);
+            double py = scaleY(p.getStations().getY(), mapHeight, paneHeight);
+            javafx.geometry.Point2D pt = new javafx.geometry.Point2D(px, py);
             points.add(pt);
-            System.out.println("Ponto da rota: " + pt);
         }
-        System.out.println("Animando comboio de " + points.get(0) + " para " + points.get(points.size()-1));
-        javafx.scene.shape.Circle train = new javafx.scene.shape.Circle(8, javafx.scene.paint.Color.DARKORANGE);
+        javafx.scene.shape.Circle train = new javafx.scene.shape.Circle(6, javafx.scene.paint.Color.DARKORANGE);
         mapView.getChildren().add(train);
-        // Guardar as linhas da rota para remoção posterior
         List<javafx.scene.shape.Line> routeLines = new ArrayList<>();
         for (int i = 0; i < points.size() - 1; i++) {
             javafx.scene.shape.Line line = new javafx.scene.shape.Line(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
@@ -1111,7 +1160,6 @@ public class PlayerController implements Initializable {
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(20), e -> {
             if (segment[0] >= points.size() - 1) {
                 timeline.stop();
-                // Remover as linhas da rota, manter o comboio
                 mapView.getChildren().removeAll(routeLines);
                 return;
             }
@@ -1139,5 +1187,73 @@ public class PlayerController implements Initializable {
             }
         }));
         timeline.play();
+    }
+
+    private void handleCargoSelection(Station station) {
+        if (station == null) {
+            showAlert("Error", "No station selected", Alert.AlertType.ERROR);
+            return;
+        }
+
+        List<String> availableCargos = station.getAvailableCargos();
+        if (availableCargos.isEmpty()) {
+            showAlert("Error", "No cargo available at this station", Alert.AlertType.ERROR);
+            return;
+        }
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(availableCargos.get(0), availableCargos);
+        dialog.setTitle("Select Cargo");
+        dialog.setHeaderText("Select cargo type for " + station.getName());
+        dialog.setContentText("Available cargos:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(cargo -> {
+            // Atualizar a interface para mostrar a carga selecionada
+            updateCargoSelection(station, cargo);
+        });
+    }
+
+    private void updateCargoSelection(Station station, String cargo) {
+        // Atualizar a interface para mostrar a carga selecionada
+        String message = String.format("Selected cargo '%s' at station %s", cargo, station.getName());
+        updateStatus(message);
+        
+        // Aqui você pode adicionar lógica adicional para processar a seleção da carga
+        // Por exemplo, atualizar o estado do jogo ou a interface do usuário
+    }
+
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void updateStatus(String message) {
+        statusLabel.setText(message);
+        updateLabels(message, simulation.getCurrentYear(), simulation.getCurrentMonth());
+    }
+
+    private void handleCargoModeSelection(Station station) {
+        if (station == null) {
+            showAlert("Error", "No station selected", Alert.AlertType.ERROR);
+            return;
+        }
+        List<String> cargoModes = List.of("FULL", "HALF", "AVAILABLE");
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(cargoModes.get(0), cargoModes);
+        dialog.setTitle("Select Cargo Mode");
+        dialog.setHeaderText("Choose cargo mode for station: " + station.getName());
+        dialog.setContentText("Cargo modes:");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(mode -> {
+            // Atualizar a interface para mostrar o modo selecionado
+            updateCargoModeSelection(station, mode);
+        });
+    }
+
+    private void updateCargoModeSelection(Station station, String mode) {
+        String message = String.format("Selected cargo mode '%s' at station %s", mode, station.getName());
+        updateStatus(message);
+        // Lógica adicional se necessário
     }
 }

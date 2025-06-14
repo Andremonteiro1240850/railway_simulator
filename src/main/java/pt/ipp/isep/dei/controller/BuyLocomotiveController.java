@@ -43,17 +43,26 @@ public class BuyLocomotiveController {
         Locomotive loco = null;
         for (ListLocomotives locoEnum : ListLocomotives.values()) {
             if (locoEnum.getName().equalsIgnoreCase(name)) {
+                // Só permite comprar se o tipo for permitido pelo editor
+                if (!scenario.getAvailableLocomotiveTypes().contains(locoEnum.getLocomotiveType())) {
+                    System.out.println("This type of locomotive is not available in this scenario.");
+                    return;
+                }
                 loco = locoEnum.toLocomotive();
                 break;
             }
         }
 
+        if (loco == null) {
+            System.out.println("Locomotive not found.");
+            return;
+        }
 
         // Verificar se já foi comprada
         for (Locomotive l : purchased) {
             if (l.getReference().equalsIgnoreCase(loco.getReference())) {
                 System.out.println("You have already purchased this locomotive.");
-                break;
+                return;
             }
         }
 
@@ -64,15 +73,9 @@ public class BuyLocomotiveController {
             return;
         }
 
-        else{
-            double newBudgdet=scenario.getBudget()-price;
-            scenario.setBudget(newBudgdet);
-
-            System.out.println("Purchase completed successfully!");
-
-        }
-
-
+        double newBudgdet = scenario.getBudget() - price;
+        scenario.setBudget(newBudgdet);
+        System.out.println("Purchase completed successfully!");
     }
 }
 
