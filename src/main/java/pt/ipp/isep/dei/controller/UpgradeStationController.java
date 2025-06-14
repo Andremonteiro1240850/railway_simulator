@@ -127,7 +127,7 @@ public class UpgradeStationController {
             return false;
         }
 
-        // Find corresponding enum upgrade
+
         StationUpgrade upgradeToAdd = null;
         for (StationUpgrade upg : StationUpgrade.values()) {
             if (upg.getDisplayName().equalsIgnoreCase(type)) {
