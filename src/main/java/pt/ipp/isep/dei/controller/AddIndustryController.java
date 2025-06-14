@@ -12,27 +12,45 @@ import pt.isep.lei.esoft.auth.domain.model.Email;
 import java.util.Optional;
 import pt.ipp.isep.dei.domain.enums.IndustryType;
 
+/**
+ * Controller responsible for managing the addition of industries to maps.
+ * This controller handles the creation and validation of new industries within a map.
+ */
 public class AddIndustryController {
     private OrganizationRepository organizationRepository;
     private AuthenticationRepository authenticationRepository;
     private CreateMapController createMapController;
 
-    // Inicialização dos repositórios
+    /**
+     * Default constructor that initializes the required repositories and controllers.
+     */
     public AddIndustryController() {
-        this.createMapController = new CreateMapController(); // Inicializa o controlador de mapa
+        this.createMapController = new CreateMapController();
         getOrganizationRepository();
         getAuthenticationRepository();
     }
 
-    // Permite receber os repositórios como parâmetros para fins de teste
+    /**
+     * Constructor for testing purposes that allows dependency injection.
+     *
+     * @param organizationRepository the organization repository to use
+     * @param authenticationRepository the authentication repository to use
+     * @param createMapController the map controller to use
+     */
     public AddIndustryController(OrganizationRepository organizationRepository,
                                  AuthenticationRepository authenticationRepository,
                                  CreateMapController createMapController) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
-        this.createMapController = createMapController; // Atribui o CreateMapController
+        this.createMapController = createMapController;
     }
 
+    /**
+     * Retrieves the organization repository instance.
+     * If not initialized, creates a new instance from the Repositories singleton.
+     *
+     * @return the organization repository instance
+     */
     private OrganizationRepository getOrganizationRepository() {
         if (organizationRepository == null) {
             Repositories repositories = Repositories.getInstance();
@@ -41,6 +59,12 @@ public class AddIndustryController {
         return organizationRepository;
     }
 
+    /**
+     * Retrieves the authentication repository instance.
+     * If not initialized, creates a new instance from the Repositories singleton.
+     *
+     * @return the authentication repository instance
+     */
     private AuthenticationRepository getAuthenticationRepository() {
         if (authenticationRepository == null) {
             Repositories repositories = Repositories.getInstance();
@@ -49,18 +73,27 @@ public class AddIndustryController {
         return authenticationRepository;
     }
 
+    /**
+     * Creates a new industry in the specified map at the given coordinates.
+     *
+     * @param type the type of industry to create
+     * @param positionX the X coordinate for the industry
+     * @param positionY the Y coordinate for the industry
+     * @param map the map where the industry will be placed
+     * @return Optional containing the created industry if successful, empty otherwise
+     * @throws IllegalArgumentException if the industry type is null, coordinates are out of bounds,
+     *         or the position is already occupied
+     */
     public Optional<Industry> createIndustry(IndustryType type, int positionX, int positionY, Map map) {
         try {
             if (type == null) {
                 throw new IllegalArgumentException("Industry type cannot be null");
             }
 
-            // Verifica se a posição está dentro dos limites do mapa
             if (positionX < 0 || positionX >= map.getWidth() || positionY < 0 || positionY >= map.getHeight()) {
                 throw new IllegalArgumentException("Coordinates out of bounds");
             }
 
-            // Verifica se a posição está ocupada
             if (map.isOccupied(positionX, positionY)) {
                 throw new IllegalArgumentException("Position already occupied");
             }
@@ -79,19 +112,31 @@ public class AddIndustryController {
         }
     }
 
+    /**
+     * Validates if a position in the map is valid for placing an industry.
+     *
+     * @param map the map to validate the position in
+     * @param x the X coordinate to validate
+     * @param y the Y coordinate to validate
+     * @param industry the industry to be placed
+     * @throws IllegalArgumentException if the position is invalid or already occupied
+     */
     private void validatePosition(Map map, int x, int y, Industry industry) {
-        // Verificação se a posição está fora dos limites do mapa
         if (x < 0 || x >= map.getWidth() || y < 0 || y >= map.getHeight()) {
             throw new IllegalArgumentException("Coordinates out of bounds");
         }
 
-        // Verificação se a posição já está ocupada por outra indústria
         Optional<String> result = createMapController.addIndustryToMap(map, industry);
         if (result.isPresent()) {
             throw new IllegalArgumentException("Position already occupied by another industry");
         }
     }
 
+    /**
+     * Retrieves the current employee from the authentication session.
+     *
+     * @return the employee associated with the current session
+     */
     private Employee getEmployeeFromSession() {
         Email email = getAuthenticationRepository().getCurrentUserSession().getUserId();
         return new Employee(email.getEmail());

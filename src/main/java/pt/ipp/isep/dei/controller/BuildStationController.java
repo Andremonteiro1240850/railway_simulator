@@ -9,6 +9,10 @@ import pt.isep.lei.esoft.auth.domain.model.Email;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller responsible for managing the construction of stations in the game.
+ * This controller handles the creation and validation of new stations within a scenario.
+ */
 public class BuildStationController {
     private OrganizationRepository organizationRepository;
     private AuthenticationRepository authenticationRepository;
@@ -19,29 +23,42 @@ public class BuildStationController {
     private Regions region;
     private Scenario scenario;
 
-    //Repository instances are obtained from the Repositories class
+    /**
+     * Default constructor that initializes the required repositories.
+     */
     public BuildStationController() {
         getOrganizationRepository();
         getAuthenticationRepository();
         Repositories.getInstance().getStationRepository();
     }
 
-    //Allows receiving the repositories as parameters for testing purposes
+    /**
+     * Constructor for testing purposes that allows dependency injection.
+     *
+     * @param organizationRepository the organization repository to use
+     * @param authenticationRepository the authentication repository to use
+     * @param stationRepository the station repository to use
+     */
     public BuildStationController(OrganizationRepository organizationRepository,
-                                  AuthenticationRepository authenticationRepository, StationRepository stationRepository) {
+                                  AuthenticationRepository authenticationRepository, 
+                                  StationRepository stationRepository) {
         this.organizationRepository = organizationRepository;
         this.authenticationRepository = authenticationRepository;
         this.stationRepository = stationRepository;
     }
 
-
+    /**
+     * Retrieves the organization repository instance.
+     * If not initialized, creates a new instance from the Repositories singleton.
+     *
+     * @return the organization repository instance
+     */
     private OrganizationRepository getOrganizationRepository() {
         if (organizationRepository == null) {
             Repositories repositories = Repositories.getInstance();
             organizationRepository = repositories.getOrganizationRepository();
         }
         return organizationRepository;
-
     }
 
     private AuthenticationRepository getAuthenticationRepository() {

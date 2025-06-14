@@ -10,6 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller responsible for creating and managing game scenarios.
+ * This controller handles the creation of new scenarios with specific parameters and historical events.
+ */
 public class CreateScenarioController {
     private final OrganizationRepository orgRepo;
     private final AuthenticationRepository authRepo;
@@ -19,6 +23,9 @@ public class CreateScenarioController {
     private int startYear;
     private List<HistoricalEvent> historicalEvents;
 
+    /**
+     * Default constructor that initializes all required repositories.
+     */
     public CreateScenarioController() {
         this(Repositories.getInstance().getOrganizationRepository(),
                 Repositories.getInstance().getAuthenticationRepository(),
@@ -26,6 +33,14 @@ public class CreateScenarioController {
                 Repositories.getInstance().getScenarioRepository());
     }
 
+    /**
+     * Constructor for testing purposes that allows dependency injection.
+     *
+     * @param orgRepo the organization repository to use
+     * @param authRepo the authentication repository to use
+     * @param mapRepo the map repository to use
+     * @param scenarioRepo the scenario repository to use
+     */
     public CreateScenarioController(OrganizationRepository orgRepo,
                                     AuthenticationRepository authRepo,
                                     CreateMapRepository mapRepo,
@@ -36,10 +51,21 @@ public class CreateScenarioController {
         this.scenarioRepo = scenarioRepo;
     }
 
+    /**
+     * Retrieves all available maps.
+     *
+     * @return list of all available maps
+     */
     public List<Map> getAvailableMaps() {
         return mapRepo.getAll();
     }
 
+    /**
+     * Loads historical events that are applicable from the given start year.
+     *
+     * @param startYear the year from which to start loading events
+     * @return list of historical events that start from or after the given year
+     */
     public List<HistoricalEvent> loadApplicableHistoricalEvents(int startYear) {
         List<HistoricalEvent> events = new ArrayList<>();
         for (Eventos evento : Eventos.values()) {

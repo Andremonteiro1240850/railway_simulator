@@ -8,6 +8,10 @@ import pt.isep.lei.esoft.auth.mappers.dto.UserRoleDTO;
 
 import java.util.List;
 
+/**
+ * Controller responsible for handling user authentication operations.
+ * This controller manages user login, logout, and role-based access control.
+ */
 public class AuthenticationController {
 
     public static final String ROLE_ADMIN = "ADMINISTRATOR";
@@ -19,15 +23,29 @@ public class AuthenticationController {
     private final AuthenticationRepository authenticationRepository;
     private String lastLoggedInEmail = null;
 
+    /**
+     * Default constructor that initializes the authentication repository.
+     */
     public AuthenticationController() {
         this.authenticationRepository = Repositories.getInstance().getAuthenticationRepository();
     }
 
-    // Constructor for testing purposes
+    /**
+     * Constructor for testing purposes that allows dependency injection.
+     *
+     * @param authenticationRepository the authentication repository to use
+     */
     public AuthenticationController(AuthenticationRepository authenticationRepository) {
         this.authenticationRepository = authenticationRepository;
     }
 
+    /**
+     * Attempts to log in a user with the provided credentials.
+     *
+     * @param email the user's email address
+     * @param pwd the user's password
+     * @return true if login is successful, false otherwise
+     */
     public boolean doLogin(String email, String pwd) {
         try {
             boolean success = authenticationRepository.doLogin(email, pwd);
@@ -40,6 +58,11 @@ public class AuthenticationController {
         }
     }
 
+    /**
+     * Retrieves the roles associated with the currently logged-in user.
+     *
+     * @return list of user roles if user is logged in, null otherwise
+     */
     public List<UserRoleDTO> getUserRoles() {
         if (authenticationRepository.getCurrentUserSession().isLoggedIn()) {
             return authenticationRepository.getCurrentUserSession().getUserRoles();
@@ -47,6 +70,9 @@ public class AuthenticationController {
         return null;
     }
 
+    /**
+     * Logs out the current user and clears the last logged in email.
+     */
     public void doLogout() {
         authenticationRepository.doLogout();
         lastLoggedInEmail = null;

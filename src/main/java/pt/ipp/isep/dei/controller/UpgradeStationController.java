@@ -13,6 +13,7 @@ import pt.isep.lei.esoft.auth.domain.model.Email;
 
 /**
  * Controller responsible for managing upgrades applied to stations in a given scenario.
+ * This controller handles the validation and application of station upgrades.
  */
 public class UpgradeStationController {
     private OrganizationRepository organizationRepository;
@@ -37,11 +38,11 @@ public class UpgradeStationController {
     /**
      * Constructor with dependency injection. Mainly used for testing purposes.
      *
-     * @param organizationRepository      the organization repository
-     * @param authenticationRepository    the authentication repository
-     * @param stationRepository           the station repository
-     * @param upgradeBuildingsRepository  the upgrade buildings repository
-     * @param scenarioRepository          the scenario repository
+     * @param organizationRepository the organization repository
+     * @param authenticationRepository the authentication repository
+     * @param stationRepository the station repository
+     * @param upgradeBuildingsRepository the upgrade buildings repository
+     * @param scenarioRepository the scenario repository
      */
     public UpgradeStationController(OrganizationRepository organizationRepository,
                                     AuthenticationRepository authenticationRepository,

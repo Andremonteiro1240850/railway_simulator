@@ -9,15 +9,29 @@ import pt.isep.lei.esoft.auth.domain.model.Email;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Controller responsible for managing the addition of cities to maps.
+ * This controller handles the creation and validation of new cities within a map.
+ */
 public class AddCityController {
     private OrganizationRepository organizationRepository;
     private AuthenticationRepository authenticationRepository;
 
+    /**
+     * Default constructor that initializes the required repositories.
+     */
     public AddCityController() {
         getOrganizationRepository();
         getAuthenticationRepository();
     }
 
+    /**
+     * Retrieves the organization repository instance.
+     * If not initialized, creates a new instance from the Repositories singleton.
+     *
+     * @return the organization repository instance
+     */
     private OrganizationRepository getOrganizationRepository() {
         if (organizationRepository == null) {
             Repositories repositories = Repositories.getInstance();
@@ -26,6 +40,12 @@ public class AddCityController {
         return organizationRepository;
     }
 
+    /**
+     * Retrieves the authentication repository instance.
+     * If not initialized, creates a new instance from the Repositories singleton.
+     *
+     * @return the authentication repository instance
+     */
     private AuthenticationRepository getAuthenticationRepository() {
         if (authenticationRepository == null) {
             Repositories repositories = Repositories.getInstance();

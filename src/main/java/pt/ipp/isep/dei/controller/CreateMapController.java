@@ -9,16 +9,29 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Controller responsible for creating new maps and placing entities.
+ * Controller responsible for creating and managing maps in the game.
+ * This controller handles the creation of new maps and the placement of entities within them.
  */
 public class CreateMapController {
     private final CreateMapRepository repo;
+
+    /**
+     * Default constructor that initializes the map repository.
+     */
     public CreateMapController() {
         this.repo = Repositories.getInstance().getMapRepository();
     }
 
     /**
      * Creates a new map for the given organization.
+     *
+     * @param name the name of the map
+     * @param width the width of the map
+     * @param height the height of the map
+     * @param scale the scale unit of the map
+     * @param organization the organization that owns the map
+     * @return Optional containing a success message if the map was created successfully,
+     *         or an error message if the creation failed
      */
     public Optional<String> createMap(String name, int width, int height, ScaleUnit scale, Organization organization) {
         try {
