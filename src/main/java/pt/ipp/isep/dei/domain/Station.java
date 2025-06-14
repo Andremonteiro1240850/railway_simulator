@@ -2,6 +2,7 @@ package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.Buildings;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
+import pt.ipp.isep.dei.domain.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,8 @@ public class Station {
     private int y;
     private List<StationUpgrade> upgrades = new ArrayList<>();
     private transient StationType stationTypeHandler;
-
+    private List<String> availableCargos = new ArrayList<>();
+    private final java.util.Map<String, Integer> demandaPorCarga = new java.util.HashMap<>();
 
     /**
      * Constructs a new Station with a specific reference.
@@ -46,7 +48,7 @@ public class Station {
         this.x = x;
         this.y = y;
         initializeTypeHandler();
-
+        initializeAvailableCargos();
     }
 
     /**
@@ -133,8 +135,28 @@ public class Station {
         }
     }
 
+    private void initializeAvailableCargos() {
+        // Cada tipo de estação tem diferentes cargas disponíveis
+        switch (type.toLowerCase()) {
+            case "depot":
+                availableCargos.addAll(List.of("coal", "iron", "bauxite"));
+                break;
+            case "terminal":
+                availableCargos.addAll(List.of("passengers", "mail", "food", "textiles", "automobiles"));
+                break;
+            case "station":
+                availableCargos.addAll(List.of("passengers", "mail", "food", "textiles", "coal", "iron"));
+                break;
+        }
+    }
 
+    public List<String> getAvailableCargos() {
+        return new ArrayList<>(availableCargos);
+    }
 
+    public boolean hasCargoAvailable(String cargo) {
+        return availableCargos.contains(cargo.toLowerCase());
+    }
 
     /**
      * Adds a building upgrade to the station if not already present.
@@ -234,5 +256,78 @@ public class Station {
                 y,
                 upgrades != null ? upgrades.size() : 0
         );
+    }
+
+    public int getProximityRadius() {
+        switch (type.toLowerCase()) {
+            case "depot": return 2;
+            case "terminal": return 4;
+            case "station": return 3;
+            default: return 2;
+        }
+    }
+
+    public List<City> getNearbyCities(Map map) {
+        int radius = getProximityRadius();
+        List<City> nearbyCities = new ArrayList<>();
+        for (City city : map.getCities()) {
+            int dx = city.getX() - this.x;
+            int dy = city.getY() - this.y;
+            double distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= radius) {
+                nearbyCities.add(city);
+            }
+        }
+        return nearbyCities;
+    }
+
+    public List<Industry> getNearbyIndustries(Map map) {
+        int radius = getProximityRadius();
+        List<Industry> nearbyIndustries = new ArrayList<>();
+        for (Industry industry : map.getIndustries()) {
+            int dx = industry.getPositionX() - this.x;
+            int dy = industry.getPositionY() - this.y;
+            double distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance <= radius) {
+                nearbyIndustries.add(industry);
+            }
+        }
+        return nearbyIndustries;
+    }
+
+    public int getPassengerLoadRate(Map map) {
+        int rate = 0;
+        for (City city : getNearbyCities(map)) {
+            rate += city.getHouseBlocks().size() * 2; // 2 passageiros por house block
+        }
+        return rate;
+    }
+
+    public int getCargoLoadRate(Map map, String cargoType) {
+        int rate = 0;
+        for (Industry industry : getNearbyIndustries(map)) {
+            if (industry.getType().name().equalsIgnoreCase(cargoType)) {
+                rate += 10; // 10 unidades por indústria correspondente
+            }
+        }
+        return rate;
+    }
+
+    public int getDemanda(String tipoCarga) {
+        return demandaPorCarga.getOrDefault(tipoCarga.toLowerCase(), 5); // valor médio padrão
+    }
+
+    public void setDemanda(String tipoCarga, int valor) {
+        if (valor < 1) valor = 1;
+        if (valor > 10) valor = 10;
+        demandaPorCarga.put(tipoCarga.toLowerCase(), valor);
+    }
+
+    public void atualizarDemandaAleatoria() {
+        for (String carga : availableCargos) {
+            int atual = getDemanda(carga);
+            int variacao = (int) (Math.random() * 3) - 1; // -1, 0 ou +1
+            setDemanda(carga, atual + variacao);
+        }
     }
 }

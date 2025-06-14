@@ -19,6 +19,8 @@ public class Scenario {
     private int startYear;
     private int endYear;
     private int currentYear;
+    private int startMonth = 1; // Default to January
+    private int currentMonth = 1;
     private List<LocomotiveType> availableLocomotiveTypes;
     private PortBehavior portBehavior;
     private List<HistoricalEvent> historicalEvents;
@@ -47,6 +49,8 @@ public class Scenario {
         this.startYear = startYear;
         this.currentYear = startYear;
         this.endYear = endYear;
+        this.startMonth = 1;
+        this.currentMonth = 1;
         this.availableLocomotiveTypes = availableLocomotiveTypes;
         this.historicalEvents = (historicalEvents != null) ? new ArrayList<>(historicalEvents) : new ArrayList<>();
         this.portBehavior = portBehavior;
@@ -312,5 +316,17 @@ public class Scenario {
      */
     public void addLocomotivePurchased(Locomotive locomotive) {
         this.locomotivePurchased.add(locomotive);
+    }
+
+    public int getStartMonth() {
+        return startMonth;
+    }
+
+    public int getCurrentMonth() {
+        return currentMonth;
+    }
+
+    public void setCurrentMonth(int currentMonth) {
+        this.currentMonth = currentMonth;
     }
 }

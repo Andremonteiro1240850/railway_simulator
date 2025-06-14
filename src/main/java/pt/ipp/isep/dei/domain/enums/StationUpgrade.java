@@ -6,18 +6,19 @@ package pt.ipp.isep.dei.domain.enums;
  */
 
 public enum StationUpgrade {
-    TELEGRAPH("Posto Telegráfico", 1830, 10000, "TELEPHONE", null),
-    TELEPHONE("Telefone", 1860, 25000, null, "TELEGRAPH"),
-    RESTAURANT_SMALL("Restaurante Pequeno", 1850, 5000, null, null),
-    RESTAURANT_LARGE("Restaurante Grande", 1850, 20000, "HOTEL_LARGE", null),
-    SILO("Silo", 1870, 15000, "LIQUID_STORAGE", null),
-    HOTEL_SMALL("Hotel Pequeno", 1880, 10000, null, null),
-    HOTEL_LARGE("Hotel Grande", 1880, 30000, "RESTAURANT_LARGE", null),
-    CUSTOMS("Alfândega", 1875, 20000, null, null),
-    LIQUID_STORAGE("Armazenamento de Líquidos", 1890, 20000, "SILO", null);
+    TELEGRAPH("Posto Telegráfico", 1830, 1, 10000, "TELEPHONE", null),
+    TELEPHONE("Telefone", 1860, 1, 25000, null, "TELEGRAPH"),
+    RESTAURANT_SMALL("Restaurante Pequeno", 1850, 1, 5000, null, null),
+    RESTAURANT_LARGE("Restaurante Grande", 1850, 1, 20000, "HOTEL_LARGE", null),
+    SILO("Silo", 1870, 1, 15000, "LIQUID_STORAGE", null),
+    HOTEL_SMALL("Hotel Pequeno", 1880, 1, 10000, null, null),
+    HOTEL_LARGE("Hotel Grande", 1880, 1, 30000, "RESTAURANT_LARGE", null),
+    CUSTOMS("Alfândega", 1875, 1, 20000, null, null),
+    LIQUID_STORAGE("Armazenamento de Líquidos", 1890, 1, 20000, "SILO", null);
 
     private final String displayName;
     private final int year;
+    private final int month;
     private final int cost;
     private final String exclusiveWith;
     private final String replaces;
@@ -28,14 +29,16 @@ public enum StationUpgrade {
      *
      * @param displayName   Nome legível da melhoria.
      * @param year          Ano em que a melhoria se torna disponível.
+     * @param month         Mês em que a melhoria se torna disponível.
      * @param cost          Custo de implementação da melhoria.
      * @param exclusiveWith Nome de uma melhoria com a qual esta é mutuamente exclusiva.
      * @param replaces      Nome de uma melhoria que esta substitui, se aplicável.
      */
 
-    StationUpgrade(String displayName, int year, int cost, String exclusiveWith, String replaces) {
+    StationUpgrade(String displayName, int year, int month, int cost, String exclusiveWith, String replaces) {
         this.displayName = displayName;
         this.year = year;
+        this.month = month;
         this.cost = cost;
         this.exclusiveWith = exclusiveWith;
         this.replaces = replaces;
@@ -55,6 +58,13 @@ public enum StationUpgrade {
      * @return Ano de introdução da melhoria.
      */
     public int getYear() { return year; }
+
+    /**
+     * Obtém o mês de disponibilidade da melhoria.
+     *
+     * @return Mês de introdução da melhoria.
+     */
+    public int getMonth() { return month; }
 
     /**
      * Obtém o custo de implementação da melhoria.
