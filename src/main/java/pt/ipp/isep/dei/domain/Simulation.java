@@ -115,7 +115,7 @@ public class Simulation implements Serializable {
     private double calculateCargoRevenue(Station from, Station to, CargoMode cargoMode) {
         double distance = toKilometers(calculateDistance(from, to));
         String cargoType = cargoMode.name().toLowerCase();
-        double baseRate = getCargoBaseRate(cargoMode);
+        double baseRate = getCargoBaseRate(cargoMode, cargoType);
         int demanda = to.getDemanda(cargoType);
         double ajusteDemanda = 1.0;
         if (demanda >= 8) ajusteDemanda = 1.6;
@@ -130,12 +130,28 @@ public class Simulation implements Serializable {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    private double getCargoBaseRate(CargoMode cargoMode) {
-        return switch (cargoMode) {
-            case FULL -> 100.0;
-            case HALF -> 75.0;
-            case AVAILABLE -> 50.0;
-        };
+    private double getCargoBaseRate(CargoMode cargoMode, String cargoType) {
+        switch (cargoType.toLowerCase()) {
+            case "passengers": return 200.0;
+            case "mail": return 120.0;
+            case "automobiles": return 180.0;
+            case "coal": return 90.0;
+            case "cereals": return 60.0;
+            case "food": return 80.0;
+            case "steel": return 100.0;
+            case "textiles": return 70.0;
+            case "coffee": return 110.0;
+            case "bauxite": return 85.0;
+            case "iron": return 95.0;
+            case "nitrate": return 75.0;
+            case "vegetables": return 65.0;
+            case "wool": return 60.0;
+            case "rubber": return 100.0;
+            case "cattle": return 90.0;
+            default:
+                // Valor padrão para cargas não especificadas
+                return 50.0;
+        }
     }
 
     private void updateCargoStatus() {

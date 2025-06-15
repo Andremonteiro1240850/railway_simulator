@@ -627,6 +627,13 @@ public class PlayerController implements Initializable {
                     statusLabel.setText("Invalid coordinates.");
                     return null;
                 }
+                // Verificar se as coordenadas estão dentro dos limites do mapa
+                int mapWidth = scenario.getMap().getWidth();
+                int mapHeight = scenario.getMap().getHeight();
+                if (x < 0 || x >= mapWidth || y < 0 || y >= mapHeight) {
+                    statusLabel.setText("Coordinates are outside the map limits.");
+                    return null;
+                }
                 // Verificar orçamento
                 if (scenario.getBudget() < cost) {
                     statusLabel.setText("Not enough budget.");
@@ -1078,16 +1085,9 @@ public class PlayerController implements Initializable {
                 }
             }
             if (carriageListView.getItems().isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("No Carriages Available");
-                alert.setHeaderText(null);
-                if (totalCarriageCapacity >= selectedLoco.getPower()) {
-                    alert.setContentText("Cannot add more carriages: locomotive power limit reached.");
-                } else {
-                    alert.setContentText("No carriages available for the allowed cargo types at this station.");
-                }
-                alert.showAndWait();
-                break;
+                // Se não houver nenhum vagão disponível, adicionar um padrão (primeiro da enum)
+                Carriage defaultCarriage = pt.ipp.isep.dei.domain.enums.CarriageList.values()[0].toCarriage();
+                carriageListView.getItems().add(defaultCarriage);
             }
             carriageListView.setCellFactory(lv -> new ListCell<Carriage>() {
                 @Override
