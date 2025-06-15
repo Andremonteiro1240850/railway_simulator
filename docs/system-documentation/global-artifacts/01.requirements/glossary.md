@@ -4,89 +4,124 @@
 
 Column "TEA (PT)" is optional. If the team does not intend to use it, then remove it.
 
-| **_TEA_** (EN)                     | **_TEA_** (PT)                      | **_Description_** (EN)                                                                                          |
-|-----------------------------------|-------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| **Acceleration** | **Aceleração** | The rate at which a train increases its speed. |
-| **Agile Development** | **Desenvolvimento Ágil** | A software development methodology based on iterative and incremental progress. |
-| **Authentication** | **Autenticação** | The process of verifying user identity before granting access. |
-| **Available Buildings** | **Edifícios Disponíveis** | A list of station upgrades that are allowed within a given scenario and their availability year. |
-| **Backlog** | **Backlog** | A list of pending tasks, features, or bug fixes in a Scrum project. |
-| **Bakeries** | **Padarias** | A type of transforming industry that converts raw materials into bread and other food products. |
-| **Board Privacy** | **Privacidade do Quadro** | The access level of a Scrum Board (e.g., private, public). |
-| **Budget** | **Orçamento** | A financial constraint representing the available funds for constructing and maintaining railway infrastructure. |
-| **Building** | **Edifício** | An upgrade that can be added to a station, with specific cost and functional effect. |
-| **Business Rules** | **Regras de Negócio** | Constraints and guidelines that define how the system should operate. |
-| **Cargo/Freight** | **Carga/Mercadoria** | Goods or commodities transported by trains, such as coal, steel, or textiles. |
-| **Carriages/Wagons** | **Vagões** | Train cars used for transporting passengers or cargo. |
-| **City** | **Cidade** | A location on the map containing houses and industries that generate or consume cargo. |
-| **City Block** | **Bloco da Cidade** | A unit representing residential or commercial buildings in a city. |
-| **Collision Detection** | **Deteção de Colisões** | A system to prevent trains from crashing (excluded from this project). |
-| **Connectivity Analysis** | **Análise de Conectividade** | The process of evaluating how well the railway network is structured. |
-| **Cost** | **Custo** | The expense required to build infrastructure, purchase trains, or upgrade stations. |
-| **Coverage Report** | **Relatório de Cobertura** | A document showing the percentage of code tested with unit tests. |
-| **Customs Office** | **Alfândega** | A station upgrade that facilitates the handling of international cargo. |
-| **Data Persistence** | **Persistência de Dados** | The storage of data so that it remains available between program executions. |
-| **Date** | **Data** | Defines the start, current, and end year of a scenario. |
-| **Deadline** | **Prazo** | The final date by which a task must be completed. |
-| **Double Track** | **Linha Dupla** | A railway line with two parallel tracks allowing bidirectional movement. |
-| **Editor** | **Editor** | A user who creates maps and scenarios, defining elements like industries, cities, and scenario restrictions. |
-| **FURPS+** | **FURPS+** | A model defining system quality attributes: Functionality, Usability, Reliability, Performance, and Supportability. |
-| **Feature** | **Funcionalidade** | A specific functionality of the software. |
-| **Final Product** | **Produto Final** | A manufactured good that can be delivered to cities, such as cars or textiles. |
-| **Framework** | **Framework** | A structured approach or set of tools used in software development. |
-| **Freight** | **Frete** | Another term for cargo transported by trains. |
-| **Game Mechanic** | **Mecânica do Jogo** | The rules and interactions within the railway simulation. |
-| **GitHub Repository** | **Repositório GitHub** | A cloud-based storage system for managing source code and version control. |
-| **Graphical Representation** | **Representação Gráfica** | The visual depiction of maps, stations, and train routes. |
-| **Historical Restriction** | **Restrição Histórica** | A limitation based on real-world events affecting the simulation. |
-| **House Block** | **Bloco de Casas** | A segment of a city representing residential areas. |
-| **I/O** | **E/S** | Input/Output Operations. |
-| **Infrastructure** | **Infraestrutura** | The essential physical structures for the railway network (stations, lines, trains). |
-| **Inhabitants** | **Habitantes** | People who live in a House Block. |
-| **Input/Output Operations** | **Operações de Entrada/Saída** | Processes involving data entry and retrieval in the system. |
-| **Inventory** | **Inventário** | A dynamic record of all trains, carriages, cargo, and station upgrades owned by the player. |
-| **Iteration** | **Iteração** | A cycle in agile development where a set of features is implemented and reviewed. |
-| **JUnit 5** | **JUnit 5** | A framework for writing and running unit tests in Java. |
-| **JaCoCo** | **JaCoCo** | A tool for measuring code coverage in Java applications. |
-| **Java Applications** | **Aplicações Java** | Software programs developed using the Java programming language. |
-| **JavaDoc** | **JavaDoc** | Documentation automatically generated from Java source code comments. |
-| **Kilometer Cost** | **Custo por Quilómetro** | The expense associated with constructing a railway line per kilometer. |
-| **Line** | **Linha** | A railway connection between two stations. |
-| **Logbook** | **Livro de Registos** | A Scrum Board column where teams record project-related notes and decisions. |
-| **Mail** | **Correio** | A type of cargo representing postal services delivered between cities. |
-| **Maintenance Route** | **Rota de Manutenção** | A special route designed to pass once through each railway line to simulate maintenance operations. |
-| **Map** | **Mapa** | The virtual representation where the railway simulation occurs. |
-| **Mixed Industry** | **Indústria Mista** | An industry that can import/export any type of cargo (e.g., ports). |
-| **Network Performance** | **Desempenho da Rede** | An assessment of how efficiently the railway system operates. |
-| **Node** | **Nó** | A key point in the railway network, such as a station or industry. |
-| **Object Serialization** | **Serialização de Objetos** | A technique to save and restore program data between executions. |
-| **Operational Radius** | **Raio Operacional** | The area of influence a station covers for supplying and receiving cargo. |
-| **Passenger** | **Passageiro** | A type of cargo representing people traveling by train. |
-| **Performance Metric** | **Métrica de Desempenho** | A measurement used to evaluate system efficiency. |
-| **Player** | **Jogador** | A user who plays the game by creating stations, trains, and routes on a selected map/scenario. |
-| **Port** | **Porto** | A mixed industry facility that can import/export various cargoes. |
-| **Position** | **Posição** | Represents XY coordinates on the map for placing cities, industries, or stations. |
-| **Product Owner** | **Proprietário do Produto** | A role in Scrum responsible for defining product requirements and priorities. |
-| **Radius** | **Raio** | The radius determines the area around a station within which cities and industries can send or receive cargo. |
-| **Railroad Network** | **Rede Ferroviária** | A system of railway lines, stations, and trains. |
-| **Railway Connectivity** | **Conectividade Ferroviária** | The extent to which different parts of the railway network are linked. |
-| **Route** | **Rota** | A list of stations where the train passes. |
-| **Route Validity Check** | **Verificação de Rota** | A check to ensure a train can travel between two stations, considering type and electrification. |
-| **Scenario** | **Cenário** | A defined context for the simulation including date, restrictions, and available resources. |
-| **Scrum** | **Scrum** | An agile framework for managing software development projects. |
-| **Scrum Board** | **Quadro Scrum** | A visual tool for tracking. |
-| **Scrum Master** | **Scrum Master** | A team member responsible for facilitating the Scrum process. |
-| **Serialization** | **Serialização** | The process of converting an object into a format that can be stored or transmitted. |
-| **Simulator** | **Simulador** | A program that imitates the behavior of a real system or process. |
-| **Single Track** | **Linha Simples** | A railway line with only one track, requiring careful scheduling to avoid congestion. |
-| **Sprint** | **Sprint** | A fixed period in which a Scrum team completes a set of tasks. |
-| **Station** | **Estação** | A mid-tier station where trains stop to pick up and deliver cargo. |
-| **Technical Restriction** | **Restrição Tecnológica** | Limits which locomotives, buildings, or industries are available in a scenario. |
-| **Terminal** | **Terminal** | The largest type of station with a 5x5 economic radius. |
-| **Time Restriction** | **Restrição Temporal** | Limits the period in which the simulation can occur. |
-| **Train** | **Comboio** | A railway vehicle used to transport passengers or goods. |
-| **Transforming Industry** | **Indústria Transformadora** | A facility that processes raw materials into finished products (e.g., automobile factories). |
-| **User Case Diagram** | **Diagrama de Casos de Uso** | A UML diagram that visually represents the interactions between users and a system. |
-| **User Story** | **História de Utilizador** | A description of a software feature from the end-user perspective. |
-| **Version Register** | **Registo de Versão** | A log tracking different versions of the project. |
-| **Waypoints** | **Pontos de Passagem** | Specific locations along a train’s route where it can stop or change direction. |
+Claro, aqui está o glossário atualizado com as novas entradas:
+
+| **_TEA_** (EN)                    | **_TEA_** (PT)                             | **_Description_** (EN)                                                                                                                                                           |
+|-----------------------------------|--------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Acceleration**                  | **Aceleração**                             | The rate at which a train increases its speed.                                                                                                                                   |
+| **Acquisition Price**             | **Preço de Aquisição**                     | The expense incurred to purchase a locomotive.                                                                                                                                   |
+| **Actor**                         | **Ator**                                   | In the context of use cases, something with behavior that interacts with the system, such as a person, another computer system, or an organization.                              |
+| **Agile Development**             | **Desenvolvimento Ágil**                   | A software development methodology based on iterative and incremental progress.                                                                                                  |
+| **Authentication**                | **Autenticação**                           | The process of verifying user identity before granting access.                                                                                                                   |
+| **Available Buildings**           | **Edifícios Disponíveis**                  | A list of station upgrades that are allowed within a given scenario and their availability year.                                                                                 |
+| **Backlog**                       | **Backlog**                                | A list of pending tasks, features, or bug fixes in a Scrum project.                                                                                                              |
+| **Bakeries**                      | **Padarias**                               | A type of transforming industry that converts raw materials into bread and other food products.                                                                                  |
+| **Board Privacy**                 | **Privacidade do Quadro**                  | The access level of a Scrum Board (e.g., private, public).                                                                                                                       |
+| **Budget**                        | **Orçamento**                              | A financial constraint representing the available funds for constructing and maintaining railway infrastructure.                                                                 |
+| **Building**                      | **Edifício**                               | An upgrade that can be added to a station, with specific cost and functional effect.                                                                                             |
+| **Business Rules**                | **Regras de Negócio**                      | Constraints and guidelines that define how the system should operate.                                                                                                            |
+| **Cargo/Freight**                 | **Carga/Mercadoria**                       | Goods or commodities transported by trains, such as coal, steel, or textiles.                                                                                                    |
+| **Carload**                       | **Carga de Vagão**                         | A unit of measurement for cargo, often used to quantify the amount of goods transported by train.                                                                                |
+| **Carriages/Wagons**              | **Vagões**                                 | Train cars used for transporting passengers or cargo.                                                                                                                            |
+| **Change Management**             | **Gestão de Mudanças**                     | A process within Requirements Engineering for managing modifications to requirements throughout the project lifecycle.                                                           |
+| **City**                          | **Cidade**                                 | A location on the map containing houses and industries that generate or consume cargo.                                                                                           |
+| **City Block**                    | **Bloco da Cidade**                        | A unit representing residential or commercial buildings in a city.                                                                                                               |
+| **Collision Detection**           | **Deteção de Colisões**                    | A system to prevent trains from crashing (excluded from this project).                                                                                                           |
+| **Connectivity Analysis**         | **Análise de Conectividade**               | The process of evaluating how well the railway network is structured.                                                                                                            |
+| **Cost**                          | **Custo**                                  | The expense required to build infrastructure, purchase trains, or upgrade stations.                                                                                              |
+| **Coverage Report**               | **Relatório de Cobertura**                 | A document showing the percentage of code tested with unit tests.                                                                                                                |
+| **Customs Office**                | **Alfândega**                              | A station upgrade that facilitates the handling of international cargo.                                                                                                          |
+| **Data Persistence**              | **Persistência de Dados**                  | The storage of data so that it remains available between program executions.                                                                                                     |
+| **Date**                          | **Data**                                   | Defines the start, current, and end year of a scenario.                                                                                                                          |
+| **Deadline**                      | **Prazo**                                  | The final date by which a task must be completed.                                                                                                                                |
+| **Demand**                        | **Demanda**                                | The varying need for a specific type of cargo at a station, influencing the cargo's delivery value.                                                                              |
+| **Depot**                         | **Depósito**                               | A type of station with a 3x3 economic radius and a cost of 50,000.                                                                                                               |
+| **Double Track**                  | **Linha Dupla**                            | A railway line with two parallel tracks allowing bidirectional movement.                                                                                                         |
+| **Economic Radius**               | **Raio Econômico**                         | The area around a station within which industrial and population sites send (supply) and receive (demand) cargo through that station.                                            |
+| **Editor**                        | **Editor**                                 | A user who creates maps and scenarios, defining elements like industries, cities, and scenario restrictions.                                                                     |
+| **Electrified Line**              | **Linha Eletrificada**                     | A railway line that is equipped to support electric locomotives.                                                                                                                 |
+| **Elicitation (Requirements)**    | **Elicitação (Requisitos)**                | The process of gathering software requirements from clients and other stakeholders.                                                                                              |
+| **Feature**                       | **Funcionalidade**                         | A specific functionality of the software.                                                                                                                                        |
+| **Final Product**                 | **Produto Final**                          | A manufactured good that can be delivered to cities, such as cars or textiles.                                                                                                   |
+| **Framework**                     | **Framework**                              | A structured approach or set of tools used in software development.                                                                                                              |
+| **Freight**                       | **Frete**                                  | Another term for cargo transported by trains.                                                                                                                                    |
+| **Fuel Cost**                     | **Custo de Combustível**                   | The annual cost associated with the fuel consumption of a locomotive.                                                                                                            |
+| **FURPS+**                        | **FURPS+**                                 | A model defining system quality attributes: Functionality, Usability, Reliability, Performance, and Supportability.                                                              |
+| **Game Mechanic**                 | **Mecânica do Jogo**                       | The rules and interactions within the railway simulation.                                                                                                                        |
+| **GitHub Repository**             | **Repositório GitHub**                     | A cloud-based storage system for managing source code and version control.                                                                                                       |
+| **Graphical Representation**      | **Representação Gráfica**                  | The visual depiction of maps, stations, and train routes.                                                                                                                        |
+| **Historical Restriction**        | **Restrição Histórica**                    | A limitation based on real-world events affecting the simulation.                                                                                                                |
+| **House Block**                   | **Bloco de Casas**                         | A segment of a city representing residential areas.                                                                                                                              |
+| **I/O**                           | **E/S**                                    | Input/Output Operations.                                                                                                                                                         |
+| **Infrastructure**                | **Infraestrutura**                         | The essential physical structures for the railway network (stations, lines, trains).                                                                                             |
+| **Inhabitants**                   | **Habitantes**                             | People who live in a House Block.                                                                                                                                                |
+| **Input/Output Operations**       | **Operações de Entrada/Saída**             | Processes involving data entry and retrieval in the system.                                                                                                                      |
+| **Integrative Project**           | **Projeto Integrador**                     | A comprehensive assignment involving the analysis, design, and implementation of a computer solution, specifically a simplified simulation of railway networks.                  |
+| **Inventory**                     | **Inventário**                             | A dynamic record of all trains, carriages, cargo, and station upgrades owned by the player.                                                                                      |
+| **Iteration**                     | **Iteração**                               | A cycle in agile development where a set of features is implemented and reviewed.                                                                                                |
+| **JaCoCo**                        | **JaCoCo**                                 | A tool for measuring code coverage in Java applications.                                                                                                                         |
+| **Java Applications**             | **Aplicações Java**                        | Software programs developed using the Java programming language.                                                                                                                 |
+| **JavaDoc**                       | **JavaDoc**                                | Documentation automatically generated from Java source code comments.                                                                                                            |
+| **JUnit 5**                       | **JUnit 5**                                | A framework for writing and running unit tests in Java.                                                                                                                          |
+| **Kilometer Cost**                | **Custo por Quilómetro**                   | The expense associated with constructing a railway line per kilometer.                                                                                                           |
+| **Line**                          | **Linha**                                  | A railway connection between two stations.                                                                                                                                       |
+| **Locomotive**                    | **Locomotiva**                             | The part of a train that provides traction, characterized by type (steam, diesel, electric), power, acceleration, top speed, fuel cost, maintenance cost, and acquisition price. |
+| **Logbook**                       | **Livro de Registos**                      | A Scrum Board column where teams record project-related notes and decisions.                                                                                                     |
+| **Mail**                          | **Correio**                                | A type of cargo representing postal services delivered between cities.                                                                                                           |
+| **Maintenance Cost**              | **Custo de Manutenção**                    | The annual cost associated with the upkeep and repair of a locomotive.                                                                                                           |
+| **Maintenance Route**             | **Rota de Manutenção**                     | A special route designed to pass once through each railway line to simulate maintenance operations.                                                                              |
+| **Map**                           | **Mapa**                                   | The virtual representation where the railway simulation occurs.                                                                                                                  |
+| **Map Editor**                    | **Editor de Mapas**                        | A software tool that enables users to create rectangular maps and place static elements such as cities and industries.                                                           |
+| **Mixed Industry**                | **Indústria Mista**                        | An industry that can import/export any type of cargo (e.g., ports).                                                                                                              |
+| **Negotiation (Requirements)**    | **Negociação (Requisitos)**                | The process of resolving conflicting requirements and addressing limited business resources, including prioritizing requirements.                                                |
+| **Network Performance**           | **Desempenho da Rede**                     | An assessment of how efficiently the railway system operates.                                                                                                                    |
+| **Node**                          | **Nó**                                     | A key point in the railway network, such as a station or industry.                                                                                                               |
+| **Object Serialization**          | **Serialização de Objetos**                | A technique to save and restore program data between executions.                                                                                                                 |
+| **Operational Radius**            | **Raio Operacional**                       | The area of influence a station covers for supplying and receiving cargo.                                                                                                        |
+| **Operation Contract**            | **Contrato de Operação**                   | A document that defines the system's behavior in terms of state changes resulting from a system operation.                                                                       |
+| **Passenger**                     | **Passageiro**                             | A type of cargo representing people traveling by train.                                                                                                                          |
+| **Performance Metric**            | **Métrica de Desempenho**                  | A measurement used to evaluate system efficiency.                                                                                                                                |
+| **Player**                        | **Jogador**                                | A user who plays the game by creating stations, trains, and routes on a selected map/scenario.                                                                                   |
+| **Port**                          | **Porto**                                  | A mixed industry facility that can import/export various cargoes.                                                                                                                |
+| **Position**                      | **Posição**                                | Represents XY coordinates on the map for placing cities, industries, or stations.                                                                                                |
+| **Primary Sector Industry**       | **Indústria do Setor Primário**            | An industry type that generates raw resources, including mines (e.g., iron, coal) and farms (e.g., vegetables, cattle).                                                          |
+| **Product Owner**                 | **Proprietário do Produto**                | A role in Scrum responsible for defining product requirements and priorities.                                                                                                    |
+| **Radius**                        | **Raio**                                   | The radius determines the area around a station within which cities and industries can send or receive cargo.                                                                    |
+| **Railroad Network**              | **Rede Ferroviária**                       | A system of railway lines, stations, and trains.                                                                                                                                 |
+| **Railway Connectivity**          | **Conectividade Ferroviária**              | The extent to which different parts of the railway network are linked.                                                                                                           |
+| **Requirements**                  | **Requisitos**                             | The capabilities and conditions that a system, and more broadly a project, must conform to.                                                                                      |
+| **Requirements Engineering**      | **Engenharia de Requisitos**               | A discipline encompassing techniques, skills, and methods used to collect, specify, negotiate, and validate functional and non-functional requirements for a system.             |
+| **Route**                         | **Rota**                                   | A list of stations where the train passes.                                                                                                                                       |
+| **Route Validity Check**          | **Verificação de Rota**                    | A check to ensure a train can travel between two stations, considering type and electrification.                                                                                 |
+| **Scenario**                      | **Cenário**                                | A defined context for the simulation including date, restrictions, and available resources.                                                                                      |
+| **Scenario (Use Case)**           | **Cenário (Caso de Uso)**                  | A specific sequence of actions and interactions between an actor and the system within a use case, representing a particular path (success or failure).                          |
+| **Scenario Editor**               | **Editor de Cenários**                     | A tool allowing users to define restrictions and conditions for a given map, including time, technological, and historical limitations.                                          |
+| **Scrum**                         | **Scrum**                                  | An agile framework for managing software development projects.                                                                                                                   |
+| **Scrum Board**                   | **Quadro Scrum**                           | A visual tool for tracking.                                                                                                                                                      |
+| **Scrum Master**                  | **Scrum Master**                           | A team member responsible for facilitating the Scrum process.                                                                                                                    |
+| **Serialization**                 | **Serialização**                           | The process of converting an object into a format that can be stored or transmitted.                                                                                             |
+| **Simulator**                     | **Simulador**                              | A program that imitates the behavior of a real system or process.                                                                                                                |
+| **Single Track**                  | **Linha Simples**                          | A railway line with only one track, requiring careful scheduling to avoid congestion.                                                                                            |
+| **Specification (Requirements)**  | **Especificação (Requisitos)**             | The process of documenting requirements, which can involve formal or informal artifacts and categorization into functional and non-functional types.                             |
+| **Stakeholder**                   | **Partes Interessadas**                    | Any person or group with an interest or concern in the software to be developed, including clients, end-users, and other involved parties.                                       |
+| **Station**                       | **Estação**                                | A mid-tier station where trains stop to pick up and deliver cargo.                                                                                                               |
+| **Supplementary Specification**   | **Especificação Suplementar**              | An artifact used to capture non-functional requirements and domain rules.                                                                                                        |
+| **Supply**                        | **Oferta**                                 | The availability of a specific type of cargo at a station for collection.                                                                                                        |
+| **System Sequence Diagram (SSD)** | **Diagrama de Sequência de Sistema (DSS)** | A diagram that shows the sequence of events and system operations for a use case.                                                                                                |
+| **Technical Restriction**         | **Restrição Tecnológica**                  | Limits which locomotives, buildings, or industries are available in a scenario.                                                                                                  |
+| **Terminal**                      | **Terminal**                               | The largest type of station with a 5x5 economic radius.                                                                                                                          |
+| **Test-Driven Development (TDD)** | **Desenvolvimento Orientado a Testes**     | A software development practice where unit tests are written before the actual code implementation to ensure maintainability and good software practices.                        |
+| **Time Restriction**              | **Restrição Temporal**                     | Limits the period in which the simulation can occur.                                                                                                                             |
+| **Top Speed**                     | **Velocidade Máxima**                      | The maximum velocity a locomotive can achieve.                                                                                                                                   |
+| **Tracing (Requirements)**        | **Rastreamento (Requisitos)**              | The ability to link requirements to other artifacts such as design elements, code, and tests, ensuring traceability throughout the development process.                          |
+| **Train**                         | **Comboio**                                | A railway vehicle used to transport passengers or goods.                                                                                                                         |
+| **Transforming Industry**         | **Indústria Transformadora**               | A facility that processes raw materials into finished products (e.g., automobile factories).                                                                                     |
+| **Use Case (UC)**                 | **Caso de Uso (CU)**                       | A textual story describing how a system is used to achieve a specific business objective.                                                                                        |
+| **Use Case Model (UCM)**          | **Modelo de Caso de Uso (MCU)**            | An abstraction of a system that promotes understanding and description of requirements, particularly functional ones, and includes Use Case Diagrams and Use Cases.              |
+| **User Case Diagram**             | **Diagrama de Casos de Uso**               | A UML diagram that visually represents the interactions between users and a system.                                                                                              |
+| **User Scenario**                 | **Cenário de Utilizador**                  | A description capturing the goals of the system from the perspective of its end-users, focusing on their day-to-day interactions.                                                |
+| **User Story**                    | **História de Utilizador**                 | A description of a software feature from the end-user perspective.                                                                                                               |
+| **Validation (Requirements)**     | **Validação (Requisitos)**                 | The activity of reviewing and confirming that requirements are complete, correct, and ready for development.                                                                     |
+| **Version Register**              | **Registo de Versão**                      | A log tracking different versions of the project.                                                                                                                                |
+| **Vision Document**               | **Documento de Visão**                     | A high-level artifact that outlines the purpose of a project, the problems it addresses, stakeholders, needs, and the proposed solution's perspective.                           |
+| **Waypoints**                     | **Pontos de Passagem**                     | Specific locations along a train’s route where it can stop or change direction.                                                                                                  |
