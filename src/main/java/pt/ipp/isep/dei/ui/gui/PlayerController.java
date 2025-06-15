@@ -849,7 +849,7 @@ public class PlayerController implements Initializable {
         List<Carriage> carriages = new ArrayList<>();
         boolean addMoreCarriages = true;
         int totalCarriageCapacity = 0;
-        double totalCost = selectedLoco.getCost();
+        double totalCost = 0.0;
         while (addMoreCarriages) {
             Dialog<Carriage> carriageDialog = new Dialog<>();
             carriageDialog.setTitle("Add Carriage");
