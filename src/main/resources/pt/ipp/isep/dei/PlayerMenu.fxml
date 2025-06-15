@@ -34,6 +34,8 @@
             <!-- Menu Simulation -->
             <Menu text="Simulation" style="-fx-font-size: 16px;">
                <items>
+                  <MenuItem fx:id="saveGameMenuItem" text="Save Game" onAction="#handleSaveGame" />
+                  <MenuItem fx:id="loadGameMenuItem" text="Load Game" onAction="#handleLoadGame" />
                   <MenuItem fx:id="startSimulationMenuItem" text="Start Simulation" onAction="#onStartSimulation" />
                   <MenuItem fx:id="pauseSimulationMenuItem" text="Pause Simulation" onAction="#onPauseSimulation" />
                </items>

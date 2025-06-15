@@ -2,10 +2,11 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 import pt.ipp.isep.dei.domain.enums.CargoMode;
 
-public class Simulation {
+public class Simulation implements Serializable {
     private final Scenario scenario;
     private final Player player;
     private int currentYear;

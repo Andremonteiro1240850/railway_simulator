@@ -5,6 +5,7 @@ import pt.ipp.isep.dei.repository.ScenarioRepository;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.domain.Map;
 import pt.ipp.isep.dei.domain.Scenario;
+import pt.ipp.isep.dei.domain.Simulation;
 import pt.ipp.isep.dei.utils.FileManager;
 
 /**
@@ -99,5 +100,42 @@ public class SaveLoadController {
      */
     public String[] getSavedScenarios() {
         return FileManager.getSavedScenarios();
+    }
+
+    /**
+     * Saves the current simulation (game) to a file.
+     *
+     * @param simulation the simulation to save
+     * @param filename the name of the file to save to
+     * @return true if the save was successful, false otherwise
+     */
+    public boolean saveGame(Simulation simulation, String filename) {
+        return FileManager.saveGame(simulation, filename);
+    }
+
+    /**
+     * Loads a simulation (game) from a file.
+     *
+     * @param filename the name of the file to load from
+     * @return the loaded simulation, or null if loading failed
+     */
+    public Simulation loadGame(String filename) {
+        Simulation loadedSimulation = FileManager.loadGame(filename);
+        if (loadedSimulation != null) {
+            // Add stations from the loaded simulation to the repository
+            loadedSimulation.getScenario().getStationsPurchased().forEach(station -> {
+                Repositories.getInstance().getStationRepository().add(station);
+            });
+        }
+        return loadedSimulation;
+    }
+
+    /**
+     * Gets a list of all saved game files.
+     *
+     * @return array of game filenames
+     */
+    public String[] getSavedGames() {
+        return FileManager.getSavedGames();
     }
 } 

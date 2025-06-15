@@ -39,6 +39,8 @@ import pt.ipp.isep.dei.domain.enums.StationUpgrade;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.repository.ScenarioRepository;
 import javafx.scene.control.ChoiceDialog;
+import pt.ipp.isep.dei.controller.SaveLoadController;
+import javafx.scene.control.TextInputDialog;
 
 public class PlayerController implements Initializable {
     private ScenarioRepository scenarioRepo;
@@ -80,6 +82,7 @@ public class PlayerController implements Initializable {
     private Simulation simulation;
     private Timeline simulationTimeline;
     private Player player;
+    private SaveLoadController saveLoadController = new SaveLoadController();
 
     public PlayerController() {
         this.controller = new CreateScenarioController();
@@ -266,9 +269,9 @@ public class PlayerController implements Initializable {
     }
 
     private void updateStationList() {
-        List<Station> allStations = Repositories.getInstance().getStationRepository().getAll();
-        stationList.getItems().clear();
-        stationList.getItems().addAll(allStations);
+        if (simulation != null && stationList != null) {
+            stationList.getItems().setAll(simulation.getScenario().getStationsPurchased());
+        }
     }
 
     private void updateLocomotiveInventory() {
@@ -1255,5 +1258,82 @@ public class PlayerController implements Initializable {
         String message = String.format("Selected cargo mode '%s' at station %s", mode, station.getName());
         updateStatus(message);
         // Lógica adicional se necessário
+    }
+
+    @FXML
+    private void handleSaveGame() {
+        if (simulation == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Save Game Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No simulation in progress to save.");
+            alert.showAndWait();
+            return;
+        }
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Save Game");
+        dialog.setHeaderText("Enter a name for your saved game:");
+        dialog.setContentText("Filename:");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(filename -> {
+            if (filename.trim().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Invalid Filename");
+                alert.setHeaderText(null);
+                alert.setContentText("Filename cannot be empty.");
+                alert.showAndWait();
+                return;
+            }
+            boolean success = saveLoadController.saveGame(simulation, filename.trim());
+            Alert alert = new Alert(success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
+            alert.setTitle(success ? "Game Saved" : "Save Failed");
+            alert.setHeaderText(null);
+            alert.setContentText(success ? "Game saved successfully!" : "Failed to save game.");
+            alert.showAndWait();
+        });
+    }
+
+    @FXML
+    private void handleLoadGame() {
+        String[] savedGames = saveLoadController.getSavedGames();
+        if (savedGames.length == 0) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("No Saved Games");
+            alert.setHeaderText(null);
+            alert.setContentText("No saved games found.");
+            alert.showAndWait();
+            return;
+        }
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(savedGames[0], savedGames);
+        dialog.setTitle("Load Game");
+        dialog.setHeaderText("Select a saved game to load:");
+        dialog.setContentText("Saved games:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(filename -> {
+            Simulation loadedSimulation = saveLoadController.loadGame(filename);
+            if (loadedSimulation != null) {
+                simulation = loadedSimulation;
+                updateLabels("Game loaded: " + filename, simulation.getCurrentYear(), simulation.getCurrentMonth());
+                stationList.getItems().clear();
+                updateStationList();
+                updateLocomotiveInventory();
+                updateIndustriesList();
+                updateCitiesList();
+                drawMapAndAnimateRoute(null);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Game Loaded");
+                alert.setHeaderText(null);
+                alert.setContentText("Game loaded successfully!");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Load Failed");
+                alert.setHeaderText(null);
+                alert.setContentText("Failed to load game.");
+                alert.showAndWait();
+            }
+        });
     }
 }
