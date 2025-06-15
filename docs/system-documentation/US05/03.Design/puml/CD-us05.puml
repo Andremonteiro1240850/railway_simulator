@@ -1,67 +1,148 @@
 @startuml
-
 skinparam monochrome false
 skinparam shadowing false
 hide empty members
 
-class Player {
+' Domain Layer
+package "Domain Layer" {
+    class Scenario {
+        - budget : float
+        + getMap() : Map
+        + getBudget() : float
+        + setBudget(budget : float)
+        + addStationPurchased(station : Station)
+    }
+
+    class Map {
+        - width : int
+        - height : int
+        + getWidth() : int
+        + getHeight() : int
+        + getCities() : List<City>
+    }
+
+    class City {
+        - name : String
+        - x : int
+        - y : int
+        ' Additional attributes as needed
+    }
+
+    class Station {
+        - name : String
+        - x : int
+        - y : int
+        - type : StationType
+        - region : String
+        ' Constructor from DTO
+        + Station(dto : StationDTO)
+        ' Other methods as Information Expert
+    }
+
+    class StationType {
+        - name : String
+        ' Other attributes (e.g., cost)
+    }
 }
 
-class BuildStationUI {
-  + asksToBuildStation()
-  + showStationTypes()
-  + askForLocation()
-  + showDataAndRequestConfirmation()
-  + displayOperationSuccess()
+' Application Layer
+package "Application Layer" {
+    class Repositories {
+        - scenarioRepository : ScenarioRepository
+        - stationRepository : StationRepository
+        + getInstance() : Repositories
+        + getScenarioRepository() : ScenarioRepository
+        + getStationRepository() : StationRepository
+    }
+
+    class ScenarioRepository {
+        + getAll() : List<Scenario>
+        + save(scenario : Scenario) : Optional<Scenario>
+    }
+
+    class StationRepository {
+        + getAll() : List<Station>
+        + add(station : Station) : Optional<Station>
+    }
+
+    class StationTypeRepository {
+        + getAll() : List<StationType>
+    }
+
+    class BuildStationController {
+        - scenario : Scenario
+        + setScenario(dto : ScenarioDTO)
+        + suggestStationName(x : int, y : int, type : StationType) : String
+        + createStation(dto : StationDTO) : boolean
+    }
 }
 
-class CreateStationController {
-  + getStationTypes()
-  + getLocation()
-  + getName()
-  + getCentre()
-  + createStation()
+' Presentation Layer
+package "Presentation Layer" {
+
+
+    class BuildStationUI {
+        + asksToBuildStation()
+        + showAvailableScenarios(scenarios : List<ScenarioDTO>)
+        + requestsXCoordinate()
+        + requestsYCoordinate()
+        + showsSuggestedNameAndRequestsConfirmation(name : String)
+        + requestsStationTypeAndRegion()
+        + displaysOperationSuccessFailure(success : boolean)
+    }
 }
 
-class StationRepository {
-  + getStationTypeList()
-  + calculateCenterOptions()
-  + saveStation()
+' DTOs (Data Transfer Objects)
+package "DTOs" {
+    class ScenarioDTO {
+        + convert(scenarios : List<Scenario>) : List<ScenarioDTO>
+        ' Attributes for scenario data
+    }
+
+    class StationDTO {
+        ' Attributes for station creation data
+        + x : int
+        + y : int
+        + name : String
+        + type : StationType
+        + region : String
+    }
 }
 
-class CreateMapRepository {
-  + requestCoordinates()
-}
+' Relationships
 
+' UI and Controller (Dependency)
+Player --> BuildStationUI : "uses"
+BuildStationUI ..> BuildStationController : "uses"
+BuildStationUI ..> ScenarioDTO : "uses"
+BuildStationUI ..> StationDTO : "uses"
 
-class Station {
-  + generateName()
-}
+' Controller and Repositories (Dependencies and Associations)
+BuildStationController --> Repositories : "uses"
+BuildStationController ..> ScenarioRepository : "uses"
+BuildStationController ..> StationRepository : "uses"
+BuildStationController ..> StationTypeRepository : "uses"
 
-class City {
-  + getNearestCity()
-}
+' Controller and Domain Objects (Dependencies/Creation/Usage)
+BuildStationController ..> Scenario : "manages"
+BuildStationController ..> Map : "uses"
+BuildStationController ..> Station : "creates"
+BuildStationController ..> StationType : "uses"
+BuildStationController ..> StationDTO : "receives"
+BuildStationController ..> ScenarioDTO : "receives"
 
+' Repositories and Domain Objects (Aggregation/Composition)
+Repositories *-- ScenarioRepository : "aggregates"
+Repositories *-- StationRepository : "aggregates"
+Repositories *-- StationTypeRepository : "aggregates"
 
+ScenarioRepository o-- Scenario : "manages"
+StationRepository o-- Station : "manages"
+StationTypeRepository o-- StationType : "manages"
 
-class Map {
-  + buildStation()
-}
-
-
-class StationTypeRepository {
-  + getStationTypeList()
-}
-
-' Relacionamentos
-Player --> CreateStationUI:"use"
-CreateStationUI --> CreateStationController:"create"
-
-Station --> StationRepository: "save station on"
-CreateStationController --> CreateMapRepository:"check and validate"
-CreateStationController --> Station: "create"
-CreateStationController --> City: "get"
-CreateStationController --> Map: "get"
-CreateStationController --> StationTypeRepository: "get"
+' Domain Object Relationships (Associations, Aggregations, Compositions)
+Scenario *-- Map : "has a"
+Map *-- City : "contains"
+Station o-- StationType : "is of type"
 
 @enduml

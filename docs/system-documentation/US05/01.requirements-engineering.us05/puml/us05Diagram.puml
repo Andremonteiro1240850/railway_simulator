@@ -13,27 +13,27 @@ activate Employee
     Employee -> System : Ask to build a station
     activate System
 
-        System --> Employee : Verify if is alowed to build a station and show station types
+        System --> Employee : show avaiable scenarios
     deactivate System
 
-    Employee -> System : select station type
+    Employee -> System : select scenario
     activate System
 
-        System --> Employee :  ask for location
+        System --> Employee :  ask for cordinate x
     deactivate System
 
-    Employee -> System : Give location
+    Employee -> System : Give cordinate
     activate System
 
-        System --> Employee : request name, (and centre if station) and sugest name
+        System --> Employee : ask for cordinate y
     deactivate System
 
-    Employee -> System : type requested information
+    Employee -> System : Give cordinate
     activate System
 
-        System --> Employee : show all information and request confirmation
+        System --> Employee : show sugested name and request confirmation
     deactivate System
-    Employee -> System : Confirm information
+    Employee -> System : select station type and region (if station) and confirms name
     activate System
     System -> Employee : display operation sucess and build station
 

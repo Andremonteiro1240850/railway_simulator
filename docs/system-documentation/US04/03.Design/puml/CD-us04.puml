@@ -2,61 +2,198 @@
 skinparam monochrome false
 skinparam packageStyle rectangle
 skinparam shadowing false
+hide empty members
 
-class Editor {
+' Presentation Layer
+package "Presentation Layer" {
+
+
+       class CreateScenarioUI {
+        + asksToCreateNewScenario()
+        + showAvailableMaps(maps : List<MapDTO>)
+        + requestsScenarioDetails()
+        + configurePortBehavior()
+        + showEventsAndAskConfirmation(events : List<HistoricalEventDTO>)
+        + displaySuccessFailure(success : boolean)
+        ' Métodos para obter input do utilizador
+        + selectsMap() : MapDTO
+        + typesScenarioName() : String
+        + typesStartYear() : int
+        + typesEndYear() : int
+        + selectsLocomotiveTypes() : List<String>
+        + selectsCargo() : String
+        + confirmsEvents() : boolean
+    }
 }
 
-class CreateScenarioUI {
-  + askToCreateNewScenario()
-  + showAvailableMaps(mapsList)
-  + requestScenarioDetails()
-  + showConfirmation(data)
-  + displaySuccess()
+' Application Layer
+package "Application Layer" {
+    class Repositories {
+        + getInstance() : Repositories
+        + getAuthenticationRepository() : AuthenticationRepository
+        + getOrganizationRepository() : OrganizationRepository
+        + getMapRepository() : MapRepository
+        + getScenarioRepository() : ScenarioRepository
+        ' Add HistoricalEventRepository if needed
+    }
+
+    class AuthenticationRepository {
+        + getCurrentUserSession() : CurrentUserSession
+    }
+
+    class OrganizationRepository {
+        + getOrganizationByEmployee(employee : Employee) : Optional<Organization>
+    }
+
+    class MapRepository {
+        + getAll() : List<Map>
+    }
+
+    class ScenarioRepository {
+        + add(scenario : Scenario) : Optional<Scenario>
+    }
+
+    ' Implicit based on sequence diagram for historical events
+    class HistoricalEventRepository {
+        + getApplicableEvents(startYear : int) : List<HistoricalEvent>
+    }
+
+    class CreateScenarioController {
+        - repositories : Repositories
+        - authRepo : AuthenticationRepository
+        - orgRepo : OrganizationRepository
+        - mapRepo : MapRepository
+        - scenarioRepo : ScenarioRepository
+
+        + create() : void
+        + getAvailableMaps() : List<MapDTO>
+        + loadApplicableHistoricalEvents(startYear : int) : List<HistoricalEventDTO>
+        + createScenario(dto : ScenarioDTO) : boolean
+    }
 }
 
-class CreateScenarioController {
-  + getAvailableMaps()
-  + getAvailablePortBehaviors()
-  + getAvailableLocomotionTypes()
-  + getIndustryGenerationFactors()
-  + createScenario(params)
+' Domain Layer
+package "Domain Layer" {
+    class CurrentUserSession {
+        + isLoggedIn() : boolean
+        + getUserId() : String ' Email in this context
+    }
+
+    class Employee {
+        - email : String
+        + Employee(email : String)
+    }
+
+    class Organization {
+        ' Attributes if needed, e.g., name, id
+    }
+
+    class Map {
+        - id : String
+        - name : String
+        - width : int
+        - height : int
+        ' Other map specific attributes
+    }
+
+    class PortBehavior {
+        + PortBehavior()
+        + addCargo(cargoType : String) : void
+        ' Other methods to configure behavior
+    }
+
+    class Scenario {
+        - name : String
+        - startYear : int
+        - endYear : int
+        - locomotiveTypes : List<String>
+        - map : Map
+        - portBehavior : PortBehavior
+        - historicalEvents : List<HistoricalEvent>
+        - creatorEmail : String
+        + Scenario(dto : ScenarioDTO, map : Map, portBehavior : PortBehavior, events : List<HistoricalEvent>, creatorEmail : String)
+        ' Other scenario specific methods
+    }
+
+    class HistoricalEvent {
+        - name : String
+        - year : int
+        ' Other attributes
+        + HistoricalEvent(name : String, year : int)
+    }
 }
 
+' DTOs (Data Transfer Objects)
+package "DTOs" {
+    class MapDTO {
+        - id : String
+        - name : String
+        + convert(maps : List<Map>) : List<MapDTO>
+    }
 
-class CreateMapRepository {
-  + getAllMaps()
+    class HistoricalEventDTO {
+        - name : String
+        - year : int
+        + convert(events : List<HistoricalEvent>) : List<HistoricalEventDTO>
+    }
+
+    class ScenarioDTO {
+        - mapId : String
+        - name : String
+        - startYear : int
+        - endYear : int
+        - locomotiveTypes : List<String>
+        - cargoTypes : List<String> ' From PortBehavior configuration
+        ' Additional attributes if needed for DTO
+    }
 }
 
-class PortBehavior {
-  + getBehaviorOptions()
-}
+' Relationships
 
-class Locomotive {
-  + requestLocomotionTypes()
-}
+' UI and Controller (Dependency)
+Editor --> CreateScenarioUI : "uses"
+CreateScenarioUI ..> CreateScenarioController : "uses"
+CreateScenarioUI ..> MapDTO : "sends/receives"
+CreateScenarioUI ..> HistoricalEventDTO : "receives"
+CreateScenarioUI ..> ScenarioDTO : "sends"
 
-class IndustryRepository {
-  + getGenerationFrequency()
-}
+' Controller and Repositories (Dependencies)
+CreateScenarioController ..> Repositories : "uses"
+CreateScenarioController ..> AuthenticationRepository : "uses"
+CreateScenarioController ..> OrganizationRepository : "uses"
+CreateScenarioController ..> MapRepository : "uses"
+CreateScenarioController ..> ScenarioRepository : "uses"
+CreateScenarioController ..> HistoricalEventRepository : "uses"
 
-class ScenarioManager {
-  + create(map, params)
-  + setPortBehavior()
-  + setLocomotionTypes()
-  + configureIndustries()
-}
+' Controller and Domain Objects (Usage, Creation)
+CreateScenarioController ..> CurrentUserSession : "uses"
+CreateScenarioController ..> Employee : "creates"
+CreateScenarioController ..> Organization : "uses"
+CreateScenarioController ..> Map : "uses"
+CreateScenarioController ..> PortBehavior : "creates"
+CreateScenarioController ..> Scenario : "creates"
+CreateScenarioController ..> HistoricalEvent : "creates"
+CreateScenarioController ..> MapDTO : "receives"
+CreateScenarioController ..> HistoricalEventDTO : "sends"
+CreateScenarioController ..> ScenarioDTO : "receives"
 
-' Relacionamentos
-Editor --> CreateScenarioUI : use
-CreateScenarioUI --> CreateScenarioController : comunicate
-CreateScenarioController --> CreateMapRepository : goes
-CreateScenarioController --> PortBehavior : goes
-CreateScenarioController --> Locomotive : goes
-CreateScenarioController --> IndustryRepository : goes
-CreateScenarioController --> ScenarioManager : create
-ScenarioManager --> Locomotive : configure
+' Repositories and Domain Objects (Management/Aggregation)
+Repositories *-- AuthenticationRepository : "aggregates"
+Repositories *-- OrganizationRepository : "aggregates"
+Repositories *-- MapRepository : "aggregates"
+Repositories *-- ScenarioRepository : "aggregates"
+Repositories *-- HistoricalEventRepository : "aggregates"
 
+AuthenticationRepository o-- CurrentUserSession : "manages"
+OrganizationRepository o-- Organization : "manages"
+MapRepository o-- Map : "manages"
+ScenarioRepository o-- Scenario : "manages"
+HistoricalEventRepository o-- HistoricalEvent : "manages"
 
-
+' Domain Object Relationships
+Scenario "1" *-- "1" Map : "has a"
+Scenario "1" *-- "1" PortBehavior : "has a"
+Scenario "1" *-- "0..*" HistoricalEvent : "includes"
+Organization "1" *-- "0..*" Employee : "has"
 
 @enduml

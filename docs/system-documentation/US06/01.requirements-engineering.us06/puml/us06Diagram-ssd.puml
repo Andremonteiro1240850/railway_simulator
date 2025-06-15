@@ -23,12 +23,18 @@ activate Employee
     deactivate System
 
     Employee -> System : select building
+
     activate System
+     System --> Employee : requests  subtype
+        deactivate System
+
+        Employee -> System : select subtype
+        activate System
 
         System --> Employee : shows all data and requests confirmation
     deactivate System
 
-    Employee -> System : confirms data
+    Employee -> System : confirms upgrade
     activate System
 
         System --> Employee : displays operation success and upgrade station

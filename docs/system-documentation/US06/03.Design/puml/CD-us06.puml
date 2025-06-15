@@ -2,66 +2,143 @@
 skinparam monochrome false
 skinparam packageStyle rectangle
 skinparam shadowing false
+hide empty members
 
-class Player {
+' Domain Layer
+package "Domain Layer" {
+    class Station {
+        - id : String
+        - name : String
+        - x : int
+        - y : int
+        - type : String ' Refers to StationType
+        - region : String
+        - upgrades : List<String>
+        + hasUpgrade(type : String, subType : String) : boolean
+        + addUpgrade(type : String, subType : String) : boolean
+    }
+
+    class Scenario {
+        - id : String
+        - budget : float
+        - stations : List<Station>
+        + canAfford(price : float) : boolean
+        + deductBudget(price : float) : boolean
+        ' Add methods to manage stations within the scenario if needed, e.g., getStationById
+    }
+
+    class UpgradeType {
+        - name : String
+        - hasSubTypes : boolean
+        - cost : float
+        ' Could have a list of subtypes
+    }
+
+    class UpgradeSubType {
+        - name : String
+        - cost : float
+    }
 }
 
-class UpgradeStationUI {
-  + askToUpgradeStation()
-  + showAvailableStations()
-  + requestBuildingType()
-  + showUpgradeSummary()
-  + displayUpgradeResult()
+' Application Layer (Repositories and Controller)
+package "Application Layer" {
+    class StationRepository {
+        + getAll() : List<Station>
+        + findByReference(stationId : String) : Optional<Station>
+        + addUpgradeToStation(stationId : String, upgrade : String) : boolean
+        + findScenarioByStation(stationId : String) : Optional<Scenario>
+    }
+
+    class UpgradeBuildingsRepository {
+        + getAllUpgradeTypes() : List<String> ' Simplified to string as per SD
+        + acceptsSubTypes(type : String) : boolean
+        + getAllSubTypes() : List<String> ' Simplified to string as per SD
+        ' Could have methods to get upgrade costs or full UpgradeType objects
+    }
+
+    class ScenarioRepository {
+        + getScenarioById(scenarioId : String) : Optional<Scenario>
+        + save(scenario : Scenario) : boolean ' For updating budget changes
+    }
+
+    class UpgradeStationController {
+        - selectedStation : Station
+        - currentScenario : Scenario
+        + initialize()
+        + getAvailableStations() : List<StationDTO>
+        + getAvailableUpgradeTypes() : List<UpgradeOptionDTO>
+        + getAvailableSubTypes(type : String) : List<UpgradeOptionDTO>
+        + upgradeStation(dto : UpgradeOptionDTO) : boolean
+    }
 }
 
-class UpgradeStationController {
-  + initialize()
-  + getStations()
-  + selectUpgradeBuilding()
-  + executeUpgrade()
+' Presentation Layer
+package "Presentation Layer" {
+
+
+    class UpgradeStationUI {
+        + asksToUpgradeStation()
+        + showAvailableStations(stations : List<StationDTO>)
+        + requestsUpgradeType(upgradeTypes : List<UpgradeOptionDTO>)
+        + requestsSubtype(subTypes : List<UpgradeOptionDTO>)
+        + showsSummaryAndRequestsConfirmation()
+        + displaysUpgradeResult(success : boolean)
+        + selectsStation() : StationDTO
+        + selectsUpgradeType() : UpgradeOptionDTO
+        + selectsSubType() : UpgradeOptionDTO
+        + confirmsUpgrade() : boolean
+    }
 }
 
+' DTOs (Data Transfer Objects)
+package "DTOs" {
+    class StationDTO {
+        - id : String
+        - name : String
+        - x : int
+        - y : int
+        + convert(stations : List<Station>) : List<StationDTO>
+        ' Attributes needed for UI display
+    }
 
-
-class PlayerRepository {
-  + getCurrentPlayer()
+    class UpgradeOptionDTO {
+        - type : String
+        - subType : String
+        - displayName : String
+        ' Additional fields like cost if needed by UI
+        + wrap(options : List<String>) : List<UpgradeOptionDTO>
+    }
 }
 
-class StationRepository {
-  + getStationsByPlayer()
-}
+' Relationships
 
-class BuildingRepository {
-  + getBuildingsByType()
-}
+' UI and Controller (Dependency)
+PLAYER --> UpgradeStationUI : "uses"
+UpgradeStationUI ..> UpgradeStationController : "uses"
+UpgradeStationUI ..> StationDTO : "sends/receives"
+UpgradeStationUI ..> UpgradeOptionDTO : "sends/receives"
 
+' Controller and Repositories (Dependencies)
+UpgradeStationController ..> StationRepository : "uses"
+UpgradeStationController ..> UpgradeBuildingsRepository : "uses"
+UpgradeStationController ..> ScenarioRepository : "uses"
 
-class Organization{
-  + verifyIfPossible()
-}
+' Controller and Domain Objects (Dependencies/Usage)
+UpgradeStationController ..> Station : "interacts with"
+UpgradeStationController ..> Scenario : "interacts with"
+UpgradeStationController ..> StationDTO : "sends/receives"
+UpgradeStationController ..> UpgradeOptionDTO : "sends/receives"
 
-class StationUpgrader {
-  + applyUpgrade()
-}
+' Repositories and Domain Objects (Management)
+StationRepository o-- Station : "manages"
+ScenarioRepository o-- Scenario : "manages"
+UpgradeBuildingsRepository o-- UpgradeType : "manages"
+UpgradeBuildingsRepository o-- UpgradeSubType : "manages"
 
-' Relacionamentos
-Player --> UpgradeStationUI : usa
-UpgradeStationUI --> UpgradeStationController : comunicate
-
-UpgradeStationController --> PlayerRepository : goes
-UpgradeStationController --> StationRepository : goes
-UpgradeStationController --> BuildingRepository : goes
-UpgradeStationController --> StationRepository : verify
-UpgradeStationController --> Organization : verify
-UpgradeStationController --> StationUpgrader : create
-StationUpgrader --> StationRepository: save on
-BuildingRepository --> StationUpgrader: get building
-
-
-
-
-
+' Domain Object Relationships
+Scenario "1" *-- "*" Station : "contains" ' A Scenario can contain multiple Stations
+Station "1" *-- "0..*" UpgradeType : "has" ' A Station can have multiple upgrades
+' The relationship between UpgradeType and UpgradeSubType could be a composition if subtypes only exist within a type
+UpgradeType "1" *-- "0..*" UpgradeSubType : "has"
 
 @enduml
-
-

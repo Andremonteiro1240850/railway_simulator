@@ -5,21 +5,20 @@
 ### 3.1. Rationale
 
 **The rationale grounds on the SSD interactions and the identified input/output data.**
+Here's the refactored table with 10 steps, translated into English, aligning responsibilities and justifications with the provided sequence diagram for the "Upgrade Station" process and GRASP principles:
 
-| Interaction ID | Question: Which class is responsible for... | Answer | Justification (with patterns) |
-|:---------------|:--------------------------------------------|:-------|:-----------------------------|
-| Step 1 | ... interacting with the Player? | UpgradeStationUI | Pure Fabrication: separates UI responsibility from domain logic |
-| Step 2 | ... coordinating the upgrade process? | UpgradeStationController | Controller: mediates between UI and domain logic |
-| Step 3 | ... retrieving the current player data? | PlayerRepository | Repository: handles player data persistence |
-| Step 4 | ... retrieving available stations? | StationRepository | Information Expert: knows about stations |
-| Step 5 | ... retrieving available buildings? | BuildingRepository | Information Expert: knows about building types |
-| Step 6 | ... verifying if upgrade is financially possible? | BudgetManager | Information Expert: manages player finances |
-| Step 7 | ... executing the station upgrade? | StationUpgrader | Expert: handles upgrade business rules |
-| Step 8 | ... validating building availability by date? | BuildingRepository | Information Expert: knows building constraints |
-| Step 9 | ... validating mutual exclusivity of buildings? | BuildingRepository | Information Expert: knows building dependencies |
-| Step 10 | ... persisting the upgraded station? | StationRepository | Repository: handles station data persistence |
-| Step 11 | ... updating player budget? | BudgetManager | Information Expert: manages financial transactions |
-| Step 12 | ... providing feedback to the player? | UpgradeStationUI | Pure Fabrication: handles user output |
+| Interaction ID | Question: Which class is responsible for...                           | Answer                       | Justification (with GRASP patterns)                                                               |
+|:---------------|:----------------------------------------------------------------------|:-----------------------------|:--------------------------------------------------------------------------------------------------|
+| Step 1         | ... interacting with the Player?                                      | `UpgradeStationUI`           | **Pure Fabrication**: Separates UI responsibility from domain logic.                              |
+| Step 2         | ... coordinating the upgrade process?                                 | `UpgradeStationController`   | **Controller**: Mediates between the UI and domain logic, orchestrating operations.               |
+| Step 3         | ... retrieving available stations?                                    | `StationRepository`          | **Repository**: Responsible for persistence and retrieval of `Station` objects.                   |
+| Step 4         | ... retrieving available upgrade types and subtypes?                  | `UpgradeBuildingsRepository` | **Information Expert**: Possesses the knowledge about upgrade types and subtypes.                 |
+| Step 5         | ... verifying if the upgrade is financially possible?                 | `Scenario`                   | **Information Expert**: Possesses knowledge of its own budget and can verify its sufficiency.     |
+| Step 6         | ... executing the upgrade on the station itself (adding the upgrade)? | `Station`                    | **Information Expert**: Knows its own upgrades and is responsible for adding them.                |
+| Step 7         | ... checking if an upgrade already exists on the station?             | `Station`                    | **Information Expert**: Knows its own existing upgrades and can verify their presence.            |
+| Step 8         | ... persisting the updated station?                                   | `StationRepository`          | **Repository**: Responsible for saving changes to `Station` data.                                 |
+| Step 9         | ... updating the scenario budget after the upgrade?                   | `Scenario`                   | **Information Expert**: Possesses knowledge of its budget and is responsible for deducting costs. |
+| Step 10        | ... providing feedback to the Player?                                 | `UpgradeStationUI`           | **Pure Fabrication**: Handles the presentation of operation results to the user.                  |
 
 ### Systematization
 
