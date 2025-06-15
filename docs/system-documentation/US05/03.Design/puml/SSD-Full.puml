@@ -10,146 +10,147 @@ actor "Player" as ORG_EMPLOYEE
 
 participant ":BuildStationUI" as UI
 participant ":BuildStationController" as CTRL
-participant "StationRepository" as REPOS
-participant "CreateMapRepository" as MAP
+participant "repositories\n:Repositories" as REPOS_SINGLETON
+participant "scenario\n:Scenario" as SCENARIO_OBJ #LightBlue
+participant "map\n:Map" as MAP_OBJ #LightBlue
+participant "stationRepository\n:StationRepository" as STATION_REPO
 
-participant "Station" as NAMING
-participant "City" as CITY
-participant "Map" as RAIL
-participant "StationTypes" as REPOT
+' DTOs adicionados
+participant "ScenarioDTO" as SCENARIO_DTO #LightGreen
+participant "StationDTO" as STATION_DTO #LightGreen
 
 activate ORG_EMPLOYEE
 
-    ORG_EMPLOYEE -> UI : asks to build a staion
-    autonumber 1
+ORG_EMPLOYEE -> UI : asks to build a station
+activate UI
+    UI --> CTRL : create()
+    activate CTRL
+    CTRL --> UI : initializationComplete
+    deactivate CTRL
 
-    activate UI
-        UI --> CTRL** : create()
-        autonumber 2
-        UI -> CTRL : getStationTypes()
-        autonumber 3
-        autonumber 3.1
-        activate CTRL
+    UI -> REPOS_SINGLETON : getInstance()
+    activate REPOS_SINGLETON
+    REPOS_SINGLETON --> UI : repositories
 
-                    CTRL -> REPOT : getStationTypeList()
-                    activate REPOT
-                        REPOT --> CTRL: stationTypesList
-                    deactivate REPOT
+    UI -> REPOS_SINGLETON : getScenarioRepository()
+    REPOS_SINGLETON --> UI : scenarioRepo
+    deactivate REPOS_SINGLETON
 
-            CTRL --> UI : stationTypesList
-            autonumber 4
-        deactivate CTRL
-        UI --> ORG_EMPLOYEE : verify if is allowed to build a station and\n show station types
-        autonumber 5
-    deactivate UI
+    UI -> scenarioRepo : getAll()
+    activate scenarioRepo
+    scenarioRepo --> UI : List<Scenario>
+    deactivate scenarioRepo
 
-    ORG_EMPLOYEE -> UI : selects station type
-    activate UI
-    UI -> ORG_EMPLOYEE : Ask for location
-    deactivate UI
-    ORG_EMPLOYEE -> UI : Give location
-    autonumber 6
-    activate UI
-        UI -> CTRL : getLocation()
-        autonumber 6.1
+    ' Conversão para DTO
+    UI -> SCENARIO_DTO : convert(List<Scenario>)
+    activate SCENARIO_DTO
+    SCENARIO_DTO --> UI : List<ScenarioDTO>
+    deactivate SCENARIO_DTO
 
-        activate CTRL
+    UI --> ORG_EMPLOYEE : show available scenarios
+deactivate UI
 
-                CTRL -> MAP : requestCoordinates()
-                activate MAP
-                    MAP --> CTRL : giveCoordinates
+ORG_EMPLOYEE -> UI : selects scenario
+activate UI
+    UI -> CTRL : setScenario(dto : ScenarioDTO)
+    activate CTRL
+    CTRL --> UI : success
+    deactivate CTRL
 
+    UI --> ORG_EMPLOYEE : requests X coordinate
+deactivate UI
 
-                CTRL -> MAP : validateXY()
+ORG_EMPLOYEE -> UI : types X coordinate
+activate UI
+    UI --> ORG_EMPLOYEE : requests Y coordinate
+deactivate UI
 
-                    MAP --> CTRL : isValid
-                deactivate MAP
+ORG_EMPLOYEE -> UI : types Y coordinate
+activate UI
+    UI -> CTRL : suggestStationName(x, y, type:StationTypes)
+    activate CTRL
+        CTRL -> SCENARIO_OBJ : getMap()
+        activate SCENARIO_OBJ
+        SCENARIO_OBJ --> CTRL : Map
+        deactivate SCENARIO_OBJ
 
-            CTRL --> UI : location
-            autonumber 6.2
-        deactivate CTRL
+        CTRL -> MAP_OBJ : getCities()
+        activate MAP_OBJ
+        MAP_OBJ --> CTRL : List<City>
+        deactivate MAP_OBJ
 
-        UI -> CTRL : getName()
-        autonumber 6.3
+        CTRL --> UI : suggestedName
+    deactivate CTRL
 
-        activate CTRL
+    UI --> ORG_EMPLOYEE : shows suggested name and requests confirmation
+deactivate UI
 
-                CTRL -> CITY : getNearestCity(location)
-                activate CITY
-                    CITY --> CTRL : cityName
-                deactivate CITY
+ORG_EMPLOYEE -> UI : selects station type and region, confirms data
+activate UI
+    ' Substituir vários parâmetros por DTO
+    UI -> CTRL : createStation(dto : StationDTO)
+    activate CTRL
 
-                CTRL -> NAMING : generateName(cityName, stationType)
-                activate NAMING
-                    NAMING --> CTRL : suggestedName
-                deactivate NAMING
-                CTRL -> UI : name
+        CTRL -> SCENARIO_OBJ : getMap()
+        activate SCENARIO_OBJ
+        SCENARIO_OBJ --> CTRL : Map
+        deactivate SCENARIO_OBJ
 
-            autonumber 6.4
+        CTRL -> MAP_OBJ : getWidth()
+        activate MAP_OBJ
+        MAP_OBJ --> CTRL : width
+        CTRL -> MAP_OBJ : getHeight()
+        MAP_OBJ --> CTRL : height
+        deactivate MAP_OBJ
 
-        deactivate CTRL
+        CTRL -> REPOS_SINGLETON : getInstance()
+        activate REPOS_SINGLETON
+        REPOS_SINGLETON --> CTRL : repositories
+        deactivate REPOS_SINGLETON
 
-        UI -> CTRL : getCentre()
-        autonumber 6.5
+        CTRL -> REPOS_SINGLETON : getStationRepository()
+        activate REPOS_SINGLETON
+        REPOS_SINGLETON --> CTRL : stationRepository
+        deactivate REPOS_SINGLETON
 
-        activate CTRL
+        CTRL -> STATION_REPO : getAll()
+        activate STATION_REPO
+        STATION_REPO --> CTRL : List<Station>
+        deactivate STATION_REPO
 
-                CTRL -> REPOT : calculateCenterOptions()
-                activate REPOT
-                    REPOT --> CTRL : centerOptions
-                deactivate REPOT
+        CTRL -> SCENARIO_OBJ : getBudget()
+        activate SCENARIO_OBJ
+        SCENARIO_OBJ --> CTRL : budget
+        deactivate SCENARIO_OBJ
 
-                CTRL -> UI : centreOptions
+        create "newStation:Station" as NEW_STATION_OBJ
+        CTRL -> NEW_STATION_OBJ : <<create>>(from DTO)
+       activate NEW_STATION_OBJ
+        NEW_STATION_OBJ --> CTRL : Station
+        deactivate NEW_STATION_OBJ
 
-            autonumber 6.6
+        CTRL -> SCENARIO_OBJ : addStationPurchased(newStation)
+        activate SCENARIO_OBJ
+        SCENARIO_OBJ --> CTRL : success
+        deactivate SCENARIO_OBJ
 
-        deactivate CTRL
+        CTRL -> STATION_REPO : add(newStation)
+        activate STATION_REPO
+        STATION_REPO --> CTRL : Optional<Station>
+        deactivate STATION_REPO
 
-        UI --> ORG_EMPLOYEE : requests information (name, (centre if Staion)) and sugest name
-        autonumber 7
-    deactivate UI
-
-    ORG_EMPLOYEE -> UI : types requested information
-
-    autonumber 8
-    activate UI
-        UI --> ORG_EMPLOYEE : shows all data and name suggested, and requests confirmation
-        autonumber 9
-    deactivate UI
-
-    ORG_EMPLOYEE -> UI : confirms data
-    autonumber 10
-    activate UI
-        UI -> CTRL : createStation(Type, location, name, centre)
-        autonumber 11
-        activate CTRL
-
-            autonumber 12
-
-            activate CTRL
-
-                    CTRL -> RAIL : verifyIfPossible(stationType)
-                    activate RAIL
-                        RAIL --> CTRL : isPossible
-                    deactivate RAIL
-
-                    CTRL -> RAIL : buildStation()
-                    activate RAIL
-                        RAIL --> CTRL : stationBuilt
-                        deactivate RAIL
-                        CTRL -> REPOS : saveStation()
-                        activate REPOS
-                        REPOS --> CTRL: stationSaved
-                        deactivate REPOS
-                    deactivate RAIL
-
-                autonumber 18
-                CTRL -> UI : stationCreated
-
-            deactivate CTRL
-        UI --> ORG_EMPLOYEE: displays operation success and build
-        autonumber 19
-    deactivate UI
+        alt if added.isPresent()
+            CTRL -> SCENARIO_OBJ : setBudget(budget - cost)
+            activate SCENARIO_OBJ
+            SCENARIO_OBJ --> CTRL : success
+            deactivate SCENARIO_OBJ
+            CTRL --> UI : true (stationCreated)
+        else
+            CTRL --> UI : false (stationNotCreated)
+        end
+    deactivate CTRL
+    UI --> ORG_EMPLOYEE : displays operation success/failure
+deactivate UI
 
 deactivate ORG_EMPLOYEE
 @enduml

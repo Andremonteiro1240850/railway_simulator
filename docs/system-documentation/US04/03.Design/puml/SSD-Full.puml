@@ -10,142 +10,186 @@ actor "Editor" as ORG_EMPLOYEE
 
 participant ":CreateScenarioUI" as UI
 participant ":CreateScenarioController" as CTRL
+participant "repositories\n:Repositories" as REPOS_SINGLETON
+participant "authRepo\n:AuthenticationRepository" as AUTH_REPO
+participant "session\n:CurrentUserSession" as SESSION
+participant "orgRepo\n:OrganizationRepository" as ORG_REPO
+participant "mapRepo\n:CreateMapRepository" as MAP_REPO
+participant "scenarioRepo\n:ScenarioRepository" as SCENARIO_REPO
+participant "selectedMap\n:Map" as MAP_OBJ #LightBlue
+participant "configuredPortBehavior\n:PortBehavior" as PORT_BEHAVIOR_OBJ #LightBlue
+participant "newScenario\n:Scenario" as SCENARIO_OBJ #LightBlue
+participant "newHistoricalEvent\n:HistoricalEvent" as HISTORICAL_EVENT_OBJ #LightBlue
 
-participant "map\n:CreateMapRepository" as MAP
-participant "PortBehaviour" as PORT
-participant ":LocomotiveType" as TS
-participant "industry\n:IndustryRepository" as IND
-participant "scenario\n:Scenario" as SCEN
-participant ":HistoricalEvent" as EVENT
-participant "scenarioRepo\n:ScenarioRepository" as SCEN_REPO
+
+participant "MapDTO" as MAP_DTO #LightGreen
+participant "HistoricalEventDTO" as HIST_EVENT_DTO #LightGreen
+participant "List<HistoricalEventDTO>" as HIST_DTO_LIST #LightGreen
+participant "ScenarioDTO" as SCENARIO_DTO #LightGreen
 
 activate ORG_EMPLOYEE
 
-    ORG_EMPLOYEE -> UI : asks to create a new scenario
-    autonumber 1
+ORG_EMPLOYEE -> UI : asks to create a new scenario
+activate UI
+    UI --> CTRL : create()
+    activate CTRL
+        CTRL -> REPOS_SINGLETON : getInstance()
+        activate REPOS_SINGLETON
+        REPOS_SINGLETON --> CTRL : repositories
+        deactivate REPOS_SINGLETON
 
-    activate UI
-        UI --> CTRL** : create()
-        autonumber 2
-        UI -> CTRL : getAvailableMaps()
-        autonumber 3
+        CTRL -> REPOS_SINGLETON : getOrganizationRepository()
+        activate REPOS_SINGLETON
+        REPOS_SINGLETON --> CTRL : orgRepo
+        deactivate REPOS_SINGLETON
 
-        activate CTRL
-            CTRL --> MAP**: getAllMaps()
-            autonumber 4
-            activate MAP
-                MAP --> CTRL: mapsList
-                autonumber 5
-            deactivate MAP
-            CTRL --> UI : availableMaps
-            autonumber 6
-        deactivate CTRL
+        CTRL -> REPOS_SINGLETON : getAuthenticationRepository()
+        activate REPOS_SINGLETON
+        REPOS_SINGLETON --> CTRL : authRepo
+        deactivate REPOS_SINGLETON
 
-        UI --> ORG_EMPLOYEE : Verify permission and ask to select a map
-        autonumber 7
-    deactivate UI
+        CTRL -> REPOS_SINGLETON : getMapRepository()
+        activate REPOS_SINGLETON
+        REPOS_SINGLETON --> CTRL : mapRepo
+        deactivate REPOS_SINGLETON
 
-    ORG_EMPLOYEE -> UI : selects a map
-    autonumber 8
-    activate UI
-        UI -> CTRL : getAvailablePortBehaviors()
-        autonumber 9
+        CTRL -> REPOS_SINGLETON : getScenarioRepository()
+        activate REPOS_SINGLETON
+        REPOS_SINGLETON --> CTRL : scenarioRepo
+        deactivate REPOS_SINGLETON
 
-        activate CTRL
-            CTRL --> PORT**: getBehaviorOptions()
-            autonumber 10
-            activate PORT
-                PORT --> CTRL: behaviorOptions
-                autonumber 11
-            deactivate PORT
-            CTRL --> UI : portBehaviorOptions
-            autonumber 12
-        deactivate CTRL
+        CTRL --> UI : initializationComplete
+    deactivate CTRL
 
-        UI -> CTRL : getAvailableLocomotionTypes()
-        autonumber 13
+    UI -> CTRL : getAvailableMaps()
+    activate CTRL
+        CTRL -> MAP_REPO : getAll()
+        activate MAP_REPO
+        MAP_REPO --> CTRL : List<Map>
+        deactivate MAP_REPO
 
-        activate CTRL
-            CTRL -> TS: requestLocomotionTypes()
-            autonumber 14
-            activate TS
-                TS --> CTRL: availableTypes
-                autonumber 15
-            deactivate TS
-            CTRL --> UI : locomotionTypes
-            autonumber 16
-        deactivate CTRL
+        CTRL -> MAP_DTO : convert(List<Map>)
+        activate MAP_DTO
+        MAP_DTO --> CTRL : List<MapDTO>
+        deactivate MAP_DTO
+        CTRL --> UI : List<MapDTO>
+    deactivate CTRL
 
-        UI -> CTRL : getIndustryGenerationFactors()
-        autonumber 17
+    UI --> ORG_EMPLOYEE : show available maps and ask to select
+deactivate UI
 
-        activate CTRL
-            CTRL --> IND**: getGenerationFrequency()
-            autonumber 18
-            activate IND
-                IND --> CTRL: generateFrequency
-                autonumber 19
-            deactivate IND
-            CTRL --> UI : industryFactors
-            autonumber 20
+ORG_EMPLOYEE -> UI : selects a map
+activate UI
+UI --> ORG_EMPLOYEE : requests scenario name
+deactivate UI
 
-        UI -> CTRL : loadApplicableHistoricalEvents(startYear)
-        autonumber 12
+ORG_EMPLOYEE -> UI : types scenario name
+activate UI
+UI --> ORG_EMPLOYEE : requests start year
+deactivate UI
 
-            CTRL -> EVENT : filter enum Eventos\nwhere year ∈ [startYear, endYear]
-            activate EVENT
-            autonumber 13
-            EVENT --> CTRL : list of applicable events
-            deactivate EVENT
-            autonumber 14
+ORG_EMPLOYEE -> UI : types start year
+activate UI
+UI --> ORG_EMPLOYEE : requests end year
+deactivate UI
 
+ORG_EMPLOYEE -> UI : types end year
+activate UI
+UI --> ORG_EMPLOYEE : requests locomotive types
+deactivate UI
 
-        CTRL --> UI : historicalEvents
-        deactivate CTRL
+ORG_EMPLOYEE -> UI : selects locomotive types
+activate UI
+UI --> ORG_EMPLOYEE : configure port behavior
+create PORT_BEHAVIOR_OBJ
+UI -> PORT_BEHAVIOR_OBJ : <<create>>()
 
-        UI --> ORG_EMPLOYEE : requests scenario details (port behavior, cargoes transform and import or export,\n locomotion types, frequency of generating industries )
-        autonumber 21
-    deactivate UI
+loop for each cargo type
+    UI --> ORG_EMPLOYEE : asks cargo
+    ORG_EMPLOYEE -> UI : selects cargo
+    UI -> PORT_BEHAVIOR_OBJ : addCargo(cargo)
+    PORT_BEHAVIOR_OBJ --> UI : success
+end
+deactivate UI
 
-    ORG_EMPLOYEE -> UI : provide requested data
-    autonumber 22
-    activate UI
-        UI --> ORG_EMPLOYEE : shows all data and requests confirmation
-        autonumber 23
-    deactivate UI
+ORG_EMPLOYEE -> UI : finishes port behavior
+activate UI
+UI -> CTRL : loadApplicableHistoricalEvents(startYear)
+activate CTRL
 
-    ORG_EMPLOYEE -> UI : confirms data
-    autonumber 24
-    activate UI
-        UI -> CTRL : createScenario()
-        autonumber 25
+loop for each Eventos
+    create HISTORICAL_EVENT_OBJ
+    CTRL -> HISTORICAL_EVENT_OBJ : <<create>>(evento)
+    HISTORICAL_EVENT_OBJ --> CTRL : HistoricalEvent
+end
 
-        activate CTRL
-            CTRL --> SCEN**: create(map, params)
-            autonumber 26
-            activate SCEN
-                SCEN -> SCEN: setPortBehavior()
-                autonumber 27
-                SCEN -> SCEN: setLocomotionTypes()
-                autonumber 28
-                SCEN -> SCEN: configureIndustries()
-                autonumber 29
-                SCEN --> CTRL: newScenario
-                autonumber 30
-            deactivate SCEN
-             CTRL -> SCEN_REPO : add(newScenario)
-                            autonumber 18
-                            activate SCEN_REPO
-                                SCEN_REPO --> CTRL : optionalScenario
-                                autonumber 19
-                            deactivate SCEN_REPO
-            CTRL --> UI: createScenario
+CTRL -> HIST_EVENT_DTO : convert(List<HistoricalEvent>)
+activate HIST_EVENT_DTO
+HIST_EVENT_DTO --> CTRL : List<HistoricalEventDTO>
+deactivate HIST_EVENT_DTO
+CTRL --> UI : List<HistoricalEventDTO>
+deactivate CTRL
 
-            autonumber 31
-        deactivate CTRL
-        UI --> ORG_EMPLOYEE: displays operation success
-        autonumber 32
-    deactivate UI
+UI --> ORG_EMPLOYEE : show events and ask confirmation
+deactivate UI
+
+ORG_EMPLOYEE -> UI : confirms
+activate UI
+
+UI -> CTRL : createScenario(dto : ScenarioDTO)
+activate CTRL
+
+CTRL -> AUTH_REPO : getCurrentUserSession()
+activate AUTH_REPO
+AUTH_REPO --> CTRL : session
+deactivate AUTH_REPO
+
+CTRL -> SESSION : isLoggedIn()
+activate SESSION
+SESSION --> CTRL : boolean
+deactivate SESSION
+
+alt isLoggedIn
+    CTRL -> SESSION : getUserId()
+    activate SESSION
+    SESSION --> CTRL : Email
+    deactivate SESSION
+
+    create "Employee" as EMPLOYEE_OBJ
+    CTRL -> EMPLOYEE_OBJ : <<create>>(email)
+    activate    EMPLOYEE_OBJ
+    EMPLOYEE_OBJ --> CTRL : employee
+    deactivate EMPLOYEE_OBJ
+
+    CTRL -> ORG_REPO : getOrganizationByEmployee(employee)
+    activate ORG_REPO
+    ORG_REPO --> CTRL : Optional<Organization>
+    deactivate ORG_REPO
+
+    alt organization.isPresent()
+        create SCENARIO_OBJ
+        CTRL -> SCENARIO_OBJ : <<create>>(from DTO)
+        activate SCENARIO_OBJ
+        SCENARIO_OBJ --> CTRL : Scenario
+        deactivate SCENARIO_OBJ
+
+        CTRL -> SCENARIO_REPO : add(Scenario)
+        activate SCENARIO_REPO
+        SCENARIO_REPO --> CTRL : Optional<Scenario>
+        deactivate SCENARIO_REPO
+
+        alt scenario added
+            CTRL -> CTRL : set scenario
+            CTRL --> UI : success : true
+        else
+            CTRL --> UI : success : false
+        end
+    end
+end
+
+deactivate CTRL
+UI --> ORG_EMPLOYEE : Display sucess massage, create scenario and save
+deactivate UI
 
 deactivate ORG_EMPLOYEE
 @enduml

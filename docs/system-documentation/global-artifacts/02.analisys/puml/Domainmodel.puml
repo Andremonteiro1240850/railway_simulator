@@ -8,7 +8,6 @@ hide methods
 
 class Map {
     name
-
 }
 class Dimension{
     width
@@ -21,8 +20,6 @@ class Position{
 
 class Industry {
     name
-    type
-
 }
 
 class City {
@@ -30,41 +27,38 @@ class City {
 }
 
 class HouseBlock {
-inhabitants
+    inhabitants
 }
 
 class Scenario {
     description
+    startYear
+    endYear
 }
-class Date{
-startYear
-currentYear
-endYear
+
+class StationType {
+    type
+    radius
+    price
 }
 
 class Station {
     name
     capacity
-    demand
-    supply
-
-}
-class StationType{
-radius
-price
+    demandPerCargoType
+    supplyPerCargoType
 }
 
-
-class Building{
-effect
-type
-price
+class Building {
+    effect
+    type
+    price
 }
+
 class RailwayLine {
     length
     isElectrified
     isDoubleTrack
-
 }
 
 class Locomotive {
@@ -75,7 +69,7 @@ class Locomotive {
     fuelCost
     maintenanceCost
     price
-
+    startYearOfOperation
 }
 
 class Carriage {
@@ -90,62 +84,57 @@ class Train {
 class Cargo {
     type
     quantity
+    status
 }
 
 class Route {
-
 }
 
 class Player{
-id
+    id
 }
 
 class Editor{
-id
-
+    id
 }
 
 class Budget{
-balance
+    balance
 }
 
 class Inventory{
 }
 
 class Simulation{
-isRunning
+    isRunning
+    currentYear
 }
-
 
 
 ' Relationships
 
-Player "1" -- "1" Inventory :  owns >
-Inventory "1" -- "*" Building :  stores >
-Inventory "1" -- "*" Locomotive :  stores >
-Inventory "1" -- "*" Industry :  stores >
-Map "1" -- "1" Dimension :  has >
+Player "1" -- "1" Budget : has >
+Player "1" -- "1" Inventory : owns >
+Inventory "1" -- "*" Building : stores >
+Inventory "1" -- "*" Locomotive : stores >
+Map "1" -- "1" Dimension : has >
 Map "1" -- "*" Industry : contains >
 Map "1" -- "*" City : contains >
-City "1" -- "1" Position :  located at >
-Industry "1" -- "1" Position :  located at >
-HouseBlock "1" -- "1" Position :  located at >
-Station "1" -- "1" Position :  located at >
-Building "*" -- "1" Simulation :  depends on >
+City "1" -- "1" Position : located at >
+Industry "1" -- "1" Position : located at >
+HouseBlock "1" -- "1" Position : located at >
+Station "1" -- "1" Position : located at >
+Station "1" -- "1" StationType : is of type >
 City "1" -- "*" HouseBlock : has >
-Scenario "1" -- "*" Map : applies to >
+Scenario "1" -- "1" Map : applies to >
 Scenario "1" -- "*" Locomotive : restricts >
 Scenario "1" -- "*" Building : restricts >
-Scenario "1" -- "1" Date : has >
 Station "1" -- "*" Building : upgraded with >
-Station "1" -- "*" Cargo : handles >
 Station "1" -- "*" RailwayLine : connected by >
-Locomotive "1" -- "1" Date : has >
 Train "1" -- "1" Locomotive : powered by >
 Train "1" -- "*" Carriage : consists of >
 Train "1" -- "1" Route : follows >
 Train "1" -- "*" Cargo : transports >
-Route "1" -- "*" Cargo : handles >
 Route "1" -- "1" Station : starts at >
 Route "1" -- "1" Station : finish at >
 Route "1" -- "*" Station : passes by >
@@ -156,10 +145,14 @@ Editor "1" -- "*" Scenario : creates >
 Player "1" -- "*" Station : builds/views >
 Player "1" -- "*" RailwayLine : builds >
 Player "1" -- "*" Train : owns >
-Player "1" -- "1" Budget : has >
-Simulation "1" -- "*" Cargo : generates >
-Simulation "1" -- "*" Station : generates at >
-Simulation "1" -- "1" Date : has >
+Simulation "1" -- "1" Scenario : runs for >
+
+
+' Generalization
+
+Industry <|-- PrimaryIndustry
+Industry <|-- TransformingIndustry
+Industry <|-- MixedIndustry
 
 class PrimaryIndustry {
     resource
@@ -180,19 +173,12 @@ class MixedIndustry {
     price
 }
 
-Industry <|-- PrimaryIndustry
-Industry <|-- TransformingIndustry
-Industry <|-- MixedIndustry
-
-Station <|-- StationType
-
 class PassengerCarriage {
     seatCount
 }
 
 class FreightCarriage {
     cargoType
-    capacity
 }
 
 Carriage <|-- PassengerCarriage
@@ -214,4 +200,8 @@ Locomotive <|-- SteamLocomotive
 Locomotive <|-- DieselLocomotive
 Locomotive <|-- ElectricLocomotive
 
+' Additional relationships (simplified)
+Station "1" -- "*" Cargo : holds >
+Station "1" -- "0..1" City : serves >
+Station "1" -- "0..1" Industry : serves >
 @enduml

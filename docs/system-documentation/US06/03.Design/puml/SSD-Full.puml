@@ -1,3 +1,4 @@
+
 @startuml
 skinparam monochrome true
 skinparam packageStyle rectangle
@@ -10,109 +11,136 @@ actor "Player" as PLAYER
 
 participant ":UpgradeStationUI" as UI
 participant ":UpgradeStationController" as CTRL
-participant "player\n:PlayerRepository" as PLAYER_REPO
-participant "station\n:StationRepository" as STATION_REPO
-participant "building\n:BuildingRepository" as BUILDING_REPO
-participant "organization" as ECONOMY
-participant "station\n:StationUpgrader" as UPGRADER
+participant ":StationRepository" as STATION_REPO
+participant ":UpgradeBuildingsRepository" as BUILDING_REPO
+participant ":ScenarioRepository" as SCENARIO_REPO
+participant "station:Station" as STATION_OBJ #LightBlue
+participant "scenario:Scenario" as SCENARIO_OBJ #LightBlue
+
+' DTOs adicionados
+participant "StationDTO" as STATION_DTO #LightGreen
+participant "UpgradeOptionDTO" as UPGRADE_DTO #LightGreen
 
 activate PLAYER
 
-    PLAYER -> UI : asks to upgrade a station
-    autonumber 1
+PLAYER -> UI : asks to upgrade a station
+activate UI
+    UI --> CTRL : initialize()
+    activate CTRL
+    CTRL --> UI : initializationComplete
+    deactivate CTRL
 
-    activate UI
-        UI --> CTRL** : initialize()
-        autonumber 2
-        UI -> CTRL : getStations()
-        autonumber 3
+    UI -> CTRL : getAvailableStations()
+    activate CTRL
+        CTRL -> STATION_REPO : getAll()
+        activate STATION_REPO
+        STATION_REPO --> CTRL : List<Station>
+        deactivate STATION_REPO
 
-        autonumber 3.1
-        activate CTRL
+        CTRL -> STATION_DTO : convert(List<Station>)
+        activate STATION_DTO
+        STATION_DTO --> CTRL : List<StationDTO>
+        deactivate STATION_DTO
+        CTRL --> UI : List<StationDTO>
+    deactivate CTRL
 
-                CTRL -> PLAYER_REPO : getCurrentPlayer()
-                activate PLAYER_REPO
-                    PLAYER_REPO --> CTRL : player
-                deactivate PLAYER_REPO
+    UI --> PLAYER : show available stations
+deactivate UI
 
-                CTRL -> STATION_REPO : getStationsByPlayer(player)
-                activate STATION_REPO
-                    STATION_REPO --> CTRL : stations
-                deactivate STATION_REPO
-
-            autonumber 4
-            CTRL -> UI : stationsList
-
-        deactivate CTRL
-        UI --> PLAYER : show available stations
-        autonumber 5
-    deactivate UI
-
-    PLAYER -> UI : selects station
-    autonumber 6
-    activate UI
-        UI -> CTRL : selectUpgradeBuilding()
-autonumber 6.1
-
-
-activate CTRL
-
-
-        CTRL -> BUILDING_REPO : getAvaibleBuildings()
-       activate BUILDING_REPO
-            BUILDING_REPO --> CTRL : avaiableBuildings
-
-
-        CTRL -> BUILDING_REPO : getBuildingsByType(avaibleBuildings)
-
-            BUILDING_REPO --> CTRL : buildings
+PLAYER -> UI : selects station
+activate UI
+    UI -> CTRL : getAvailableUpgradeTypes()
+    activate CTRL
+        CTRL -> BUILDING_REPO : getAllUpgradeTypes()
+        activate BUILDING_REPO
+        BUILDING_REPO --> CTRL : List<String>
         deactivate BUILDING_REPO
 
-    autonumber 6.2
+        CTRL -> UPGRADE_DTO : wrap(List<String>)
+        activate UPGRADE_DTO
+        UPGRADE_DTO --> CTRL : List<UpgradeOptionDTO>
+        deactivate UPGRADE_DTO
+        CTRL --> UI : List<UpgradeOptionDTO>
+    deactivate CTRL
 
+    UI --> PLAYER : requests upgrade type
+deactivate UI
 
-            CTRL --> UI : buildingOptions
-            autonumber 6.2
-        deactivate CTRL
+PLAYER -> UI : selects upgrade type
+activate UI
+    UI -> CTRL : getAvailableSubTypes(type : String)
+    activate CTRL
 
-        UI --> PLAYER : requests building type
-        autonumber 7
-    deactivate UI
+    alt BUILDING_REPO.acceptsSubTypes(type)
+        CTRL -> BUILDING_REPO : getAllSubTypes()
+        activate BUILDING_REPO
+        BUILDING_REPO --> CTRL : List<String>
+        deactivate BUILDING_REPO
 
-    PLAYER -> UI : selects building
-    autonumber 8
-    activate UI
-        UI --> PLAYER : shows summary and requests confirmation
-        autonumber 9
-    deactivate UI
+        CTRL -> UPGRADE_DTO : wrap(List<String>)
+        activate UPGRADE_DTO
+        UPGRADE_DTO --> CTRL : List<UpgradeOptionDTO>
+        deactivate UPGRADE_DTO
+        CTRL --> UI : List<UpgradeOptionDTO>
+    else
+        CTRL --> UI : empty list : List<UpgradeOptionDTO>
+    end
+    deactivate CTRL
 
-    PLAYER -> UI : confirms upgrade
-    autonumber 10
-    activate UI
-        UI -> CTRL : executeUpgrade(station, building)
-        autonumber 11
-        autonumber 11.1
-        activate CTRL
+    UI --> PLAYER : requests subtype (if applicable)
+deactivate UI
 
-                CTRL -> ECONOMY : verifyIfPossible(upgradeCost)
-                activate ECONOMY
-                    ECONOMY --> CTRL : isFunds
-                deactivate ECONOMY
+PLAYER -> UI : selects subtype (optional)
+activate UI
+    UI --> PLAYER : shows summary and requests confirmation
+deactivate UI
 
-                CTRL -> UPGRADER : applyUpgrade(station, building)
-                activate UPGRADER
-                    UPGRADER --> CTRL : upgradeResult
-                deactivate UPGRADER
+PLAYER -> UI : confirms upgrade
+activate UI
+    UI -> CTRL : upgradeStation(dto : UpgradeOptionDTO)
+    activate CTRL
 
-            autonumber 14
+        CTRL -> STATION_REPO : findByReference(stationId)
+        activate STATION_REPO
+        STATION_REPO --> CTRL : Optional<Station>
+        deactivate STATION_REPO
 
+        CTRL -> STATION_OBJ : hasUpgrade(type, subType)
+        activate STATION_OBJ
+        STATION_OBJ --> CTRL : boolean
+        deactivate STATION_OBJ
 
-            CTRL --> UI: upgradeStatus
-            autonumber 14
-        deactivate CTRL
-        UI --> PLAYER: displays upgrade success
-        autonumber 15
-    deactivate UI
+        CTRL -> STATION_REPO : findScenarioByStation(stationId)
+        activate STATION_REPO
+        STATION_REPO --> CTRL : Optional<Scenario>
+        deactivate STATION_REPO
+
+        CTRL -> SCENARIO_OBJ : canAfford(price)
+        activate SCENARIO_OBJ
+        SCENARIO_OBJ --> CTRL : boolean
+        deactivate SCENARIO_OBJ
+
+        opt if (validUpgrade && !upgradeExists && sufficientBudget)
+            CTRL -> STATION_OBJ : addUpgrade(type, subType)
+            activate STATION_OBJ
+            STATION_OBJ --> CTRL : success
+            deactivate STATION_OBJ
+
+            CTRL -> STATION_REPO : addUpgradeToStation(stationId, stationUpgrade)
+            activate STATION_REPO
+            STATION_REPO --> CTRL : success
+            deactivate STATION_REPO
+
+            CTRL -> SCENARIO_OBJ : deductBudget(price)
+            activate SCENARIO_OBJ
+            SCENARIO_OBJ --> CTRL : success
+            deactivate SCENARIO_OBJ
+        end
+
+        CTRL --> UI : upgradeStatus : boolean
+    deactivate CTRL
+    UI --> PLAYER : displays upgrade result
+deactivate UI
 
 deactivate PLAYER
 @enduml
