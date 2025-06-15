@@ -36,6 +36,7 @@ import pt.ipp.isep.dei.domain.*;
 import pt.ipp.isep.dei.domain.enums.ListLocomotives;
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
+import pt.ipp.isep.dei.domain.enums.CargoMode;
 import pt.ipp.isep.dei.repository.Repositories;
 import pt.ipp.isep.dei.repository.ScenarioRepository;
 import javafx.scene.control.ChoiceDialog;
@@ -70,6 +71,15 @@ public class PlayerController implements Initializable {
     @FXML private TableColumn<City, String> cityCoordinatesColumn;
     @FXML private Pane mapView;
     @FXML private Label mapTitleLabel;
+    
+    // Update trains table fields
+    @FXML private TableView<Route> trainsTable;
+    @FXML private TableColumn<Route, String> trainLocomotiveColumn;
+    @FXML private TableColumn<Route, String> trainStartStationColumn;
+    @FXML private TableColumn<Route, String> trainEndStationColumn;
+    @FXML private TableColumn<Route, String> trainCargoColumn;
+    @FXML private TableColumn<Route, String> trainCarriagesColumn;
+
     private final CreateScenarioController controller;
     private final Scanner scanner;
     
@@ -82,6 +92,7 @@ public class PlayerController implements Initializable {
     private List<HistoricalEvent> historicalEvents;
     private Simulation simulation;
     private Timeline simulationTimeline;
+    private Timeline trainAnimationTimeline;
     private Player player;
     private SaveLoadController saveLoadController = new SaveLoadController();
 
@@ -191,6 +202,7 @@ public class PlayerController implements Initializable {
         setupLocomotiveInventoryTable();
         setupIndustriesTable();
         setupCitiesTable();
+        setupTrainsTable();
         chooseScenario();
     }
 
@@ -222,11 +234,53 @@ public class PlayerController implements Initializable {
 
     private void setupLocomotiveInventoryTable() {
         if (locomotiveNameColumn != null)
-            locomotiveNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getReference()));
+            locomotiveNameColumn.setCellValueFactory(cellData -> {
+                Locomotive loco = cellData.getValue();
+                String name = loco.getReference();
+                // Check if locomotive is part of a train in any active route
+                boolean isAssigned = simulation.getActiveRoutes().stream()
+                    .anyMatch(route -> route.getTrain().getLocomotive().equals(loco));
+                if (isAssigned) {
+                    name += " (Part of Train)";
+                }
+                return new SimpleStringProperty(name);
+            });
         if (locomotiveTypeColumn != null)
-            locomotiveTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().toString()));
+            locomotiveTypeColumn.setCellValueFactory(cellData -> {
+                Locomotive loco = cellData.getValue();
+                String type = loco.getType().toString();
+                // Add carriage count if locomotive is part of a train
+                boolean isAssigned = simulation.getActiveRoutes().stream()
+                    .anyMatch(route -> route.getTrain().getLocomotive().equals(loco));
+                if (isAssigned) {
+                    int carriageCount = simulation.getActiveRoutes().stream()
+                        .filter(route -> route.getTrain().getLocomotive().equals(loco))
+                        .findFirst()
+                        .map(route -> route.getTrain().getCarriageList().size())
+                        .orElse(0);
+                    type += " (" + carriageCount + " carriages)";
+                }
+                return new SimpleStringProperty(type);
+            });
         if (locomotivePowerColumn != null)
-            locomotivePowerColumn.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getPower())));
+            locomotivePowerColumn.setCellValueFactory(cellData -> {
+                Locomotive loco = cellData.getValue();
+                String power = String.valueOf(loco.getPower());
+                // Add used power if locomotive is part of a train
+                boolean isAssigned = simulation.getActiveRoutes().stream()
+                    .anyMatch(route -> route.getTrain().getLocomotive().equals(loco));
+                if (isAssigned) {
+                    double usedPower = simulation.getActiveRoutes().stream()
+                        .filter(route -> route.getTrain().getLocomotive().equals(loco))
+                        .findFirst()
+                        .map(route -> route.getTrain().getCarriageList().stream()
+                            .mapToDouble(Carriage::getCapacity)
+                            .sum())
+                        .orElse(0.0);
+                    power += " (Used: " + String.format("%.1f", usedPower) + ")";
+                }
+                return new SimpleStringProperty(power);
+            });
     }
 
     private void setupIndustriesTable() {
@@ -269,6 +323,47 @@ public class PlayerController implements Initializable {
         });
     }
 
+    private void setupTrainsTable() {
+        if (trainLocomotiveColumn != null)
+            trainLocomotiveColumn.setCellValueFactory(cellData -> {
+                Route route = cellData.getValue();
+                return new SimpleStringProperty(route.getTrain().getLocomotive().getReference());
+            });
+
+        if (trainStartStationColumn != null)
+            trainStartStationColumn.setCellValueFactory(cellData -> {
+                Route route = cellData.getValue();
+                if (!route.getRoute().isEmpty()) {
+                    return new SimpleStringProperty(route.getRoute().get(0).getStations().getName());
+                }
+                return new SimpleStringProperty("-");
+            });
+
+        if (trainEndStationColumn != null)
+            trainEndStationColumn.setCellValueFactory(cellData -> {
+                Route route = cellData.getValue();
+                if (!route.getRoute().isEmpty()) {
+                    return new SimpleStringProperty(route.getRoute().get(route.getRoute().size() - 1).getStations().getName());
+                }
+                return new SimpleStringProperty("-");
+            });
+
+        if (trainCargoColumn != null)
+            trainCargoColumn.setCellValueFactory(cellData -> {
+                Route route = cellData.getValue();
+                Set<String> cargoTypes = route.getTrain().getCarriageList().stream()
+                    .map(Carriage::getCargoType)
+                    .collect(Collectors.toSet());
+                return new SimpleStringProperty(String.join(", ", cargoTypes));
+            });
+
+        if (trainCarriagesColumn != null)
+            trainCarriagesColumn.setCellValueFactory(cellData -> {
+                Route route = cellData.getValue();
+                return new SimpleStringProperty(String.valueOf(route.getTrain().getCarriageList().size()));
+            });
+    }
+
     private void updateStationList() {
         if (simulation != null && stationList != null) {
             stationList.getItems().setAll(simulation.getScenario().getStationsPurchased());
@@ -277,7 +372,58 @@ public class PlayerController implements Initializable {
 
     private void updateLocomotiveInventory() {
         if (simulation != null && locomotiveInventory != null) {
-            locomotiveInventory.getItems().setAll(simulation.getLocomotives());
+            List<Locomotive> locomotives = simulation.getLocomotives();
+            locomotiveInventory.getItems().clear();
+            locomotiveInventory.getItems().addAll(locomotives);
+            
+            // Update the table columns to show more information
+            locomotiveNameColumn.setCellValueFactory(cellData -> {
+                Locomotive loco = cellData.getValue();
+                String name = loco.getReference();
+                // Check if locomotive is part of a train in any active route
+                boolean isAssigned = simulation.getActiveRoutes().stream()
+                    .anyMatch(route -> route.getTrain().getLocomotive().equals(loco));
+                if (isAssigned) {
+                    name += " (Part of Train)";
+                }
+                return new SimpleStringProperty(name);
+            });
+            
+            locomotiveTypeColumn.setCellValueFactory(cellData -> {
+                Locomotive loco = cellData.getValue();
+                String type = loco.getType().toString();
+                // Add carriage count if locomotive is part of a train
+                boolean isAssigned = simulation.getActiveRoutes().stream()
+                    .anyMatch(route -> route.getTrain().getLocomotive().equals(loco));
+                if (isAssigned) {
+                    int carriageCount = simulation.getActiveRoutes().stream()
+                        .filter(route -> route.getTrain().getLocomotive().equals(loco))
+                        .findFirst()
+                        .map(route -> route.getTrain().getCarriageList().size())
+                        .orElse(0);
+                    type += " (" + carriageCount + " carriages)";
+                }
+                return new SimpleStringProperty(type);
+            });
+            
+            locomotivePowerColumn.setCellValueFactory(cellData -> {
+                Locomotive loco = cellData.getValue();
+                String power = String.valueOf(loco.getPower());
+                // Add used power if locomotive is part of a train
+                boolean isAssigned = simulation.getActiveRoutes().stream()
+                    .anyMatch(route -> route.getTrain().getLocomotive().equals(loco));
+                if (isAssigned) {
+                    double usedPower = simulation.getActiveRoutes().stream()
+                        .filter(route -> route.getTrain().getLocomotive().equals(loco))
+                        .findFirst()
+                        .map(route -> route.getTrain().getCarriageList().stream()
+                            .mapToDouble(Carriage::getCapacity)
+                            .sum())
+                        .orElse(0.0);
+                    power += " (Used: " + String.format("%.1f", usedPower) + ")";
+                }
+                return new SimpleStringProperty(power);
+            });
         }
     }
 
@@ -295,6 +441,14 @@ public class PlayerController implements Initializable {
         }
     }
 
+    private void updateTrainsTable() {
+        if (simulation != null && trainsTable != null) {
+            List<Route> activeRoutes = simulation.getActiveRoutes();
+            trainsTable.getItems().clear();
+            trainsTable.getItems().addAll(activeRoutes);
+        }
+    }
+
     private void startSimulationWithScenario(Scenario selectedScenario) {
         if (player == null) {
             player = new Player("player@email.com");
@@ -305,6 +459,7 @@ public class PlayerController implements Initializable {
         updateLocomotiveInventory();
         updateIndustriesList();
         updateCitiesList();
+        updateTrainsTable();
     }
 
     @FXML
@@ -326,11 +481,20 @@ public class PlayerController implements Initializable {
             updateLabels("Simulation in progress", simulation.getCurrentYear(), simulation.getCurrentMonth());
             if (simulation.getCurrentYear() >= simulation.getEndYear()) {
                 simulationTimeline.stop();
+                if (trainAnimationTimeline != null) {
+                    trainAnimationTimeline.stop();
+                }
                 updateLabels("Simulation finished", simulation.getCurrentYear(), simulation.getCurrentMonth());
             }
         }));
         simulationTimeline.setCycleCount(Timeline.INDEFINITE);
         simulationTimeline.play();
+        
+        // Start the train animation if it exists
+        if (trainAnimationTimeline != null) {
+            trainAnimationTimeline.play();
+        }
+        
         updateLabels("Simulation in progress", simulation.getCurrentYear(), simulation.getCurrentMonth());
     }
 
@@ -338,6 +502,10 @@ public class PlayerController implements Initializable {
     private void onPauseSimulation() {
         if (simulationTimeline != null) {
             simulationTimeline.stop();
+            // Pause the train animation
+            if (trainAnimationTimeline != null) {
+                trainAnimationTimeline.pause();
+            }
             updateLabels("Simulation paused", simulation != null ? simulation.getCurrentYear() : null, simulation != null ? simulation.getCurrentMonth() : null);
         }
     }
@@ -867,39 +1035,56 @@ public class PlayerController implements Initializable {
                 allowedCargos.addAll(portBehavior.getImportCargo());
                 allowedCargos.addAll(portBehavior.getExportCargo());
                 allowedCargos.addAll(portBehavior.getTransformCargo());
+                System.out.println("Allowed cargo types from PortBehavior: " + allowedCargos);
+            } else {
+                System.out.println("Warning: PortBehavior is null");
             }
             // Filtrar ainda mais pelo que existe próximo da estação de origem
             Set<String> finalAllowedCargos = new HashSet<>();
+            System.out.println("Starting station: " + startStation.getName() + " at (" + startStation.getX() + ", " + startStation.getY() + ")");
+            System.out.println("Nearby cities: " + startStation.getNearbyCities(scenario.getMap()));
+            System.out.println("Nearby industries: " + startStation.getNearbyIndustries(scenario.getMap()));
             for (String cargo : allowedCargos) {
                 if (cargo.equalsIgnoreCase("passengers")) {
                     if (!startStation.getNearbyCities(scenario.getMap()).isEmpty()) {
                         finalAllowedCargos.add(cargo);
+                        System.out.println("Added passengers cargo type - cities nearby");
+                    } else {
+                        System.out.println("No cities nearby for passengers cargo");
                     }
                 } else {
                     boolean hasIndustry = startStation.getNearbyIndustries(scenario.getMap()).stream()
                         .anyMatch(ind -> ind.getType().name().equalsIgnoreCase(cargo));
                     if (hasIndustry) {
                         finalAllowedCargos.add(cargo);
+                        System.out.println("Added " + cargo + " cargo type - matching industry nearby");
+                    } else {
+                        System.out.println("No matching industry nearby for " + cargo + " cargo");
                     }
                 }
             }
+            System.out.println("Final allowed cargo types: " + finalAllowedCargos);
+            System.out.println("Selected locomotive power: " + selectedLoco.getPower());
             for (pt.ipp.isep.dei.domain.enums.CarriageList c : pt.ipp.isep.dei.domain.enums.CarriageList.values()) {
                 Carriage carriage = c.toCarriage();
                 if (finalAllowedCargos.contains(carriage.getCargoType().toLowerCase())) {
-                    if (totalCarriageCapacity + carriage.getCapacity() <= selectedLoco.getPower() &&
-                        totalCost + carriage.getCost() <= scenario.getBudget()) {
+                    System.out.println("Found matching carriage: " + carriage.getName() + " with capacity " + carriage.getCapacity());
+                    if (totalCarriageCapacity + carriage.getCapacity() <= selectedLoco.getPower()) {
                         carriageListView.getItems().add(carriage);
+                        System.out.println("Added carriage to list - total capacity would be: " + (totalCarriageCapacity + carriage.getCapacity()));
+                    } else {
+                        System.out.println("Carriage not added - would exceed locomotive power");
                     }
                 }
             }
             if (carriageListView.getItems().isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Limit Reached");
+                alert.setTitle("No Carriages Available");
                 alert.setHeaderText(null);
                 if (totalCarriageCapacity >= selectedLoco.getPower()) {
                     alert.setContentText("Cannot add more carriages: locomotive power limit reached.");
                 } else {
-                    alert.setContentText("Cannot add more carriages: budget limit reached.");
+                    alert.setContentText("No carriages available for the allowed cargo types at this station.");
                 }
                 alert.showAndWait();
                 break;
@@ -956,12 +1141,59 @@ public class PlayerController implements Initializable {
             allowedCargos.addAll(portBehavior.getTransformCargo());
         }
         for (Station station : routeStations) {
-            handleCargoModeSelection(station);
+            Dialog<String> modeDialog = new Dialog<>();
+            modeDialog.setTitle("Select Cargo Mode");
+            modeDialog.setHeaderText("Choose cargo mode for station: " + station.getName());
+            
+            ListView<String> modeListView = new ListView<>();
+            modeListView.getItems().addAll("Available", "Half", "Full");
+            modeListView.setCellFactory(lv -> new ListCell<String>() {
+                @Override
+                protected void updateItem(String mode, boolean empty) {
+                    super.updateItem(mode, empty);
+                    if (empty || mode == null) {
+                        setText(null);
+                    } else {
+                        setText(mode);
+                    }
+                }
+            });
+            
+            VBox content = new VBox(10, modeListView);
+            modeDialog.getDialogPane().setContent(content);
+            modeDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            
+            modeDialog.setResultConverter(dialogButton -> {
+                if (dialogButton == ButtonType.OK) {
+                    return modeListView.getSelectionModel().getSelectedItem();
+                }
+                return null;
+            });
+            
+            Optional<String> result = modeDialog.showAndWait();
+            if (result.isPresent() && result.get() != null) {
+                CargoMode mode = switch (result.get()) {
+                    case "Full" -> CargoMode.FULL;
+                    case "Half" -> CargoMode.HALF;
+                    case "Available" -> CargoMode.AVAILABLE;
+                    default -> CargoMode.AVAILABLE;
+                };
+                routePoints.add(new PointsOfRoute(station, mode));
+            } else {
+                // If user cancels, use AVAILABLE as default
+                routePoints.add(new PointsOfRoute(station, CargoMode.AVAILABLE));
+            }
         }
+        
         // 5. Confirmar e atribuir rota
         pt.ipp.isep.dei.controller.AssignRouteController assignController = new pt.ipp.isep.dei.controller.AssignRouteController();
         assignController.assignRouteToTrain(selectedLoco, carriages, routePoints, scenario);
+        
+        // Update the UI
+        updateLocomotiveInventory();
+        updateTrainsTable();
         drawMapAndAnimateRoute(routePoints);
+        
         Alert done = new Alert(Alert.AlertType.INFORMATION);
         done.setTitle("Route Assigned");
         done.setHeaderText(null);
@@ -1136,6 +1368,12 @@ public class PlayerController implements Initializable {
 
     private void animateTrainOnRoute(List<pt.ipp.isep.dei.domain.PointsOfRoute> routePoints, int mapWidth, int mapHeight, double paneWidth, double paneHeight) {
         if (routePoints == null || routePoints.size() < 2) return;
+        
+        // Stop any existing animation
+        if (trainAnimationTimeline != null) {
+            trainAnimationTimeline.stop();
+        }
+        
         // Lista de pontos (x, y) da rota
         List<javafx.geometry.Point2D> points = new ArrayList<>();
         for (pt.ipp.isep.dei.domain.PointsOfRoute p : routePoints) {
@@ -1144,39 +1382,42 @@ public class PlayerController implements Initializable {
             javafx.geometry.Point2D pt = new javafx.geometry.Point2D(px, py);
             points.add(pt);
         }
+        
+        // Add reverse points for return journey
+        List<javafx.geometry.Point2D> returnPoints = new ArrayList<>(points);
+        java.util.Collections.reverse(returnPoints);
+        points.addAll(returnPoints);
+        
         javafx.scene.shape.Circle train = new javafx.scene.shape.Circle(6, javafx.scene.paint.Color.DARKORANGE);
         mapView.getChildren().add(train);
-        List<javafx.scene.shape.Line> routeLines = new ArrayList<>();
-        for (int i = 0; i < points.size() - 1; i++) {
-            javafx.scene.shape.Line line = new javafx.scene.shape.Line(points.get(i).getX(), points.get(i).getY(), points.get(i+1).getX(), points.get(i+1).getY());
-            line.setStroke(javafx.scene.paint.Color.BLACK);
-            line.setStrokeWidth(4);
-            mapView.getChildren().add(line);
-            routeLines.add(line);
-        }
+        
         final int[] segment = {0};
         final double[] progress = {0.0};
         final double speed = 2.0; // pixels por frame
         train.setCenterX(points.get(0).getX());
         train.setCenterY(points.get(0).getY());
-        Timeline timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(20), e -> {
+        
+        trainAnimationTimeline = new Timeline();
+        trainAnimationTimeline.setCycleCount(Timeline.INDEFINITE);
+        trainAnimationTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(20), e -> {
             if (segment[0] >= points.size() - 1) {
-                timeline.stop();
-                mapView.getChildren().removeAll(routeLines);
+                segment[0] = 0;
+                progress[0] = 0.0;
                 return;
             }
+            
             javafx.geometry.Point2D from = points.get(segment[0]);
             javafx.geometry.Point2D to = points.get(segment[0] + 1);
             double dx = to.getX() - from.getX();
             double dy = to.getY() - from.getY();
             double dist = Math.sqrt(dx * dx + dy * dy);
+            
             if (dist == 0) {
                 segment[0]++;
                 progress[0] = 0.0;
                 return;
             }
+            
             progress[0] += speed / dist;
             if (progress[0] >= 1.0) {
                 progress[0] = 0.0;
@@ -1190,7 +1431,11 @@ public class PlayerController implements Initializable {
                 train.setCenterY(nextY);
             }
         }));
-        timeline.play();
+        
+        // Only start the animation if the simulation is running
+        if (simulationTimeline != null && simulationTimeline.getStatus() == Timeline.Status.RUNNING) {
+            trainAnimationTimeline.play();
+        }
     }
 
     private void handleCargoSelection(Station station) {

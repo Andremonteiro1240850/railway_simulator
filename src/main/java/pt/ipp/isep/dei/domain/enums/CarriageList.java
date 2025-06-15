@@ -8,24 +8,23 @@ import pt.ipp.isep.dei.domain.Carriage;
  */
 public enum CarriageList {
 
-
-    PASSENGER_CAR("Passenger Car", "PASSENGERS", 35),
-    MAIL_CAR("Mail Car", "MAIL", 25),
-    REFRIGERATED_CAR("Refrigerated Car", "FOOD", 40),
-    BOXCAR("Boxcar", "TEXTILES", 50),
-    AUTOMOBILE_CAR("Automobile Car", "CARS", 30),
-    BAKERY_SUPPLY_CAR("Bakery Supply Car", "FOOD", 35),
-    COAL_HOPPER("Coal Hopper", "COAL", 60),
-    IRON_ORE_HOPPER("Iron Ore Hopper", "IRON_ORE", 60),
-    BAUXITE_HOPPER("Bauxite Hopper", "BAUXITE", 60),
-     NITRATE_TANKER("Nitrate Tanker", "NITRATE", 45),
-    CATTLE_CAR("Cattle Car", "CATTLE", 30),
-    GRAIN_HOPPER("Grain Hopper", "CEREALS", 55),
-    VEGETABLE_CAR("Vegetable Car", "VEGETABLES", 45),
-    WOOL_CAR("Wool Car", "WOOL", 40),
-    COFFEE_CAR("Coffee Car", "COFFEE", 40),
-    RUBBER_CAR("Rubber Car", "RUBBER", 40),
-    STEEL_CAR("Steel Car", "STEEL", 50);
+    PASSENGER_CAR("Passenger Car", "passengers", 35),
+    MAIL_CAR("Mail Car", "mail", 25),
+    REFRIGERATED_CAR("Refrigerated Car", "food", 40),
+    BOXCAR("Boxcar", "textiles", 50),
+    AUTOMOBILE_CAR("Automobile Car", "automobiles", 30),
+    BAKERY_SUPPLY_CAR("Bakery Supply Car", "food", 35),
+    COAL_HOPPER("Coal Hopper", "coal", 60),
+    IRON_ORE_HOPPER("Iron Ore Hopper", "iron", 60),
+    BAUXITE_HOPPER("Bauxite Hopper", "bauxite", 60),
+    NITRATE_TANKER("Nitrate Tanker", "nitrate", 45),
+    CATTLE_CAR("Cattle Car", "cattle", 30),
+    GRAIN_HOPPER("Grain Hopper", "cereals", 55),
+    VEGETABLE_CAR("Vegetable Car", "vegetables", 45),
+    WOOL_CAR("Wool Car", "wool", 40),
+    COFFEE_CAR("Coffee Car", "coffee", 40),
+    RUBBER_CAR("Rubber Car", "rubber", 40),
+    STEEL_CAR("Steel Car", "steel", 50);
 
     private final String name;
     private final String cargoType;
@@ -77,6 +76,6 @@ public enum CarriageList {
      * @return a new {@code Carriage} instance
      */
     public Carriage toCarriage() {
-        return new Carriage(name, cargoType, (double) capacity, 1000.0);
+        return new Carriage(name, cargoType, (double) capacity, 0.0);
     }
 }

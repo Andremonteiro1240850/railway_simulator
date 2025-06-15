@@ -79,11 +79,13 @@
          <ScrollPane prefHeight="700" prefWidth="370" fitToWidth="true" style="-fx-background-color:transparent;">
             <VBox spacing="24">
                <Label text="Trains" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-               <TableView fx:id="trainList" prefHeight="100.0" prefWidth="350.0">
+               <TableView fx:id="trainsTable" prefHeight="200.0" prefWidth="400.0">
                   <columns>
-                     <TableColumn fx:id="trainNameColumn" text="Train Name" prefWidth="120" />
-                     <TableColumn fx:id="locomotiveColumn" text="Locomotive Type" prefWidth="130" />
-                     <TableColumn fx:id="cargoColumn" text="Current Cargo" prefWidth="130" />
+                     <TableColumn fx:id="trainLocomotiveColumn" prefWidth="80.0" text="Locomotive" />
+                     <TableColumn fx:id="trainStartStationColumn" prefWidth="80.0" text="Start Station" />
+                     <TableColumn fx:id="trainEndStationColumn" prefWidth="80.0" text="End Station" />
+                     <TableColumn fx:id="trainCargoColumn" prefWidth="80.0" text="Cargo Types" />
+                     <TableColumn fx:id="trainCarriagesColumn" prefWidth="80.0" text="Carriages" />
                   </columns>
                </TableView>
                <Label text="Stations" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
@@ -95,11 +97,11 @@
                   </columns>
                </TableView>
                <Label text="Cities" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
-               <TableView fx:id="citiesList" prefHeight="100.0" prefWidth="350.0">
+               <TableView fx:id="citiesList" prefHeight="200.0" prefWidth="200.0">
                   <columns>
-                     <TableColumn fx:id="cityNameColumn" text="Name" prefWidth="120" />
-                     <TableColumn fx:id="cityBlocksColumn" text="House Blocks" prefWidth="130" />
-                     <TableColumn fx:id="cityCoordinatesColumn" text="Coordinates" prefWidth="130" />
+                     <TableColumn fx:id="cityNameColumn" prefWidth="75.0" text="Name" />
+                     <TableColumn fx:id="cityBlocksColumn" prefWidth="75.0" text="Blocks" />
+                     <TableColumn fx:id="cityCoordinatesColumn" prefWidth="75.0" text="Coordinates" />
                   </columns>
                </TableView>
                <Label text="Locomotive Inventory" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
