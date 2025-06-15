@@ -2,12 +2,13 @@ package pt.ipp.isep.dei.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Represents a player in the simulation. A player has an email,
  * can purchase locomotives, and is associated with a scenario.
  */
-public class Player {
+public class Player implements Serializable {
 
     private String email;
     private List<Locomotive> locomotivePurchased;

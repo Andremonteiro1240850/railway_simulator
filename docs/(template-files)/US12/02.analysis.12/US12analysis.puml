@@ -1,0 +1,62 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+@startuml
+'left to right direction
+skinparam classAttributeIconSize 0
+
+hide circle
+hide methods
+
+'title Domain Model - US12
+
+class ProductOwner {
+  name
+  email
+  password
+}
+
+class Simulator {
+  scenario
+  map
+  status
+  +start()
+  +pause()
+}
+
+class Station {
+  name
+  location
+}
+
+class Cargo {
+  type
+  quantity
+}
+
+class Industry {
+  name
+  produces
+}
+
+class City {
+  name
+  consumes
+}
+
+ProductOwner "1" -- "*" Simulator : creates
+Simulator "1" -- "*" Station : generatesCargoAt
+Station "1" -- "*" Cargo : stores
+Station "1" -- "*" Industry : serves
+Station "1" -- "*" City : serves
+
+@enduml
+
+
+@enduml
