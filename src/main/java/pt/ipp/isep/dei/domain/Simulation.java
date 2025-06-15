@@ -46,7 +46,7 @@ public class Simulation implements Serializable {
 
     private void calculateYearlyExpenses() {
         // Calculate track maintenance expenses based on total track length
-        double totalTrackLength = calculateTotalTrackLength();
+        double totalTrackLength = toKilometers(calculateTotalTrackLength());
         double trackMaintenanceCost = totalTrackLength * 100; // 100 per km
         currentYearResults.addTrackMaintenanceExpense(trackMaintenanceCost, 
             String.format("Maintenance for %.2f km of track", totalTrackLength));
@@ -60,7 +60,7 @@ public class Simulation implements Serializable {
 
         // Calculate fuel expenses based on traveled kilometers
         for (Route route : activeRoutes) {
-            double routeLength = calculateRouteLength(route);
+            double routeLength = toKilometers(calculateRouteLength(route));
             for (Locomotive locomotive : locomotives) {
                 double fuelCost = routeLength * locomotive.getFuelCost();
                 currentYearResults.addFuelExpense(fuelCost,
@@ -113,7 +113,7 @@ public class Simulation implements Serializable {
     }
 
     private double calculateCargoRevenue(Station from, Station to, CargoMode cargoMode) {
-        double distance = calculateDistance(from, to);
+        double distance = toKilometers(calculateDistance(from, to));
         String cargoType = cargoMode.name().toLowerCase();
         double baseRate = getCargoBaseRate(cargoMode);
         int demanda = to.getDemanda(cargoType);
@@ -224,5 +224,14 @@ public class Simulation implements Serializable {
 
     public FinancialResults getCurrentYearResults() {
         return currentYearResults;
+    }
+
+    private double toKilometers(double value) {
+        if (scenario == null || scenario.getMap() == null || scenario.getMap().getScale() == null) return value;
+        return switch (scenario.getMap().getScale()) {
+            case KM -> value;
+            case METERS -> value / 1000.0;
+            case MILES -> value * 1.60934;
+        };
     }
 } 
