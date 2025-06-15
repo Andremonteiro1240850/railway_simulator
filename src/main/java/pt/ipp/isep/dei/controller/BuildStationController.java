@@ -165,12 +165,10 @@ public class BuildStationController {
             return false;
         }
 
-        List<Station> existingStations = stationRepository.getAll();
-        for (Station s : existingStations) {
-            if (s.getX() == x && s.getY() == y) {
-                System.out.println("Erro: Já existe uma estação nessa localização (" + x + ", " + y + ").");
-                return false;
-            }
+        // Verificar se a posição está ocupada por qualquer objeto no mapa
+        if (map.isOccupied(x, y)) {
+            System.out.println("❌ Erro: Posição já ocupada por outro objeto.");
+            return false;
         }
 
         double budget = scenario.getBudget();
@@ -187,6 +185,9 @@ public class BuildStationController {
         }
 
         Station newStation = new Station("ST-" + System.currentTimeMillis(), stationName, stationType.getType(), regionType.getRegion(), scenario.getName(), stationType.getArea(), x, y);
+        
+        // Adicionar a estação diretamente ao mapa do cenário
+        map.addStation(newStation);
         scenario.addStationPurchased(newStation);
         Optional<Station> added = stationRepository.add(newStation);
 
