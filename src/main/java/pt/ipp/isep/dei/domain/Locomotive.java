@@ -10,7 +10,7 @@ import pt.ipp.isep.dei.domain.enums.LocomotiveType;
 public class Locomotive implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String reference;
-    private final LocomotiveType type;
+    private final TypeLocomotive type;
     private final int power;
     private final double acceleration;
     private final int startYear;
@@ -61,7 +61,7 @@ public class Locomotive implements Serializable {
         }
         
         this.reference = reference;
-        this.type = type;
+        this.type = TypeLocomotive.fromLocomotiveType(type);
         this.purchasePrice = purchasePrice;
         this.maintenanceCostPerYear = maintenanceCostPerYear;
         this.power = power;
@@ -84,7 +84,7 @@ public class Locomotive implements Serializable {
     public Locomotive(String name, String fuelType, int buildCost, int maintenanceCost,
                       int topSpeed, String accelerationRating, int availableYear) {
         this.reference = name;
-        this.type = LocomotiveType.fromString(fuelType);
+        this.type = TypeLocomotive.fromLocomotiveType(LocomotiveType.fromString(fuelType));
         this.purchasePrice = buildCost;
         this.maintenanceCostPerYear = maintenanceCost;
         this.power = topSpeed * 10;
@@ -125,7 +125,7 @@ public class Locomotive implements Serializable {
      * @return the locomotive type
      */
     public LocomotiveType getType() {
-        return type;
+        return type.getType();
     }
 
     /**
@@ -197,7 +197,7 @@ public class Locomotive implements Serializable {
      * @return a cloned locomotive with identical attributes
      */
     public Locomotive copy() {
-        return new Locomotive(reference, type, purchasePrice, maintenanceCostPerYear, power, acceleration, startYear, fuelCost);
+        return new Locomotive(reference, type.getType(), purchasePrice, maintenanceCostPerYear, power, acceleration, startYear, fuelCost);
     }
 
     /**

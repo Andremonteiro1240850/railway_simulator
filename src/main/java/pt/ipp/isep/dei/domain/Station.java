@@ -3,6 +3,7 @@ package pt.ipp.isep.dei.domain;
 import pt.ipp.isep.dei.domain.enums.Buildings;
 import pt.ipp.isep.dei.domain.enums.StationUpgrade;
 import pt.ipp.isep.dei.domain.enums.StationTypes;
+import pt.ipp.isep.dei.domain.TypeStation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Station implements Serializable {
     private int x;
     private int y;
     private List<StationUpgrade> upgrades = new ArrayList<>();
-    private transient StationType stationTypeHandler;
+    private transient TypeStation stationTypeHandler;
     private List<String> availableCargos = new ArrayList<>();
     private Map<String, Integer> demandas = new HashMap<>();
 
@@ -66,16 +67,8 @@ public class Station implements Serializable {
     }
 
     private void initializeTypeHandler() {
-        switch (type.toLowerCase()) {
-            case "depot":
-                stationTypeHandler = new DepotStationType(); break;
-            case "terminal":
-                stationTypeHandler = new TerminalStationType(); break;
-            case "station":
-                stationTypeHandler = new RegularStationType(); break;
-            default:
-                stationTypeHandler = null;
-        }
+        StationTypes stationType = StationTypes.valueOf(type.toUpperCase());
+        stationTypeHandler = TypeStation.fromStationType(stationType);
     }
 
     private void initializeAvailableCargos() {
@@ -224,12 +217,7 @@ public class Station implements Serializable {
     }
 
     public int getProximityRadius() {
-        switch (type.toLowerCase()) {
-            case "depot": return 2;
-            case "terminal": return 4;
-            case "station": return 3;
-            default: return 2;
-        }
+        return stationTypeHandler != null ? stationTypeHandler.getProximityRadius() : 2;
     }
 
     public List<City> getNearbyCities(pt.ipp.isep.dei.domain.Map map) {
