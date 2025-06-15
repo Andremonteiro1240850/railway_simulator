@@ -1,11 +1,13 @@
 package pt.ipp.isep.dei.domain;
 
 import pt.ipp.isep.dei.domain.enums.LocomotiveType;
+import java.io.Serializable;
 
 /**
  * Abstract base class for different types of locomotives
  */
-public abstract class TypeLocomotive {
+public abstract class TypeLocomotive implements Serializable {
+    private static final long serialVersionUID = 1L;
     protected final LocomotiveType type;
 
     protected TypeLocomotive(LocomotiveType type) {
