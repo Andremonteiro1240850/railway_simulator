@@ -3,6 +3,7 @@ package pt.ipp.isep.dei.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pt.ipp.isep.dei.domain.Map;
+import pt.ipp.isep.dei.domain.Organization;
 import pt.ipp.isep.dei.domain.Scenario;
 import pt.ipp.isep.dei.domain.enums.ScaleUnit;
 import pt.ipp.isep.dei.repository.*;
