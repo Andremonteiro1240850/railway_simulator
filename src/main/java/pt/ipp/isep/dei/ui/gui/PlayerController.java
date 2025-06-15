@@ -48,6 +48,7 @@ public class PlayerController implements Initializable {
     @FXML private MenuItem startSimulationMenuItem;
     @FXML private MenuItem pauseSimulationMenuItem;
     @FXML private MenuItem buyLocomotiveMenuItem;
+    @FXML private MenuItem financialResultsMenuItem;
     @FXML private Label statusLabel;
     @FXML private Label yearLabel;
     @FXML private Label budgetLabel;
@@ -1335,5 +1336,20 @@ public class PlayerController implements Initializable {
                 alert.showAndWait();
             }
         });
+    }
+
+    @FXML
+    private void showFinancialResults() {
+        if (simulation == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Simulation");
+            alert.setHeaderText(null);
+            alert.setContentText("Please start a simulation first.");
+            alert.showAndWait();
+            return;
+        }
+
+        FinancialResultsView view = new FinancialResultsView(simulation);
+        view.show();
     }
 }

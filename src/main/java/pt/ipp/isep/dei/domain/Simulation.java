@@ -7,6 +7,7 @@ import java.io.Serializable;
 import pt.ipp.isep.dei.domain.enums.CargoMode;
 
 public class Simulation implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final Scenario scenario;
     private final Player player;
     private int currentYear;
@@ -14,6 +15,8 @@ public class Simulation implements Serializable {
     private final List<Route> activeRoutes;
     private final List<Station> stations;
     private final List<Locomotive> locomotives;
+    private final List<FinancialResults> financialHistory;
+    private FinancialResults currentYearResults;
 
     public Simulation(Scenario scenario, Player player) {
         this.scenario = scenario;
@@ -23,6 +26,8 @@ public class Simulation implements Serializable {
         this.activeRoutes = new ArrayList<>();
         this.stations = new ArrayList<>();
         this.locomotives = new ArrayList<>();
+        this.financialHistory = new ArrayList<>();
+        this.currentYearResults = new FinancialResults(currentYear);
     }
 
     public void advanceMonth() {
@@ -30,28 +35,66 @@ public class Simulation implements Serializable {
         if (currentMonth > 12) {
             currentMonth = 1;
             currentYear++;
-            calculateExpenses();
+            calculateYearlyExpenses();
+            financialHistory.add(currentYearResults);
+            currentYearResults = new FinancialResults(currentYear);
         }
-        calculateRevenue();
+        calculateMonthlyRevenue();
         updateCargoStatus();
         checkNewTechnologies();
     }
 
-    private void calculateExpenses() {
-        for (Station station : stations) {
-            scenario.setBudget(scenario.getBudget() - station.getMaintenanceCost());
-        }
+    private void calculateYearlyExpenses() {
+        // Calculate track maintenance expenses based on total track length
+        double totalTrackLength = calculateTotalTrackLength();
+        double trackMaintenanceCost = totalTrackLength * 100; // 100 per km
+        currentYearResults.addTrackMaintenanceExpense(trackMaintenanceCost, 
+            String.format("Maintenance for %.2f km of track", totalTrackLength));
+
+        // Calculate train maintenance expenses
         for (Locomotive locomotive : locomotives) {
-            scenario.setBudget(scenario.getBudget() - locomotive.getMaintenanceCostPerYear());
-            scenario.setBudget(scenario.getBudget() - locomotive.getFuelCost());
+            double maintenanceCost = locomotive.getMaintenanceCostPerYear();
+            currentYearResults.addTrainMaintenanceExpense(maintenanceCost,
+                String.format("Maintenance for locomotive %s", locomotive.getReference()));
+        }
+
+        // Calculate fuel expenses based on traveled kilometers
+        for (Route route : activeRoutes) {
+            double routeLength = calculateRouteLength(route);
+            for (Locomotive locomotive : locomotives) {
+                double fuelCost = routeLength * locomotive.getFuelCost();
+                currentYearResults.addFuelExpense(fuelCost,
+                    String.format("Fuel for locomotive %s on route %s", 
+                        locomotive.getReference(), route.getName()));
+            }
         }
     }
 
-    private void calculateRevenue() {
+    private void calculateMonthlyRevenue() {
         for (Route route : activeRoutes) {
             double routeRevenue = calculateRouteRevenue(route);
-            scenario.setBudget(scenario.getBudget() + routeRevenue);
+            currentYearResults.addCargoRevenue(routeRevenue,
+                String.format("Revenue from route %s", route.getName()));
         }
+    }
+
+    private double calculateTotalTrackLength() {
+        double totalLength = 0;
+        for (Route route : activeRoutes) {
+            totalLength += calculateRouteLength(route);
+        }
+        return totalLength;
+    }
+
+    private double calculateRouteLength(Route route) {
+        double length = 0;
+        List<PointsOfRoute> points = route.getRoute();
+        for (int i = 0; i < points.size() - 1; i++) {
+            Station currentStation = points.get(i).getStations();
+            Station nextStation = points.get(i + 1).getStations();
+            length += calculateDistance(currentStation, nextStation);
+        }
+        return length;
     }
 
     private double calculateRouteRevenue(Route route) {
@@ -63,7 +106,6 @@ public class Simulation implements Serializable {
             Station nextStation = points.get(i + 1).getStations();
             CargoMode cargoMode = points.get(i).getCargoMode();
             
-            // Calculate revenue based on cargo type, distance, and demand
             revenue += calculateCargoRevenue(currentStation, nextStation, cargoMode);
         }
         
@@ -71,7 +113,6 @@ public class Simulation implements Serializable {
     }
 
     private double calculateCargoRevenue(Station from, Station to, CargoMode cargoMode) {
-        // Base revenue calculation based on distance and cargo type
         double distance = calculateDistance(from, to);
         String cargoType = cargoMode.name().toLowerCase();
         double baseRate = getCargoBaseRate(cargoMode);
@@ -79,7 +120,6 @@ public class Simulation implements Serializable {
         double ajusteDemanda = 1.0;
         if (demanda >= 8) ajusteDemanda = 1.6;
         else if (demanda <= 2) ajusteDemanda = 0.6;
-        // Aqui poderias usar a quantidade real transportada, para já assumo 1 unidade
         double quantidade = 1.0;
         return distance * baseRate * ajusteDemanda * quantidade;
     }
@@ -91,7 +131,6 @@ public class Simulation implements Serializable {
     }
 
     private double getCargoBaseRate(CargoMode cargoMode) {
-        // Different cargo modes have different base rates
         return switch (cargoMode) {
             case FULL -> 100.0;
             case HALF -> 75.0;
@@ -177,5 +216,13 @@ public class Simulation implements Serializable {
 
     public List<Locomotive> getLocomotives() {
         return new ArrayList<>(locomotives);
+    }
+
+    public List<FinancialResults> getFinancialHistory() {
+        return new ArrayList<>(financialHistory);
+    }
+
+    public FinancialResults getCurrentYearResults() {
+        return currentYearResults;
     }
 } 

@@ -104,5 +104,26 @@ public class Route implements Serializable {
     public int hashCode() {
         return Objects.hash(route, train);
     }
+
+    /**
+     * Returns a name for this route based on its stations.
+     * The name is in the format "Station1 - Station2 - ... - StationN"
+     *
+     * @return a string representing the route name
+     */
+    public String getName() {
+        if (route == null || route.isEmpty()) {
+            return "Empty Route";
+        }
+        
+        StringBuilder name = new StringBuilder();
+        for (int i = 0; i < route.size(); i++) {
+            if (i > 0) {
+                name.append(" - ");
+            }
+            name.append(route.get(i).getStations().getName());
+        }
+        return name.toString();
+    }
 }
 
